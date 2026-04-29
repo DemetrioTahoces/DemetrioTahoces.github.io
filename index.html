@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PromptNex Universal Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Inter:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* --- DESIGN SYSTEM VARIABLES (Universal/Clean) --- */
+    :root {
+        /* Superficies Claras */
+        --bg-app: #F8FAFC;       /* Gris muy pálido de fondo (Slate-50) */
+        --bg-card: #FFFFFF;      /* Blanco puro para tarjetas */
+        --bg-input: #F1F5F9;     /* Gris suave para áreas de prompt */
+
+        /* Texto (Slate Scale) */
+        --text-primary: #0F172A; /* Casi negro, pero más suave */
+        --text-secondary: #64748B; /* Gris medio legible */
+        --text-light: #94A3B8;
+
+        /* Color de Marca (Friendly Indigo) */
+        --brand-color: #4F46E5; 
+        --brand-hover: #4338CA;
+        --brand-light: #EEF2FF; /* Fondo muy suave del color marca */
+
+        /* Acentos de IA (Estilo Pastel) */
+        --tag-gpt-bg: #DCFCE7;  /* Verde pastel */
+        --tag-gpt-text: #166534;
+        
+        --tag-mj-bg: #F3E8FF;   /* Violeta pastel */
+        --tag-mj-text: #6B21A8;
+
+        /* Sombras (Elevation) */
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* --- RESET & TYPOGRAPHY --- */
+    body {
+        background-color: var(--bg-app);
+        color: var(--text-secondary);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 40px;
+        line-height: 1.6;
+    }
+
+    h1, h2, h3 { 
+        color: var(--text-primary); 
+        font-family: 'Plus Jakarta Sans', sans-serif; /* Geométrica y moderna */
+        margin-top: 0;
+    }
+    
+    h2 { margin-top: 50px; font-size: 20px; font-weight: 600; border-bottom: none;}
+
+    /* Fuente para Prompts (Legible pero técnica) */
+    .font-mono { font-family: 'Space Mono', monospace; font-size: 13px; }
+
+    /* --- UI COMPONENTS --- */
+
+    /* 1. Botones (Estilo Pill) */
+    .btn {
+        padding: 10px 24px;
+        border-radius: 50px; /* Pill shape */
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 14px;
+        display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { 
+        background-color: var(--brand-color); 
+        color: white; 
+        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+    }
+    .btn-primary:hover { 
+        background-color: var(--brand-hover); 
+        transform: translateY(-1px);
+    }
+    .btn-secondary {
+        background-color: white;
+        color: var(--text-primary);
+        border: 1px solid #E2E8F0;
+        box-shadow: var(--shadow-sm);
+    }
+    .btn-secondary:hover { background-color: #F8FAFC; border-color: #CBD5E1; }
+
+    /* 2. Tags/Badges (Estilo Pastel) */
+    .badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .badge-mj { background-color: var(--tag-mj-bg); color: var(--tag-mj-text); }
+    .badge-gpt { background-color: var(--tag-gpt-bg); color: var(--tag-gpt-text); }
+
+    /* 3. Prompt Card Universal */
+    .card {
+        background: var(--bg-card);
+        border-radius: 16px; /* Bordes suaves */
+        box-shadow: var(--shadow-md);
+        border: 1px solid rgba(0,0,0,0.02); /* Borde casi invisible */
+        max-width: 560px;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        margin-bottom: 30px;
+    }
+    .card:hover {
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-2px);
+    }
+
+    .card-header {
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    
+    .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px;}
+    .avatar { width: 32px; height: 32px; background: #E0E7FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--brand-color); font-weight: bold;}
+    
+    .card-title { font-size: 18px; margin: 0; color: var(--text-primary); font-weight: 700;}
+    
+    /* Área de Prompt (Estilo "Caja de Nota") */
+    .prompt-box {
+        background-color: var(--bg-input);
+        margin: 0 24px 20px 24px;
+        padding: 16px;
+        border-radius: 12px;
+        color: #334155;
+        border: 1px solid #E2E8F0;
+        position: relative;
+    }
+    
+    /* Variables visualmente amigables */
+    .variable-highlight {
+        background-color: #E0E7FF; /* Indigo muy claro */
+        color: var(--brand-color);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+        border: 1px dashed rgba(79, 70, 229, 0.4);
+        cursor: text;
+    }
+
+    .card-image-preview {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%); /* Placeholder visual */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+
+    .card-actions {
+        padding: 16px 24px;
+        border-top: 1px solid #F1F5F9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .action-group { display: flex; gap: 16px; font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+    .icon-btn { cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .icon-btn:hover { color: var(--brand-color); }
+
+</style>
+</head>
+<body>
+
+    <div style="max-width: 800px; margin: 0 auto;">
+        
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h1 style="font-size: 36px; letter-spacing: -1px;">Descubre Prompts Increíbles</h1>
+            <p style="font-size: 18px; max-width: 500px; margin: 0 auto; color: var(--text-secondary);">
+                Una comunidad para creadores. Explora, mezcla y crea con la mejor librería de prompts para IA.
+            </p>
+            <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+                <button class="btn btn-primary">Empezar gratis</button>
+                <button class="btn btn-secondary">Explorar Galería</button>
+            </div>
+        </div>
+
+        <h2>Feed de Comunidad</h2>
+
+        <div class="card">
+            <div class="card-image-preview">
+                <span>[ Imagen Generada: Cyberpunk Portrait ]</span>
+            </div>
+            <div class="card-header">
+                <div>
+                    <div class="user-info">
+                        <div class="avatar">JS</div>
+                        <span style="font-size: 13px; font-weight: 500;">Julia Studio</span>
+                        <span style="font-size: 12px; color: #94A3B8;">• hace 2h</span>
+                    </div>
+                    <h3 class="card-title">Retrato Editorial Neón</h3>
+                </div>
+                <span class="badge badge-mj">Midjourney v6</span>
+            </div>
+            
+            <div class="prompt-box font-mono">
+                /imagine prompt: Retrato cinematográfico de <span class="variable-highlight">[Sujeto]</span> en una calle de Tokio de noche, luces de neón reflejadas, fotografía estilo Kodak Portra 400, f/1.8 --v 6.0
+            </div>
+
+            <div class="card-actions">
+                <div class="action-group">
+                    <div class="icon-btn">♥ 342</div>
+                    <div class="icon-btn">💬 12</div>
+                </div>
+                <button class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
+                    Copiar Prompt
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="user-info">
+                        <div class="avatar" style="background: #DCFCE7; color: #166534;">M</div>
+                        <span style="font-size: 13px; font-weight: 500;">MarketerPro</span>
+                    </div>
+                    <h3 class="card-title">Generador de Estrategia SEO</h3>
+                </div>
+                <span class="badge badge-gpt">GPT-4</span>
+            </div>
+            
+            <div class="prompt-box font-mono">
+                Actúa como un experto en SEO con 10 años de experiencia. Necesito que generes una estructura de artículos para un blog sobre <span class="variable-highlight">[Temática del Cliente]</span> enfocada en palabras clave de baja competencia pero alta intención de compra.
+            </div>
+
+            <div class="card-actions">
+                <div class="action-group">
+                    <div class="icon-btn">♥ 1.2k</div>
+                    <div class="icon-btn">⚡ Remix</div>
+                </div>
+                <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px; border-radius: 50px;">
+                    Ver Resultado
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
