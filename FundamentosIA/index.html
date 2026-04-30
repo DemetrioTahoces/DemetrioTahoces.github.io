@@ -3,387 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estrategia de Adopción de IA: Videoporteros</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Estrategia de IA - Videoporteros Demetrio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --primary: #0ea5e9;
+            --primary-glow: rgba(14, 165, 233, 0.5);
+            --secondary: #8b5cf6;
+            --secondary-glow: rgba(139, 92, 246, 0.5);
+            --accent: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            background-attachment: fixed;
         }
-        .chart-container {
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 0 3rem;
             position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 6rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 1rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+            font-size: 2.5rem;
+        }
+
+        /* Glassmorphism Cards */
         .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(51, 65, 85, 0.8);
-            backdrop-filter: blur(10px);
+            background: var(--surface-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .neon-text-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.8); }
-        .neon-text-pink { text-shadow: 0 0 10px rgba(236, 72, 153, 0.8); }
-        .neon-border-cyan { box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
-        .node-connector {
-            position: relative;
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px -5px var(--primary-glow);
         }
-        .node-connector::after {
-            content: "↓";
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
+
+        /* Ecosystem Grid */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .eco-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Fundamentals */
+        .fundamentals {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .fund-item {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .fund-item i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* Trends Table */
+        .trends-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 2rem;
+            background: var(--surface-color);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--surface-border);
+        }
+
+        .trends-table th, .trends-table td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .trends-table th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .badge.alta { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge.media { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge.baja { background: rgba(16, 185, 129, 0.2); color: var(--accent); }
+
+        /* Opportunities */
+        .opp-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .opp-container { grid-template-columns: 1fr; }
+        }
+
+        .opp-col h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
             font-size: 1.5rem;
-            color: #06b6d4;
         }
-        @media (min-width: 768px) {
-            .node-connector-md::after {
-                content: "→";
-                bottom: auto;
-                top: 50%;
-                right: -25px;
-                left: auto;
-                transform: translateY(-50%);
-            }
+
+        .opp-card {
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
         }
+        .opp-card.front {
+            border-left-color: var(--secondary);
+        }
+
+        .opp-card h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .opp-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Maturity */
+        .maturity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .maturity-card {
+            text-align: center;
+        }
+
+        .maturity-score {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin: 1rem 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Roadmap */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.45rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .timeline-item:nth-child(2)::before { border-color: var(--secondary); box-shadow: 0 0 10px var(--secondary-glow);}
+        .timeline-item:nth-child(3)::before { border-color: var(--accent); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);}
+
+        .timeline-horizon {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .timeline-item:nth-child(2) .timeline-horizon { color: var(--secondary); }
+        .timeline-item:nth-child(3) .timeline-horizon { color: var(--accent); }
+
+        .timeline-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Barriers */
+        .barriers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .barrier-card h4 {
+            color: var(--warning);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .barrier-card .mitigation {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+        
+        .mitigation strong {
+            color: var(--accent);
+        }
+
     </style>
 </head>
-<body class="antialiased p-4 md:p-8">
+<body>
 
-    <!-- PALETTE: Cyber Neon (Slate 900 Background, Cyan 500, Pink 500, Yellow 500 Accents). -->
-    <!-- PLAN: 
-         1. Introducción: Contexto estratégico.
-         2. Ecosistema IA: Análisis comparativo de modelos fundacionales (Gráfico Radar).
-         3. Orquestación: Flujo tecnológico (Diagrama HTML).
-         4. Barreras y Mitigaciones: Análisis de ejes Cultura, Datos y Tecnología (Gráfico de Barras y Tarjetas). 
-    -->
-    <!-- VISUALIZATIONS: 
-         - Modelos (Comparar -> Radar Chart -> Chart.js para mostrar fortalezas relativas en múltiples ejes).
-         - Flujo (Organizar -> Layout HTML/CSS -> Tailwind sin SVG para representar arquitectura).
-         - Barreras vs Impacto (Comparar -> Stacked/Grouped Bar Chart -> Chart.js para contrastar la severidad del problema vs la eficacia de la solución).
-         CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in this output. 
-    -->
-
-    <div class="max-w-7xl mx-auto">
-        
-        <header class="text-center mb-16 pt-8">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 neon-text-cyan">
-                Transición a la Inteligencia Artificial
-            </h1>
-            <h2 class="text-xl md:text-2xl text-slate-300 font-light max-w-3xl mx-auto">
-                Hoja de ruta estratégica para el ecosistema de Videoporteros
-            </h2>
+    <div class="container">
+        <header>
+            <h1 class="gradient-text">Plan Estratégico de IA</h1>
+            <p>Roadmap de Adopción Tecnológica para Videoporteros Demetrio</p>
         </header>
 
-        <section class="mb-20">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-cyan-400 mb-4 border-b border-slate-700 pb-2">1. El Ecosistema Actual de IA</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    Comprender la estructura de la industria es el primer paso crítico. El mercado se divide principalmente entre modelos propietarios (cerrados) y modelos de código abierto (open-weight). Para un entorno de hardware y seguridad como los videoporteros, la elección del modelo impacta directamente en la privacidad, el riesgo de dependencia ("lock-in") y la viabilidad técnica en dispositivos periféricos (edge).
-                </p>
+        <!-- 1. Ecosystem -->
+        <section class="section" style="animation-delay: 0.1s;">
+            <h2 class="section-title"><i class="ph ph-graph"></i> 1. Ecosistema Actual de IA</h2>
+            <div class="ecosystem-grid">
+                <div class="glass-card eco-card">
+                    <h3><i class="ph ph-brain"></i> Modelos Fundacionales</h3>
+                    <p><strong>Cerrados:</strong> Alto rendimiento (GPT, Claude). Riesgo de lock-in.</p>
+                    <p><strong>Abiertos:</strong> (Llama, DeepSeek). Claves para privacidad, cumplimiento normativo y despliegue local (Edge).</p>
+                    <p><strong>Agentes Personales:</strong> OpenClaw (local), Manus AI (nube).</p>
+                </div>
+                <div class="glass-card eco-card">
+                    <h3><i class="ph ph-cloud-network"></i> Infraestructura</h3>
+                    <p>Los grandes cloud (Hyperscalers) actúan como orquestadores.</p>
+                    <p>Plataformas como Amazon Bedrock para alojar ecosistemas de agentes multi-modelo.</p>
+                </div>
+                <div class="glass-card eco-card">
+                    <h3><i class="ph ph-briefcase"></i> Integración Empresarial</h3>
+                    <p>CRMs/ERPs con agentes bidireccionales.</p>
+                    <p>Herramientas de productividad (Teams, Meet).</p>
+                    <p>Gestión de conocimiento interno seguro (NotebookLM).</p>
+                </div>
+                <div class="glass-card eco-card">
+                    <h3><i class="ph ph-robot"></i> Automatización</h3>
+                    <p><strong>Low/No-Code:</strong> Make, N8N, Zapier para arquitecturas multiagente rápidas.</p>
+                    <p><strong>Desarrollo a Medida:</strong> LangChain, LlamaIndex para flujos complejos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Fundamentals & Trends -->
+        <section class="section" style="animation-delay: 0.2s;">
+            <h2 class="section-title"><i class="ph ph-lightbulb"></i> 2. Fundamentos y Tendencias</h2>
+            <div class="fundamentals glass-card">
+                <div class="fund-item">
+                    <i class="ph ph-database"></i>
+                    <h4>El Dato como Activo Crítico</h4>
+                    <p>Requiere datos de calidad que reflejen fielmente el negocio.</p>
+                </div>
+                <div class="fund-item">
+                    <i class="ph ph-rocket-launch"></i>
+                    <h4>Mentalidad "IA First"</h4>
+                    <p>Ejecución ágil. Diseño central basado en IA, pasos incrementales.</p>
+                </div>
+                <div class="fund-item">
+                    <i class="ph ph-puzzle-piece"></i>
+                    <h4>Integración Estratégica</h4>
+                    <p>Redefine la propuesta de valor, no es un proyecto aislado.</p>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="glass-card p-6 rounded-xl neon-border-cyan">
-                    <h4 class="text-xl font-semibold text-white mb-2 text-center">Análisis de Capacidades Fundacionales</h4>
-                    <p class="text-sm text-slate-400 mb-6 text-center">Comparativa conceptual entre enfoques Propietarios y Open-Weight basada en requerimientos del producto.</p>
-                    <div class="chart-container">
-                        <canvas id="ecosystemChart"></canvas>
-                    </div>
-                </div>
+            <table class="trends-table">
+                <thead>
+                    <tr>
+                        <th>Tendencia (24 Meses)</th>
+                        <th>Impacto</th>
+                        <th>Implicación Estratégica Clave</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Edge Computing y SLMs</strong></td>
+                        <td><span class="badge alta">ALTA</span></td>
+                        <td>Llevar inteligencia comprimida a placas de calle. Agentes autónomos, rápidos y privados.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multimodalidad Nativa</strong></td>
+                        <td><span class="badge media">MEDIA</span></td>
+                        <td>Agentes de seguridad que interpretan audio, vídeo e imagen (Visita vs Intrusión).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Intelligent Experience</strong></td>
+                        <td><span class="badge baja">BAJA</span></td>
+                        <td>Mejora operativa rápida en soporte y marketing (interfaces conversacionales).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-                <div class="space-y-6">
-                    <div class="p-6 rounded-lg bg-slate-800 border-l-4 border-cyan-500">
-                        <div class="flex items-center mb-3">
-                            <span class="text-3xl mr-3">☁️</span>
-                            <h5 class="text-xl font-bold text-white">Modelos Propietarios (Ej. GPT, Claude)</h5>
-                        </div>
-                        <p class="text-slate-300">Ofrecen rendimiento bruto superior y facilidad inicial vía API, pero exigen enviar datos fuera de la red local, generando riesgos de privacidad y dependencia total del proveedor (Vendor Lock-in).</p>
+        <!-- 3. Area of Intervention -->
+        <section class="section" style="animation-delay: 0.3s;">
+            <h2 class="section-title"><i class="ph ph-target"></i> 3. Área de Intervención: Operaciones, QA y Marketing</h2>
+            <div class="glass-card">
+                <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">Selección de la cadena de valor que conecta la Creación de Producto (QA/SWE) con su Comunicación (Marketing).</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="ph ph-flask"></i> Impacto en QA y Operaciones</h4>
+                        <p>Transición de pruebas manuales a "automatización inteligente". Multiplicador de capacidades sin aumentar costes.</p>
                     </div>
-                    
-                    <div class="p-6 rounded-lg bg-slate-800 border-l-4 border-pink-500">
-                        <div class="flex items-center mb-3">
-                            <span class="text-3xl mr-3">🔒</span>
-                            <h5 class="text-xl font-bold text-white">Modelos Open-Weight (Ej. Llama, Mistral)</h5>
-                        </div>
-                        <p class="text-slate-300">Permiten la ejecución local (on-premise). Fundamentales para garantizar la privacidad de los usuarios de videoporteros, cumplir con normativas estrictas y desplegar inteligencia directamente en el dispositivo (Edge AI).</p>
+                    <div>
+                        <h4 style="color: var(--secondary); margin-bottom: 0.5rem;"><i class="ph ph-arrows-merge"></i> Alineación Marketing-SWE</h4>
+                        <p>Creación de una "Arquitectura de Experiencia Inteligente" para romper silos de información.</p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--accent); margin-bottom: 0.5rem;"><i class="ph ph-trend-up"></i> Foco en el ROI</h4>
+                        <p>Priorizar el back-office genera un ROI más alto y sostenible. La IA como "aplanador de barreras" para PYMEs.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-20">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-pink-400 mb-4 border-b border-slate-700 pb-2">2. Infraestructura y Orquestación</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    Los proveedores Cloud ya no solo alojan; actúan como orquestadores. La estrategia moderna no pasa por atarse a un solo motor de IA, sino por utilizar plataformas que permitan intercambiar modelos dinámicamente según la tarea (Agentes).
-                </p>
-            </div>
-
-            <div class="glass-card p-8 rounded-xl relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-yellow-500"></div>
-                
-                <h4 class="text-xl font-semibold text-white mb-8 text-center">Arquitectura de Decisión y Agentes</h4>
-                
-                <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12">
+        <!-- 4. Opportunities Map -->
+        <section class="section" style="animation-delay: 0.4s;">
+            <h2 class="section-title"><i class="ph ph-map-trifold"></i> 4. Mapa de Oportunidades de IA</h2>
+            <div class="opp-container">
+                <div class="opp-col">
+                    <h3>Ámbito 1: Back-Office (Procesos)</h3>
                     
-                    <div class="bg-slate-800 border border-slate-600 rounded-lg p-6 w-full md:w-1/3 text-center node-connector node-connector-md z-10">
-                        <div class="text-4xl mb-2">⚙️</div>
-                        <h5 class="text-lg font-bold text-cyan-300">Orquestador Cloud</h5>
-                        <p class="text-xs text-slate-400 mt-2">Ej. Microsoft Hub / AWS Bedrock</p>
+                    <div class="glass-card opp-card">
+                        <h4>1. Automatización QA</h4>
+                        <p><strong>Desafío:</strong> Cuellos de botella en regresión.</p>
+                        <p><strong>Solución:</strong> Agentes de pruebas dinámicas/deterministas.</p>
                     </div>
-
-                    <div class="flex flex-col gap-4 w-full md:w-1/3 z-10">
-                        <div class="bg-slate-700 border border-slate-500 rounded-lg p-4 text-center">
-                            <h6 class="font-bold text-white text-sm">Agente Nube</h6>
-                            <p class="text-xs text-slate-400">Modelos de alta capacidad</p>
-                        </div>
-                        <div class="bg-slate-700 border border-pink-500 rounded-lg p-4 text-center shadow-[0_0_10px_rgba(236,72,153,0.3)]">
-                            <h6 class="font-bold text-white text-sm">Agente Personal / Local</h6>
-                            <p class="text-xs text-slate-400">OpenClaw / Edge Inference</p>
-                        </div>
+                    <div class="glass-card opp-card">
+                        <h4>2. Agilización de Despliegues</h4>
+                        <p><strong>Desafío:</strong> Lentitud y burocracia en hotfixes.</p>
+                        <p><strong>Solución:</strong> Agente Orquestador de Flujos Dinámicos.</p>
                     </div>
-
-                    <div class="bg-slate-800 border border-slate-600 rounded-lg p-6 w-full md:w-1/3 text-center z-10">
-                        <div class="text-4xl mb-2">📱</div>
-                        <h5 class="text-lg font-bold text-yellow-300">Hardware Final</h5>
-                        <p class="text-xs text-slate-400 mt-2">Videoportero Interactivo</p>
+                    <div class="glass-card opp-card">
+                        <h4>3. Coordinación Interdepartamental</h4>
+                        <p><strong>Desafío:</strong> Silos Marketing / SWE.</p>
+                        <p><strong>Solución:</strong> Asistente de Gestión del Conocimiento.</p>
                     </div>
+                    <div class="glass-card opp-card">
+                        <h4>4. Integración y Talento</h4>
+                        <p><strong>Desafío:</strong> Curva de aprendizaje lenta.</p>
+                        <p><strong>Solución:</strong> Agente de Onboarding RAG.</p>
+                    </div>
+                </div>
 
+                <div class="opp-col">
+                    <h3 style="color: var(--secondary);">Ámbito 2: Front-Office (Experiencia)</h3>
+                    
+                    <div class="glass-card opp-card front">
+                        <h4>5. Soporte Nivel 1</h4>
+                        <p><strong>Desafío:</strong> Saturación por dudas básicas.</p>
+                        <p><strong>Solución:</strong> Chatbot RAG anclado a manuales (24/7).</p>
+                    </div>
+                    <div class="glass-card opp-card front">
+                        <h4>6. Inteligencia Edge en Hardware</h4>
+                        <p><strong>Desafío:</strong> Latencia y dependencia de nube.</p>
+                        <p><strong>Solución:</strong> Agentes autónomos locales en placa de calle.</p>
+                    </div>
+                    <div class="glass-card opp-card front">
+                        <h4>7. Evolución de UI/UX</h4>
+                        <p><strong>Desafío:</strong> Fricción en apps tradicionales.</p>
+                        <p><strong>Solución:</strong> Agente Conversacional Multimodal (Voz/Vídeo).</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-10">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-yellow-400 mb-4 border-b border-slate-700 pb-2">3. Barreras de Adopción y Mitigaciones</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    La implementación de esta tecnología enfrenta obstáculos significativos divididos en tres ejes principales. Evaluar la severidad de la barrera frente a la eficacia de nuestra mitigación es vital para asignar recursos.
-                </p>
+        <!-- 5. Maturity -->
+        <section class="section" style="animation-delay: 0.5s;">
+            <h2 class="section-title"><i class="ph ph-chart-radar"></i> 5. Diagnóstico de Madurez (Nivel 1-2)</h2>
+            <div class="maturity-grid">
+                <div class="glass-card maturity-card">
+                    <h4>Estrategia y Liderazgo</h4>
+                    <div class="maturity-score">Muy Baja</div>
+                    <p>Iniciativas aisladas sin roadmap corporativo ni sponsorship.</p>
+                </div>
+                <div class="glass-card maturity-card" style="border-bottom: 3px solid var(--danger);">
+                    <h4>Cultura y Gobernanza</h4>
+                    <div class="maturity-score">Baja (Riesgo)</div>
+                    <p>"Caballos desbocados". Urge gobernanza para proteger datos y IP.</p>
+                </div>
+                <div class="glass-card maturity-card">
+                    <h4>Datos</h4>
+                    <div class="maturity-score">Media-Baja</div>
+                    <p>Silos. Necesidad de un Gemelo Digital transversal.</p>
+                </div>
+                <div class="glass-card maturity-card">
+                    <h4>Talento</h4>
+                    <div class="maturity-score">Desequilibrada</div>
+                    <p>SWE avanzado, pero negocio requiere alfabetización (Prompting).</p>
+                </div>
+                <div class="glass-card maturity-card">
+                    <h4>Tecnología</h4>
+                    <div class="maturity-score">Baja</div>
+                    <p>Sistemas legacy y burocracia frenan la integración de agentes.</p>
+                </div>
             </div>
+        </section>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                <div class="lg:col-span-5 glass-card p-6 rounded-xl flex flex-col justify-center">
-                    <h4 class="text-xl font-semibold text-white mb-2 text-center">Impacto de la Estrategia</h4>
-                    <p class="text-sm text-slate-400 mb-6 text-center">Nivel de resistencia vs. Capacidad de resolución planificada.</p>
-                    <div class="chart-container">
-                        <canvas id="barriersChart"></canvas>
+        <!-- 6. Roadmap -->
+        <section class="section" style="animation-delay: 0.6s;">
+            <h2 class="section-title"><i class="ph ph-path"></i> 6. Roadmap Estratégico (3 Horizontes)</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-horizon">Horizonte 1: Eficiencia (0-3 meses)</div>
+                    <div class="timeline-content">
+                        <div class="glass-card">
+                            <h4>1. Automatización Pruebas QA</h4>
+                            <p><strong>Meta:</strong> Reducir cuello de botella 40%.</p>
+                            <p>Mayor impacto operativo y viabilidad inmediata.</p>
+                        </div>
+                        <div class="glass-card">
+                            <h4>2. Asistente Soporte Técnico (RAG)</h4>
+                            <p><strong>Meta:</strong> Filtrar 70% consultas N1.</p>
+                            <p>Uso de manuales existentes (Grounding).</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div class="bg-slate-800 p-5 rounded-lg border-t-4 border-cyan-400">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">👥</span>
-                            <h5 class="text-lg font-bold text-white">Eje Cultural</h5>
+                <div class="timeline-item">
+                    <div class="timeline-horizon">Horizonte 2: Escalado (12-24 meses)</div>
+                    <div class="timeline-content">
+                        <div class="glass-card">
+                            <h4>3. Orquestador de PMO</h4>
+                            <p><strong>Meta:</strong> -50% burocracia hotfixes.</p>
+                            <p>Requiere limpieza de procesos (Kaizen) previa.</p>
                         </div>
-                        <div class="mb-3">
-                            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Barrera</span>
-                            <p class="text-sm text-slate-300">Sobrecarga tecnológica en Marketing vs. Elitismo en Software Engineering.</p>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Mitigación</span>
-                            <ul class="text-sm text-slate-300 list-disc list-inside mt-1">
-                                <li>Modelo de "Champions" (referentes internos).</li>
-                                <li>Formación práctica y talleres de prompting directos.</li>
-                            </ul>
+                        <div class="glass-card">
+                            <h4>4. Puente Marketing-SWE</h4>
+                            <p><strong>Meta:</strong> Alineación síncrona de features.</p>
+                            <p>Mejora cultural con baja fricción técnica.</p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="bg-slate-800 p-5 rounded-lg border-t-4 border-pink-400">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">📊</span>
-                            <h5 class="text-lg font-bold text-white">Eje Datos</h5>
+                <div class="timeline-item">
+                    <div class="timeline-horizon">Horizonte 3: Transformación (2+ años)</div>
+                    <div class="timeline-content">
+                        <div class="glass-card">
+                            <h4>5. Edge AI: Inteligencia en Placa</h4>
+                            <p><strong>Meta:</strong> Decisiones autónomas en local.</p>
+                            <p>Apuesta crítica para competitividad futura.</p>
                         </div>
-                        <div class="mb-3">
-                            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Barrera</span>
-                            <p class="text-sm text-slate-300">Silos fragmentados (software vs hardware) e invisibilidad de datos no estructurados.</p>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Mitigación</span>
-                            <ul class="text-sm text-slate-300 list-disc list-inside mt-1">
-                                <li>IA para organizar y limpiar la IA (base documental).</li>
-                                <li>Escalera de Datos: Centralización para agentes orquestadores.</li>
-                            </ul>
+                        <div class="glass-card">
+                            <h4>6. Interfaz Conversacional</h4>
+                            <p><strong>Meta:</strong> Sustituir App tradicional.</p>
+                            <p>Requiere arquitectura agnóstica de datos madura.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="bg-slate-800 p-5 rounded-lg border-t-4 border-yellow-400 md:col-span-2">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🔌</span>
-                            <h5 class="text-lg font-bold text-white">Eje Tecnología</h5>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Barrera</span>
-                                <p class="text-sm text-slate-300 mt-1">Sistemas legacy, rigidez de despliegue y falta de APIs en hardware antiguo que bloquean agentes autónomos.</p>
-                            </div>
-                            <div>
-                                <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Mitigación</span>
-                                <ul class="text-sm text-slate-300 list-disc list-inside mt-1">
-                                    <li>Arquitectura Agnóstica: Stack intercambiable sin reescribir base.</li>
-                                    <li>Reingeniería Asistida: IA para entender y actualizar código antiguo.</li>
-                                </ul>
-                            </div>
-                        </div>
+        <!-- 7. Barriers -->
+        <section class="section" style="animation-delay: 0.7s;">
+            <h2 class="section-title"><i class="ph ph-shield-warning"></i> 7. Barreras y Mitigación</h2>
+            <div class="barriers-grid">
+                <div class="glass-card barrier-card">
+                    <h4><i class="ph ph-users"></i> Cultura: Miedo al reemplazo</h4>
+                    <p>Resistencia ante la pérdida de control burocrático.</p>
+                    <div class="mitigation">
+                        <p><strong>Solución:</strong> Transparencia. Enfoque "Copiloto" y validación <em>Human-in-the-Loop</em> para decisiones críticas.</p>
                     </div>
-
+                </div>
+                <div class="glass-card barrier-card">
+                    <h4><i class="ph ph-graduation-cap"></i> Talento: Brecha de capacidades</h4>
+                    <p>Escasez de perfiles orquestadores y riesgo de elitismo SWE.</p>
+                    <div class="mitigation">
+                        <p><strong>Solución:</strong> Identificar "Champions" internos. Talleres prácticos de prompting aplicados al negocio.</p>
+                    </div>
+                </div>
+                <div class="glass-card barrier-card">
+                    <h4><i class="ph ph-database-slash"></i> Datos: Fragmentación</h4>
+                    <p>Silos de información y datos no estructurados.</p>
+                    <div class="mitigation">
+                        <p><strong>Solución:</strong> Usar IA para limpiar datos (IA para IA). Crear una Escalera de Datos centralizada.</p>
+                    </div>
+                </div>
+                <div class="glass-card barrier-card">
+                    <h4><i class="ph ph-desktop"></i> Tecnología: Legacy</h4>
+                    <p>Rigidez de sistemas de despliegue y hardware antiguo.</p>
+                    <div class="mitigation">
+                        <p><strong>Solución:</strong> Arquitectura agnóstica (intercambiable). Reingeniería asistida por IA para entender código/procesos.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
     </div>
-
-    <script>
-        const wrapLabel = (label) => {
-            if (label.length <= 16) return label;
-            let words = label.split(' ');
-            let lines = [];
-            let currentLine = '';
-            for (let word of words) {
-                if ((currentLine + word).length > 16) {
-                    if (currentLine.length > 0) lines.push(currentLine.trim());
-                    currentLine = word + ' ';
-                } else {
-                    currentLine += word + ' ';
-                }
-            }
-            if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-            return lines;
-        };
-
-        const globalTooltipConfig = {
-            callbacks: {
-                title: function(tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    if (Array.isArray(label)) {
-                        return label.join(' ');
-                    } else {
-                        return label;
-                    }
-                }
-            }
-        };
-
-        Chart.defaults.color = '#cbd5e1';
-        Chart.defaults.font.family = "'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-
-        const radarLabelsRaw = [
-            'Privacidad de Usuario', 
-            'Control de Datos', 
-            'Despliegue en Edge', 
-            'Independencia (No Lock-in)', 
-            'Rendimiento Bruto (Nube)'
-        ];
-        const radarLabels = radarLabelsRaw.map(wrapLabel);
-
-        const ctxRadar = document.getElementById('ecosystemChart').getContext('2d');
-        new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-                labels: radarLabels,
-                datasets: [
-                    {
-                        label: 'Modelos Propietarios',
-                        data: [1, 2, 1, 1, 5],
-                        backgroundColor: 'rgba(6, 182, 212, 0.2)',
-                        borderColor: 'rgba(6, 182, 212, 1)',
-                        pointBackgroundColor: 'rgba(6, 182, 212, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(6, 182, 212, 1)'
-                    },
-                    {
-                        label: 'Modelos Open-Weight',
-                        data: [5, 5, 4, 4, 3],
-                        backgroundColor: 'rgba(236, 72, 153, 0.2)',
-                        borderColor: 'rgba(236, 72, 153, 1)',
-                        pointBackgroundColor: 'rgba(236, 72, 153, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(236, 72, 153, 1)'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                        pointLabels: { color: '#f8fafc', font: { size: 11 } },
-                        ticks: { display: false, min: 0, max: 5 }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#f8fafc' } },
-                    tooltip: globalTooltipConfig
-                }
-            }
-        });
-
-        const barLabelsRaw = [
-            'Cultura (Marketing vs SWE)', 
-            'Datos (Silos y Calidad)', 
-            'Tecnología (Legacy)'
-        ];
-        const barLabels = barLabelsRaw.map(wrapLabel);
-
-        const ctxBar = document.getElementById('barriersChart').getContext('2d');
-        new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: barLabels,
-                datasets: [
-                    {
-                        label: 'Severidad Barrera',
-                        data: [8, 9, 7],
-                        backgroundColor: 'rgba(248, 113, 113, 0.8)',
-                        borderRadius: 4
-                    },
-                    {
-                        label: 'Eficacia Mitigación',
-                        data: [9, 8, 8],
-                        backgroundColor: 'rgba(74, 222, 128, 0.8)',
-                        borderRadius: 4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 10,
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#cbd5e1' }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: globalTooltipConfig
-                }
-            }
-        });
-    </script>
 </body>
 </html>
