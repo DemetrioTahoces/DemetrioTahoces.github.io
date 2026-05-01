@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estrategia de IA - Videoporteros Demetrio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root {
@@ -36,13 +39,16 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.15), transparent 25%),
                 radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
             background-attachment: fixed;
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Outfit', sans-serif;
             line-height: 1.2;
         }
@@ -121,7 +127,7 @@
 
         .glass-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px -5px var(--primary-glow);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px var(--primary-glow);
         }
 
         /* Ecosystem Grid */
@@ -146,7 +152,7 @@
             gap: 2rem;
             flex-wrap: wrap;
         }
-        
+
         .fund-item {
             flex: 1;
             min-width: 300px;
@@ -172,7 +178,8 @@
             border: 1px solid var(--surface-border);
         }
 
-        .trends-table th, .trends-table td {
+        .trends-table th,
+        .trends-table td {
             padding: 1.2rem;
             text-align: left;
             border-bottom: 1px solid var(--surface-border);
@@ -190,9 +197,21 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        .badge.alta { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .badge.media { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .badge.baja { background: rgba(16, 185, 129, 0.2); color: var(--accent); }
+
+        .badge.alta {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .badge.media {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .badge.baja {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+        }
 
         /* Opportunities */
         .opp-container {
@@ -202,7 +221,9 @@
         }
 
         @media (max-width: 900px) {
-            .opp-container { grid-template-columns: 1fr; }
+            .opp-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         .opp-col h3 {
@@ -216,6 +237,7 @@
             margin-bottom: 1rem;
             border-left: 4px solid var(--primary);
         }
+
         .opp-card.front {
             border-left-color: var(--secondary);
         }
@@ -284,8 +306,15 @@
             box-shadow: 0 0 10px var(--primary-glow);
         }
 
-        .timeline-item:nth-child(2)::before { border-color: var(--secondary); box-shadow: 0 0 10px var(--secondary-glow);}
-        .timeline-item:nth-child(3)::before { border-color: var(--accent); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);}
+        .timeline-item:nth-child(2)::before {
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px var(--secondary-glow);
+        }
+
+        .timeline-item:nth-child(3)::before {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
 
         .timeline-horizon {
             font-family: 'Outfit', sans-serif;
@@ -293,9 +322,14 @@
             color: var(--primary);
             margin-bottom: 1rem;
         }
-        
-        .timeline-item:nth-child(2) .timeline-horizon { color: var(--secondary); }
-        .timeline-item:nth-child(3) .timeline-horizon { color: var(--accent); }
+
+        .timeline-item:nth-child(2) .timeline-horizon {
+            color: var(--secondary);
+        }
+
+        .timeline-item:nth-child(3) .timeline-horizon {
+            color: var(--accent);
+        }
 
         .timeline-content {
             display: grid;
@@ -309,31 +343,31 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
-        
+
         .barrier-card h4 {
             color: var(--warning);
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
-        
+
         .barrier-card .mitigation {
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px dashed rgba(255,255,255,0.1);
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
         }
-        
+
         .mitigation strong {
             color: var(--accent);
         }
-
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <header>
-            <h1 class="gradient-text">Plan Estratégico de IA</h1>
-            <p>Roadmap de Adopción Tecnológica para Videoporteros Demetrio</p>
+            <h1 class="gradient-text">Roadmap de adopción de IA</h1>
+            <p>Roadmap de Adopción de IA para Videoporteros Demetrio</p>
         </header>
 
         <!-- 1. Ecosystem -->
@@ -343,7 +377,8 @@
                 <div class="glass-card eco-card">
                     <h3><i class="ph ph-brain"></i> Modelos Fundacionales</h3>
                     <p><strong>Cerrados:</strong> Alto rendimiento (GPT, Claude). Riesgo de lock-in.</p>
-                    <p><strong>Abiertos:</strong> (Llama, DeepSeek). Claves para privacidad, cumplimiento normativo y despliegue local (Edge).</p>
+                    <p><strong>Abiertos:</strong> (Llama, DeepSeek). Claves para privacidad, cumplimiento normativo y
+                        despliegue local (Edge).</p>
                     <p><strong>Agentes Personales:</strong> OpenClaw (local), Manus AI (nube).</p>
                 </div>
                 <div class="glass-card eco-card">
@@ -398,7 +433,8 @@
                     <tr>
                         <td><strong>Edge Computing y SLMs</strong></td>
                         <td><span class="badge alta">ALTA</span></td>
-                        <td>Llevar inteligencia comprimida a placas de calle. Agentes autónomos, rápidos y privados.</td>
+                        <td>Llevar inteligencia comprimida a placas de calle. Agentes autónomos, rápidos y privados.
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>Multimodalidad Nativa</strong></td>
@@ -416,21 +452,29 @@
 
         <!-- 3. Area of Intervention -->
         <section class="section" style="animation-delay: 0.3s;">
-            <h2 class="section-title"><i class="ph ph-target"></i> 3. Área de Intervención: Operaciones, QA y Marketing</h2>
+            <h2 class="section-title"><i class="ph ph-target"></i> 3. Área de Intervención: Operaciones, QA y Marketing
+            </h2>
             <div class="glass-card">
-                <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">Selección de la cadena de valor que conecta la Creación de Producto (QA/SWE) con su Comunicación (Marketing).</p>
+                <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">Selección de la cadena de valor que conecta la
+                    Creación de Producto (QA/SWE) con su Comunicación (Marketing).</p>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
                     <div>
-                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="ph ph-flask"></i> Impacto en QA y Operaciones</h4>
-                        <p>Transición de pruebas manuales a "automatización inteligente". Multiplicador de capacidades sin aumentar costes.</p>
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="ph ph-flask"></i> Impacto en
+                            QA y Operaciones</h4>
+                        <p>Transición de pruebas manuales a "automatización inteligente". Multiplicador de capacidades
+                            sin aumentar costes.</p>
                     </div>
                     <div>
-                        <h4 style="color: var(--secondary); margin-bottom: 0.5rem;"><i class="ph ph-arrows-merge"></i> Alineación Marketing-SWE</h4>
-                        <p>Creación de una "Arquitectura de Experiencia Inteligente" para romper silos de información.</p>
+                        <h4 style="color: var(--secondary); margin-bottom: 0.5rem;"><i class="ph ph-arrows-merge"></i>
+                            Alineación Marketing-SWE</h4>
+                        <p>Creación de una "Arquitectura de Experiencia Inteligente" para romper silos de información.
+                        </p>
                     </div>
                     <div>
-                        <h4 style="color: var(--accent); margin-bottom: 0.5rem;"><i class="ph ph-trend-up"></i> Foco en el ROI</h4>
-                        <p>Priorizar el back-office genera un ROI más alto y sostenible. La IA como "aplanador de barreras" para PYMEs.</p>
+                        <h4 style="color: var(--accent); margin-bottom: 0.5rem;"><i class="ph ph-trend-up"></i> Foco en
+                            el ROI</h4>
+                        <p>Priorizar el back-office genera un ROI más alto y sostenible. La IA como "aplanador de
+                            barreras" para PYMEs.</p>
                     </div>
                 </div>
             </div>
@@ -442,7 +486,7 @@
             <div class="opp-container">
                 <div class="opp-col">
                     <h3>Ámbito 1: Back-Office (Procesos)</h3>
-                    
+
                     <div class="glass-card opp-card">
                         <h4>1. Automatización QA</h4>
                         <p><strong>Desafío:</strong> Cuellos de botella en regresión.</p>
@@ -467,7 +511,7 @@
 
                 <div class="opp-col">
                     <h3 style="color: var(--secondary);">Ámbito 2: Front-Office (Experiencia)</h3>
-                    
+
                     <div class="glass-card opp-card front">
                         <h4>5. Soporte Nivel 1</h4>
                         <p><strong>Desafío:</strong> Saturación por dudas básicas.</p>
@@ -581,28 +625,32 @@
                     <h4><i class="ph ph-users"></i> Cultura: Miedo al reemplazo</h4>
                     <p>Resistencia ante la pérdida de control burocrático.</p>
                     <div class="mitigation">
-                        <p><strong>Solución:</strong> Transparencia. Enfoque "Copiloto" y validación <em>Human-in-the-Loop</em> para decisiones críticas.</p>
+                        <p><strong>Solución:</strong> Transparencia. Enfoque "Copiloto" y validación
+                            <em>Human-in-the-Loop</em> para decisiones críticas.</p>
                     </div>
                 </div>
                 <div class="glass-card barrier-card">
                     <h4><i class="ph ph-graduation-cap"></i> Talento: Brecha de capacidades</h4>
                     <p>Escasez de perfiles orquestadores y riesgo de elitismo SWE.</p>
                     <div class="mitigation">
-                        <p><strong>Solución:</strong> Identificar "Champions" internos. Talleres prácticos de prompting aplicados al negocio.</p>
+                        <p><strong>Solución:</strong> Identificar "Champions" internos. Talleres prácticos de prompting
+                            aplicados al negocio.</p>
                     </div>
                 </div>
                 <div class="glass-card barrier-card">
                     <h4><i class="ph ph-database-slash"></i> Datos: Fragmentación</h4>
                     <p>Silos de información y datos no estructurados.</p>
                     <div class="mitigation">
-                        <p><strong>Solución:</strong> Usar IA para limpiar datos (IA para IA). Crear una Escalera de Datos centralizada.</p>
+                        <p><strong>Solución:</strong> Usar IA para limpiar datos (IA para IA). Crear una Escalera de
+                            Datos centralizada.</p>
                     </div>
                 </div>
                 <div class="glass-card barrier-card">
                     <h4><i class="ph ph-desktop"></i> Tecnología: Legacy</h4>
                     <p>Rigidez de sistemas de despliegue y hardware antiguo.</p>
                     <div class="mitigation">
-                        <p><strong>Solución:</strong> Arquitectura agnóstica (intercambiable). Reingeniería asistida por IA para entender código/procesos.</p>
+                        <p><strong>Solución:</strong> Arquitectura agnóstica (intercambiable). Reingeniería asistida por
+                            IA para entender código/procesos.</p>
                     </div>
                 </div>
             </div>
@@ -610,4 +658,5 @@
 
     </div>
 </body>
+
 </html>
