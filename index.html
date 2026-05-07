@@ -4,577 +4,470 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estrategia de Adopción de IA: Videoporteros</title>
+    <title>CV - Demetrio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: #080f1c;
+            color: #d1d5db;
         }
 
-        .chart-container {
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 50%, #1d4ed8 100%);
+        }
+
+        .section-title {
             position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+            display: inline-block;
+            color: #e0e7ff;
         }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
-        }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(51, 65, 85, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .neon-text-cyan {
-            text-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
-        }
-
-        .neon-text-pink {
-            text-shadow: 0 0 10px rgba(236, 72, 153, 0.8);
-        }
-
-        .neon-border-cyan {
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-        }
-
-        .node-connector {
-            position: relative;
-        }
-
-        .node-connector::after {
-            content: "↓";
+        .section-title::after {
+            content: "";
             position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            color: #06b6d4;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #3b82f6;
         }
 
-        @media (min-width: 768px) {
-            .node-connector-md::after {
-                content: "→";
-                bottom: auto;
-                top: 50%;
-                right: -25px;
-                left: auto;
-                transform: translateY(-50%);
-            }
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .job-card {
+            border-left: 4px solid #3b82f6;
+            background: #111827;
+        }
+
+        .skill-tag {
+            background: #1e3a5f;
+            border: 1px solid #2563eb;
+            color: #bfdbfe;
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+.header-bg {
+            background: linear-gradient(135deg, #0f1d35 0%, #1a3a6e 50%, #0f2040 100%);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        a {
+            transition: color 0.2s ease;
         }
     </style>
 </head>
 
 <body class="antialiased p-4 md:p-8">
 
-    <!-- PALETTE: Cyber Neon (Slate 900 Background, Cyan 500, Pink 500, Yellow 500 Accents). -->
-    <!-- PLAN: 
-         1. Introducción: Contexto estratégico.
-         2. Ecosistema IA: Análisis comparativo de modelos fundacionales (Gráfico Radar).
-         3. Orquestación: Flujo tecnológico (Diagrama HTML).
-         4. Barreras y Mitigaciones: Análisis de ejes Cultura, Datos y Tecnología (Gráfico de Barras y Tarjetas). 
-    -->
-    <!-- VISUALIZATIONS: 
-         - Modelos (Comparar -> Radar Chart -> Chart.js para mostrar fortalezas relativas en múltiples ejes).
-         - Flujo (Organizar -> Layout HTML/CSS -> Tailwind sin SVG para representar arquitectura).
-         - Barreras vs Impacto (Comparar -> Stacked/Grouped Bar Chart -> Chart.js para contrastar la severidad del problema vs la eficacia de la solución).
-         CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in this output. 
-    -->
+    <div class="max-w-5xl mx-auto">
 
-    <div class="max-w-7xl mx-auto">
-
-        <header class="text-center mb-16 pt-8">
-            <h1
-                class="text-4xl md:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 neon-text-cyan">
-                Transición a la Inteligencia Artificial
+        <header class="header-bg rounded-2xl p-10 mb-10 text-center shadow-xl">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+                Demetrio
             </h1>
-            <h2 class="text-xl md:text-2xl text-slate-300 font-light max-w-3xl mx-auto">
-                Hoja de ruta estratégica para el ecosistema de Videoporteros
-            </h2>
+            <div class="flex flex-col items-center gap-2">
+                <a href="mailto:tonitahoces@gmail.com"
+                    class="text-xl md:text-2xl text-blue-200 hover:text-white transition-colors">
+                    tonitahoces@gmail.com
+                </a>
+                <a href="https://www.linkedin.com/in/demetrio-antonio-tahoces-s%C3%A1nchez-17905a181" target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                    LinkedIn
+                </a>
+            </div>
         </header>
 
-        <section class="mb-20">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-cyan-400 mb-4 border-b border-slate-700 pb-2">1. El Ecosistema Actual
-                    de IA</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    Comprender la estructura de la industria es el primer paso crítico. El mercado se divide
-                    principalmente entre modelos propietarios (cerrados) y modelos de código abierto (open-weight). Para
-                    un entorno de hardware y seguridad como los videoporteros, la elección del modelo impacta
-                    directamente en la privacidad, el riesgo de dependencia ("lock-in") y la viabilidad técnica en
-                    dispositivos periféricos (edge).
-                </p>
-            </div>
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Experiencia Profesional</h2>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="glass-card p-6 rounded-xl neon-border-cyan">
-                    <h4 class="text-xl font-semibold text-white mb-2 text-center">Análisis de Capacidades Fundacionales
-                    </h4>
-                    <p class="text-sm text-slate-400 mb-6 text-center">Comparativa conceptual entre enfoques
-                        Propietarios y Open-Weight basada en requerimientos del producto.</p>
-                    <div class="chart-container">
-                        <canvas id="ecosystemChart"></canvas>
+            <div class="space-y-6">
+                <div class="card job-card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-100">Backend Engineer</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">09/2022
+                            -
+                            Actual</span>
                     </div>
+                    <p class="text-blue-400 font-semibold mb-3">Opendit</p>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">Planificación y desarrollo de sistema Backend para control de
+                                dispositivos IoT en el sector
+                                de telefonillos y videoporteros.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">Entorno Startup en equipo multidisciplinar, presente en todas
+                                las fases de desarrollo del producto.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300"><strong class="text-gray-200">Stack:</strong> Spring Boot,
+                                NestJS, Event Driven Architecture, Clean/Hexagonal Architecture, CQRS, DDD.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300"><strong class="text-gray-200">Infra:</strong> OAuth2,
+                                GraphQL/OpenAPI, Azure Service Bus, RabbitMQ, PostgreSQL, MongoDB, Redis, Kubernetes,
+                                DAPR, Azure DevOps.</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="space-y-6">
-                    <div class="p-6 rounded-lg bg-slate-800 border-l-4 border-cyan-500">
-                        <div class="flex items-center mb-3">
-                            <span class="text-3xl mr-3">☁️</span>
-                            <h5 class="text-xl font-bold text-white">Modelos Propietarios (Ej. GPT, Claude)</h5>
-                        </div>
-                        <p class="text-slate-300">Ofrecen rendimiento bruto superior y facilidad inicial vía API, pero
-                            exigen enviar datos fuera de la red local, generando riesgos de privacidad y dependencia
-                            total del proveedor (Vendor Lock-in).</p>
+                <div class="card job-card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-100">Ingeniero de Datos</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">11/2021
+                            - 09/2022</span>
                     </div>
+                    <p class="text-blue-400 font-semibold mb-3">Nunegal Consulting — Inditex</p>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">Software para gestión en tiempo real de grandes volúmenes de
+                                datos. Sistemas de QA para garantías sobre el dato.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300"><strong class="text-gray-200">Stack:</strong> Kafka, Java
+                                11/SpringBoot, Grafana, OpenShift, Snowflake.</span>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div class="p-6 rounded-lg bg-slate-800 border-l-4 border-pink-500">
-                        <div class="flex items-center mb-3">
-                            <span class="text-3xl mr-3">🔒</span>
-                            <h5 class="text-xl font-bold text-white">Modelos Open-Weight (Ej. Llama, Mistral)</h5>
-                        </div>
-                        <p class="text-slate-300">Permiten la ejecución local (on-premise). Fundamentales para
-                            garantizar la privacidad de los usuarios de videoporteros, cumplir con normativas estrictas
-                            y desplegar inteligencia directamente en el dispositivo (Edge AI).</p>
+                <div class="card job-card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-100">Desarrollador de Software</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">03/2021
+                            - 11/2021</span>
+                    </div>
+                    <p class="text-blue-400 font-semibold mb-3">Vector ITC — Securitas Direct</p>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">Aplicaciones Back-end. Operadores automáticos para interpretar
+                                señalización de dispositivos físicos.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300"><strong class="text-gray-200">Stack:</strong> Git, Docker,
+                                Jenkins, Kubernetes, Kafka, Java/SpringBoot.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card job-card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-100">Especialista en Robótica e IA</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">01/2020
+                            - 03/2021</span>
+                    </div>
+                    <p class="text-blue-400 font-semibold mb-3">Alisys S.L.U</p>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">API REST en Java para Plataforma Robótica. Integración de
+                                microservicios de IA (Reconocimiento Facial, STT, NLU).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">Aplicaciones Android para Robots (VoIP, WebRTC).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card job-card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-100">Ingeniero de Software</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">09/2019
+                            - 01/2020</span>
+                    </div>
+                    <p class="text-blue-400 font-semibold mb-3">Alisys S.L.U</p>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">App Android de mensajería con adjuntos, notificaciones Push y
+                                Firebase.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card job-card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-100">Desarrollador Android</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">02/2019
+                            - 09/2019</span>
+                    </div>
+                    <p class="text-blue-400 font-semibold mb-3">Imagine800 S.L</p>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-2 mt-1">▸</span>
+                            <span class="text-gray-300">Apps Android orientadas a VoIP y transcripción de voz.
+                                Integración de Asterisk en Docker.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Formación Académica</h2>
+
+            <div class="space-y-6">
+                <div class="card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-100">Máster en Ingeniería de Telecomunicaciones</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">2017 —
+                            2019</span>
+                    </div>
+                    <p class="text-blue-400 font-semibold mb-1">Universidad de Oviedo</p>
+                    <p class="text-gray-400 text-sm"><strong class="text-gray-300">TFM:</strong> <span
+                            class="text-gray-400">Desarrollo de Apps en Android con Tecnologías VoIP y Transcripción de
+                            Voz.</span></p>
+                </div>
+
+                <div class="card p-6 rounded-xl">
+                    <div class="flex flex-wrap justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-100">Grado en Ingeniería en Tecnologías y Servicios de
+                            Telecomunicación</h3>
+                        <span class="text-blue-300 font-semibold bg-blue-900/40 px-3 py-1 rounded-full text-sm">2012 —
+                            2017</span>
+                    </div>
+                    <p class="text-blue-400 font-semibold mb-1">Universidad de Oviedo — Mención en Sistemas de
+                        Telecomunicación</p>
+                    <p class="text-gray-400 text-sm"><strong class="text-gray-300">TFG:</strong> <span
+                            class="text-gray-400">Redes neuronales para procesado de arrays de antenas.</span></p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Formación Complementaria</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="card p-4 rounded-xl flex items-center">
+                    <div class="w-10 h-10 bg-blue-900/40 rounded-full flex items-center justify-center mr-4 shrink-0">
+                        <span class="text-blue-400 text-lg">📊</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Snowflake Complete Masterclass</p>
+                        <p class="text-gray-500 text-sm">Udemy — Nikolai Schuler (2022)</p>
+                    </div>
+                </div>
+                <div class="card p-4 rounded-xl flex items-center">
+                    <div class="w-10 h-10 bg-blue-900/40 rounded-full flex items-center justify-center mr-4 shrink-0">
+                        <span class="text-blue-400 text-lg">🔄</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Cursos de Kafka</p>
+                        <p class="text-gray-500 text-sm">Udemy — Stephane Mareek (2021)</p>
+                    </div>
+                </div>
+                <div class="card p-4 rounded-xl flex items-center">
+                    <div class="w-10 h-10 bg-blue-900/40 rounded-full flex items-center justify-center mr-4 shrink-0">
+                        <span class="text-blue-400 text-lg">📱</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Cursos de Flutter</p>
+                        <p class="text-gray-500 text-sm">Udemy — Fernando Herrera (2020-2021)</p>
+                    </div>
+                </div>
+                <div class="card p-4 rounded-xl flex items-center">
+                    <div class="w-10 h-10 bg-blue-900/40 rounded-full flex items-center justify-center mr-4 shrink-0">
+                        <span class="text-blue-400 text-lg">🚀</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Curso de Node.js</p>
+                        <p class="text-gray-500 text-sm">Udemy — Fernando Herrera (2020)</p>
+                    </div>
+                </div>
+                <div class="card p-4 rounded-xl md:col-span-2 flex items-center">
+                    <div class="w-10 h-10 bg-blue-900/40 rounded-full flex items-center justify-center mr-4 shrink-0">
+                        <span class="text-blue-400 text-lg">🤖</span>
+                    </div>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Big Data e Inteligencia Artificial con Deep Learning</p>
+                        <p class="text-gray-500 text-sm">Colegio Oficial de Ingenieros de Minas (2019)</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-20">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-pink-400 mb-4 border-b border-slate-700 pb-2">2. Infraestructura y
-                    Orquestación</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    Los proveedores Cloud ya no solo alojan; actúan como orquestadores. La estrategia moderna no pasa
-                    por atarse a un solo motor de IA, sino por utilizar plataformas que permitan intercambiar modelos
-                    dinámicamente según la tarea (Agentes).
-                </p>
-            </div>
+        <div class="section-divider mb-12 rounded-full"></div>
 
-            <div class="glass-card p-8 rounded-xl relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-yellow-500"></div>
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Competencias Técnicas</h2>
 
-                <h4 class="text-xl font-semibold text-white mb-8 text-center">Arquitectura de Decisión y Agentes</h4>
-
-                <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12">
-
-                    <div
-                        class="bg-slate-800 border border-slate-600 rounded-lg p-6 w-full md:w-1/3 text-center node-connector node-connector-md z-10">
-                        <div class="text-4xl mb-2">⚙️</div>
-                        <h5 class="text-lg font-bold text-cyan-300">Orquestador Cloud</h5>
-                        <p class="text-xs text-slate-400 mt-2">Ej. Microsoft Hub / AWS Bedrock</p>
-                    </div>
-
-                    <div class="flex flex-col gap-4 w-full md:w-1/3 z-10">
-                        <div class="bg-slate-700 border border-slate-500 rounded-lg p-4 text-center">
-                            <h6 class="font-bold text-white text-sm">Agente Nube</h6>
-                            <p class="text-xs text-slate-400">Modelos de alta capacidad</p>
-                        </div>
-                        <div
-                            class="bg-slate-700 border border-pink-500 rounded-lg p-4 text-center shadow-[0_0_10px_rgba(236,72,153,0.3)]">
-                            <h6 class="font-bold text-white text-sm">Agente Personal / Local</h6>
-                            <p class="text-xs text-slate-400">OpenClaw / Edge Inference</p>
+            <div class="card p-6 rounded-xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-100 mb-3">Lenguajes</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Python</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">C++</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Java</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">JavaScript</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">TypeScript</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Dart</span>
                         </div>
                     </div>
-
-                    <div class="bg-slate-800 border border-slate-600 rounded-lg p-6 w-full md:w-1/3 text-center z-10">
-                        <div class="text-4xl mb-2">📱</div>
-                        <h5 class="text-lg font-bold text-yellow-300">Hardware Final</h5>
-                        <p class="text-xs text-slate-400 mt-2">Videoportero Interactivo</p>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-100 mb-3">Bases de Datos</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">MongoDB</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Snowflake</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">MySQL</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Redis</span>
+                        </div>
                     </div>
-
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-100 mb-3">Frameworks</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Spring Boot</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">NestJS</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Flutter</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">Angular</span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-sm">NodeJS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Herramientas y Tecnologías</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">Kafka</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">Docker</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">Kubernetes</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">Git</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">Azure</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">OAuth2</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">REST API</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">GraphQL</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">gRPC</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">WebRTC</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">VoIP</span>
+                        <span class="skill-tag px-3 py-1 rounded-full text-sm">Android</span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-10">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-yellow-400 mb-4 border-b border-slate-700 pb-2">3. Barreras de
-                    Adopción y Mitigaciones</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    La implementación de esta tecnología enfrenta obstáculos significativos divididos en tres ejes
-                    principales. Evaluar la severidad de la barrera frente a la eficacia de nuestra mitigación es vital
-                    para asignar recursos.
-                </p>
-            </div>
+        <div class="section-divider mb-12 rounded-full"></div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Idiomas</h2>
 
-                <div class="lg:col-span-5 glass-card p-6 rounded-xl flex flex-col justify-center">
-                    <h4 class="text-xl font-semibold text-white mb-2 text-center">Impacto de la Estrategia</h4>
-                    <p class="text-sm text-slate-400 mb-6 text-center">Nivel de resistencia vs. Capacidad de resolución
-                        planificada.</p>
-                    <div class="chart-container">
-                        <canvas id="barriersChart"></canvas>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="card p-6 rounded-xl text-center">
+                    <p class="text-2xl mb-2">🇬🇧</p>
+                    <p class="text-gray-100 font-semibold text-lg">Inglés</p>
+                    <p class="text-blue-400 font-semibold">Nivel B2</p>
+                    <p class="text-gray-500 text-sm">Cambridge First Certificate</p>
                 </div>
-
-                <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    <div class="bg-slate-800 p-5 rounded-lg border-t-4 border-cyan-400">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">👥</span>
-                            <h5 class="text-lg font-bold text-white">Eje Cultural</h5>
-                        </div>
-                        <div class="mb-3">
-                            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Barrera</span>
-                            <p class="text-sm text-slate-300">Sobrecarga tecnológica en Marketing vs. Elitismo en
-                                Software Engineering.</p>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Mitigación</span>
-                            <ul class="text-sm text-slate-300 list-disc list-inside mt-1">
-                                <li>Modelo de "Champions" (referentes internos).</li>
-                                <li>Formación práctica y talleres de prompting directos.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-800 p-5 rounded-lg border-t-4 border-pink-400">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">📊</span>
-                            <h5 class="text-lg font-bold text-white">Eje Datos</h5>
-                        </div>
-                        <div class="mb-3">
-                            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Barrera</span>
-                            <p class="text-sm text-slate-300">Silos fragmentados (software vs hardware) e invisibilidad
-                                de datos no estructurados.</p>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Mitigación</span>
-                            <ul class="text-sm text-slate-300 list-disc list-inside mt-1">
-                                <li>IA para organizar y limpiar la IA (base documental).</li>
-                                <li>Escalera de Datos: Centralización para agentes orquestadores.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-800 p-5 rounded-lg border-t-4 border-yellow-400 md:col-span-2">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🔌</span>
-                            <h5 class="text-lg font-bold text-white">Eje Tecnología</h5>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Barrera</span>
-                                <p class="text-sm text-slate-300 mt-1">Sistemas legacy, rigidez de despliegue y falta de
-                                    APIs en hardware antiguo que bloquean agentes autónomos.</p>
-                            </div>
-                            <div>
-                                <span
-                                    class="text-xs font-bold text-green-400 uppercase tracking-wider">Mitigación</span>
-                                <ul class="text-sm text-slate-300 list-disc list-inside mt-1">
-                                    <li>Arquitectura Agnóstica: Stack intercambiable sin reescribir base.</li>
-                                    <li>Reingeniería Asistida: IA para entender y actualizar código antiguo.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="card p-6 rounded-xl text-center">
+                    <p class="text-2xl mb-2">🇪🇸</p>
+                    <p class="text-gray-100 font-semibold text-lg">Español</p>
+                    <p class="text-blue-400 font-semibold">Nativo</p>
                 </div>
             </div>
         </section>
 
-        <section class="mb-10">
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-3xl font-bold text-cyan-400 mb-4 border-b border-slate-700 pb-2">4. Casos de Uso: Los
-                    Tres Horizontes de McKinsey</h3>
-                <p class="text-slate-300 text-lg leading-relaxed max-w-4xl">
-                    La estrategia de adopción se estructura en tres horizontes temporales que van desde la optimización
-                    del negocio actual hasta la creación de nuevos modelos de negocio disruptivos.
-                </p>
-            </div>
+        <div class="section-divider mb-12 rounded-full"></div>
 
-            <!-- Horizonte 1 -->
-            <div class="mb-8 glass-card p-6 rounded-xl neon-border-cyan">
-                <div class="flex items-start gap-4 mb-4">
-                    <div
-                        class="bg-cyan-500/20 text-cyan-400 font-extrabold text-2xl w-14 h-14 flex items-center justify-center rounded-lg shrink-0 border border-cyan-500/40">
-                        H1
-                    </div>
-                    <div>
-                        <h4 class="text-2xl font-bold text-cyan-300 mb-1">Horizonte 1 — Optimizar el Negocio Actual
-                        </h4>
-                        <p class="text-sm text-slate-400">0 – 12 meses · Mejorar lo que ya hacemos</p>
-                    </div>
-                </div>
-                <p class="text-slate-300 mb-5">
-                    Aplicar IA para incrementar la eficiencia operativa, reducir costes y mejorar la experiencia del
-                    usuario en los productos de videoportero existentes.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🎙️</span>
-                            <h5 class="font-bold text-white text-sm">Asistente de Voz Integrado</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Atención por voz local con modelos ligeros (Whisper Tiny +
-                            LLM edge) para abrir puertas, consultar visitantes y configurar el dispositivo sin
-                            intervención manual.</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🔍</span>
-                            <h5 class="font-bold text-white text-sm">Detección Inteligente de Eventos</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Clasificación de visitas (paquetería, desconocidos,
-                            residentes) con IA embebida, reduciendo falsas alarmas y notificaciones innecesarias.</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">📞</span>
-                            <h5 class="font-bold text-white text-sm">Soporte Automatizado</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Agente conversacional para resolver incidencias de instalación
-                            y uso, escalando a humanos solo cuando sea estrictamente necesario.</p>
-                    </div>
-                </div>
-            </div>
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Interés Profesional</h2>
 
-            <!-- Horizonte 2 -->
-            <div class="mb-8 glass-card p-6 rounded-xl"
-                style="box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); border: 1px solid rgba(236, 72, 153, 0.4);">
-                <div class="flex items-start gap-4 mb-4">
-                    <div
-                        class="bg-pink-500/20 text-pink-400 font-extrabold text-2xl w-14 h-14 flex items-center justify-center rounded-lg shrink-0 border border-pink-500/40">
-                        H2
-                    </div>
-                    <div>
-                        <h4 class="text-2xl font-bold text-pink-300 mb-1">Horizonte 2 — Expandir el Negocio Existente
-                        </h4>
-                        <p class="text-sm text-slate-400">12 – 36 meses · Nuevas capacidades y mercados adyacentes</p>
-                    </div>
-                </div>
-                <p class="text-slate-300 mb-5">
-                    Extender la propuesta de valor del videoportero hacia servicios de seguridad, gestión de accesos y
-                    automatización del hogar o edificio.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🏢</span>
-                            <h5 class="font-bold text-white text-sm">Gestión Predictiva de Accesos</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">IA que aprende patrones de entrada/salida por residente y
-                            sugiere reglas automáticas de acceso para comunidades y oficinas.</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🛡️</span>
-                            <h5 class="font-bold text-white text-sm">Seguridad Proactiva</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Detección de comportamientos anómalos en zonas comunes con
-                            análisis de vídeo en tiempo real, generando alertas antes de que ocurra un incidente.</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">📊</span>
-                            <h5 class="font-bold text-white text-sm">Dashboard Analítico para Comunidades</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Panel con métricas de uso, picos de tráfico y recomendaciones
-                            IA para optimizar recursos de conserjería y mantenimiento.</p>
-                    </div>
-                </div>
+            <div class="card p-6 rounded-xl">
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                        <span class="text-gray-300">Desarrollo de aplicaciones <strong
+                                class="text-gray-200">Front-end</strong> y <strong
+                                class="text-gray-200">Back-end</strong>, con interés en arquitecturas escalables y
+                            mantenibles.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                        <span class="text-gray-300"><strong class="text-gray-200">Machine Learning, Big Data e
+                                IoT</strong> aplicados al sector de seguridad y automatización de edificios.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                        <span class="text-gray-300"><strong class="text-gray-200">Ecosistema de IA actual:</strong>
+                            Integración de LLMs, agentes autónomos y arquitecturas RAG. Soluciones on-premise y edge
+                            computing para privacidad.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                        <span class="text-gray-300"><strong class="text-gray-200">Arquitectura de
+                                microservicios</strong> y patrones event-driven para orquestación de servicios
+                            inteligentes.</span>
+                    </li>
+                </ul>
             </div>
+        </section>
 
-            <!-- Horizonte 3 -->
-            <div class="mb-4 glass-card p-6 rounded-xl"
-                style="box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); border: 1px solid rgba(234, 179, 8, 0.4);">
-                <div class="flex items-start gap-4 mb-4">
-                    <div
-                        class="bg-yellow-500/20 text-yellow-400 font-extrabold text-2xl w-14 h-14 flex items-center justify-center rounded-lg shrink-0 border border-yellow-500/40">
-                        H3
-                    </div>
-                    <div>
-                        <h4 class="text-2xl font-bold text-yellow-300 mb-1">Horizonte 3 — Transformar el Negocio</h4>
-                        <p class="text-sm text-slate-400">36 – 60 meses · Nuevos modelos de negocio disruptivos</p>
-                    </div>
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Habilidades</h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="card p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-2">💡</p>
+                    <p class="text-gray-100 font-semibold">Creatividad</p>
                 </div>
-                <p class="text-slate-300 mb-5">
-                    Reinventar el rol del videoportero como nodo central de una plataforma de servicios inteligentes
-                    para edificios y ciudades conectadas.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🌐</span>
-                            <h5 class="font-bold text-white text-sm">Plataforma de Servicios Edificio-as-a-Service</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">El videoportero se convierte en hub de un marketplace:
-                            limpieza, paquetería inteligente, teleasistencia médica y gestión energética.</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🤖</span>
-                            <h5 class="font-bold text-white text-sm">Concierge Autónomo con Agentes IA</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Agentes de IA que gestionan reservas, coordinan proveedores y
-                            resuelven incidencias del edificio de forma completamente autónoma.</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-lg border border-slate-700">
-                        <div class="flex items-center mb-2">
-                            <span class="text-xl mr-2">🏙️</span>
-                            <h5 class="font-bold text-white text-sm">Smart Building Interoperable</h5>
-                        </div>
-                        <p class="text-xs text-slate-400">Integración con infraestructura urbana inteligente: semáforos
-                            para emergencias, gestión de flotas de reparto y redes energéticas comunitarias.</p>
-                    </div>
+                <div class="card p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-2">🤝</p>
+                    <p class="text-gray-100 font-semibold">Trabajo en equipo</p>
+                </div>
+                <div class="card p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-2">🔄</p>
+                    <p class="text-gray-100 font-semibold">Adaptación</p>
+                </div>
+                <div class="card p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-2">⚡</p>
+                    <p class="text-gray-100 font-semibold">Proactividad</p>
+                </div>
+                <div class="card p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-2">🎯</p>
+                    <p class="text-gray-100 font-semibold">Resolución de problemas</p>
+                </div>
+                <div class="card p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-2">💬</p>
+                    <p class="text-gray-100 font-semibold">Comunicación</p>
                 </div>
             </div>
         </section>
 
     </div>
 
-    <script>
-        const wrapLabel = (label) => {
-            if (label.length <= 16) return label;
-            let words = label.split(' ');
-            let lines = [];
-            let currentLine = '';
-            for (let word of words) {
-                if ((currentLine + word).length > 16) {
-                    if (currentLine.length > 0) lines.push(currentLine.trim());
-                    currentLine = word + ' ';
-                } else {
-                    currentLine += word + ' ';
-                }
-            }
-            if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-            return lines;
-        };
-
-        const globalTooltipConfig = {
-            callbacks: {
-                title: function (tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    if (Array.isArray(label)) {
-                        return label.join(' ');
-                    } else {
-                        return label;
-                    }
-                }
-            }
-        };
-
-        Chart.defaults.color = '#cbd5e1';
-        Chart.defaults.font.family = "'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-
-        const radarLabelsRaw = [
-            'Privacidad de Usuario',
-            'Control de Datos',
-            'Despliegue en Edge',
-            'Independencia (No Lock-in)',
-            'Rendimiento Bruto (Nube)'
-        ];
-        const radarLabels = radarLabelsRaw.map(wrapLabel);
-
-        const ctxRadar = document.getElementById('ecosystemChart').getContext('2d');
-        new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-                labels: radarLabels,
-                datasets: [
-                    {
-                        label: 'Modelos Propietarios',
-                        data: [1, 2, 1, 1, 5],
-                        backgroundColor: 'rgba(6, 182, 212, 0.2)',
-                        borderColor: 'rgba(6, 182, 212, 1)',
-                        pointBackgroundColor: 'rgba(6, 182, 212, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(6, 182, 212, 1)'
-                    },
-                    {
-                        label: 'Modelos Open-Weight',
-                        data: [5, 5, 4, 4, 3],
-                        backgroundColor: 'rgba(236, 72, 153, 0.2)',
-                        borderColor: 'rgba(236, 72, 153, 1)',
-                        pointBackgroundColor: 'rgba(236, 72, 153, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(236, 72, 153, 1)'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                        pointLabels: { color: '#f8fafc', font: { size: 11 } },
-                        ticks: { display: false, min: 0, max: 5 }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#f8fafc' } },
-                    tooltip: globalTooltipConfig
-                }
-            }
-        });
-
-        const barLabelsRaw = [
-            'Cultura (Marketing vs SWE)',
-            'Datos (Silos y Calidad)',
-            'Tecnología (Legacy)'
-        ];
-        const barLabels = barLabelsRaw.map(wrapLabel);
-
-        const ctxBar = document.getElementById('barriersChart').getContext('2d');
-        new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: barLabels,
-                datasets: [
-                    {
-                        label: 'Severidad Barrera',
-                        data: [8, 9, 7],
-                        backgroundColor: 'rgba(248, 113, 113, 0.8)',
-                        borderRadius: 4
-                    },
-                    {
-                        label: 'Eficacia Mitigación',
-                        data: [9, 8, 8],
-                        backgroundColor: 'rgba(74, 222, 128, 0.8)',
-                        borderRadius: 4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 10,
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#cbd5e1' }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: globalTooltipConfig
-                }
-            }
-        });
-    </script>
 </body>
 
 </html>
