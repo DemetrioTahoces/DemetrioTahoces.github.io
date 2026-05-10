@@ -19,7 +19,7 @@ Desarrollo del ecosistema IoT y aplicaciones móviles para una compañía líder
 - Transición Tecnológica: Formé parte del equipo clave en la migración desde Opendit, asegurando la disponibilidad del servicio y la integridad de los datos para miles de usuarios durante el cambio de infraestructura.
 - Early Adopter en IA: Integración y testeo pionero del ecosistema de agentes y skills con Copilot, optimizando el flujo de desarrollo y automatizando tareas repetitivas de lógica de negocio y testing.
 - Infraestructura y Disponibilidad: Colaboro en el despliegue y mantenimiento de microservicios sobre Kubernetes, garantizando comunicaciones fluidas mediante RabbitMQ y Redis.
-- **Stack:** Spring Boot, NestJS, Hexagonal Architecture, DDD, Unit Testing.
+- **Stack:** Spring Boot, NestJS, Hexagonal Architecture, DDD, Testing.
 - **Infra:** Kubernetes (ConfigMaps/Secrets), GitHub, GitHub Actions, OpenAPI, MongoDB, PostgreSQL, Redis, RabbitMQ.
 
 ### Backend Engineer — Opendit
