@@ -20,7 +20,7 @@ No solo escribo código; diseño sistemas. Mi experiencia en entornos de alta ex
 
 - **Diseño basado en el dominio (DDD):** Implementación de arquitecturas hexagonales para separar la lógica de negocio de la infraestructura.
 - **Sistemas Distribuidos:** Uso de patrones Event-Driven y herramientas como DAPR para crear microservicios desacoplados y resilientes.
-- **Mantenibilidad:** Fiel defensor del Clean Code y de que el código debe ser leído por humanos y solo accidentalmente ejecutado por máquinas.
+- **Mantenibilidad:** Fiel defensor del Clean Code y de que el código debe ser legible por humanos.
 
 ### 2. El Dato como Activo (Data & IoT)
 
@@ -43,10 +43,11 @@ Actualmente estoy liderando mi propia transición hacia la IA de segunda generac
 
 | Etapa | Foco Principal | Logro Clave |
 |-------|----------------|-------------|
-| Fundación (Teleco) | Señal y Redes | Aplicación de Redes Neuronales en arrays de antenas (2017). |
-| Construcción (Software) | Backend & Mobile | Desarrollo de sistemas VoIP y aplicaciones críticas en tiempo real. |
+| Fundación (Teleco) | Teoría de Señal e IA | Aplicación de Redes Neuronales en arrays de antenas (2017). |
+| Construcción (Software) | Backend & Mobile | Desarrollo Android y aplicaciones backend críticas en tiempo real. |
+| Pipelines (Datos) | Datos | Pipelines de datos masivos (Sistemas de QA). |
 | Escalado (Seniority) | Arquitectura & IoT | Liderazgo técnico en Opendit, implementando DAPR y patrones BFF. |
-| Futuro (IA) | Sistemas Inteligentes | Especialización en IA Agéntica para automatizar procesos de decisión. |
+| Futuro (IA) | Sistemas Inteligentes | Especialización en IA Agéntica para automatizar procesos. |
 
 ---
 
