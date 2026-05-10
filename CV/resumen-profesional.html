@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Profesional - Demetrio Tahoces</title>
+    <meta name="description" content="Software Engineer especializado en Backend, IoT e IA Agéntica.">
+    <meta property="og:title" content="Resumen Profesional - Demetrio Tahoces">
+    <meta property="og:description" content="Software Engineer especializado en Backend, IoT e IA Agéntica.">
+    <meta property="og:type" content="profile">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080f1c;
+            color: #d1d5db;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 50%, #1d4ed8 100%);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            color: #e0e7ff;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #3b82f6;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .pillar-card {
+            border-left: 4px solid #3b82f6;
+            background: #111827;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .pillar-card:hover {
+            border-left-color: #60a5fa;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+        }
+
+        .evolution-table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .evolution-table th {
+            background: linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%);
+            color: #e0e7ff;
+        }
+
+        .evolution-table tr:nth-child(even) td {
+            background: #0f1d2e;
+        }
+
+        .evolution-table tr:hover td {
+            background: #1e3a5f;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, #0f1d35 0%, #1a3a6e 50%, #0f2040 100%);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .badge {
+            background: #1e3a5f;
+            border: 1px solid #2563eb;
+            color: #bfdbfe;
+        }
+
+        @media print {
+            body { background: white; color: black; }
+            .header-bg { background: #f3f4f6; box-shadow: none; border: 1px solid #ddd; }
+            .card { box-shadow: none; border: 1px solid #ddd; opacity: 1 !important; transform: none !important; }
+            .pillar-card { border: 1px solid #ddd; box-shadow: none; }
+            .section-divider { display: none; }
+        }
+    </style>
+</head>
+
+<body class="antialiased p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+
+        <header class="header-bg rounded-2xl p-10 mb-10 text-center shadow-xl relative overflow-hidden">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
+                Demetrio
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-200 mb-4">Software Engineer</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">Backend & Core</span>
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">IoT & Datos</span>
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">IA Agéntica & RAG</span>
+            </div>
+        </header>
+
+        <section class="mb-12">
+            <div class="card p-8 rounded-xl">
+                <h2 class="text-2xl font-bold text-gray-100 mb-6 section-title">Visión General</h2>
+                <p class="text-gray-300 leading-relaxed text-lg">
+                    Soy un Ingeniero de Telecomunicación que evolucionó hacia la ingeniería de software por pura vocación. Mi trayectoria no es lineal, sino una progresión lógica de complejidad: empecé creando aplicaciones en Android, pasé a implementar sistemas de backend y de ahi a orquestar el flujo de datos masivos y creación de aplicaciones (Backend e IoT) y actualmente estoy interesado en transicionar hacia implementación de IA Agéntica y flujos de trabajo con IA.                </p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <div class="bg-blue-900/30 border border-blue-700/50 rounded-lg px-4 py-2 text-center">
+                        <p class="text-2xl mb-1">📐</p>
+                        <p class="text-blue-300 text-sm font-medium">Escalabilidad Pragmática</p>
+                    </div>
+                    <div class="bg-blue-900/30 border border-blue-700/50 rounded-lg px-4 py-2 text-center">
+                        <p class="text-2xl mb-1">🏗️</p>
+                        <p class="text-blue-300 text-sm font-medium">Arquitectura Limpia</p>
+                    </div>
+                    <div class="bg-blue-900/30 border border-blue-700/50 rounded-lg px-4 py-2 text-center">
+                        <p class="text-2xl mb-1">🔒</p>
+                        <p class="text-blue-300 text-sm font-medium">IA como palanca técnica</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Pilares de Valor</h2>
+
+            <div class="space-y-6">
+                <div class="card pillar-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">⚙️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Arquitectura y Robustez (Backend Core)</h3>
+                            <p class="text-gray-400 text-sm mb-4">No solo escribo código; diseño sistemas. Mi experiencia en entornos de alta exigencia me ha enseñado que la agilidad sin arquitectura es deuda técnica inmediata.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Diseño basado en el dominio (DDD):</strong>
+                                <p class="text-gray-400 text-sm">Implementación de arquitecturas hexagonales para separar la lógica de negocio de la infraestructura.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Sistemas Distribuidos:</strong>
+                                <p class="text-gray-400 text-sm">Uso de patrones Event-Driven y herramientas como DAPR para crear microservicios desacoplados y resilientes.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Mantenibilidad:</strong>
+                                <p class="text-gray-400 text-sm">Fiel defensor del Clean Code y de que el código debe ser leído por humanos y solo accidentalmente ejecutado por máquinas.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card pillar-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">📊</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">El Dato como Activo (Data & IoT)</h3>
+                            <p class="text-gray-400 text-sm mb-4">He gestionado el ciclo de vida completo del dato en sectores críticos.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">IoT a Gran Escala:</strong>
+                                <p class="text-gray-400 text-sm">Desde la señalización física en dispositivos de seguridad hasta el backend de control en Fermax/Opendit.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Big Data en Tiempo Real:</strong>
+                                <p class="text-gray-400 text-sm">Diseño de pipelines con Kafka para procesar volúmenes masivos en el ecosistema de Inditex, priorizando siempre la integridad y el QA del dato.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card pillar-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">🤖</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">La Frontera de la IA (IA Agéntica & RAG)</h3>
+                            <p class="text-gray-400 text-sm mb-4">Actualmente estoy liderando mi propia transición hacia la IA de segunda generación. No me limito a consumir APIs; busco la integración profunda de modelos en el flujo de software.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Arquitecturas RAG:</strong>
+                                <p class="text-gray-400 text-sm">Optimización de la recuperación de información para eliminar alucinaciones en entornos corporativos.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Agentes Autónomos:</strong>
+                                <p class="text-gray-400 text-sm">Desarrollo de sistemas capaces de razonar y ejecutar tareas complejas mediante herramientas como LangChain y CrewAI.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <strong class="text-gray-200">Soberanía del Dato:</strong>
+                                <p class="text-gray-400 text-sm">Interés profundo en soluciones On-premise y Edge Computing para garantizar que la IA sea privada y segura.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Evolución Técnica</h2>
+
+            <div class="card p-6 rounded-xl overflow-x-auto">
+                <table class="evolution-table w-full text-left">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-3 rounded-tl-xl">Etapa</th>
+                            <th class="px-4 py-3">Foco Principal</th>
+                            <th class="px-4 py-3 rounded-tr-xl">Logro Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-300">
+                        <tr>
+                            <td class="px-4 py-3 font-medium text-gray-100">Fundación (Teleco)</td>
+                            <td class="px-4 py-3">Señal y Redes</td>
+                            <td class="px-4 py-3">Aplicación de Redes Neuronales en arrays de antenas (2017).</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-medium text-gray-100">Construcción (Software)</td>
+                            <td class="px-4 py-3">Backend & Mobile</td>
+                            <td class="px-4 py-3">Desarrollo de sistemas VoIP y aplicaciones críticas en tiempo real.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-medium text-gray-100">Escalado (Seniority)</td>
+                            <td class="px-4 py-3">Arquitectura & IoT</td>
+                            <td class="px-4 py-3">Liderazgo técnico en Opendit, implementando DAPR y patrones BFF.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-medium text-gray-100 rounded-bl-xl">Futuro (IA)</td>
+                            <td class="px-4 py-3">Sistemas Inteligentes</td>
+                            <td class="px-4 py-3 rounded-br-xl">Especialización en IA Agéntica para automatizar procesos de decisión.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Filosofía de Trabajo</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="card p-6 rounded-xl text-center">
+                    <div class="w-16 h-16 bg-blue-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🎓</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-100 mb-2">Mentoría Activa</h3>
+                    <p class="text-gray-400 text-sm">Creo en el crecimiento colectivo. He mentorizado perfiles junior no solo en sintaxis, sino en patrones de diseño y mentalidad de ingeniería.</p>
+                </div>
+                <div class="card p-6 rounded-xl text-center">
+                    <div class="w-16 h-16 bg-blue-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🚀</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-100 mb-2">Early Adopter</h3>
+                    <p class="text-gray-400 text-sm">Mi historial con Copilot en Fermax demuestra que busco la eficiencia constante. La IA no sustituye al ingeniero, lo potencia.</p>
+                </div>
+                <div class="card p-6 rounded-xl text-center">
+                    <div class="w-16 h-16 bg-blue-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🧩</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-100 mb-2">Resolución de Problemas</h3>
+                    <p class="text-gray-400 text-sm">Mi formación como Ingeniero de Teleco me dio una base matemática y analítica para no asustarme ante problemas de bajo nivel (protocolos, latencias) ni de alto nivel (orquestación cloud).</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <div class="card p-8 rounded-xl bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-700/50">
+                <h2 class="text-2xl font-bold text-gray-100 mb-4 section-title">¿Qué busco ahora?</h2>
+                <p class="text-gray-300 leading-relaxed text-lg">
+                    Busco retos donde la Ingeniería de Software de alta calidad se encuentre con la Inteligencia Artificial. Me motiva diseñar la infraestructura que permitirá a la próxima generación de empresas ser <strong class="text-blue-300">"AI-First"</strong>, sin sacrificar la estabilidad ni la privacidad que los sistemas críticos requieren.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var cards = document.querySelectorAll('.card');
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                cards.forEach(function (card) { observer.observe(card); });
+            } else {
+                cards.forEach(function (card) { card.classList.add('visible'); });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
