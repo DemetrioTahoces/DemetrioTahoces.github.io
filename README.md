@@ -75,7 +75,7 @@ Integración de servicios inteligentes y desarrollo de aplicaciones para una pla
 
 ## Formación Académica
 
-### Máster en IA Aplicada y Optimización de Procesos — VisualFaktory y Panel
+### Máster en IA Aplicada y Optimización de Procesos — Utamed
 **2026**
 - IA Agéntica y Arquitecturas RAG
 - Ecosistemas de IA: Desarrollo de soluciones personalizadas y despliegue de arquitecturas propias para liderar la transición estratégica de las empresas hacia la Inteligencia Artificial.
