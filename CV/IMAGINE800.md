@@ -6,7 +6,7 @@
 
 ## Contexto
 
-Imagine800 fue mi primer empleo y el contexto en el que desarrollé mi Trabajo de Fin de Máster. El TFM **no estaba relacionado** con la empresa: la aplicación que construí profesionalmente en Imagine800 **era literalmente el TFM**. Un mismo proyecto entregado simultáneamente a la empresa y a la universidad, lo que refleja una integración real entre formación e industria.
+Imagine800 fue mi primer empleo y el contexto en el que desarrollé mi Trabajo de Fin de Máster. Entregado simultáneamente a la empresa y a la universidad, lo que refleja una integración real entre formación e industria.
 
 ---
 
