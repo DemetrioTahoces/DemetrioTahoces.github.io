@@ -101,15 +101,15 @@ Integración de servicios inteligentes y desarrollo de aplicaciones para una pla
 
 ## Competencias Técnicas
 
-- **Backend & Core**: Java (Spring Boot), TypeScript/Node.js (NestJS), Python, Arquitectura Hexagonal, DDD, CQRS.
+- **Backend & Core**: Java (Spring Boot), TypeScript/Node.js (NestJS), Python, Arquitectura Hexagonal, DDD, CQRS, BFF.
 
 - **Data & Event-Driven**: Apache Kafka, RabbitMQ, PostgreSQL, MongoDB, Redis, Snowflake.
 
-- **Cloud & Infra**: Kubernetes (K8s), Docker, DAPR, Azure Service Bus, Azure DevOps, Github, GitHub Actions.
+- **Cloud & Infra**: Kubernetes (K8s), Docker, DAPR, Azure Service Bus, Azure DevOps, Github.
 
 - **IA & Agentes (Enfoque actual)**: Arquitecturas RAG, LangChain/CrewAI, Integración de Agentes Autónomos, Prompting.
 
-- **Comunicaciones & Otros**: GraphQL, gRPC, OAuth2, WebRTC, VoIP (Asterisk), Dart (Flutter).
+- **Comunicaciones & Otros**: OpenAPI, GraphQL, gRPC, OAuth2, WebRTC, VoIP (Asterisk), Dart (Flutter).
 
 ---
 

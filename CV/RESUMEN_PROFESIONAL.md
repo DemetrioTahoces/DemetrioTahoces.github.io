@@ -16,7 +16,7 @@ Mi filosofía se resume en tres pilares: **escalabilidad pragmática**, **arquit
 
 ### 1. Arquitectura y Robustez (Backend Core)
 
-No solo escribo código; diseño sistemas. Mi experiencia en entornos de alta exigencia me ha enseñado que la agilidad sin arquitectura es deuda técnica inmediata.
+No solo escribo código; diseño sistemas.
 
 - **Diseño basado en el dominio (DDD):** Implementación de arquitecturas hexagonales para separar la lógica de negocio de la infraestructura.
 - **Sistemas Distribuidos:** Uso de patrones Event-Driven y herramientas como DAPR para crear microservicios desacoplados y resilientes.
@@ -26,7 +26,7 @@ No solo escribo código; diseño sistemas. Mi experiencia en entornos de alta ex
 
 He gestionado el ciclo de vida completo del dato en sectores críticos:
 
-- **IoT a Gran Escala:** Desde la señalización física en dispositivos de seguridad hasta el backend de control en Fermax/Opendit.
+- **IoT a Gran Escala:** Desde la señalización física en dispositivos hasta el backend de control en Fermax/Opendit.
 - **Big Data en Tiempo Real:** Diseño de pipelines con Kafka para procesar volúmenes masivos en el ecosistema de Inditex, priorizando siempre la integridad y el QA del dato.
 
 ### 3. La Frontera de la IA (IA Agéntica & RAG)
@@ -34,7 +34,7 @@ He gestionado el ciclo de vida completo del dato en sectores críticos:
 Actualmente estoy liderando mi propia transición hacia la IA de segunda generación. No me limito a consumir APIs; busco la integración profunda de modelos en el flujo de software:
 
 - **Arquitecturas RAG:** Optimización de la recuperación de información para eliminar alucinaciones en entornos corporativos.
-- **Agentes Autónomos:** Desarrollo de sistemas capaces de razonar y ejecutar tareas complejas mediante herramientas como LangChain y CrewAI.
+- **Agentes Autónomos:** Desarrollo de sistemas capaces de razonar y ejecutar tareas complejas mediante herramientas como LangChain y LangGraph.
 - **Soberanía del Dato:** Interés profundo en soluciones On-premise y Edge Computing para garantizar que la IA sea privada y segura.
 
 ---
