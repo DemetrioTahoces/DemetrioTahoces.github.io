@@ -161,15 +161,7 @@
 
     <div class="max-w-5xl mx-auto">
 
-        <header class="header-bg rounded-2xl p-10 mb-8 text-center shadow-xl relative overflow-hidden">
-            <a href="mailto:tonitahoces@gmail.com?subject=Solicitud%20de%20CV&body=Hola%20Demetrio,%0A%0AMe%20gustar%C3%ADa%20recibir%20una%20copia%20de%20tu%20CV%20en%20PDF.%0A%0ASaludos"
-                class="btn-cv absolute top-6 right-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm z-10">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Solicitar CV en PDF
-            </a>
+        <header class="header-bg rounded-2xl p-10 mb-8 text-center shadow-xl">
             <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
                 Demetrio
             </h1>
@@ -196,6 +188,28 @@
                 </div>
             </div>
         </header>
+
+        <div class="flex flex-col sm:flex-row gap-3 mb-8 justify-center">
+            <a href="mailto:tonitahoces@gmail.com?subject=Solicitud%20de%20CV&body=Hola%20Demetrio,%0A%0AMe%20gustar%C3%ADa%20recibir%20una%20copia%20de%20tu%20CV%20en%20PDF.%0A%0ASaludos"
+                class="btn-cv inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Solicitar CV en PDF
+            </a>
+            <button type="button" disabled
+                class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm cursor-not-allowed opacity-60"
+                style="background:#1e3a5f; border:1px solid #2563eb; color:#bfdbfe;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-3 3-3-3z" />
+                </svg>
+                Asistente (chatbot)
+                <span
+                    style="font-size:0.7rem; background:#1d4ed8; color:#bfdbfe; padding:1px 8px; border-radius:9999px;">Próximamente</span>
+            </button>
+        </div>
 
         <section class="mb-12">
             <div class="card p-8 rounded-xl">
@@ -535,7 +549,7 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold text-gray-100 mb-2">IA & Agentes (Enfoque actual)</h3>
-                    <p class="text-gray-400 text-sm">Arquitecturas RAG, LangChain/CrewAI, Integración de Agentes
+                    <p class="text-gray-400 text-sm">Arquitecturas RAG, LangChain/LangGraph, Integración de Agentes
                         Autónomos, Prompting.</p>
                 </div>
                 <div>
@@ -553,13 +567,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="card p-6 rounded-xl text-center">
                     <div class="flex justify-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="48" height="24" class="rounded shadow-sm">
-                            <clipPath id="uk-t"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath>
-                            <path d="M0,0v30h60v-30z" fill="#012169"/>
-                            <path d="M0,0l60,30m0-30l-60,30" stroke="#fff" stroke-width="6"/>
-                            <path d="M0,0l60,30m0-30l-60,30" clip-path="url(#uk-t)" stroke="#C8102E" stroke-width="4"/>
-                            <path d="M30,0v30m-30-15h60" stroke="#fff" stroke-width="10"/>
-                            <path d="M30,0v30m-30-15h60" stroke="#C8102E" stroke-width="6"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="48" height="24"
+                            class="rounded shadow-sm">
+                            <clipPath id="uk-t">
+                                <path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z" />
+                            </clipPath>
+                            <path d="M0,0v30h60v-30z" fill="#012169" />
+                            <path d="M0,0l60,30m0-30l-60,30" stroke="#fff" stroke-width="6" />
+                            <path d="M0,0l60,30m0-30l-60,30" clip-path="url(#uk-t)" stroke="#C8102E" stroke-width="4" />
+                            <path d="M30,0v30m-30-15h60" stroke="#fff" stroke-width="10" />
+                            <path d="M30,0v30m-30-15h60" stroke="#C8102E" stroke-width="6" />
                         </svg>
                     </div>
                     <p class="text-gray-100 font-semibold text-lg">Inglés</p>
@@ -570,9 +587,10 @@
                 </div>
                 <div class="card p-6 rounded-xl text-center">
                     <div class="flex justify-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="48" height="32" class="rounded shadow-sm">
-                            <rect width="3" height="2" fill="#c60b1e"/>
-                            <rect y="0.5" width="3" height="1" fill="#ffc400"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="48" height="32"
+                            class="rounded shadow-sm">
+                            <rect width="3" height="2" fill="#c60b1e" />
+                            <rect y="0.5" width="3" height="1" fill="#ffc400" />
                         </svg>
                     </div>
                     <p class="text-gray-100 font-semibold text-lg">Español</p>
