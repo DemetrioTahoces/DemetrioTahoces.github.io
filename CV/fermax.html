@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Engineer en Fermax - Demetrio Tahoces</title>
+    <meta name="description" content="Experiencia como Software Engineer en Fermax: ecosistema IoT, DDD, Domain Events y adopción de IA.">
+    <meta property="og:title" content="Software Engineer en Fermax - Demetrio Tahoces">
+    <meta property="og:description" content="Experiencia como Software Engineer en Fermax: ecosistema IoT, DDD, Domain Events y adopción de IA.">
+    <meta property="og:type" content="profile">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #080f1c; color: #d1d5db; }
+        .section-divider { height: 2px; background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 50%, #1d4ed8 100%); }
+        .section-title { position: relative; display: inline-block; color: #e0e7ff; }
+        .section-title::after { content: ""; position: absolute; bottom: -8px; left: 0; width: 60px; height: 3px; background: #3b82f6; }
+        .card { background: #111827; border: 1px solid #1f2937; transition: box-shadow 0.3s ease, transform 0.3s ease; opacity: 0; transform: translateY(16px); }
+        .card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .card:hover { box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25); transform: translateY(-2px); }
+        .detail-card { border-left: 4px solid #3b82f6; background: #111827; transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+        .detail-card:hover { border-left-color: #60a5fa; box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25); }
+        .header-bg { background: linear-gradient(135deg, #0f1d35 0%, #1a3a6e 50%, #0f2040 100%); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3); }
+        .badge { background: #1e3a5f; border: 1px solid #2563eb; color: #bfdbfe; }
+        .back-link { color: #60a5fa; transition: color 0.2s ease; }
+        .back-link:hover { color: #93c5fd; }
+        @media print {
+            body { background: white; color: black; }
+            .header-bg { background: #f3f4f6; box-shadow: none; border: 1px solid #ddd; }
+            .card { box-shadow: none; border: 1px solid #ddd; opacity: 1 !important; transform: none !important; }
+            .detail-card { border: 1px solid #ddd; box-shadow: none; }
+            .section-divider { display: none; }
+        }
+    </style>
+</head>
+
+<body class="antialiased p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" /></svg>
+            Volver al CV
+        </a>
+
+        <header class="header-bg rounded-2xl p-10 mb-10 text-center shadow-xl relative overflow-hidden">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">Software Engineer</h1>
+            <p class="text-xl md:text-2xl text-blue-200 mb-2">
+                <a href="https://www.fermax.com/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Fermax</a>
+            </p>
+            <p class="text-blue-300 text-sm mb-4">01/2025 — Presente</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">Spring Boot</span>
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">NestJS</span>
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">DDD</span>
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">Kubernetes</span>
+                <span class="badge px-4 py-2 rounded-full text-sm font-medium">GitHub Copilot</span>
+            </div>
+        </header>
+
+        <section class="mb-12">
+            <div class="card p-8 rounded-xl">
+                <h2 class="text-2xl font-bold text-gray-100 mb-6 section-title">Contexto</h2>
+                <p class="text-gray-300 leading-relaxed text-lg">
+                    Fermax es una compañía líder con más de 75 años de trayectoria en el sector de videoporteros y control de accesos. Tras la subrogación técnica del equipo de Opendit, me incorporé al equipo de desarrollo para continuar la evolución del ecosistema IoT y las aplicaciones móviles de la compañía. El reto principal: integrar el conocimiento técnico adquirido en la etapa startup dentro de una organización de mayor escala, manteniendo la agilidad y la calidad del código.
+                </p>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Contribuciones Clave</h2>
+
+            <div class="space-y-6">
+                <div class="card detail-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">🏗️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Evolución de Arquitectura con Domain Events</h3>
+                            <p class="text-gray-400 text-sm mb-4">Impulso estratégico del uso de Domain Events dentro de la arquitectura DDD del backend IoT.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Promoví la adopción de Domain Events como mecanismo de comunicación entre bounded contexts, mejorando significativamente el desacoplamiento entre microservicios.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">La gestión asíncrona de eventos ha facilitado una escalabilidad horizontal mucho más natural, permitiendo que nuevos servicios se suscriban a eventos existentes sin modificar los productores.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Reducción de la complejidad accidental en la comunicación inter-servicio, sustituyendo llamadas síncronas por publicación de eventos de dominio.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card detail-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">🔄</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Transición Tecnológica desde Opendit</h3>
+                            <p class="text-gray-400 text-sm mb-4">Migración crítica de infraestructura y servicios con zero-downtime.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Participación clave en el equipo de migración desde Opendit a Fermax, asegurando la disponibilidad del servicio y la integridad de los datos para miles de usuarios activos.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Coordinación de la migración de bases de datos (MongoDB y PostgreSQL), reconfiguración de servicios cloud y validación end-to-end de la integridad de datos.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Adaptación del equipo técnico a los procesos y cultura de una organización de mayor escala, manteniendo las buenas prácticas de ingeniería adquiridas en el entorno startup.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card detail-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">🤖</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Early Adopter en IA (GitHub Copilot)</h3>
+                            <p class="text-gray-400 text-sm mb-4">Integración pionera de herramientas de IA en el flujo de desarrollo del equipo.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Testeo y adopción pionera del ecosistema de agentes y skills de GitHub Copilot dentro del equipo de desarrollo, siendo referente en su uso avanzado.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Automatización de tareas repetitivas: generación de boilerplate, tests unitarios, documentación de APIs y refactoring de código legacy.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Evangelización del uso de IA como herramienta de productividad dentro del equipo, demostrando con métricas reales la reducción de tiempo en tareas mecánicas.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card detail-card p-6 rounded-xl">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">☸️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Infraestructura y Disponibilidad</h3>
+                            <p class="text-gray-400 text-sm mb-4">Despliegue y mantenimiento de microservicios en producción sobre Kubernetes.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Gestión de ConfigMaps y Secrets en Kubernetes para la configuración segura y dinámica de los microservicios en producción.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Garantía de comunicaciones fluidas entre servicios mediante RabbitMQ (mensajería asíncrona con colas y exchanges) y Redis (caché distribuida y pub/sub).</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Automatización de despliegues mediante GitHub Actions, con pipelines de CI/CD que incluyen testing, linting y validación de contratos OpenAPI.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider mb-12 rounded-full"></div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Stack Técnico</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Backend & Arquitectura</h3>
+                    <p class="text-gray-400 text-sm">Spring Boot (Java), NestJS (TypeScript/Node.js), Arquitectura Hexagonal, Domain-Driven Design (DDD), Domain Events, Unit Testing.</p>
+                </div>
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Bases de Datos</h3>
+                    <p class="text-gray-400 text-sm">MongoDB (datos no estructurados e IoT), PostgreSQL (datos relacionales), Redis (caché distribuida y pub/sub).</p>
+                </div>
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Infraestructura & CI/CD</h3>
+                    <p class="text-gray-400 text-sm">Kubernetes (ConfigMaps/Secrets), GitHub, GitHub Actions, OpenAPI/Swagger.</p>
+                </div>
+                <div class="card p-6 rounded-xl">
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Mensajería & IA</h3>
+                    <p class="text-gray-400 text-sm">RabbitMQ (colas y exchanges), GitHub Copilot (agentes y skills para automatización de desarrollo).</p>
+                </div>
+            </div>
+        </section>
+
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-8 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" /></svg>
+            Volver al CV
+        </a>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var cards = document.querySelectorAll('.card');
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+                    });
+                }, { threshold: 0.1 });
+                cards.forEach(function (card) { observer.observe(card); });
+            } else { cards.forEach(function (card) { card.classList.add('visible'); }); }
+        });
+    </script>
+
+</body>
+
+</html>
