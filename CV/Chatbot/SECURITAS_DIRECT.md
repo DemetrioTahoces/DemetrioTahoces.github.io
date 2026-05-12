@@ -14,13 +14,13 @@ Como desarrollador en Vector ITC (ahora Softtek), trabajé para Securitas Direct
 
 ### 🔔 Operadores Automáticos de Señalización
 
-- Desarrollo de operadores que interpretaban señales de sensores de movimiento, detectores de apertura y cámaras en tiempo real.
-- Lógica de decisión automática sobre activación de alarmas y notificaciones a central.
+- Desarrollo de operadores que interpretaban señales de dispositivos de seguridad en tiempo real.
+- Lógica de decisión automática sobre activación de alarmas y notificaciones a la CRA (Central Receptora de Alarmas).
 - Reglas de negocio complejas para reducir falsos positivos sin comprometer la seguridad.
 
 ### 📡 Procesado de Señales en Tiempo Real
 
-- Transformación de datos brutos de dispositivos físicos en eventos de seguridad con contexto semántico.
+- Transformación de datos brutos de dispositivos físicos en eventos de seguridad mediante KSQL (Kafka SQL).
 - Apache Kafka avanzado: Connect para integración de fuentes, Streams y KSQL para procesamiento en vuelo, administración de brokers y topics.
 - Integración con servicios externos mediante clientes REST y SOAP para comunicación con sistemas legacy de seguridad.
 

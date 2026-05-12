@@ -15,7 +15,6 @@ Opendit fue una startup dedicada al desarrollo de soluciones IoT para el sector 
 ### ⚙️ Arquitectura DAPR
 
 - DAPR como capa de abstracción de infraestructura (mensajería, secrets, service discovery).
-- Sistema completamente agnóstico al cloud provider, facilitando portabilidad Azure/on-premise.
 - Sidecars por microservicio, eliminando dependencia con SDKs específicos.
 - Reducción de vendor lock-in y facilitación de tests de integración locales.
 
@@ -23,13 +22,13 @@ Opendit fue una startup dedicada al desarrollo de soluciones IoT para el sector 
 
 - Consolidación de múltiples llamadas API en una sola request, reduciendo latencia.
 - Respuestas adaptadas por cliente (iOS, Android, Web), evitando over/under-fetching.
+- Capa de seguridad centralizada en servicios BFF, ocultando el resto del backend a la red externa.
 - Evolución independiente de la API de cada cliente.
 
 ### 📊 Sistema de Telemetría con CQRS
 
 - Separación Commands (escrituras masivas IoT) vs Queries (consultas optimizadas).
 - Procesamiento de altos volúmenes sin comprometer rendimiento de lectura.
-- Proyecciones optimizadas para dashboards, históricos y alertas.
 
 ### ☁️ Ecosistema Cloud Azure
 

@@ -61,12 +61,12 @@
                         <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0"><span class="text-2xl">🔄</span></div>
                         <div>
                             <h3 class="text-xl font-bold text-gray-100 mb-2">Pipelines de Datos con Apache Kafka</h3>
-                            <p class="text-gray-400 text-sm">Ingesta y procesamiento de datos masivos con Kafka como backbone de mensajería.</p>
+                            <p class="text-gray-400 text-sm">Transformación y procesamiento de datos masivos con Kafka como backbone de mensajería.</p>
                         </div>
                     </div>
                     <ul class="space-y-3 ml-4">
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Desarrollo de pipelines de ingesta que procesaban flujos de datos de múltiples fuentes del ecosistema Inditex en tiempo real.</p></li>
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Uso avanzado de Kafka: Streams para transformaciones en vuelo, KSQL para consultas sobre flujos, y configuración de semántica Exactly Once para garantía de entrega.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Desarrollo de pipelines de transformación que procesaban flujos de datos de múltiples fuentes del ecosistema Inditex en tiempo real.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Uso avanzado de Kafka: Streams para transformaciones en vuelo y Exactly Once para garantía de entrega.</p></li>
                         <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Validaciones de integridad en cada etapa del pipeline, garantizando la consistencia del dato desde el origen hasta el almacenamiento final.</p></li>
                         <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Gestión de topics, particiones y consumer groups para optimizar el throughput y garantizar la ordenación de eventos críticos.</p></li>
                     </ul>
@@ -82,6 +82,7 @@
                     </div>
                     <ul class="space-y-3 ml-4">
                         <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Implementación de validaciones automáticas sobre los datos en tránsito, detectando anomalías, duplicados y datos incompletos en tiempo real.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Cálculo de métricas de integridad de los datos en tiempo real.</p></li>
                         <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Definición de reglas de calidad del dato adaptadas a los requisitos de negocio de cada dominio de Inditex.</p></li>
                     </ul>
                 </div>
@@ -110,7 +111,7 @@
                     </div>
                     <ul class="space-y-3 ml-4">
                         <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Integración con Snowflake para almacenamiento y consultas analíticas de alto rendimiento sobre datos históricos.</p></li>
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Modelado de datos optimizado para las necesidades analíticas del negocio.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Gráficos y consultas de métricas de QA sobre los datos almacenados.</p></li>
                     </ul>
                 </div>
             </div>
@@ -122,7 +123,7 @@
             <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Stack Técnico</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="card p-6 rounded-xl"><h3 class="text-lg font-semibold text-gray-100 mb-3">Backend</h3><p class="text-gray-400 text-sm">Java 11, Spring Boot, Lombok, API REST, Programación Funcional, SQL.</p></div>
-                <div class="card p-6 rounded-xl"><h3 class="text-lg font-semibold text-gray-100 mb-3">Streaming</h3><p class="text-gray-400 text-sm">Apache Kafka (Streams, KSQL, Consumers, Producers, Exactly Once).</p></div>
+                <div class="card p-6 rounded-xl"><h3 class="text-lg font-semibold text-gray-100 mb-3">Streaming</h3><p class="text-gray-400 text-sm">Apache Kafka (Streams, Consumers, Producers, Exactly Once).</p></div>
                 <div class="card p-6 rounded-xl"><h3 class="text-lg font-semibold text-gray-100 mb-3">Monitoreo</h3><p class="text-gray-400 text-sm">Grafana (dashboards y alertas).</p></div>
                 <div class="card p-6 rounded-xl"><h3 class="text-lg font-semibold text-gray-100 mb-3">Data & Infra</h3><p class="text-gray-400 text-sm">Snowflake (data warehouse), OpenShift, GitHub/Azure (CI/CD, Git), JIRA (Scrum).</p></div>
             </div>

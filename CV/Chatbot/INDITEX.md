@@ -14,14 +14,15 @@ A través de Nunegal Consulting, trabajé como Ingeniero de Datos para Inditex, 
 
 ### 🔄 Pipelines de Datos con Apache Kafka
 
-- Desarrollo de pipelines de ingesta que procesaban flujos de datos de múltiples fuentes en tiempo real.
-- Uso avanzado de Kafka: Streams para transformaciones en vuelo, KSQL para consultas sobre flujos, y semántica Exactly Once para garantía de entrega.
+- Desarrollo de pipelines de transformación que procesaban flujos de datos de múltiples fuentes en tiempo real.
+- Uso avanzado de Kafka: Streams para transformaciones en vuelo y Exactly Once para garantía de entrega.
 - Validaciones de integridad en cada etapa del pipeline.
 - Gestión de topics, particiones y consumer groups para optimizar throughput y garantizar ordenación.
 
 ### ✅ Quality Assurance de Datos en Tiempo Real
 
 - Validaciones automáticas sobre datos en tránsito: anomalías, duplicados y datos incompletos.
+- Cálculo de métricas de integridad de los datos en tiempo real.
 - Reglas de calidad del dato adaptadas a requisitos de negocio de cada dominio.
 
 ### 📈 Monitoreo con Grafana
@@ -32,7 +33,7 @@ A través de Nunegal Consulting, trabajé como Ingeniero de Datos para Inditex, 
 ### ❄️ Almacenamiento en Snowflake
 
 - Integración con Snowflake para consultas analíticas de alto rendimiento sobre datos históricos.
-- Modelado de datos optimizado para las necesidades analíticas del negocio.
+- Gráficos y consultas de métricas de QA sobre los datos almacenados.
 
 ---
 
@@ -41,7 +42,7 @@ A través de Nunegal Consulting, trabajé como Ingeniero de Datos para Inditex, 
 | Categoría | Tecnologías |
 |-----------|-------------|
 | **Backend** | Java 11, Spring Boot, Lombok, API REST, Programación Funcional, SQL |
-| **Streaming** | Apache Kafka (Streams, KSQL, Consumers, Producers, Exactly Once) |
+| **Streaming** | Apache Kafka (Streams, Consumers, Producers, Exactly Once) |
 | **Monitoreo** | Grafana (dashboards y alertas) |
 | **Data Warehouse** | Snowflake |
 | **Infraestructura** | OpenShift, GitHub/Azure (CI/CD, Git), JIRA (Scrum) |
