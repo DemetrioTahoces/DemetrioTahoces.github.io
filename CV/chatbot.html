@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Virtual - Demetrio Tahoces</title>
+    <meta name="description" content="Asistente virtual de IA sobre la experiencia profesional de Demetrio Tahoces.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080f1c;
+            color: #d1d5db;
+            background-image: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.4) 0%, transparent 60%);
+            background-attachment: fixed;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(31, 41, 55, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            color: #e2e8f0;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .suggestion-chip {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-chip:hover {
+            background: rgba(51, 65, 85, 0.8);
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        /* Markdown Styles for AI Messages */
+        .markdown-body p { margin-bottom: 0.75em; }
+        .markdown-body p:last-child { margin-bottom: 0; }
+        .markdown-body strong { color: #f8fafc; font-weight: 600; }
+        .markdown-body ul { list-style-type: disc; margin-left: 1.5em; margin-bottom: 0.75em; }
+        .markdown-body ol { list-style-type: decimal; margin-left: 1.5em; margin-bottom: 0.75em; }
+        .markdown-body li { margin-bottom: 0.25em; }
+        .markdown-body code { background: rgba(0,0,0,0.3); padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; font-family: monospace; color: #93c5fd; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
+
+    <div class="w-full max-w-4xl flex flex-col h-[90vh] card rounded-2xl overflow-hidden relative">
+        
+        <!-- Header -->
+        <header class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors" title="Volver al CV">
+                    <i class="ph ph-arrow-left text-xl"></i>
+                </a>
+                <div>
+                    <h1 class="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                        <i class="ph ph-robot text-blue-500"></i> Asistente Virtual
+                    </h1>
+                    <p class="text-xs text-slate-400">Pregúntame sobre la experiencia de Demetrio</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/20 border border-blue-900/50">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                <span class="text-xs font-medium text-blue-300">Online</span>
+            </div>
+        </header>
+
+        <!-- Chat Area -->
+        <main id="chat-container" class="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-6 scroll-smooth">
+            
+            <!-- Welcome Message -->
+            <div class="flex gap-4 max-w-[85%] animate-fade-in">
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-900/50 border border-blue-700/50 flex items-center justify-center text-blue-400">
+                    <i class="ph ph-robot"></i>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs text-slate-500 font-medium ml-1">Asistente IA</span>
+                    <div class="bg-slate-800/80 border border-slate-700 text-slate-200 rounded-2xl rounded-tl-none p-4 shadow-sm markdown-body">
+                        <p>¡Hola! Soy el asistente de IA del portfolio de Demetrio Tahoces. Estoy conectado a la información de su CV.</p>
+                        <p>¿En qué te puedo ayudar hoy?</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Suggestions -->
+        <div id="suggestions" class="p-4 flex flex-wrap gap-2 justify-center border-t border-slate-800/50 bg-slate-900/30">
+            <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2" onclick="fillInput('Resume brevemente la experiencia en Fermax')">
+                <i class="ph ph-briefcase"></i> Experiencia en Fermax
+            </button>
+            <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2" onclick="fillInput('¿En qué tecnologías de IA y backend es experto?')">
+                <i class="ph ph-code"></i> Tecnologías Backend e IA
+            </button>
+            <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2" onclick="fillInput('Enumera las empresas en las que ha trabajado')">
+                <i class="ph ph-buildings"></i> Trayectoria
+            </button>
+        </div>
+
+        <!-- Input Area -->
+        <footer class="p-4 bg-slate-900/80 border-t border-slate-800 backdrop-blur-md">
+            <form id="chat-form" class="relative flex items-center gap-2">
+                <input type="text" id="chat-input" placeholder="Escribe tu pregunta aquí..." autocomplete="off"
+                    class="w-full glass-input rounded-xl px-4 py-3 pl-4 pr-12 text-sm transition-all shadow-inner placeholder:text-slate-500" required>
+                <button type="submit" id="send-btn" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="ph ph-paper-plane-right text-lg"></i>
+                </button>
+            </form>
+            <div class="text-center mt-2">
+                <span class="text-[10px] text-slate-500">El asistente puede cometer errores. El backend está limitado por rate limiting.</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // API Configuration
+        // Note: For local testing ensure the python backend is running on port 8000.
+        // For production, this should point to your deployed Vercel URL.
+        const API_URL = "http://localhost:8000/api/chat/stream";
+        
+        // DOM Elements
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatContainer = document.getElementById('chat-container');
+        const suggestionsContainer = document.getElementById('suggestions');
+        const sendBtn = document.getElementById('send-btn');
+
+        // State
+        let isGenerating = false;
+        let sessionId = null;
+
+        // Auto-fill input from suggestions
+        function fillInput(text) {
+            chatInput.value = text;
+            chatInput.focus();
+        }
+
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            chatContainer.scrollTo({
+                top: chatContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // Create User Message Bubble
+        function appendUserMessage(text) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex gap-4 max-w-[85%] self-end animate-fade-in flex-row-reverse';
+            
+            wrapper.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-md">
+                    <i class="ph ph-user"></i>
+                </div>
+                <div class="flex flex-col gap-1 items-end">
+                    <span class="text-xs text-slate-400 font-medium mr-1">Tú</span>
+                    <div class="bg-blue-600 text-white rounded-2xl rounded-tr-none p-4 shadow-sm text-sm">
+                        ${escapeHTML(text)}
+                    </div>
+                </div>
+            `;
+            
+            chatContainer.appendChild(wrapper);
+            scrollToBottom();
+        }
+
+        // Create AI Message Placeholder
+        function appendAILoading() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex gap-4 max-w-[85%] animate-fade-in ai-message-wrapper';
+            
+            wrapper.innerHTML = `
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-900/50 border border-blue-700/50 flex items-center justify-center text-blue-400">
+                    <i class="ph ph-robot"></i>
+                </div>
+                <div class="flex flex-col gap-1 w-full">
+                    <span class="text-xs text-slate-500 font-medium ml-1">Asistente IA</span>
+                    <div class="bg-slate-800/80 border border-slate-700 text-slate-200 rounded-2xl rounded-tl-none p-4 shadow-sm markdown-body text-sm min-h-[44px] ai-content">
+                        <div class="typing-indicator mt-1">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="ai-usage hidden text-[10px] text-slate-500 ml-2 mt-1"></div>
+                </div>
+            `;
+            
+            chatContainer.appendChild(wrapper);
+            scrollToBottom();
+            return wrapper;
+        }
+
+        // Update AI Message Bubble
+        function updateAIMessage(wrapper, markdownText) {
+            const contentDiv = wrapper.querySelector('.ai-content');
+            // Remove typing indicator on first token
+            if (contentDiv.querySelector('.typing-indicator')) {
+                contentDiv.innerHTML = '';
+            }
+            
+            // Use marked to parse markdown
+            contentDiv.innerHTML = marked.parse(markdownText);
+        }
+
+        // Show Usage Stats
+        function showUsage(wrapper, usage) {
+            const usageDiv = wrapper.querySelector('.ai-usage');
+            if (usageDiv && usage) {
+                usageDiv.classList.remove('hidden');
+                usageDiv.innerHTML = `⚡ Consumo: <strong>${usage.total_tokens}</strong> tokens <span class="opacity-70">(In: ${usage.input_tokens} | Out: ${usage.output_tokens})</span>`;
+            }
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag])
+            );
+        }
+
+        // Handle Form Submit
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (isGenerating) return;
+            
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Hide suggestions after first message
+            if (suggestionsContainer.style.display !== 'none') {
+                suggestionsContainer.style.display = 'none';
+            }
+
+            // Lock UI
+            isGenerating = true;
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="ph ph-spinner animate-spin"></i>';
+
+            // Add bubbles
+            appendUserMessage(message);
+            const aiWrapper = appendAILoading();
+            
+            let fullAiResponse = "";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+
+                if (!response.ok) {
+                    if (response.status === 429) {
+                        throw new Error("Límite de peticiones excedido. Por favor, espera un minuto.");
+                    }
+                    throw new Error("Error de conexión con el servidor.");
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                let buffer = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    
+                    let boundary = buffer.indexOf("\n\n");
+                    while (boundary !== -1) {
+                        const chunk = buffer.slice(0, boundary).trim();
+                        buffer = buffer.slice(boundary + 2);
+                        
+                        if (chunk.startsWith("data: ")) {
+                            const dataStr = chunk.slice(6);
+                            try {
+                                const data = JSON.parse(dataStr);
+                                
+                                if (data.type === "session" && !sessionId) {
+                                    sessionId = data.session_id;
+                                } 
+                                else if (data.type === "token") {
+                                    fullAiResponse += data.content;
+                                    updateAIMessage(aiWrapper, fullAiResponse);
+                                    scrollToBottom();
+                                }
+                                else if (data.type === "done") {
+                                    showUsage(aiWrapper, data.usage);
+                                }
+                                else if (data.type === "error") {
+                                    fullAiResponse += "\n\n*[Error: " + data.message + "]*";
+                                    updateAIMessage(aiWrapper, fullAiResponse);
+                                }
+                            } catch (e) {
+                                console.error("Error parsing JSON chunk:", e, "Chunk:", dataStr);
+                            }
+                        }
+                        boundary = buffer.indexOf("\n\n");
+                    }
+                }
+            } catch (error) {
+                console.error("Chat Error:", error);
+                const contentDiv = aiWrapper.querySelector('.ai-content');
+                contentDiv.innerHTML = `<span class="text-red-400"><i class="ph ph-warning-circle"></i> ${error.message}</span>`;
+            } finally {
+                // Unlock UI
+                isGenerating = false;
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="ph ph-paper-plane-right text-lg"></i>';
+                chatInput.focus();
+                scrollToBottom();
+            }
+        });
+    </script>
+</body>
+
+</html>
