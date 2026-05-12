@@ -16,13 +16,13 @@ Imagine800 fue mi primer empleo y el contexto en el que desarrollé mi Trabajo d
 
 **Universidad de Oviedo** — Máster en Ingeniería de Telecomunicaciones (2017 — 2019)
 
-El desarrollo que realicé en Imagine800 **era el propio TFM**. No hubo dos proyectos paralelos: la aplicación profesional y el trabajo académico eran exactamente lo mismo. Esto marcó mi forma de entender el aprendizaje técnico: directamente aplicado, con impacto real desde el primer día.
+El desarrollo que realicé en Imagine800 **era el propio TFM**. Esto marcó mi forma de entender el aprendizaje técnico: directamente aplicado, con impacto real desde el primer día.
 
 #### Funcionalidades desarrolladas
 
 - **Llamadas VoIP en Android:** Implementación de los protocolos SIP (señalización) y RTP (transporte de audio) y gestión del ciclo de vida completo de la llamada.
 
-- **Transcripción en tiempo real (STT):** Integración de motores Speech-to-Text para generar la transcripción de la conversación durante la llamada, procesando el audio en streaming mediante servicios en segundo plano de Android.
+- **Transcripción en tiempo real (STT):** Integración de motores Speech-to-Text para generar la transcripción de la conversación durante la llamada.
 
 - **Iluminación sincronizada de la transcripción:** Funcionalidad estilo *karaoke* que resaltaba en pantalla cada palabra de la transcripción a medida que se pronunciaba, sincronizando el texto con el audio en tiempo real.
 
@@ -34,7 +34,7 @@ El desarrollo que realicé en Imagine800 **era el propio TFM**. No hubo dos proy
 
 ### 📞 Aplicaciones Android VoIP (contexto profesional)
 
-- Apps Android para realizar y recibir llamadas VoIP a través de redes de datos.
+- Apps Android para realizar y recibir llamadas VoIP.
 - Gestión del ciclo de vida de llamadas, incluyendo hold, mute y manejo de interrupciones del sistema Android.
 
 ### 🐳 Asterisk en Docker
@@ -48,6 +48,6 @@ El desarrollo que realicé en Imagine800 **era el propio TFM**. No hubo dos proy
 | Categoría | Tecnologías |
 |-----------|-------------|
 | **Mobile** | Android (Java), servicios en segundo plano |
-| **Comunicaciones** | VoIP (SIP, RTP), Asterisk PBX |
+| **Comunicaciones** | VoIP (SIP, RTP), Asterisk |
 | **Transcripción** | Speech-to-Text (streaming) |
 | **Infraestructura** | Docker, Asterisk (dial plans, extensiones) |

@@ -6,7 +6,7 @@
 
 ## Resumen Profesional
 
-Soy Ingeniero de Telecomunicación de base y Software Engineer por vocación. Durante los últimos 6 años me he centrado en construir sistemas que realmente aguanten el tirón, desde infraestructuras IoT críticas hasta el procesado de datos a gran escala en Inditex, siempre con la arquitectura limpia del código y la escalabilidad y mantenibilidad como bandera. Ahora mismo, estoy volcando esa experiencia en el mundo de la IA aplicada, explorando cómo los LLMs y los agentes autónomos pueden elevar el software que desarrollamos hoy a un nivel mucho más inteligente y adaptativo.
+Soy Ingeniero de Telecomunicación de base y Software Engineer por vocación. Durante los últimos 6 años me he centrado en construir sistemas de software que realmente aguanten el tirón, desde infraestructuras IoT críticas hasta el procesado de datos a gran escala en Inditex, siempre con la arquitectura limpia del código y la escalabilidad y mantenibilidad como bandera. Ahora mismo, estoy volcando esa experiencia en el mundo de la IA aplicada, explorando cómo los LLMs y los agentes autónomos pueden elevar el software que desarrollamos hoy a un nivel mucho más inteligente y adaptativo.
 
 ## Experiencia Profesional
 
@@ -107,7 +107,7 @@ Integración de servicios inteligentes y desarrollo de aplicaciones para una pla
 
 - **Cloud & Infra**: Kubernetes (K8s), Docker, DAPR, Azure Service Bus, Azure DevOps, Github.
 
-- **IA & Agentes (Enfoque actual)**: Arquitecturas RAG, LangChain/CrewAI, Integración de Agentes Autónomos, Prompting.
+- **IA & Agentes (Enfoque actual)**: Arquitecturas RAG, LangChain/LangGraph, Integración de Agentes Autónomos, Prompting.
 
 - **Comunicaciones & Otros**: OpenAPI, GraphQL, gRPC, OAuth2, WebRTC, VoIP (Asterisk), Dart (Flutter).
 
