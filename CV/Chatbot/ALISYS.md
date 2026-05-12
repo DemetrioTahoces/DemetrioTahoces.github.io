@@ -26,7 +26,7 @@ Alisys S.L.U. es una empresa especializada en todo tipo de soluciones digitales.
 ### 🤖 API REST para Plataforma Robótica
 
 - API REST en Java como orquestador central para controlar distintos tipos de robots (Pepper, NAO, James, Temi), con backend VoIP Asterisk.
-- Servidor de WebSockets en Java para monitorizar y controlar el estado de los distintos componentes de la plataforma en tiempo real, además de procesar el audio para STT con Google Cloud Speech y Azure Cognitive Services.
+- Servidor de WebSockets en Java para monitorizar y controlar el estado de los distintos componentes de la plataforma en tiempo real.
 - Productores y consumidores de Kafka para comunicar datos de sensorización de los robots.
 
 ### 🧠 Integración de Microservicios de IA

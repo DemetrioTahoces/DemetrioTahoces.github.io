@@ -8,7 +8,7 @@
 
 Soy un Ingeniero de Telecomunicación que evolucionó hacia la ingeniería de software por pura vocación. Mi trayectoria no es lineal, sino una progresión lógica de complejidad: empecé creando aplicaciones en Android, pasé a implementar sistemas de backend y de ahi a orquestar el flujo de datos masivos y creación de aplicaciones (Backend e IoT) y actualmente estoy interesado en transicionar hacia implementación de IA Agéntica y flujos de trabajo con IA.
 
-Mi filosofía se resume en tres pilares: **escalabilidad pragmática**, **arquitectura limpia** y **IA como palanca técnica**.
+Mi filosofía de desarrollo se resume en tres pilares: **escalabilidad pragmática**, **arquitectura limpia** y **IA como palanca técnica**.
 
 ---
 
