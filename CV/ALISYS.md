@@ -6,7 +6,7 @@
 
 ## Contexto
 
-Alisys S.L.U. es una empresa especializada en soluciones de comunicación e inteligencia artificial. Durante año y medio, evolucioné desde Ingeniero de Software (desarrollo Android) hasta Especialista en Robótica e IA. Esta experiencia supuso mi primer contacto profesional con la IA aplicada.
+Alisys S.L.U. es una empresa especializada en todo tipo de soluciones digitales. Durante año y medio, evolucioné desde Ingeniero de Software (desarrollo Android) hasta Especialista en Robótica e IA, una progresión que refleja mi capacidad de adaptación y aprendizaje rápido en dominios nuevos y complejos.
 
 ---
 
@@ -15,8 +15,8 @@ Alisys S.L.U. es una empresa especializada en soluciones de comunicación e inte
 ### 💬 App Android de Mensajería
 
 - App de mensajería multicanal con soporte para adjuntos multimedia (imágenes, vídeos, documentos, audios).
-- Notificaciones Push con Firebase Cloud Messaging (FCM).
-- Backend Firebase: autenticación, Firestore, Cloud Storage.
+- Notificaciones Push con Firebase Cloud Messaging (FCM) y autenticación con Firebase Authentication.
+- Backend propio (CloudCX) para base de datos y almacenamiento de archivos (blob storage).
 - Sincronización offline con resolución de conflictos al recuperar conectividad.
 
 ---
@@ -26,20 +26,19 @@ Alisys S.L.U. es una empresa especializada en soluciones de comunicación e inte
 ### 🤖 API REST para Plataforma Robótica
 
 - API REST en Java como orquestador central para controlar distintos tipos de robots (Pepper, NAO, James, Temi), con backend VoIP Asterisk.
-- Servidor de WebSockets en Java para monitorizar y controlar el estado de los distintos componentes de la plataforma en tiempo real.
+- Servidor de WebSockets en Java para monitorizar y controlar el estado de los distintos componentes de la plataforma en tiempo real, además de procesar el audio para STT con Google Cloud Speech y Azure Cognitive Services.
 - Productores y consumidores de Kafka para comunicar datos de sensorización de los robots.
 
 ### 🧠 Integración de Microservicios de IA
 
-- **Reconocimiento Facial:** Identificación y verificación de usuarios con librerías y modelos desarrollados en Node.js.
+- **Reconocimiento Facial:** Identificación y verificación de usuarios con reconocimiento facial nativo de Android.
 - **Speech-to-Text (STT):** Conversión de comandos de voz mediante Google Cloud Speech y Azure Cognitive Services.
 - **Natural Language Understanding (NLU):** Interpretación de intención del usuario con Google Assistant, Dialogflow y Rasa.
 
 ### 📱 Apps Android para Robots
 
 - Apps Android embebidas en robots para comunicación VoIP y WebRTC.
-- Streaming de vídeo y videollamada con WebRTC, señalización mediante gRPC.
-- Optimización de recursos (CPU, batería, red) para autonomía operativa.
+- Streaming de vídeo y videollamada con WebRTC, señalización SIP con Asterisk.
 
 ---
 
@@ -48,6 +47,6 @@ Alisys S.L.U. es una empresa especializada en soluciones de comunicación e inte
 | Categoría | Tecnologías |
 |-----------|-------------|
 | **Backend** | Java (API REST, WebSockets), Spring Boot, Kafka (sensores) |
-| **Mobile** | Android (Java/Kotlin), Firebase (Firestore, FCM, Auth, Storage) |
-| **IA & Providers** | Reconocimiento Facial (Node.js), STT (Google Cloud, Azure), NLU (Google Assistant, Dialogflow, Rasa) |
-| **Comunicaciones** | VoIP (Asterisk), WebRTC, gRPC, GitLab |
+| **Mobile** | Android (Java/Kotlin), Firebase (FCM, Auth), Reconocimiento Facial nativo |
+| **IA & Providers** | STT (Google Cloud, Azure), NLU (Google Assistant, Dialogflow, Rasa) |
+| **Comunicaciones & otros** | VoIP (Asterisk), WebRTC, SIP, GitLab |
