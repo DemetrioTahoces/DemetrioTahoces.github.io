@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistente Virtual - Demetrio Tahoces</title>
     <meta name="description" content="Asistente virtual de IA sobre la experiencia profesional de Demetrio Tahoces.">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -195,13 +196,16 @@
                     <p class="text-xs text-slate-400">Pregúntame sobre la experiencia de Demetrio</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/20 border border-blue-900/50">
+            <div id="status-container"
+                class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 transition-colors duration-300">
                 <span class="relative flex h-2 w-2">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    <span id="status-ping"
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75"></span>
+                    <span id="status-dot"
+                        class="relative inline-flex rounded-full h-2 w-2 bg-slate-500 transition-colors duration-300"></span>
                 </span>
-                <span class="text-xs font-medium text-blue-300">Online</span>
+                <span id="status-text"
+                    class="text-xs font-medium text-slate-400 transition-colors duration-300">Conectando...</span>
             </div>
         </header>
 
@@ -267,7 +271,9 @@
         // API Configuration
         // Note: For local testing ensure the python backend is running on port 8000.
         // For production, this should point to your deployed Vercel URL.
-        const API_URL = "https://demetrio-tahoces-cv-chatbot.vercel.app/api/chat/stream";
+        const API_URL = "https://demetrio-tahoces-cv-chatbot.vercel.app";
+        const CHAT_STREAM_URL = API_URL + "/api/chat/stream";
+        const HEALTH_URL = API_URL + "/api/health";
 
         // DOM Elements
         const chatForm = document.getElementById('chat-form');
@@ -275,10 +281,68 @@
         const chatContainer = document.getElementById('chat-container');
         const suggestionsContainer = document.getElementById('suggestions');
         const sendBtn = document.getElementById('send-btn');
+        const statusContainer = document.getElementById('status-container');
+        const statusPing = document.getElementById('status-ping');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
 
         // State
         let isGenerating = false;
         let sessionId = null;
+
+        // Check Health Status
+        async function checkHealth() {
+            try {
+                const response = await fetch(HEALTH_URL);
+                if (response.ok) {
+                    // Online
+                    statusContainer.className = "flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/20 border border-blue-900/50 transition-colors duration-300";
+                    statusPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75";
+                    statusPing.style.display = "inline-flex";
+                    statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-blue-500 transition-colors duration-300";
+                    statusText.className = "text-xs font-medium text-blue-300 transition-colors duration-300";
+                    statusText.textContent = "Online";
+
+                    // Enable chat if it was disabled
+                    if (chatInput.disabled && !isGenerating) {
+                        chatInput.disabled = false;
+                        chatInput.placeholder = "Escribe tu pregunta aquí...";
+                        sendBtn.disabled = false;
+
+                        const suggestionChips = document.querySelectorAll('.suggestion-chip');
+                        suggestionChips.forEach(chip => {
+                            chip.disabled = false;
+                            chip.classList.remove('opacity-50', 'cursor-not-allowed');
+                        });
+                    }
+                } else {
+                    throw new Error("Offline");
+                }
+            } catch (error) {
+                // Offline
+                statusContainer.className = "flex items-center gap-2 px-3 py-1 rounded-full bg-red-900/20 border border-red-900/50 transition-colors duration-300";
+                statusPing.style.display = "none";
+                statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500 transition-colors duration-300";
+                statusText.className = "text-xs font-medium text-red-300 transition-colors duration-300";
+                statusText.textContent = "Offline";
+
+                // Disable chat
+                chatInput.disabled = true;
+                chatInput.placeholder = "Asistente temporalmente offline";
+                sendBtn.disabled = true;
+
+                // Disable suggestions
+                const suggestionChips = document.querySelectorAll('.suggestion-chip');
+                suggestionChips.forEach(chip => {
+                    chip.disabled = true;
+                    chip.classList.add('opacity-50', 'cursor-not-allowed');
+                });
+            }
+        }
+
+        // Execute health check on load and every minute
+        checkHealth();
+        setInterval(checkHealth, 60000);
 
         // Auto-fill input from suggestions
         function fillInput(text) {
@@ -402,7 +466,7 @@
             let fullAiResponse = "";
 
             try {
-                const response = await fetch(API_URL, {
+                const response = await fetch(CHAT_STREAM_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

@@ -107,7 +107,6 @@ class ChatResponse(BaseModel):
 
 
 @app.get("/api/health")
-@limiter.limit(get_rate_limit_string())
 async def health_check(request: Request):
     """Health check endpoint — verifies the service is running."""
     return {
