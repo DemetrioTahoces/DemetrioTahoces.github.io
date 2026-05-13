@@ -22,9 +22,9 @@ El desarrollo que realicé en Imagine800 **era el propio TFM**. Esto marcó mi f
 
 - **Llamadas VoIP en Android:** Implementación de los protocolos SIP (señalización) y RTP (transporte de audio) y gestión del ciclo de vida completo de la llamada.
 
-- **Transcripción en tiempo real (STT):** Integración de motores Speech-to-Text para generar la transcripción de la conversación durante la llamada.
+- **Transcripción (STT):** Integración de motores Speech-to-Text para generar la transcripción de la conversación durante la llamada.
 
-- **Iluminación sincronizada de la transcripción:** Funcionalidad estilo *karaoke* que resaltaba en pantalla cada palabra de la transcripción a medida que se pronunciaba, sincronizando el texto con el audio en tiempo real.
+- **Iluminación sincronizada de la transcripción:** Funcionalidad estilo *karaoke* que resaltaba en pantalla cada palabra de la transcripción a medida que se pronunciaba, sincronizando el texto con el audio.
 
 - **Infraestructura Asterisk:** Despliegue de la centralita Asterisk con Docker.
 
