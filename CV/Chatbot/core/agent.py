@@ -7,6 +7,7 @@ from typing import AsyncGenerator
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
+from langgraph.checkpoint.memory import MemorySaver
 
 from core.config import settings
 from core.prompts import SYSTEM_PROMPT
@@ -40,11 +41,13 @@ def create_agent_graph():
     """
     model = _create_model()
     tools = get_tools()
+    memory = MemorySaver()
 
     graph = create_react_agent(
         model=model,
         tools=tools,
         prompt=SYSTEM_PROMPT,
+        checkpointer=memory,
     )
 
     logger.info(
