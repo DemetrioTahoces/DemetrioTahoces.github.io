@@ -57,6 +57,7 @@ _DOC_DESCRIPTIONS = {
     "GRADO_TELECOMUNICACION": "Grado en Ingeniería de Telecomunicación — Universidad de Oviedo (2012-2017)",
     "MASTER_TELECOMUNICACION": "Máster en Ingeniería de Telecomunicación — VoIP, Android (2017-2019)",
     "MASTER_IA_APLICADA": "Máster en IA Aplicada y Optimización de Procesos — RAG, Agentes (2026)",
+    "TFG": "Trabajo de Final de Grado - Redes neuronales para procesado de arrays de antenas"
 }
 
 
