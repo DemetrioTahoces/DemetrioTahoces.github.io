@@ -58,7 +58,7 @@ def create_agent_graph():
     graph = create_react_agent(
         model=model,
         tools=tools,
-        state_modifier=_trim_messages,
+        prompt=_trim_messages,
         checkpointer=memory,
     )
 
