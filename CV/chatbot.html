@@ -235,28 +235,32 @@
         <div id="suggestions"
             class="p-4 flex flex-wrap gap-2 justify-center border-t border-slate-800/50 bg-slate-900/30">
             <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2"
-                onclick="fillInput('Resume brevemente la experiencia en Fermax')">
+                onclick="fillInput('Cuéntame sobre la experiencia actual de Demetrio en Fermax. ¿Qué retos técnicos está afrontando?')">
                 <i class="ph ph-briefcase"></i> Experiencia en Fermax
             </button>
             <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2"
-                onclick="fillInput('¿En qué tecnologías de IA y backend es experto?')">
+                onclick="fillInput('¿Cuáles son las principales tecnologías de Backend que domina Demetrio y cómo las aplica en arquitecturas reales?')">
                 <i class="ph ph-code"></i> Tecnologías Backend e IA
             </button>
             <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2"
-                onclick="fillInput('Enumera las empresas en las que ha trabajado')">
+                onclick="fillInput('Haz un resumen de la trayectoria profesional de Demetrio, detallando las empresas clave donde ha trabajado y su evolución técnica.')">
                 <i class="ph ph-buildings"></i> Trayectoria
+            </button>
+            <button class="suggestion-chip px-4 py-2 rounded-full text-sm text-slate-300 flex items-center gap-2"
+                onclick="fillInput('¿Cómo describirías el potencial y la proyección profesional de Demetrio para liderar nuevos retos en Ingeniería de Software e Inteligencia Artificial?')">
+                <i class="ph ph-rocket"></i> Proyección Profesional
             </button>
         </div>
 
         <!-- Input Area -->
         <footer class="p-4 bg-slate-900/80 border-t border-slate-800 backdrop-blur-md">
-            <form id="chat-form" class="relative flex items-center gap-2">
-                <input type="text" id="chat-input" placeholder="Escribe tu pregunta aquí..." autocomplete="off"
-                    class="w-full glass-input rounded-xl px-4 py-3 pl-4 pr-12 text-sm transition-all shadow-inner placeholder:text-slate-500"
-                    required>
+            <form id="chat-form" class="relative flex items-end gap-2">
+                <textarea id="chat-input" placeholder="Escribe tu pregunta aquí..." autocomplete="off" rows="1"
+                    class="flex-1 glass-input rounded-xl px-4 py-3 text-sm transition-all shadow-inner placeholder:text-slate-500 resize-none overflow-y-auto"
+                    style="min-height: 44px; max-height: 150px;" required></textarea>
                 <button type="submit" id="send-btn"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="ph ph-paper-plane-right text-lg"></i>
+                    class="flex-shrink-0 w-11 h-[44px] flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-[1px]">
+                    <i class="ph ph-paper-plane-right text-xl"></i>
                 </button>
             </form>
             <div class="text-center mt-2">
@@ -348,6 +352,7 @@
         function fillInput(text) {
             chatInput.value = text;
             chatInput.focus();
+            autoResizeInput();
         }
 
         // Scroll to bottom of chat
@@ -438,6 +443,24 @@
             );
         }
 
+        // Auto-resize textarea
+        function autoResizeInput() {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = Math.min(chatInput.scrollHeight, 150) + 'px';
+        }
+
+        chatInput.addEventListener('input', autoResizeInput);
+
+        // Submit on Enter (without Shift)
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendBtn.disabled) {
+                    sendBtn.click();
+                }
+            }
+        });
+
         // Handle Form Submit
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -455,6 +478,7 @@
             // Lock UI
             isGenerating = true;
             chatInput.value = '';
+            chatInput.style.height = 'auto'; // Reset height
             chatInput.disabled = true;
             sendBtn.disabled = true;
             sendBtn.innerHTML = '<i class="ph ph-spinner animate-spin"></i>';
