@@ -6,7 +6,7 @@ import logging
 from typing import AsyncGenerator
 
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, trim_messages
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -39,8 +39,19 @@ def _trim_messages(state):
     Prepends the system prompt to ensure it's always available to the model.
     """
     messages = state.get("messages", []) if isinstance(state, dict) else state
-    # Keep only the last 5 messages to limit token consumption growth
-    trimmed_messages = messages[-5:] if len(messages) > 5 else messages
+    
+    # Use LangChain's trim_messages to safely truncate history
+    # ensuring we don't orphan tool calls from their tool messages
+    # and we always start on a human message for Gemini compatibility.
+    trimmed_messages = trim_messages(
+        messages,
+        max_tokens=6, # Keep up to the last 6 messages
+        token_counter=len,
+        strategy="last",
+        start_on="human",
+        include_system=False
+    )
+    
     return [SystemMessage(content=SYSTEM_PROMPT)] + trimmed_messages
 
 
@@ -94,8 +105,10 @@ async def invoke_agent(graph, message: str, session_id: str) -> dict:
         if hasattr(m, "type") and m.type == "ai" and m.content
     ]
 
-    response_text = ai_messages[-1].content if ai_messages else "No se pudo generar una respuesta."
-
+    response_text = "No se pudo generar una respuesta."
+    if ai_messages and ai_messages[-1].content:
+        response_text = ai_messages[-1].content
+    
     # Accumulate token usage across all AI messages in the run
     total_input = 0
     total_output = 0
@@ -137,6 +150,7 @@ async def stream_agent(graph, message: str, session_id: str) -> AsyncGenerator[d
 
     total_input_tokens = 0
     total_output_tokens = 0
+    has_streamed_text = False
 
     async for stream_mode, chunk in graph.astream(
         inputs, config=config, stream_mode=["messages", "updates"]
@@ -147,6 +161,7 @@ async def stream_agent(graph, message: str, session_id: str) -> AsyncGenerator[d
             # Stream AI content tokens
             if hasattr(message_chunk, "content") and message_chunk.content:
                 if metadata.get("langgraph_node") == "agent":
+                    has_streamed_text = True
                     yield {"type": "token", "content": message_chunk.content}
 
         elif stream_mode == "updates":
@@ -171,6 +186,12 @@ async def stream_agent(graph, message: str, session_id: str) -> AsyncGenerator[d
                             "tool": tm.name,
                             "status": "ok",
                         }
+
+    if not has_streamed_text:
+        yield {
+            "type": "token", 
+            "content": "Lo siento, no he podido generar una respuesta adecuada para esta consulta."
+        }
 
     # Final event with accumulated usage data
     usage = {
