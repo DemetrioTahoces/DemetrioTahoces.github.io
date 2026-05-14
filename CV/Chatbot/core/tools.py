@@ -53,11 +53,11 @@ _DOC_DESCRIPTIONS = {
     "INDITEX": "Experiencia en Inditex (Nunegal) — Ingeniero de Datos, Kafka, Snowflake (2021-2022)",
     "SECURITAS_DIRECT": "Experiencia en Securitas Direct (Vector ITC) — Procesado de señales (2021)",
     "ALISYS": "Experiencia en Alisys — Robótica, IA, Android, VoIP (2019-2021)",
-    "IMAGINE800": "Experiencia en Imagine800 — Apps Android, VoIP, Asterisk (2019)",
+    "IMAGINE800": "Experiencia en Imagine800 (Incluye TFM) — Apps Android, VoIP, Asterisk (2019)",
     "GRADO_TELECOMUNICACION": "Grado en Ingeniería de Telecomunicación — Universidad de Oviedo (2012-2017)",
     "MASTER_TELECOMUNICACION": "Máster en Ingeniería de Telecomunicación — VoIP, Android (2017-2019)",
     "MASTER_IA_APLICADA": "Máster en IA Aplicada y Optimización de Procesos — RAG, Agentes (2026)",
-    "TFG": "Trabajo de Final de Grado - Redes neuronales para procesado de arrays de antenas"
+    "TFG": "Trabajo de Final de Grado (TFG) - Redes neuronales para procesado de arrays de antenas"
 }
 
 
