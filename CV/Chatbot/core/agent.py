@@ -6,6 +6,7 @@ import logging
 from typing import AsyncGenerator
 
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import SystemMessage
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -32,6 +33,17 @@ def _create_model() -> ChatGoogleGenerativeAI:
     )
 
 
+def _trim_messages(state):
+    """
+    Trims the conversation history to save tokens while retaining recent context.
+    Prepends the system prompt to ensure it's always available to the model.
+    """
+    messages = state.get("messages", []) if isinstance(state, dict) else state
+    # Keep only the last 5 messages to limit token consumption growth
+    trimmed_messages = messages[-5:] if len(messages) > 5 else messages
+    return [SystemMessage(content=SYSTEM_PROMPT)] + trimmed_messages
+
+
 def create_agent_graph():
     """
     Create the LangGraph ReAct agent with document tools.
@@ -46,7 +58,7 @@ def create_agent_graph():
     graph = create_react_agent(
         model=model,
         tools=tools,
-        prompt=SYSTEM_PROMPT,
+        state_modifier=_trim_messages,
         checkpointer=memory,
     )
 
