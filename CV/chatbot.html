@@ -479,9 +479,8 @@
             isGenerating = true;
             chatInput.value = '';
             chatInput.style.height = 'auto'; // Reset height
-            chatInput.disabled = true;
             sendBtn.disabled = true;
-            sendBtn.innerHTML = '<i class="ph ph-spinner animate-spin"></i>';
+            sendBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i>';
 
             // Add bubbles
             appendUserMessage(message);
@@ -557,10 +556,8 @@
             } finally {
                 // Unlock UI
                 isGenerating = false;
-                chatInput.disabled = false;
                 sendBtn.disabled = false;
-                sendBtn.innerHTML = '<i class="ph ph-paper-plane-right text-lg"></i>';
-                chatInput.focus();
+                sendBtn.innerHTML = '<i class="ph ph-paper-plane-right text-xl"></i>';
                 scrollToBottom();
             }
         });
