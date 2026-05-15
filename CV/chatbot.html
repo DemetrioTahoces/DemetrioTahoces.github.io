@@ -504,6 +504,10 @@
                     if (response.status === 429) {
                         throw new Error("Límite de peticiones excedido. Por favor, espera un minuto.");
                     }
+                    if (response.status === 403) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData.error || "Acceso denegado temporalmente por comportamiento inapropiado.");
+                    }
                     throw new Error("Error de conexión con el servidor.");
                 }
 

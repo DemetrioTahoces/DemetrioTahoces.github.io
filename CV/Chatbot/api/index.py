@@ -11,6 +11,8 @@ import json
 import time
 import uuid
 import sys
+import datetime
+from collections import defaultdict
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -39,6 +41,13 @@ from middleware.request_logger import (
 # ---------------------------------------------------------------------------
 # App initialization
 # ---------------------------------------------------------------------------
+
+# In-memory malicious intent tracker
+# (Note: For multi-instance deployments like Vercel, consider Redis/Upstash)
+malicious_tracker = defaultdict(lambda: {"strikes": 0, "blocked_until": None})
+MAX_STRIKES = 3
+BLOCK_DURATION_MINUTES = 60
+MALICIOUS_PHRASE = "deja de hacerme preguntas malintencionadas"
 
 app = FastAPI(
     title="CV Chatbot API — Demetrio Tahoces",
@@ -129,6 +138,15 @@ async def chat(request: Request, body: ChatRequest):
 
     # Log incoming request
     client_ip = request.client.host if request.client else "unknown"
+    
+    # Check if blocked
+    tracker = malicious_tracker[client_ip]
+    if tracker["blocked_until"] and tracker["blocked_until"] > datetime.datetime.now():
+        return JSONResponse(
+            status_code=403,
+            content={"error": "Acceso denegado temporalmente por reiteradas consultas inapropiadas."}
+        )
+
     log_request(
         logger,
         request_id=request_id,
@@ -142,6 +160,13 @@ async def chat(request: Request, body: ChatRequest):
     try:
         graph = _get_agent()
         result = await invoke_agent(graph, body.message, session_id)
+        
+        # Track malicious intents
+        if MALICIOUS_PHRASE in result["response"]:
+            tracker["strikes"] += 1
+            if tracker["strikes"] >= MAX_STRIKES:
+                tracker["blocked_until"] = datetime.datetime.now() + datetime.timedelta(minutes=BLOCK_DURATION_MINUTES)
+
         duration_ms = (time.time() - start_time) * 1000
 
         # Log response
@@ -185,6 +210,15 @@ async def chat_stream(request: Request, body: ChatRequest):
 
     # Log incoming request
     client_ip = request.client.host if request.client else "unknown"
+    
+    # Check if blocked
+    tracker = malicious_tracker[client_ip]
+    if tracker["blocked_until"] and tracker["blocked_until"] > datetime.datetime.now():
+        return JSONResponse(
+            status_code=403,
+            content={"error": "Acceso denegado temporalmente por reiteradas consultas inapropiadas."}
+        )
+
     log_request(
         logger,
         request_id=request_id,
@@ -198,15 +232,25 @@ async def chat_stream(request: Request, body: ChatRequest):
     async def event_generator():
         try:
             graph = _get_agent()
+            accumulated_response = ""
 
             # Send session_id as first event
             yield _sse_event({"type": "session", "session_id": session_id})
 
             async for event in stream_agent(graph, body.message, session_id):
                 yield _sse_event(event)
+                
+                if event.get("type") == "token":
+                    accumulated_response += event.get("content", "")
 
                 # Log final usage on completion
                 if event.get("type") == "done":
+                    # Track malicious intents
+                    if MALICIOUS_PHRASE in accumulated_response:
+                        tracker["strikes"] += 1
+                        if tracker["strikes"] >= MAX_STRIKES:
+                            tracker["blocked_until"] = datetime.datetime.now() + datetime.timedelta(minutes=BLOCK_DURATION_MINUTES)
+                            
                     duration_ms = (time.time() - start_time) * 1000
                     log_response(
                         logger,
