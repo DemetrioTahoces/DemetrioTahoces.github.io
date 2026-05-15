@@ -107,7 +107,7 @@ Integración de servicios inteligentes y desarrollo de aplicaciones para una pla
 
 - **Cloud & Infra**: Kubernetes (K8s), Docker, DAPR, Azure Service Bus, Azure DevOps, Github.
 
-- **IA & Agentes (Enfoque actual)**: Arquitecturas RAG, LangChain/LangGraph, Integración de Agentes Autónomos, Prompting.
+- **IA & Agentes (Desarrollo Personal)**: Arquitecturas RAG, LangChain/LangGraph, Integración de Agentes Autónomos, Prompting.
 
 - **Comunicaciones & Otros**: OpenAPI, GraphQL, gRPC, OAuth2, WebRTC, VoIP (Asterisk), Dart (Flutter).
 

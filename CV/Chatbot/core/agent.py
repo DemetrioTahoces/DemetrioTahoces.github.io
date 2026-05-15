@@ -39,20 +39,34 @@ def _trim_messages(state):
     Prepends the system prompt to ensure it's always available to the model.
     """
     messages = state.get("messages", []) if isinstance(state, dict) else state
+    if not messages:
+        return [SystemMessage(content=SYSTEM_PROMPT)]
+        
+    # 1. Encontrar el índice del último mensaje del usuario (inicio del turno actual)
+    last_human_idx = 0
+    for i in range(len(messages) - 1, -1, -1):
+        if getattr(messages[i], "type", "") == "human":
+            last_human_idx = i
+            break
+            
+    # 2. Historial antiguo: Conservar SOLO preguntas y respuestas finales de texto.
+    # Descartamos las llamadas a herramientas (AI) y sus resultados (Tool) de turnos pasados.
+    # Así ahorramos miles de tokens sin perder el hilo de la conversación.
+    past_history = []
+    for m in messages[:last_human_idx]:
+        m_type = getattr(m, "type", "")
+        if m_type == "human":
+            past_history.append(m)
+        elif m_type == "ai" and m.content and not getattr(m, "tool_calls", None):
+            past_history.append(m)
+            
+    # Opcional: quedarnos con los últimos 6 o 10 mensajes de texto del historial
+    past_history = past_history[-10:]
     
-    # Use LangChain's trim_messages to safely truncate history
-    # ensuring we don't orphan tool calls from their tool messages
-    # and we always start on a human message for Gemini compatibility.
-    trimmed_messages = trim_messages(
-        messages,
-        max_tokens=6, # Keep up to the last 6 messages
-        token_counter=len,
-        strategy="last",
-        start_on="human",
-        include_system=False
-    )
+    # 3. Turno actual: Se mantiene íntegro para que el LLM pueda leer las herramientas que acaba de pedir
+    current_turn = messages[last_human_idx:]
     
-    return [SystemMessage(content=SYSTEM_PROMPT)] + trimmed_messages
+    return [SystemMessage(content=SYSTEM_PROMPT)] + past_history + current_turn
 
 
 def create_agent_graph():
@@ -107,7 +121,15 @@ async def invoke_agent(graph, message: str, session_id: str) -> dict:
 
     response_text = "No se pudo generar una respuesta."
     if ai_messages and ai_messages[-1].content:
-        response_text = ai_messages[-1].content
+        content = ai_messages[-1].content
+        if isinstance(content, list):
+            text_parts = [
+                block["text"] for block in content 
+                if isinstance(block, dict) and block.get("type") == "text" and "text" in block
+            ]
+            response_text = "".join(text_parts)
+        else:
+            response_text = str(content)
     
     # Accumulate token usage across all AI messages in the run
     total_input = 0
@@ -161,8 +183,19 @@ async def stream_agent(graph, message: str, session_id: str) -> AsyncGenerator[d
             # Stream AI content tokens
             if hasattr(message_chunk, "content") and message_chunk.content:
                 if metadata.get("langgraph_node") == "agent":
-                    has_streamed_text = True
-                    yield {"type": "token", "content": message_chunk.content}
+                    content = message_chunk.content
+                    if isinstance(content, list):
+                        text_parts = [
+                            block["text"] for block in content 
+                            if isinstance(block, dict) and block.get("type") == "text" and "text" in block
+                        ]
+                        text_val = "".join(text_parts)
+                    else:
+                        text_val = content
+                        
+                    if isinstance(text_val, str) and text_val:
+                        has_streamed_text = True
+                        yield {"type": "token", "content": text_val}
 
         elif stream_mode == "updates":
             if "agent" in chunk:
