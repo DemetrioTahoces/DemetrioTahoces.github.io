@@ -1,53 +1,21 @@
 # Desarrollador Android — Imagine800 S.L
-
-## 02/2019 — 09/2019 | [Imagine800 S.L](https://www.imagine800.com/)
-
----
+**02/2019 — 09/2019** | imagine800.com
 
 ## Contexto
+Primer empleo. El desarrollo realizado fue simultáneamente el TFM (Universidad de Oviedo, Máster Ingeniería Telecomunicaciones). Integración real formación-industria.
 
-Imagine800 fue mi primer empleo y el contexto en el que desarrollé mi Trabajo de Fin de Máster. Entregado simultáneamente a la empresa y a la universidad, lo que refleja una integración real entre formación e industria.
+## TFM: Apps Android con VoIP y Transcripción de Voz
+- Llamadas VoIP en Android: protocolos SIP (señalización) + RTP (transporte audio), ciclo vida completo llamada.
+- STT: transcripción conversación durante llamada.
+- Iluminación sincronizada transcripción: estilo karaoke, resaltado palabra a palabra sincronizado con audio.
+- Infraestructura Asterisk desplegada con Docker.
 
----
+## Contribuciones Profesionales
+- Apps Android VoIP: llamadas entrantes/salientes, hold, mute, manejo interrupciones sistema.
+- Despliegue servidores Asterisk en contenedores Docker.
 
-## Trabajo de Fin de Máster (TFM)
-
-### 🎓 Desarrollo de Apps en Android con Tecnologías VoIP y Transcripción de Voz
-
-**Universidad de Oviedo** — Máster en Ingeniería de Telecomunicaciones (2017 — 2019)
-
-El desarrollo que realicé en Imagine800 **era el propio TFM**. Esto marcó mi forma de entender el aprendizaje técnico: directamente aplicado, con impacto real desde el primer día.
-
-#### Funcionalidades desarrolladas
-
-- **Llamadas VoIP en Android:** Implementación de los protocolos SIP (señalización) y RTP (transporte de audio) y gestión del ciclo de vida completo de la llamada.
-
-- **Transcripción (STT):** Integración de motores Speech-to-Text para generar la transcripción de la conversación durante la llamada.
-
-- **Iluminación sincronizada de la transcripción:** Funcionalidad estilo *karaoke* que resaltaba en pantalla cada palabra de la transcripción a medida que se pronunciaba, sincronizando el texto con el audio.
-
-- **Infraestructura Asterisk:** Despliegue de la centralita Asterisk con Docker.
-
----
-
-## Contribuciones Adicionales
-
-### 📞 Aplicaciones Android VoIP (contexto profesional)
-
-- Apps Android para realizar y recibir llamadas VoIP.
-- Gestión del ciclo de vida de llamadas, incluyendo hold, mute y manejo de interrupciones del sistema Android.
-
-### 🐳 Asterisk en Docker
-
-- Despliegue de servidores Asterisk en contenedores Docker.
-
----
-
-## Stack Técnico
-
-| Categoría | Tecnologías |
-|-----------|-------------|
-| **Mobile** | Android (Java), servicios en segundo plano |
-| **Comunicaciones** | VoIP (SIP, RTP), Asterisk |
-| **Transcripción** | Speech-to-Text (streaming) |
-| **Infraestructura** | Docker, Asterisk (dial plans, extensiones) |
+## Stack
+- Mobile: Android (Java), servicios segundo plano.
+- Comunicaciones: VoIP (SIP, RTP), Asterisk.
+- Transcripción: Speech-to-Text (streaming).
+- Infra: Docker, Asterisk (dial plans, extensiones).
