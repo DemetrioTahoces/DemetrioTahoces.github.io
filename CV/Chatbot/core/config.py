@@ -13,9 +13,10 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # --- Required ---
-    google_api_key: str = os.getenv("GOOGLE_API_KEY", "")
+    api_key: str = os.getenv("API_KEY", "")
 
     # --- Model ---
+    provider_name: str = os.getenv("PROVIDER_NAME", "gemini").lower()
     model_name: str = os.getenv("MODEL_NAME", "gemini-2.5-flash-lite")
 
     # --- Rate Limiting ---
@@ -37,6 +38,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 settings = Settings()

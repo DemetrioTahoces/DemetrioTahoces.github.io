@@ -5,7 +5,6 @@ LangGraph ReAct agent for the CV chatbot.
 import logging
 from typing import AsyncGenerator
 
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage, trim_messages
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
@@ -17,20 +16,30 @@ from core.tools import get_tools
 logger = logging.getLogger("cv_chatbot.agent")
 
 
-def _create_model() -> ChatGoogleGenerativeAI:
-    """Instantiate the Gemini model from config."""
-    if not settings.google_api_key:
+def _create_model():
+    """Instantiate the model from config."""
+    if not settings.api_key:
         raise ValueError(
-            "GOOGLE_API_KEY is not set. "
+            "API_KEY is not set. "
             "Set it as an environment variable or in .env file."
         )
 
-    return ChatGoogleGenerativeAI(
-        model=settings.model_name,
-        google_api_key=settings.google_api_key,
-        temperature=0.3,
-        convert_system_message_to_human=False,
-    )
+    if settings.provider_name == "openai":
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(
+            model=settings.model_name,
+            api_key=settings.api_key,
+            temperature=0.3,
+        )
+    else:
+        # Default to Gemini
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        return ChatGoogleGenerativeAI(
+            model=settings.model_name,
+            google_api_key=settings.api_key,
+            temperature=0.3,
+            convert_system_message_to_human=False,
+        )
 
 
 def _trim_messages(state):
