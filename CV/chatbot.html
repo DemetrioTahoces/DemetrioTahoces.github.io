@@ -144,35 +144,18 @@
             animation: fadeIn 0.4s ease forwards;
         }
 
-        .typing-indicator span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background-color: #94a3b8;
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: bounce 1.4s infinite ease-in-out both;
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
-        .typing-indicator span:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
-            }
-
-            40% {
-                transform: scale(1);
-            }
+        .loading-bar {
+            height: 4px;
+            width: 36px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 25%, #3b82f6 50%, rgba(59, 130, 246, 0.2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
         }
     </style>
 </head>
@@ -394,11 +377,15 @@
                     <i class="ph ph-robot"></i>
                 </div>
                 <div class="flex flex-col gap-1 w-full">
-                    <span class="text-xs text-slate-500 font-medium ml-1">Asistente IA</span>
-                    <div class="bg-slate-800/80 border border-slate-700 text-slate-200 rounded-2xl rounded-tl-none p-4 shadow-sm markdown-body text-sm min-h-[44px] ai-content">
-                        <div class="typing-indicator mt-1">
-                            <span></span><span></span><span></span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-500 font-medium ml-1">Asistente IA</span>
+                        <div class="ai-status-container flex items-center gap-2 transition-opacity duration-300">
+                            <div class="loading-bar"></div>
+                            <span class="ai-status-text text-[11px] text-blue-400/80 font-medium">Conectando...</span>
                         </div>
+                    </div>
+                    <div class="ai-content-box hidden bg-slate-800/80 border border-slate-700 text-slate-200 rounded-2xl rounded-tl-none p-4 shadow-sm markdown-body text-sm min-h-[44px]">
+                        <div class="ai-content"></div>
                     </div>
                     <div class="ai-usage hidden text-[10px] text-slate-500 ml-2 mt-1"></div>
                 </div>
@@ -412,11 +399,6 @@
         // Update AI Message Bubble
         function updateAIMessage(wrapper, markdownText) {
             const contentDiv = wrapper.querySelector('.ai-content');
-            // Remove typing indicator on first token
-            if (contentDiv.querySelector('.typing-indicator')) {
-                contentDiv.innerHTML = '';
-            }
-
             // Use marked to parse markdown
             contentDiv.innerHTML = marked.parse(markdownText);
         }
@@ -531,18 +513,52 @@
                             try {
                                 const data = JSON.parse(dataStr);
 
-                                if (data.type === "session" && !sessionId) {
-                                    sessionId = data.session_id;
+                                if (data.type === "session") {
+                                    if (!sessionId) {
+                                        sessionId = data.session_id;
+                                    }
+                                    const statusText = aiWrapper.querySelector('.ai-status-text');
+                                    if (statusText) statusText.textContent = "Preparando respuesta...";
+                                }
+                                else if (data.type === "tool_result") {
+                                    const statusText = aiWrapper.querySelector('.ai-status-text');
+                                    if (statusText) {
+                                        if (data.tool === "search_documents") {
+                                            statusText.textContent = "Analizando documentos...";
+                                        } else if (data.tool === "read_document") {
+                                            statusText.textContent = "Leyendo documento relevante...";
+                                        } else {
+                                            statusText.textContent = "Utilizando herramienta: " + data.tool + "...";
+                                        }
+                                    }
                                 }
                                 else if (data.type === "token") {
+                                    const statusContainer = aiWrapper.querySelector('.ai-status-container');
+                                    if (statusContainer && !statusContainer.classList.contains('hidden')) {
+                                        statusContainer.classList.add('hidden');
+                                        const contentBox = aiWrapper.querySelector('.ai-content-box');
+                                        if (contentBox) contentBox.classList.remove('hidden');
+                                    }
                                     fullAiResponse += data.content;
                                     updateAIMessage(aiWrapper, fullAiResponse);
                                     scrollToBottom();
                                 }
                                 else if (data.type === "done") {
+                                    const statusContainer = aiWrapper.querySelector('.ai-status-container');
+                                    if (statusContainer && !statusContainer.classList.contains('hidden')) {
+                                        statusContainer.classList.add('hidden');
+                                        const contentBox = aiWrapper.querySelector('.ai-content-box');
+                                        if (contentBox) contentBox.classList.remove('hidden');
+                                    }
                                     showUsage(aiWrapper, data.usage);
                                 }
                                 else if (data.type === "error") {
+                                    const statusContainer = aiWrapper.querySelector('.ai-status-container');
+                                    if (statusContainer && !statusContainer.classList.contains('hidden')) {
+                                        statusContainer.classList.add('hidden');
+                                        const contentBox = aiWrapper.querySelector('.ai-content-box');
+                                        if (contentBox) contentBox.classList.remove('hidden');
+                                    }
                                     fullAiResponse += "\n\n*[Error: " + data.message + "]*";
                                     updateAIMessage(aiWrapper, fullAiResponse);
                                 }
