@@ -23,7 +23,7 @@ Backend IoT para telefonillos/videoporteros. Startup, equipo multidisciplinar.
 - Cloud Azure: AKS, Service Bus, CI/CD Azure DevOps.
 - Mentoría técnica a perfiles junior.
 - Stack: Spring Boot, NestJS, Event-Driven, Hexagonal, CQRS, DDD.
-- Infra: OAuth2, GraphQL/OpenAPI, Azure Service Bus, RabbitMQ, PostgreSQL, MongoDB, Redis, Kubernetes, DAPR, Azure DevOps.
+- Infra: OAuth2, GraphQL/OpenAPI, Azure Service Bus, RabbitMQ, PostgreSQL, MongoDB, Redis, DAPR, Azure DevOps.
 
 ### Ingeniero de Datos — Nunegal Consulting → Inditex (11/2021 — 09/2022, La Coruña)
 Software alta disponibilidad para QA de datos en tiempo real.
