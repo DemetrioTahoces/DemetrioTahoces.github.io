@@ -19,7 +19,7 @@ Fermax: compañía líder 75+ años en videoporteros y control de accesos. Incor
 
 ### Early Adopter IA (GitHub Copilot)
 - Referente en uso avanzado de agentes y skills de Copilot.
-- Automatización: boilerplate, tests unitarios, documentación APIs, refactoring, nuevas features.
+- Automatización: tests unitarios, documentación APIs, refactoring, nuevas features.
 
 ### Infraestructura y Disponibilidad
 - ConfigMaps/Secrets en Kubernetes para configuración segura y dinámica.
