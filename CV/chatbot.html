@@ -167,12 +167,12 @@
 
 <body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
 
-    <div class="w-full max-w-4xl flex flex-col h-[90vh] card rounded-2xl overflow-hidden relative">
+    <div id="chatbot-container-wrapper" class="w-full max-w-4xl flex flex-col h-[90vh] card rounded-2xl overflow-hidden relative">
 
         <!-- Header -->
         <header class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
             <div class="flex items-center gap-3">
-                <a href="../index.html"
+                <a href="../index.html" id="back-btn"
                     class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors"
                     title="Volver al CV">
                     <i class="ph ph-arrow-left text-xl"></i>
@@ -184,16 +184,28 @@
                     <p class="text-xs text-slate-400">Pregúntame sobre la experiencia de Demetrio</p>
                 </div>
             </div>
-            <div id="status-container"
-                class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 transition-colors duration-300">
-                <span class="relative flex h-2 w-2">
-                    <span id="status-ping"
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75"></span>
-                    <span id="status-dot"
-                        class="relative inline-flex rounded-full h-2 w-2 bg-slate-500 transition-colors duration-300"></span>
-                </span>
-                <span id="status-text"
-                    class="text-xs font-medium text-slate-400 transition-colors duration-300">Conectando...</span>
+            <div class="flex items-center gap-2">
+                <button id="reset-btn"
+                    class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-slate-800 text-slate-400 hover:text-red-400 transition-colors"
+                    title="Reiniciar conversación">
+                    <i class="ph ph-trash text-lg"></i>
+                </button>
+                <div id="status-container"
+                    class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 transition-colors duration-300">
+                    <span class="relative flex h-2 w-2">
+                        <span id="status-ping"
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75"></span>
+                        <span id="status-dot"
+                            class="relative inline-flex rounded-full h-2 w-2 bg-slate-500 transition-colors duration-300"></span>
+                    </span>
+                    <span id="status-text"
+                        class="text-xs font-medium text-slate-400 transition-colors duration-300">Conectando...</span>
+                </div>
+                <button id="minimize-btn"
+                    class="hidden flex items-center justify-center w-9 h-9 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors"
+                    title="Minimizar">
+                    <i class="ph ph-minus text-xl"></i>
+                </button>
             </div>
         </header>
 
@@ -260,6 +272,32 @@
     </div>
 
     <script>
+        // Robust wrapper for localStorage to handle security exceptions under file:// protocol
+        const safeStorage = {
+            getItem: function (key) {
+                try {
+                    return localStorage.getItem(key);
+                } catch (e) {
+                    console.warn('[Chatbot] localStorage.getItem failed:', e);
+                    return null;
+                }
+            },
+            setItem: function (key, value) {
+                try {
+                    localStorage.setItem(key, value);
+                } catch (e) {
+                    console.warn('[Chatbot] localStorage.setItem failed:', e);
+                }
+            },
+            removeItem: function (key) {
+                try {
+                    localStorage.removeItem(key);
+                } catch (e) {
+                    console.warn('[Chatbot] localStorage.removeItem failed:', e);
+                }
+            }
+        };
+
         // API Configuration
         // Note: For local testing ensure the python backend is running on port 8000.
         // For production, this should point to your deployed Vercel URL.
@@ -277,10 +315,119 @@
         const statusPing = document.getElementById('status-ping');
         const statusDot = document.getElementById('status-dot');
         const statusText = document.getElementById('status-text');
+        
+        const resetBtn = document.getElementById('reset-btn');
+        const minimizeBtn = document.getElementById('minimize-btn');
+        const backBtn = document.getElementById('back-btn');
 
-        // State
+        // State & History
         let isGenerating = false;
         let sessionId = null;
+        let chatHistory = [];
+
+        // Check if embedded in iframe
+        const isEmbedded = (window.self !== window.top);
+
+        if (isEmbedded) {
+            // Adjust styles for iframe layout
+            document.body.className = "h-screen w-screen p-0 m-0 overflow-hidden flex flex-col bg-[#080f1c]";
+            const wrapper = document.getElementById('chatbot-container-wrapper');
+            if (wrapper) {
+                wrapper.className = "w-full h-full flex flex-col overflow-hidden relative";
+                wrapper.style.height = "100vh";
+                wrapper.style.maxHeight = "100vh";
+                wrapper.style.maxWidth = "100%";
+                wrapper.style.borderRadius = "0px";
+                wrapper.style.border = "none";
+            }
+            
+            // Toggle header buttons
+            if (backBtn) backBtn.classList.add('hidden');
+            if (minimizeBtn) minimizeBtn.classList.remove('hidden');
+        }
+
+        // Minimize listener
+        minimizeBtn.addEventListener('click', () => {
+            window.parent.postMessage({ type: 'minimize' }, '*');
+        });
+
+        // Reset conversation listener
+        resetBtn.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que quieres reiniciar la conversación?')) {
+                clearConversation();
+            }
+        });
+
+        // History Management
+        function saveHistory() {
+            safeStorage.setItem('chatbot_messages', JSON.stringify(chatHistory));
+            if (sessionId) {
+                safeStorage.setItem('chatbot_session_id', sessionId);
+            }
+        }
+
+        function clearConversation() {
+            chatHistory = [];
+            sessionId = null;
+            safeStorage.removeItem('chatbot_messages');
+            safeStorage.removeItem('chatbot_session_id');
+            
+            // Keep only welcome message
+            const welcomeMsg = chatContainer.firstElementChild;
+            chatContainer.innerHTML = '';
+            if (welcomeMsg) {
+                chatContainer.appendChild(welcomeMsg);
+            }
+            
+            suggestionsContainer.style.display = 'flex';
+            chatInput.value = '';
+            autoResizeInput();
+        }
+
+        // Load chat history from storage if available
+        function loadHistory() {
+            const savedSessionId = safeStorage.getItem('chatbot_session_id');
+            const savedHistory = safeStorage.getItem('chatbot_messages');
+            
+            if (savedSessionId) {
+                sessionId = savedSessionId;
+            }
+            
+            if (savedHistory) {
+                try {
+                    chatHistory = JSON.parse(savedHistory);
+                } catch (e) {
+                    console.error("Error parsing saved chat history:", e);
+                    chatHistory = [];
+                }
+            }
+            
+            if (chatHistory.length > 0) {
+                suggestionsContainer.style.display = 'none';
+                
+                chatHistory.forEach(msg => {
+                    if (msg.sender === 'user') {
+                        appendUserMessage(msg.text, false);
+                    } else {
+                        const aiWrapper = appendAILoading(false, false);
+                        
+                        // Hide loading status container
+                        const statusContainer = aiWrapper.querySelector('.ai-status-container');
+                        if (statusContainer) statusContainer.classList.add('hidden');
+                        
+                        const contentBox = aiWrapper.querySelector('.ai-content-box');
+                        if (contentBox) contentBox.classList.remove('hidden');
+                        
+                        updateAIMessage(aiWrapper, msg.text, false);
+                        if (msg.usage) {
+                            showUsage(aiWrapper, msg.usage);
+                        }
+                    }
+                });
+                
+                scrollToBottom();
+            }
+        }
 
         // Check Health Status
         async function checkHealth() {
@@ -332,8 +479,9 @@
             }
         }
 
-        // Execute health check on load and every minute
+        // Execute health check and load history on load
         checkHealth();
+        loadHistory();
         setInterval(checkHealth, 60000);
 
         // Auto-fill input from suggestions
@@ -352,7 +500,7 @@
         }
 
         // Create User Message Bubble
-        function appendUserMessage(text) {
+        function appendUserMessage(text, shouldSave = true) {
             const wrapper = document.createElement('div');
             wrapper.className = 'flex gap-4 max-w-[85%] self-end animate-fade-in flex-row-reverse';
 
@@ -370,6 +518,11 @@
 
             chatContainer.appendChild(wrapper);
             scrollToBottom();
+
+            if (shouldSave) {
+                chatHistory.push({ sender: 'user', text: text });
+                saveHistory();
+            }
         }
 
         // Create AI Message Placeholder
@@ -470,7 +623,7 @@
             sendBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i>';
 
             // Add bubbles
-            appendUserMessage(message);
+            appendUserMessage(message, true);
             const aiWrapper = appendAILoading();
 
             let fullAiResponse = "";
@@ -556,6 +709,10 @@
                                         if (contentBox) contentBox.classList.remove('hidden');
                                     }
                                     showUsage(aiWrapper, data.usage);
+                                    
+                                    // Save completed AI response
+                                    chatHistory.push({ sender: 'ai', text: fullAiResponse, usage: data.usage });
+                                    saveHistory();
                                 }
                                 else if (data.type === "error") {
                                     const statusContainer = aiWrapper.querySelector('.ai-status-container');
@@ -566,6 +723,10 @@
                                     }
                                     fullAiResponse += "\n\n*[Error: " + data.message + "]*";
                                     updateAIMessage(aiWrapper, fullAiResponse);
+                                    
+                                    // Save error message to history
+                                    chatHistory.push({ sender: 'ai', text: fullAiResponse });
+                                    saveHistory();
                                 }
                             } catch (e) {
                                 console.error("Error parsing JSON chunk:", e, "Chunk:", dataStr);
@@ -583,6 +744,10 @@
 
                 const contentDiv = aiWrapper.querySelector('.ai-content');
                 contentDiv.innerHTML = `<span class="text-red-400"><i class="ph ph-warning-circle"></i> ${error.message}</span>`;
+                
+                // Save connection/network error to history
+                chatHistory.push({ sender: 'ai', text: `⚠️ ${error.message}` });
+                saveHistory();
             } finally {
                 // Unlock UI
                 isGenerating = false;
