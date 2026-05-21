@@ -173,9 +173,10 @@
         // Intercept chatbot links
         interceptChatbotLinks();
 
-        // Restore state from localStorage
+        // Restore state from localStorage (only on desktop/tablet)
         const isOpen = safeStorage.getItem('chatbot_open') === 'true';
-        if (isOpen) {
+        const isMobile = window.innerWidth <= 768;
+        if (isOpen && !isMobile) {
             console.log('[Chatbot Widget] Restoring open state from storage.');
             openChatbot();
         }
@@ -185,6 +186,15 @@
     }
 
     function toggleChatbot() {
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            const pathLower = window.location.pathname.toLowerCase();
+            const isInsideCV = pathLower.includes('/cv/') || pathLower.includes('\\cv\\');
+            const targetUrl = isInsideCV ? 'chatbot.html' : 'CV/chatbot.html';
+            window.location.href = targetUrl;
+            return;
+        }
+
         const isCurrentlyHidden = chatbotWindow.classList.contains('chatbot-hidden');
         if (isCurrentlyHidden) {
             openChatbot();
@@ -245,8 +255,11 @@
             const href = link.getAttribute('href');
             if (href && (href.endsWith('chatbot.html') || href.includes('chatbot.html'))) {
                 link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openChatbot();
+                    const isMobile = window.innerWidth <= 768;
+                    if (!isMobile) {
+                        e.preventDefault();
+                        openChatbot();
+                    }
                 });
             }
         });
