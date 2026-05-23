@@ -25,6 +25,7 @@ Fermax: compañía líder 75+ años en videoporteros y control de accesos. Incor
 - ConfigMaps/Secrets en Kubernetes para configuración segura y dinámica.
 - RabbitMQ para mensajería asíncrona (colas y exchanges).
 - CI/CD con pipelines que incluyen testing.
+- Despliegues blue green y problemas asociados (retrocompatibilidad BBDD, colas de mensajeria, etc.)
 
 ## Stack
 - Backend: Spring Boot (Java), NestJS (TypeScript), Hexagonal, DDD, Domain Events, Unit/Integration Testing.
