@@ -2,7 +2,7 @@
 **09/2019 — 03/2021** | alisys.net | Asturias
 
 ## Contexto
-Alisys: soluciones digitales. Evolución en 1,5 años de Ingeniero de Software (Android) a Especialista en Robótica e IA (adaptación rápida a dominios complejos).
+Alisys: soluciones digitales. Durante el año y medio que estuve allí, empecé desarrollando aplicaciones Android y luego pasé a trabajar en proyectos de robótica e inteligencia artificial, encargándome de integrar sensores y modelos de lenguaje.
 
 ## Fase 1 — Ingeniero de Software (09/2019 — 01/2020)
 ### App Android Mensajería

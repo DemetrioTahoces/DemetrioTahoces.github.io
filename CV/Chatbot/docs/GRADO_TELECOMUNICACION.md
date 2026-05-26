@@ -16,7 +16,7 @@ Grado habilitante para Ingeniero Técnico de Telecomunicación (PARS: Programa A
 - **Otras optativas:** Comunicaciones Móviles/Ópticas, Televisión, Radiofrecuencia/Microondas, Radiolocalización, CAD, Acústica, Redes Industriales, Matemáticas Avanzadas, Sistemas Información, I+D+i, Expresión Oral Inglés, Calidad, Cooperación, Creación Empresas, Prácticas Externas.
 
 ## TFG (12 ECTS)
-**Redes neuronales para procesado de arrays de antenas.** Aplicación aprendizaje automático (redes neuronales) a procesado señal en arrays antenas. Anticipa interés posterior en IA y deep learning.
+**Redes neuronales para procesado de arrays de antenas.** Aplicación de aprendizaje automático (redes neuronales) al procesado de señal en arrays de antenas. Marcó el inicio de mi interés por la IA y el deep learning.
 
 ## Datos
 - Centro: Escuela Politécnica de Ingeniería de Gijón

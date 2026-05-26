@@ -2,7 +2,7 @@
 **01/2025 — Presente** | fermax.com
 
 ## Contexto
-Fermax: compañía líder 75+ años en videoporteros y control de accesos. Incorporación tras subrogación técnica desde Opendit. Reto: integrar conocimiento startup en organización de mayor escala manteniendo agilidad y calidad.
+Fermax: fabricante de videoporteros y sistemas de control de accesos. Me incorporé tras la subrogación del equipo de Opendit para seguir desarrollando el ecosistema IoT y sus aplicaciones móviles. El objetivo principal era trasladar el diseño y la agilidad de la startup a una empresa más grande, cuidando la calidad del código y la estructura de los sistemas.
 
 ## Contribuciones
 

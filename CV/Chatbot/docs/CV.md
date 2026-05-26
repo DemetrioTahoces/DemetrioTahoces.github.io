@@ -2,24 +2,24 @@
 **Software Engineer** · tonitahoces@gmail.com · LinkedIn: demetrio-antonio-tahoces-sánchez-17905a181
 
 ## Resumen
-Ingeniero de Telecomunicación y Software Engineer con 6 años de experiencia en backend, IoT, data pipelines y sistemas distribuidos. Arquitectura limpia, escalabilidad y mantenibilidad como principios. Actualmente explorando IA aplicada (LLMs, agentes autónomos).
+Soy Ingeniero de Telecomunicación y Software Engineer. Llevo 6 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes autónomos, buscando formas prácticas de integrarlos en aplicaciones reales.
 
 ## Experiencia Profesional
 
 ### Software Engineer — Fermax (01/2025 — Presente)
 Ecosistema IoT y apps móviles. Subrogación técnica desde Opendit.
-- Impulso de Domain Events en DDD para desacoplamiento entre microservicios.
-- Equipo clave en migración Opendit→Fermax (disponibilidad + integridad datos).
-- Early Adopter IA: integración pionera de GitHub Copilot (agentes/skills).
+- Uso de Domain Events en DDD para desacoplar microservicios.
+- Participación en la migración técnica de Opendit a Fermax.
+- Integración de herramientas de IA en los flujos de desarrollo.
 - Despliegue/mantenimiento microservicios en Kubernetes, RabbitMQ, Redis.
 - Stack: Spring Boot, NestJS, Hexagonal, DDD, Testing.
 - Infra: Kubernetes, GitHub Actions, OpenAPI, MongoDB, PostgreSQL, Redis, RabbitMQ.
 
 ### Backend Engineer — Opendit (09/2022 — 12/2024)
 Backend IoT para telefonillos/videoporteros. Startup, equipo multidisciplinar.
-- Arquitectura DAPR: abstracción infra (mensajería, secrets), agnóstico al cloud.
-- Patrón BFF para reducir latencias e integración microservicios↔apps móviles.
-- Sistema telemetría CQRS para ingesta masiva de raw data IoT.
+- Uso de DAPR para la abstracción de infraestructura (mensajería, secrets).
+- Uso del patrón BFF para estructurar la comunicación microservicios-apps móviles.
+- Ingesta de datos de telemetría IoT basada en CQRS.
 - Cloud Azure: AKS, Service Bus, CI/CD Azure DevOps.
 - Mentoría técnica a perfiles junior.
 - Stack: Spring Boot, NestJS, Event-Driven, Hexagonal, CQRS, DDD.

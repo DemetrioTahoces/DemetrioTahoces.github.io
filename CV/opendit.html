@@ -43,11 +43,10 @@
                 <span class="badge px-4 py-2 rounded-full text-sm font-medium">GraphQL</span>
             </div>
         </header>
-
         <section class="mb-12">
             <div class="card p-8 rounded-xl">
                 <h2 class="text-2xl font-bold text-gray-100 mb-6 section-title">Contexto</h2>
-                <p class="text-gray-300 leading-relaxed text-lg">Opendit fue una startup dedicada al desarrollo de soluciones IoT para el sector de telefonillos y videoporteros. El producto gestionaba funcionalidades críticas: apertura de puertas, desvío de llamadas, registro de actividad y permisos a terceros. Como Backend Engineer en un equipo multidisciplinar, participé en todas las fases del ciclo de vida del producto, desde la definición de funcionalidades y requisitos (apoyado por análisis de métricas y KPIs de producto) hasta la implementación técnica y el despliegue en producción. El entorno startup exigía velocidad sin sacrificar la calidad, lo que requería decisiones arquitectónicas muy calculadas desde el primer día.</p>
+                <p class="text-gray-300 leading-relaxed text-lg">Opendit fue una startup de soluciones IoT para telefonillos y videoporteros. El producto controlaba la apertura de puertas, el desvío de llamadas, el registro de actividad y la gestión de permisos. Como Backend Engineer, trabajé en la definición de requisitos y el diseño de la arquitectura, además de la implementación del código y su puesta en producción, buscando un equilibrio entre la velocidad de entrega y la calidad del software.</p>
             </div>
         </section>
 
@@ -61,12 +60,12 @@
                         <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0"><span class="text-2xl">⚙️</span></div>
                         <div>
                             <h3 class="text-xl font-bold text-gray-100 mb-2">Arquitectura DAPR</h3>
-                            <p class="text-gray-400 text-sm">Liderazgo en el diseño del backend con DAPR como capa de abstracción de infraestructura.</p>
+                            <p class="text-gray-400 text-sm">Diseño del backend con DAPR como capa de abstracción de infraestructura.</p>
                         </div>
                     </div>
                     <ul class="space-y-3 ml-4">
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Sidecars por microservicio, eliminando dependencia directa con SDKs específicos de Azure.</p></li>
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Reducción de vendor lock-in y facilitación de tests de integración al simular infraestructura localmente.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Uso de sidecars por microservicio para evitar la dependencia directa de los SDKs de Azure.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Esto redujo la dependencia del proveedor y facilitó las pruebas de integración simulando la infraestructura de forma local.</p></li>
                     </ul>
                 </div>
 
@@ -75,14 +74,14 @@
                         <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0"><span class="text-2xl">🔀</span></div>
                         <div>
                             <h3 class="text-xl font-bold text-gray-100 mb-2">Optimización con Backend for Frontend (BFF)</h3>
-                            <p class="text-gray-400 text-sm">Patrón BFF para optimizar la comunicación entre microservicios y apps móviles.</p>
+                            <p class="text-gray-400 text-sm">Uso del patrón BFF para estructurar la comunicación entre los servicios y las aplicaciones móviles.</p>
                         </div>
                     </div>
                     <ul class="space-y-3 ml-4">
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Consolidación de múltiples llamadas API en una sola request, reduciendo latencia percibida por el usuario.</p></li>
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Respuestas adaptadas por cliente (iOS, Android, Web), evitando over-fetching y under-fetching.</p></li>
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Capa de seguridad centralizada en servicios BFF, ocultando el resto del backend a la red externa.</p></li>
-                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Evolución independiente de la API de cada plataforma sin afectar al ecosistema.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Agrupación de varias llamadas a la API en una sola petición para disminuir la latencia.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Adaptación de las respuestas según el cliente (iOS, Android, web) para enviar solo los datos necesarios.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Centralización de la seguridad en la capa BFF para mantener el resto de servicios aislados.</p></li>
+                        <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span><p class="text-gray-300 text-sm">Desarrollo de las APIs de cada plataforma de forma independiente.</p></li>
                     </ul>
                 </div>
 
