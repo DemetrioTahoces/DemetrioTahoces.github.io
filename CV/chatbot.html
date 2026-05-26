@@ -167,7 +167,8 @@
 
 <body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
 
-    <div id="chatbot-container-wrapper" class="w-full max-w-4xl flex flex-col h-[90vh] card rounded-2xl overflow-hidden relative">
+    <div id="chatbot-container-wrapper"
+        class="w-full max-w-4xl flex flex-col h-[90vh] card rounded-2xl overflow-hidden relative">
 
         <!-- Header -->
         <header class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/50">
@@ -315,7 +316,7 @@
         const statusPing = document.getElementById('status-ping');
         const statusDot = document.getElementById('status-dot');
         const statusText = document.getElementById('status-text');
-        
+
         const resetBtn = document.getElementById('reset-btn');
         const minimizeBtn = document.getElementById('minimize-btn');
         const backBtn = document.getElementById('back-btn');
@@ -340,7 +341,7 @@
                 wrapper.style.borderRadius = "0px";
                 wrapper.style.border = "none";
             }
-            
+
             // Toggle header buttons
             if (backBtn) backBtn.classList.add('hidden');
             if (minimizeBtn) minimizeBtn.classList.remove('hidden');
@@ -371,14 +372,14 @@
             sessionId = null;
             safeStorage.removeItem('chatbot_messages');
             safeStorage.removeItem('chatbot_session_id');
-            
+
             // Keep only welcome message
             const welcomeMsg = chatContainer.firstElementChild;
             chatContainer.innerHTML = '';
             if (welcomeMsg) {
                 chatContainer.appendChild(welcomeMsg);
             }
-            
+
             suggestionsContainer.style.display = 'flex';
             chatInput.value = '';
             autoResizeInput();
@@ -388,11 +389,11 @@
         function loadHistory() {
             const savedSessionId = safeStorage.getItem('chatbot_session_id');
             const savedHistory = safeStorage.getItem('chatbot_messages');
-            
+
             if (savedSessionId) {
                 sessionId = savedSessionId;
             }
-            
+
             if (savedHistory) {
                 try {
                     chatHistory = JSON.parse(savedHistory);
@@ -401,30 +402,30 @@
                     chatHistory = [];
                 }
             }
-            
+
             if (chatHistory.length > 0) {
                 suggestionsContainer.style.display = 'none';
-                
+
                 chatHistory.forEach(msg => {
                     if (msg.sender === 'user') {
                         appendUserMessage(msg.text, false);
                     } else {
                         const aiWrapper = appendAILoading(false, false);
-                        
+
                         // Hide loading status container
                         const statusContainer = aiWrapper.querySelector('.ai-status-container');
                         if (statusContainer) statusContainer.classList.add('hidden');
-                        
+
                         const contentBox = aiWrapper.querySelector('.ai-content-box');
                         if (contentBox) contentBox.classList.remove('hidden');
-                        
+
                         updateAIMessage(aiWrapper, msg.text, false);
                         if (msg.usage) {
                             showUsage(aiWrapper, msg.usage);
                         }
                     }
                 });
-                
+
                 scrollToBottom();
             }
         }
@@ -709,7 +710,7 @@
                                         if (contentBox) contentBox.classList.remove('hidden');
                                     }
                                     showUsage(aiWrapper, data.usage);
-                                    
+
                                     // Save completed AI response
                                     chatHistory.push({ sender: 'ai', text: fullAiResponse, usage: data.usage });
                                     saveHistory();
@@ -723,7 +724,7 @@
                                     }
                                     fullAiResponse += "\n\n*[Error: " + data.message + "]*";
                                     updateAIMessage(aiWrapper, fullAiResponse);
-                                    
+
                                     // Save error message to history
                                     chatHistory.push({ sender: 'ai', text: fullAiResponse });
                                     saveHistory();
@@ -744,7 +745,7 @@
 
                 const contentDiv = aiWrapper.querySelector('.ai-content');
                 contentDiv.innerHTML = `<span class="text-red-400"><i class="ph ph-warning-circle"></i> ${error.message}</span>`;
-                
+
                 // Save connection/network error to history
                 chatHistory.push({ sender: 'ai', text: `⚠️ ${error.message}` });
                 saveHistory();
