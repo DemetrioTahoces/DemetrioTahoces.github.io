@@ -16,27 +16,33 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            box-shadow: 0 8px 30px rgba(37, 99, 235, 0.4);
+            background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+            border: 1px solid rgba(147, 197, 253, 0.34);
+            box-shadow: 0 16px 38px rgba(2, 6, 23, 0.38), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
             color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease;
             outline: none;
             padding: 0;
         }
 
         .chatbot-fab:hover {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 12px 35px rgba(37, 99, 235, 0.6);
+            transform: translateY(-2px);
+            border-color: rgba(147, 197, 253, 0.58);
+            box-shadow: 0 20px 46px rgba(2, 6, 23, 0.46), 0 0 0 6px rgba(59, 130, 246, 0.12);
+        }
+
+        .chatbot-fab:focus-visible {
+            outline: 2px solid #38bdf8;
+            outline-offset: 4px;
         }
 
         .chatbot-fab i {
             font-size: 26px;
-            transition: transform 0.3s ease;
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .chatbot-fab.open i {
@@ -47,49 +53,57 @@
             position: fixed;
             bottom: 90px;
             right: 20px;
-            width: 420px;
+            width: min(420px, calc(100vw - 40px));
             height: 580px;
             max-height: calc(100vh - 110px);
-            background: #080f1c;
-            border: 1px solid rgba(31, 41, 55, 0.8);
-            border-radius: 1.25rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            background: #07111f;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 18px;
+            box-shadow: 0 28px 80px rgba(2, 6, 23, 0.62);
             overflow: hidden;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+            transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1), transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.24s;
             opacity: 1;
             transform: translateY(0) scale(1);
             visibility: visible;
+            transform-origin: bottom right;
         }
 
         .chatbot-window.chatbot-hidden {
             opacity: 0;
-            transform: translateY(20px) scale(0.95);
+            transform: translateY(16px) scale(0.97);
             visibility: hidden;
             pointer-events: none;
         }
 
-        /* Responsive styles */
         @media (max-width: 500px) {
             .chatbot-window {
                 bottom: 0;
                 right: 0;
                 width: 100vw;
-                height: 100vh;
-                max-height: 100vh;
+                height: 100dvh;
+                max-height: 100dvh;
                 border-radius: 0;
                 border: none;
             }
-            
+
             .chatbot-widget-container {
                 bottom: 16px;
                 right: 16px;
             }
-            
+
             .chatbot-fab.open-mobile-hidden {
                 display: none;
             }
         }
-    `;
+
+        @media (prefers-reduced-motion: reduce) {
+            .chatbot-fab,
+            .chatbot-fab i,
+            .chatbot-window {
+                transition-duration: 0.001ms !important;
+            }
+        }
+`;
     document.head.appendChild(style);
 
     // Dynamically load Phosphor Icons if not present on the parent page
@@ -148,10 +162,13 @@
         fab = document.createElement('button');
         fab.className = 'chatbot-fab';
         fab.setAttribute('aria-label', 'Abrir asistente virtual');
+        fab.setAttribute('aria-expanded', 'false');
+        fab.setAttribute('aria-controls', 'cv-chatbot-window');
         fab.innerHTML = '<i class="ph ph-robot"></i>';
 
         // Create Chatbot Window
         chatbotWindow = document.createElement('div');
+        chatbotWindow.id = 'cv-chatbot-window';
         chatbotWindow.className = 'chatbot-window chatbot-hidden';
 
         // Append components to container, then container to body
@@ -209,6 +226,9 @@
 
         chatbotWindow.classList.remove('chatbot-hidden');
         fab.classList.add('open-mobile-hidden');
+        fab.classList.add('open');
+        fab.setAttribute('aria-expanded', 'true');
+        fab.setAttribute('aria-label', 'Cerrar asistente virtual');
         
         const fabIcon = fab.querySelector('i');
         if (fabIcon) {
@@ -221,6 +241,9 @@
     function closeChatbot() {
         chatbotWindow.classList.add('chatbot-hidden');
         fab.classList.remove('open-mobile-hidden');
+        fab.classList.remove('open');
+        fab.setAttribute('aria-expanded', 'false');
+        fab.setAttribute('aria-label', 'Abrir asistente virtual');
 
         const fabIcon = fab.querySelector('i');
         if (fabIcon) {
@@ -233,6 +256,7 @@
     function ensureIframeCreated() {
         if (!iframe) {
             iframe = document.createElement('iframe');
+            iframe.title = 'Asistente virtual de Demetrio Tahoces';
             
             // Dynamically determine the path depending on parent page location
             // to support both http:// and local file:// protocols (case-insensitive).
