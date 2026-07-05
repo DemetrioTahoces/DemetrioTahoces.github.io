@@ -1,0 +1,44 @@
+# Experiencia Profesional
+
+Usar esta referencia cuando el usuario pida modificar, ampliar o añadir experiencia profesional, proyectos laborales, responsabilidades, logros o tecnologías asociadas a empresas.
+
+## Archivos a revisar
+
+- `index.html`: sección `#experiencia`.
+- Página detallada correspondiente en `CV/`:
+  - `CV/fermax.html`
+  - `CV/opendit.html`
+  - `CV/inditex.html`
+  - `CV/alisys.html`
+  - `CV/securitas-direct.html`
+  - `CV/imagine800.html`
+- Documento RAG correspondiente en `CV/Chatbot/docs/`:
+  - `FERMAX.md`, `OPENDIT.md`, `INDITEX.md`, `ALISYS.md`, `SECURITAS_DIRECT.md`, `IMAGINE800.md`.
+- `CV/Chatbot/docs/CV.md`: cronología y resumen global.
+
+## Regla principal
+
+Preservar todo lo escrito anteriormente salvo instrucción explícita de reemplazo. Si se amplía una experiencia, añadir responsabilidades, impacto, contexto o tecnologías sin borrar el relato anterior.
+
+## Criterios de edición
+
+- Mantener consistencia cronológica, cargo, empresa, fechas y relación contractual.
+- No inventar métricas, seniority, liderazgo, impacto de negocio ni alcance técnico si no están en la petición o en documentos existentes.
+- Separar claramente:
+  - Responsabilidades.
+  - Tecnologías usadas.
+  - Arquitectura o prácticas de ingeniería.
+  - Impacto o resultado.
+- Evitar duplicar literalmente párrafos largos entre `index.html` y páginas detalladas. La home debe resumir; la página de detalle debe explicar.
+- Si se crea una nueva experiencia, revisar navegación anterior/siguiente, enlaces desde `index.html`, metadatos SEO básicos y documento RAG asociado.
+- Si se modifica una experiencia existente, sincronizar el documento RAG correspondiente para que el chatbot responda con la misma versión.
+
+## Competencias y temas relacionados
+
+Después de editar experiencia profesional, revisar si deben añadirse o ajustar:
+
+- Tecnologías concretas: lenguajes, frameworks, bases de datos, mensajería, cloud, CI/CD, observabilidad, testing.
+- Arquitectura y prácticas: DDD, Arquitectura Hexagonal, CQRS, Event-Driven, microservicios, clean code, mentoring, liderazgo técnico.
+- Dominios: IoT, videoporteros, robótica, logística, alarmas, VoIP, datos en tiempo real, IA aplicada.
+
+Actualizar `index.html#competencias` y `CV/Chatbot/docs/CV.md` si el cambio introduce o refuerza una competencia relevante. No añadir tecnologías marginales usadas de forma anecdótica.

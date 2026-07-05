@@ -239,6 +239,12 @@
             .case-nav { grid-template-columns: 1fr; }
         }
 
+        @media (hover: none), (pointer: coarse) {
+            a, button { touch-action: manipulation; }
+            .back-link:hover, .card:hover, .case-nav a:hover { transform: none !important; }
+            .card:hover { box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22) !important; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
         }

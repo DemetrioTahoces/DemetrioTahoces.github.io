@@ -1,0 +1,4 @@
+interface:
+  display_name: "Edit CV"
+  short_description: "Guía para ampliar o modificar el CV"
+  default_prompt: "Use $edit-cv to ampliar o modificar el CV del proyecto respetando el contenido existente."

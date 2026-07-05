@@ -96,6 +96,18 @@
             }
         }
 
+        @media (hover: none), (pointer: coarse) {
+            .chatbot-fab {
+                touch-action: manipulation;
+            }
+
+            .chatbot-fab:hover {
+                transform: none;
+                border-color: rgba(147, 197, 253, 0.34);
+                box-shadow: 0 16px 38px rgba(2, 6, 23, 0.38), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .chatbot-fab,
             .chatbot-fab i,
@@ -161,6 +173,7 @@
         // Create FAB
         fab = document.createElement('button');
         fab.className = 'chatbot-fab';
+        fab.type = 'button';
         fab.setAttribute('aria-label', 'Abrir asistente virtual');
         fab.setAttribute('aria-expanded', 'false');
         fab.setAttribute('aria-controls', 'cv-chatbot-window');

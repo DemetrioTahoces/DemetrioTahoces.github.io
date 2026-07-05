@@ -334,6 +334,36 @@
             .hero-actions a { width: 100%; justify-content: center; }
         }
 
+        @media (hover: none), (pointer: coarse) {
+            a, button {
+                touch-action: manipulation;
+            }
+
+            .hero-actions a:hover,
+            .card:hover,
+            .job-card:hover,
+            .btn-cv:hover {
+                transform: none !important;
+            }
+
+            .card:hover,
+            .job-card:hover {
+                box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22) !important;
+            }
+
+            .group:hover .group-hover\:text-blue-400 {
+                color: inherit !important;
+            }
+
+            .group:hover .group-hover\:opacity-100 {
+                opacity: 0.5 !important;
+            }
+
+            .group:hover .group-hover\:translate-x-1 {
+                transform: none !important;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.001ms !important;

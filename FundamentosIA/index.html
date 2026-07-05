@@ -130,6 +130,17 @@
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px var(--primary-glow);
         }
 
+        @media (hover: none), (pointer: coarse) {
+            a, button {
+                touch-action: manipulation;
+            }
+
+            .glass-card:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+        }
+
         /* Ecosystem Grid */
         .ecosystem-grid {
             display: grid;
