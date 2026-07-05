@@ -1,3 +1,10 @@
+---
+type: cv
+title: "Software Engineer en Fermax"
+route: "/CV/fermax.html"
+tags: ["cv", "fermax", "backend", "iot"]
+---
+
 # Software Engineer — Fermax
 **01/2025 — Presente** | fermax.com
 

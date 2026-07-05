@@ -1,3 +1,10 @@
+---
+type: cv
+title: "Backend Engineer en Opendit"
+route: "/CV/opendit.html"
+tags: ["cv", "opendit", "backend", "iot"]
+---
+
 # Backend Engineer — Opendit
 **09/2022 — 12/2024** | Madrid (Híbrido)
 

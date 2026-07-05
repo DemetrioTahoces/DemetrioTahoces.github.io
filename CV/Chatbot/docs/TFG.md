@@ -1,3 +1,10 @@
+---
+type: cv
+title: "TFG - Procesado de Arrays de Antenas"
+route: "/CV/tfg.html"
+tags: ["cv", "tfg", "telecomunicacion"]
+---
+
 # TFG: Procesado de Arrays de Antenas mediante Deep Learning
 Grado en Ingeniería Telecomunicación — Universidad de Oviedo (2017)
 

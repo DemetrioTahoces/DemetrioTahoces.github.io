@@ -278,8 +278,7 @@
                 </button>
             </form>
             <div class="text-center mt-2">
-                <span class="text-[10px] text-slate-500">El asistente puede cometer errores. El backend está limitado
-                    por rate limiting.</span>
+                <span class="text-[10px] text-slate-500">El asistente es una IA y puede cometer errores.</span>
             </div>
         </footer>
 
@@ -312,6 +311,78 @@
             }
         };
 
+        const PAGE_CONTEXT_STORAGE_KEY = 'chatbot_page_context';
+        const PAGE_CONTEXT_MAX_LENGTH = 220;
+
+        function trimContextValue(value) {
+            if (typeof value !== 'string') return '';
+            return value.trim().slice(0, PAGE_CONTEXT_MAX_LENGTH);
+        }
+
+        function normalizeClientPageContext(context) {
+            if (!context) return null;
+
+            const path = trimContextValue(context.path);
+            const title = trimContextValue(context.title);
+            if (!path && !title) return null;
+
+            return { path: path || '/', title: title };
+        }
+
+        function readPageContextFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            return normalizeClientPageContext({
+                path: params.get('page_path') || '',
+                title: params.get('page_title') || ''
+            });
+        }
+
+        function readPageContextFromStorage() {
+            const raw = safeStorage.getItem(PAGE_CONTEXT_STORAGE_KEY);
+            if (!raw) return null;
+
+            try {
+                return normalizeClientPageContext(JSON.parse(raw));
+            } catch (e) {
+                console.warn('[Chatbot] Invalid stored page context:', e);
+                return null;
+            }
+        }
+
+        function readPageContextFromReferrer() {
+            if (!document.referrer) return null;
+
+            try {
+                const referrerUrl = new URL(document.referrer);
+                if (window.location.protocol !== 'file:' && referrerUrl.origin !== window.location.origin) {
+                    return null;
+                }
+
+                return normalizeClientPageContext({
+                    path: referrerUrl.pathname || '/',
+                    title: ''
+                });
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function savePageContext(context) {
+            const normalized = normalizeClientPageContext(context);
+            if (normalized) {
+                safeStorage.setItem(PAGE_CONTEXT_STORAGE_KEY, JSON.stringify(normalized));
+            }
+            return normalized;
+        }
+
+        function getPageContext() {
+            return savePageContext(
+                readPageContextFromQuery() ||
+                readPageContextFromStorage() ||
+                readPageContextFromReferrer()
+            );
+        }
+
         // API Configuration
         // Note: For local testing ensure the python backend is running on port 8000.
         // For production, this should point to your deployed Vercel URL.
@@ -339,6 +410,7 @@
         let isGenerating = false;
         let sessionId = null;
         let chatHistory = [];
+        const initialPageContext = getPageContext();
 
         // Check if embedded in iframe
         const isEmbedded = (window.self !== window.top);
@@ -679,6 +751,20 @@
             });
         }
 
+        function buildChatPayload(message) {
+            const payload = {
+                message: message,
+                session_id: sessionId
+            };
+
+            const pageContext = getPageContext() || initialPageContext;
+            if (pageContext) {
+                payload.page_context = pageContext;
+            }
+
+            return payload;
+        }
+
         async function sendChatJson(message, aiWrapper) {
             let response;
             try {
@@ -689,10 +775,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        message: message,
-                        session_id: sessionId
-                    })
+                    body: JSON.stringify(buildChatPayload(message))
                 });
             } catch (error) {
                 logNetworkFailure(error, CHAT_URL);
@@ -729,10 +812,7 @@
                         'Content-Type': 'application/json',
                         'Accept': 'text/event-stream'
                     },
-                    body: JSON.stringify({
-                        message: message,
-                        session_id: sessionId
-                    })
+                    body: JSON.stringify(buildChatPayload(message))
                 });
             } catch (error) {
                 logNetworkFailure(error, CHAT_STREAM_URL);

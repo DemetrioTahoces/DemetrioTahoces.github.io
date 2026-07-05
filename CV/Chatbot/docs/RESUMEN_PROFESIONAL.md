@@ -1,3 +1,10 @@
+---
+type: cv
+title: "Resumen profesional"
+route: "/CV/resumen-profesional.html"
+tags: ["cv", "resumen profesional"]
+---
+
 # Resumen Profesional: Demetrio Tahoces
 **Software Engineer | Backend & Sistemas de IA**
 

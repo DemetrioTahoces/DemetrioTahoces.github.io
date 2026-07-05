@@ -1,3 +1,10 @@
+---
+type: cv
+title: "Desarrollador Android en Imagine800"
+route: "/CV/imagine800.html"
+tags: ["cv", "imagine800", "android", "voip"]
+---
+
 # Desarrollador Android — Imagine800 S.L
 **02/2019 — 09/2019** | imagine800.com
 

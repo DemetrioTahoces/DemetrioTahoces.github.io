@@ -1,3 +1,10 @@
+---
+type: cv
+title: "CV completo"
+route: "/"
+tags: ["cv", "perfil profesional"]
+---
+
 # Demetrio Antonio Tahoces Sánchez
 **Software Engineer** · tonitahoces@gmail.com · LinkedIn: demetrio-antonio-tahoces-sánchez-17905a181
 

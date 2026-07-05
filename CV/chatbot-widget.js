@@ -153,6 +153,27 @@
         }
     };
 
+    const PAGE_CONTEXT_STORAGE_KEY = 'chatbot_page_context';
+
+    function getPageContext() {
+        return {
+            path: window.location.pathname || '/',
+            title: document.title || ''
+        };
+    }
+
+    function savePageContext() {
+        safeStorage.setItem(PAGE_CONTEXT_STORAGE_KEY, JSON.stringify(getPageContext()));
+    }
+
+    function buildChatbotUrl(baseUrl) {
+        const context = getPageContext();
+        const separator = baseUrl.indexOf('?') === -1 ? '?' : '&';
+        return baseUrl + separator +
+            'page_path=' + encodeURIComponent(context.path) +
+            '&page_title=' + encodeURIComponent(context.title);
+    }
+
     // HTML elements templates
     let container, fab, chatbotWindow, iframe;
     let isLoaded = false;
@@ -221,7 +242,8 @@
             const pathLower = window.location.pathname.toLowerCase();
             const isInsideCV = pathLower.includes('/cv/') || pathLower.includes('\\cv\\');
             const targetUrl = isInsideCV ? 'chatbot.html' : 'CV/chatbot.html';
-            window.location.href = targetUrl;
+            savePageContext();
+            window.location.href = buildChatbotUrl(targetUrl);
             return;
         }
 
@@ -275,7 +297,9 @@
             // to support both http:// and local file:// protocols (case-insensitive).
             const pathLower = window.location.pathname.toLowerCase();
             const isInsideCV = pathLower.includes('/cv/') || pathLower.includes('\\cv\\');
-            iframe.src = isInsideCV ? 'chatbot.html' : 'CV/chatbot.html';
+            const chatbotUrl = isInsideCV ? 'chatbot.html' : 'CV/chatbot.html';
+            savePageContext();
+            iframe.src = buildChatbotUrl(chatbotUrl);
             console.log('[Chatbot Widget] Created iframe. Path:', window.location.pathname, 'isInsideCV:', isInsideCV, 'src:', iframe.src);
             
             iframe.style.width = '100%';
@@ -296,6 +320,8 @@
                     if (!isMobile) {
                         e.preventDefault();
                         openChatbot();
+                    } else {
+                        savePageContext();
                     }
                 });
             }

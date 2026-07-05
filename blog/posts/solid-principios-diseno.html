@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLID: principios de diseño para software que cambia - Demetrio Tahoces</title>
+    <meta name="description" content="Explicación práctica y crítica de los cinco principios SOLID: qué problema resuelven, cómo aplicarlos sin dogmatismo y cómo conectan con arquitectura mantenible.">
+    <meta property="og:title" content="SOLID: principios de diseño para software que cambia">
+    <meta property="og:description" content="Una guía práctica para entender SRP, OCP, LSP, ISP y DIP como herramientas para reducir el coste del cambio.">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/solid-principios-diseno.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SOLID: principios de diseño para software que cambia">
+    <meta name="twitter:description" content="Una guía práctica para entender SRP, OCP, LSP, ISP y DIP como herramientas para reducir el coste del cambio.">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/solid-principios-diseno.svg">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "SOLID: principios de diseño para software que cambia",
+      "description": "Explicación práctica y crítica de los cinco principios SOLID.",
+      "datePublished": "2026-07-05",
+      "dateModified": "2026-07-05",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/solid-principios-diseno.svg",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html"
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #07111f;
+            --surface: rgba(15, 23, 42, 0.78);
+            --surface-strong: #0f172a;
+            --border: rgba(148, 163, 184, 0.16);
+            --border-strong: rgba(96, 165, 250, 0.42);
+            --text: #e5edf7;
+            --text-muted: #a7b4c8;
+            --text-soft: #7f8ea3;
+            --accent: #60a5fa;
+            --accent-strong: #38bdf8;
+            --accent-warm: #22c55e;
+            --shadow-soft: 0 24px 80px rgba(2, 6, 23, 0.42);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, 0.14), transparent 30rem),
+                radial-gradient(circle at 86% 8%, rgba(34, 197, 94, 0.075), transparent 24rem),
+                linear-gradient(180deg, #07111f 0%, #08101c 52%, #060b13 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 1rem 3rem;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 72%);
+        }
+
+        a { transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease; }
+        a:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
+
+        .skip-link {
+            position: fixed;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 100;
+            transform: translateY(-160%);
+            background: #e5edf7;
+            color: #07111f;
+            padding: 0.65rem 0.9rem;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        .skip-link:focus { transform: translateY(0); }
+
+        .site-nav {
+            position: sticky;
+            top: 0.75rem;
+            z-index: 40;
+            max-width: 64rem;
+            margin: 0.75rem auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(7, 17, 31, 0.78);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 16px 44px rgba(2, 6, 23, 0.34);
+        }
+
+        .site-brand { color: var(--text); font-weight: 800; padding: 0.45rem 0.75rem; white-space: nowrap; }
+        .site-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.25rem; }
+        .site-nav-links a { color: var(--text-muted); font-size: 0.86rem; font-weight: 650; padding: 0.45rem 0.7rem; border-radius: 999px; }
+        .site-nav-links a:hover, .site-nav-links a[aria-current="page"] { color: var(--text); background: rgba(96, 165, 250, 0.12); }
+
+        .page-shell { position: relative; width: min(100%, 64rem); padding-top: 0.25rem; }
+
+        .back-link {
+            color: #93c5fd;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            background: rgba(15, 23, 42, 0.48);
+            border-radius: 999px;
+            padding: 0.55rem 0.8rem;
+        }
+        .back-link:hover { color: #ffffff; border-color: rgba(96, 165, 250, 0.48); background: rgba(96, 165, 250, 0.12); transform: translateY(-1px); }
+
+        .header-bg {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            background:
+                linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(14, 39, 73, 0.9)),
+                radial-gradient(circle at 20% 10%, rgba(96, 165, 250, 0.24), transparent 24rem);
+            box-shadow: var(--shadow-soft);
+            text-align: left;
+        }
+
+        .article-hero > * { position: relative; z-index: 1; }
+        .article-hero h1 { letter-spacing: 0; line-height: 1.02; }
+
+        .card {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22);
+            opacity: 1;
+            transform: none;
+            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.45s ease;
+            backdrop-filter: blur(12px);
+        }
+        .card:hover { border-color: var(--border-strong); background: rgba(15, 23, 42, 0.92); transform: translateY(-2px); box-shadow: 0 20px 56px rgba(2, 6, 23, 0.28); }
+
+        .badge {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.22);
+            color: #bfdbfe;
+        }
+
+        .article-prose {
+            color: #cbd5e1;
+            font-size: 1.02rem;
+            line-height: 1.78;
+        }
+        .article-prose h2 {
+            margin: 2.5rem 0 1rem;
+            color: #f8fafc;
+            font-size: 1.65rem;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+        .article-prose h3 {
+            margin: 1.8rem 0 0.75rem;
+            color: #e5edf7;
+            font-size: 1.22rem;
+            line-height: 1.3;
+            font-weight: 800;
+        }
+        .article-prose p { margin: 1rem 0; }
+        .article-prose ul, .article-prose ol { margin: 1rem 0 1rem 1.25rem; }
+        .article-prose li { margin: 0.45rem 0; }
+        .article-prose strong { color: #f8fafc; }
+        .article-prose a { color: #93c5fd; text-decoration: underline; text-decoration-color: rgba(147, 197, 253, 0.38); text-underline-offset: 0.2rem; }
+        .article-prose a:hover { color: #ffffff; text-decoration-color: rgba(255, 255, 255, 0.62); }
+        .article-prose pre {
+            overflow-x: auto;
+            margin: 1.35rem 0;
+            padding: 1rem;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 0.75rem;
+            background: rgba(2, 6, 23, 0.52);
+            color: #dbeafe;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+        .article-prose code {
+            color: #bfdbfe;
+            background: rgba(96, 165, 250, 0.12);
+            border: 1px solid rgba(96, 165, 250, 0.14);
+            border-radius: 0.35rem;
+            padding: 0.1rem 0.28rem;
+        }
+        .article-prose pre code { background: transparent; border: 0; padding: 0; color: inherit; }
+
+        .callout {
+            border-left: 3px solid rgba(34, 197, 94, 0.58);
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .site-footer { margin: 1rem 0 0; padding: 2rem 0 0; border-top: 1px solid var(--border); color: var(--text-soft); font-size: 0.9rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            html.motion-ready .article-hero { opacity: 0; transform: translateY(14px); animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards; }
+            html.motion-ready .card { opacity: 0; transform: translateY(18px); }
+            html.motion-ready .card.visible { opacity: 1; transform: translateY(0); }
+            @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+        }
+
+        @media (max-width: 760px) {
+            body { padding: 0 0.85rem 2rem; }
+            .site-nav { position: static; align-items: flex-start; border-radius: 1rem; flex-direction: column; }
+            .site-nav-links { justify-content: flex-start; }
+            .site-nav-links a { padding: 0.4rem 0.55rem; }
+            .article-hero h1 { font-size: clamp(2.25rem, 11vw, 3.4rem); }
+            .principle-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            a { touch-action: manipulation; }
+            .back-link:hover, .card:hover { transform: none !important; }
+            .card:hover { box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22) !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
+        }
+    </style>
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Arquitectura</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Diseño de software</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Backend</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3">Diseño orientado al cambio</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight">SOLID: principios de diseño para software que cambia</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed">
+                Una explicación práctica de SRP, OCP, LSP, ISP y DIP como herramientas para reducir acoplamiento, proteger contratos y evitar que cada cambio atraviese todo el sistema.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300">
+                <span>5 julio 2026</span>
+                <span class="text-gray-600">·</span>
+                <span>18 min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card visible rounded-xl p-6 md:p-8 mb-8">
+            <figure class="mb-8">
+                <img src="../assets/solid-principios-diseno.svg" alt="Mapa conceptual de los cinco principios SOLID y su relación con el cambio, contratos y abstracciones." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <div class="principle-grid mb-8">
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">S</strong><span class="text-sm">Responsabilidad</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">O</strong><span class="text-sm">Extensión</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">L</strong><span class="text-sm">Sustitución</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">I</strong><span class="text-sm">Interfaces</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">D</strong><span class="text-sm">Dependencias</span></div>
+            </div>
+
+            <div class="article-prose">
+                <section>
+                    <h2>Idea central</h2>
+                    <p>SOLID no es una lista de reglas para crear más clases. Es una forma de reducir el coste del cambio. Los cinco principios intentan que una modificación razonable afecte a pocas piezas, que el código viejo estable no se toque innecesariamente, que las abstracciones mantengan contratos fiables y que las dependencias apunten hacia las decisiones importantes del sistema.</p>
+                    <p>Aplicar SOLID bien no significa convertir cada método en una interfaz ni envolver cualquier detalle en una abstracción. Eso suele producir lo contrario: más indirección, más archivos, más navegación mental y menos claridad. La lectura útil es más pragmática: detectar ejes de cambio, proteger contratos, aislar políticas de detalles y diseñar puntos de extensión donde el negocio o la tecnología realmente varían.</p>
+                </section>
+
+                <section>
+                    <h2>Antes de las letras: el problema es el cambio</h2>
+                    <p>El software no se degrada físicamente, pero se vuelve rígido cuando cada cambio obliga a tocar demasiadas zonas. Esa rigidez suele aparecer por tres causas:</p>
+                    <ul>
+                        <li>responsabilidades mezcladas;</li>
+                        <li>contratos poco claros;</li>
+                        <li>dependencias hacia detalles volátiles.</li>
+                    </ul>
+                    <p>SOLID intenta atacar esas causas. Sus principios vienen de la tradición de diseño orientado a objetos, pero muchas ideas también aplican en servicios, módulos, casos de uso, componentes funcionales o paquetes. La unidad concreta importa menos que la pregunta: <strong>si esto cambia, ¿qué más se ve arrastrado?</strong></p>
+                </section>
+
+                <section>
+                    <h2>S: Single Responsibility Principle</h2>
+                    <p>La interpretación superficial dice: "una clase debe hacer una sola cosa". Es una frase útil para empezar, pero incompleta. La idea más precisa es: <strong>un módulo debería responder a un único actor o grupo de cambio</strong>.</p>
+                    <p>Una clase <code>InvoiceService</code> que calcula impuestos, persiste facturas, genera PDF y publica eventos no tiene un único motivo de cambio. Hacienda puede cambiar reglas fiscales, operaciones puede cambiar el formato del PDF, infraestructura puede cambiar la base de datos y arquitectura puede cambiar la mensajería. Aunque todo tenga relación con "facturas", no todo cambia por la misma razón.</p>
+                    <p>Una separación más sana sería:</p>
+                    <pre><code>InvoiceCalculator       -> reglas de cálculo
+InvoiceRepository       -> persistencia
+InvoicePdfRenderer      -> representación documental
+InvoicePublishedEvent   -> integración/eventos</code></pre>
+                    <p>No es una invitación a atomizar por verbos. Si dos decisiones cambian siempre juntas, separarlas añade ceremonia. SRP pide cohesión alrededor de una razón real de cambio, no una clase por método.</p>
+                    <h3>Señales de violación</h3>
+                    <ul>
+                        <li>cambios pequeños obligan a tocar una clase enorme;</li>
+                        <li>hay métodos usados por actores distintos;</li>
+                        <li>los tests de una clase necesitan mocks de persistencia, formato, validación, red y dominio;</li>
+                        <li>el nombre de la clase contiene palabras como <code>Manager</code>, <code>Processor</code>, <code>Helper</code> o <code>Service</code> y no explica una responsabilidad concreta.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>O: Open/Closed Principle</h2>
+                    <p>El principio abierto/cerrado dice que un módulo debe poder extenderse sin modificar su código existente. La frase puede sonar imposible, porque todo cambio real modifica algo. La lectura útil es: <strong>el código estable debe permitir nuevas variantes mediante puntos de extensión explícitos</strong>.</p>
+                    <p>Ejemplo típico: cálculo de descuentos.</p>
+                    <pre><code>DiscountService
+  if customer.type == VIP
+  if customer.type == EMPLOYEE
+  if campaign == BLACK_FRIDAY</code></pre>
+                    <p>Cada nueva regla obliga a modificar el mismo bloque. Eso aumenta riesgo, conflictos de merge y regresiones. Una alternativa es modelar una abstracción <code>DiscountPolicy</code> y añadir implementaciones:</p>
+                    <pre><code>DiscountPolicy
+  VipDiscountPolicy
+  EmployeeDiscountPolicy
+  BlackFridayDiscountPolicy</code></pre>
+                    <p>El código que aplica descuentos queda cerrado respecto a la mecánica de aplicación y abierto a nuevas políticas. No se trata de usar herencia por defecto; composición, estrategia, registro de handlers, plugins o funciones de primera clase pueden cumplir el mismo papel.</p>
+                    <h3>Cuándo no aplicarlo</h3>
+                    <ul>
+                        <li>si solo existe una variante y no hay señal real de cambio;</li>
+                        <li>si la abstracción se diseña antes de entender el dominio;</li>
+                        <li>si el punto de extensión oculta una regla que debería ser explícita.</li>
+                    </ul>
+                    <p>OCP no significa "no modificar nunca". Significa no tocar código estable cada vez que aparece una variación previsible.</p>
+                </section>
+
+                <section>
+                    <h2>L: Liskov Substitution Principle</h2>
+                    <p>LSP es el principio más maltratado. No trata de que "una subclase compile donde se espera la clase base". Trata de que <strong>un subtipo respete el contrato observable del tipo que sustituye</strong>.</p>
+                    <p>Si una función recibe un <code>PaymentMethod</code>, debería poder trabajar con <code>CardPayment</code>, <code>BankTransfer</code> o <code>WalletPayment</code> sin descubrir condiciones especiales, excepciones inesperadas o cambios semánticos. El subtipo puede especializar comportamiento, pero no puede romper las expectativas que el cliente tenía sobre el contrato.</p>
+                    <p>Ejemplo clásico de violación:</p>
+                    <pre><code>Bird
+  fly()
+
+Penguin extends Bird
+  fly() -> error</code></pre>
+                    <p>El problema no es que el pingüino sea o no sea un ave en biología. El problema es que el contrato <code>Bird</code> prometía vuelo. Si no todas las aves vuelan, el contrato está mal. Un diseño mejor separa capacidades:</p>
+                    <pre><code>Bird
+FlyingBird
+  fly()
+Penguin extends Bird
+Sparrow extends FlyingBird</code></pre>
+                    <p>En backend aparece con frecuencia en repositorios, clientes HTTP, providers y adaptadores. Una implementación que devuelve <code>null</code> donde el contrato promete una lista vacía, que lanza una excepción no documentada o que ignora una transacción esperada puede romper LSP sin que el compilador se entere.</p>
+                    <h3>Checklist práctico</h3>
+                    <ul>
+                        <li>no fortalecer precondiciones en el subtipo;</li>
+                        <li>no debilitar postcondiciones;</li>
+                        <li>no romper invariantes del tipo base;</li>
+                        <li>no exigir al cliente <code>if concrete_type == ...</code>;</li>
+                        <li>no usar herencia para reutilizar código si no hay sustitución real.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>I: Interface Segregation Principle</h2>
+                    <p>ISP dice que un cliente no debería depender de métodos que no usa. El síntoma habitual es una interfaz "gorda":</p>
+                    <pre><code>UserGateway
+  createUser()
+  deleteUser()
+  exportUsers()
+  sendWelcomeEmail()
+  recalculateUserScore()</code></pre>
+                    <p>Un caso de uso que solo crea usuarios queda acoplado a operaciones de exportación, email y scoring. Ese acoplamiento puede parecer barato, pero contamina tests, implementaciones, permisos y evolución.</p>
+                    <p>Separar por cliente suele producir contratos más honestos:</p>
+                    <pre><code>CreatesUsers
+DeletesUsers
+ExportsUsers
+SendsWelcomeEmails</code></pre>
+                    <p>La clave es "por cliente", no "por método" de forma mecánica. Si dos operaciones son consumidas siempre por el mismo caso de uso y forman un contrato estable, pueden convivir.</p>
+                    <p>En APIs internas y microservicios, ISP se traduce en evitar contratos gigantes que fuerzan a todos los consumidores a conocer todo el modelo. A veces se resuelve con interfaces pequeñas; otras, con endpoints específicos, DTOs de lectura por caso de uso o eventos más focalizados.</p>
+                </section>
+
+                <section>
+                    <h2>D: Dependency Inversion Principle</h2>
+                    <p>DIP dice que los módulos de alto nivel no deberían depender de módulos de bajo nivel; ambos deberían depender de abstracciones. Además, las abstracciones no deberían depender de detalles: los detalles deberían depender de abstracciones.</p>
+                    <p>Traducido a arquitectura: las reglas importantes del sistema no deberían importar directamente el cliente HTTP, el ORM, Kafka, Redis o el proveedor cloud. El dominio o caso de uso define lo que necesita; la infraestructura implementa ese contrato.</p>
+                    <p>Ejemplo:</p>
+                    <pre><code>RegisterUserUseCase -> UserRepository
+PostgresUserRepository -> UserRepository</code></pre>
+                    <p>El caso de uso no sabe si los usuarios viven en PostgreSQL, MongoDB o un servicio remoto. Solo expresa una necesidad: guardar y recuperar usuarios con un contrato concreto.</p>
+                    <p>Esto conecta directamente con arquitectura hexagonal:</p>
+                    <ul>
+                        <li>el centro define puertos;</li>
+                        <li>los adaptadores implementan detalles;</li>
+                        <li>la composición decide qué implementación concreta se enchufa.</li>
+                    </ul>
+                    <p>DIP no es lo mismo que inyección de dependencias. La inyección es una técnica para suministrar dependencias. La inversión es una decisión de diseño: quién define el contrato y hacia dónde apunta la dependencia.</p>
+                </section>
+
+                <section>
+                    <h2>Cómo se refuerzan entre sí</h2>
+                    <p>Los principios no viven aislados:</p>
+                    <ul>
+                        <li><strong>SRP</strong> detecta ejes de cambio.</li>
+                        <li><strong>OCP</strong> convierte variaciones estables en puntos de extensión.</li>
+                        <li><strong>LSP</strong> protege que esas extensiones sean sustituibles.</li>
+                        <li><strong>ISP</strong> mantiene pequeños los contratos que cruzan límites.</li>
+                        <li><strong>DIP</strong> hace que las políticas importantes no dependan de detalles técnicos.</li>
+                    </ul>
+                    <p>En conjunto, SOLID empuja a una arquitectura donde el cambio entra por zonas previstas y no atraviesa todo el sistema.</p>
+                </section>
+
+                <section>
+                    <h2>Ejemplo integrado</h2>
+                    <p>Supongamos un sistema que notifica a usuarios cuando se crea una alerta IoT. Un diseño frágil podría tener:</p>
+                    <pre><code>AlertService
+  valida alerta
+  consulta usuario en PostgreSQL
+  decide canal
+  envía email con SMTP
+  envía push con Firebase
+  registra auditoría</code></pre>
+                    <p>Funciona, pero cada cambio toca el mismo sitio: nueva regla de alerta, nuevo canal, cambio de proveedor, cambio de auditoría.</p>
+                    <p>Una versión más SOLID:</p>
+                    <pre><code>CreateAlertUseCase
+  AlertPolicy
+  UserRepository
+  NotificationChannel
+  AuditTrail
+
+EmailNotificationChannel implements NotificationChannel
+PushNotificationChannel implements NotificationChannel
+PostgresUserRepository implements UserRepository</code></pre>
+                    <p>No es solo "más limpio". El beneficio operativo es que añadir un canal como WhatsApp o cambiar Firebase por otro proveedor no debería modificar la política central de creación de alertas.</p>
+                </section>
+
+                <section>
+                    <h2>Errores habituales</h2>
+                    <h3>Confundir SOLID con más capas</h3>
+                    <p>Más capas no implican mejor diseño. Si una interfaz solo tiene una implementación, no hay previsión de variación y solo añade navegación, quizá no aporta nada. La abstracción prematura también es deuda.</p>
+
+                    <h3>Usar herencia donde basta composición</h3>
+                    <p>Muchos problemas que se intentan resolver con jerarquías se expresan mejor con composición. LSP es una advertencia: si una subclase necesita desactivar o contradecir parte del padre, probablemente no hay relación de subtipo.</p>
+
+                    <h3>Aplicar OCP a todo</h3>
+                    <p>No todo merece un plugin system. Conviene cerrar aquello que ya es estable y abrir aquello que cambia con frecuencia. El diseño debe seguir evidencia, no ansiedad.</p>
+
+                    <h3>Diseñar interfaces desde la implementación</h3>
+                    <p>Una interfaz que copia todos los métodos de una clase concreta no invierte nada. Solo duplica el detalle. Las buenas abstracciones nacen del consumidor: "qué necesita este caso de uso para cumplir su responsabilidad".</p>
+                </section>
+
+                <section>
+                    <h2>Relación con testing</h2>
+                    <p>SOLID y testing se retroalimentan. Un módulo con una responsabilidad clara se prueba con menos contexto. Un contrato pequeño reduce mocks. Una dependencia invertida permite sustituir infraestructura por dobles de prueba. Un subtipo que respeta contratos evita tests condicionales por implementación.</p>
+                    <p>Pero los tests también desenmascaran excesos: si para probar un caso simple hay que construir diez interfaces vacías, quizá el diseño está demasiado fragmentado.</p>
+                </section>
+
+                <section>
+                    <h2>SOLID en código moderno</h2>
+                    <p>Aunque SOLID nació en el contexto de orientación a objetos, su valor no depende de escribir Java o C#. En TypeScript, Python, Go o arquitecturas funcionales siguen existiendo los mismos problemas:</p>
+                    <ul>
+                        <li>funciones con demasiadas razones de cambio;</li>
+                        <li>módulos cerrados a extensión razonable;</li>
+                        <li>contratos que prometen más de lo que algunas implementaciones cumplen;</li>
+                        <li>consumidores acoplados a APIs demasiado grandes;</li>
+                        <li>políticas de negocio dependiendo de detalles técnicos.</li>
+                    </ul>
+                    <p>La forma cambia, el criterio permanece. Un estudio experimental reciente sobre código de Machine Learning encontró evidencia estadísticamente significativa de que aplicar SOLID mejoraba la comprensión del código por parte de participantes del estudio. No convierte SOLID en dogma universal, pero sí refuerza una intuición práctica: separar responsabilidades y contratos ayuda cuando el código debe ser leído, entendido y modificado por otros.</p>
+                </section>
+
+                <section class="callout rounded-xl p-5 my-8">
+                    <h2 class="mt-0">Regla pragmática</h2>
+                    <p>Antes de aplicar un principio, conviene preguntar:</p>
+                    <ol>
+                        <li>¿Qué cambio concreto estoy intentando facilitar?</li>
+                        <li>¿Qué parte del sistema quiero proteger?</li>
+                        <li>¿La abstracción reduce acoplamiento real o solo desplaza complejidad?</li>
+                        <li>¿El contrato es estable desde el punto de vista del consumidor?</li>
+                        <li>¿Los tests quedan más simples o más ceremoniosos?</li>
+                    </ol>
+                    <p>Si no puedes responder, probablemente estás aplicando SOLID como estética, no como ingeniería.</p>
+                </section>
+
+                <section>
+                    <h2>Conclusión</h2>
+                    <p>SOLID no garantiza buen diseño. Ayuda a razonar sobre cambio, acoplamiento y contratos. Su uso maduro consiste en aplicarlo donde el sistema muestra presión real: módulos que cambian por motivos distintos, reglas que necesitan nuevas variantes, jerarquías con contratos frágiles, interfaces demasiado amplias y casos de uso acoplados a infraestructura.</p>
+                    <p>La mejor versión de SOLID no produce más código por principio. Produce código donde las decisiones importantes están protegidas, las variaciones tienen un lugar natural y los detalles reemplazables no gobiernan la arquitectura.</p>
+                </section>
+
+                <section>
+                    <h2>Fuentes consultadas</h2>
+                    <ul>
+                        <li><a href="https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html" target="_blank" rel="noopener noreferrer">Robert C. Martin, "The Single Responsibility Principle"</a>.</li>
+                        <li><a href="https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html" target="_blank" rel="noopener noreferrer">Robert C. Martin, "The Open Closed Principle"</a>.</li>
+                        <li><a href="https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html" target="_blank" rel="noopener noreferrer">Robert C. Martin, "Solid Relevance"</a>.</li>
+                        <li><a href="https://doi.org/10.1145/197320.197383" target="_blank" rel="noopener noreferrer">Barbara Liskov y Jeannette Wing, "A behavioral notion of subtyping"</a>.</li>
+                        <li><a href="https://arxiv.org/abs/2402.05337" target="_blank" rel="noopener noreferrer">Raphael Cabral et al., "Investigating the Impact of SOLID Design Principles on Machine Learning Code Understanding"</a>.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var animatedItems = document.querySelectorAll('.card');
+            if ('IntersectionObserver' in window && document.documentElement.classList.contains('motion-ready')) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+                animatedItems.forEach(function (item) { observer.observe(item); });
+            } else {
+                animatedItems.forEach(function (item) { item.classList.add('visible'); });
+            }
+        });
+    </script>
+</body>
+
+</html>

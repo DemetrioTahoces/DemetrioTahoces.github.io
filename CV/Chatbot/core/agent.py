@@ -11,7 +11,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from core.config import settings
 from core.prompts import SYSTEM_PROMPT
-from core.tools import get_tools
+from core.tools import build_page_context_hint, get_tools
 
 logger = logging.getLogger("cv_chatbot.agent")
 
@@ -104,7 +104,16 @@ def create_agent_graph():
     return graph
 
 
-async def invoke_agent(graph, message: str, session_id: str) -> dict:
+def _build_user_message(message: str, page_context: dict | None = None) -> str:
+    """Attach validated navigation context to the current user turn."""
+    context_hint = build_page_context_hint(page_context)
+    if not context_hint:
+        return message
+
+    return f"{context_hint}\n\nPregunta del usuario:\n{message}"
+
+
+async def invoke_agent(graph, message: str, session_id: str, page_context: dict | None = None) -> dict:
     """
     Invoke the agent with a user message and return the full response.
 
@@ -116,7 +125,7 @@ async def invoke_agent(graph, message: str, session_id: str) -> dict:
     Returns:
         Dict with 'response' text and 'usage' token info.
     """
-    inputs = {"messages": [("user", message)]}
+    inputs = {"messages": [("user", _build_user_message(message, page_context))]}
 
     config = {"configurable": {"thread_id": session_id}}
 
@@ -161,7 +170,7 @@ async def invoke_agent(graph, message: str, session_id: str) -> dict:
     }
 
 
-async def stream_agent(graph, message: str, session_id: str) -> AsyncGenerator[dict, None]:
+async def stream_agent(graph, message: str, session_id: str, page_context: dict | None = None) -> AsyncGenerator[dict, None]:
     """
     Stream the agent response token by token via SSE-compatible events.
 
@@ -176,7 +185,7 @@ async def stream_agent(graph, message: str, session_id: str) -> AsyncGenerator[d
         message: User's question.
         session_id: Session identifier.
     """
-    inputs = {"messages": [("user", message)]}
+    inputs = {"messages": [("user", _build_user_message(message, page_context))]}
     config = {"configurable": {"thread_id": session_id}}
 
     total_input_tokens = 0

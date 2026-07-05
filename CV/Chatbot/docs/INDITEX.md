@@ -1,3 +1,10 @@
+---
+type: cv
+title: "Ingeniero de Datos en Inditex"
+route: "/CV/inditex.html"
+tags: ["cv", "inditex", "datos"]
+---
+
 # Ingeniero de Datos — Nunegal Consulting → Inditex
 **11/2021 — 09/2022** | La Coruña
 

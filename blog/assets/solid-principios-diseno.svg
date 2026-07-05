@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Mapa conceptual de SOLID</title>
+  <desc id="desc">Diagrama de los cinco principios SOLID con una frase breve para cada uno: responsabilidad única, abierto/cerrado, sustitución de Liskov, segregación de interfaces e inversión de dependencias.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="0.55" stop-color="#10294b"/>
+      <stop offset="1" stop-color="#06111d"/>
+    </linearGradient>
+    <radialGradient id="glow-a" cx="18%" cy="12%" r="58%">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-b" cx="82%" cy="74%" r="48%">
+      <stop offset="0" stop-color="#22c55e" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#94a3b8" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow-a)"/>
+  <rect width="1200" height="630" fill="url(#glow-b)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <g filter="url(#shadow)">
+      <rect x="70" y="58" width="330" height="514" rx="30" fill="#0f172a" fill-opacity="0.9" stroke="#60a5fa" stroke-opacity="0.34"/>
+      <text x="235" y="156" text-anchor="middle" fill="#e5edf7" font-size="82" font-weight="800" letter-spacing="0">SOLID</text>
+      <text x="235" y="204" text-anchor="middle" fill="#bfdbfe" font-size="27" font-weight="700">Diseñar para cambiar</text>
+      <text x="235" y="252" text-anchor="middle" fill="#a7b4c8" font-size="21" font-weight="500">No son reglas para crear</text>
+      <text x="235" y="282" text-anchor="middle" fill="#a7b4c8" font-size="21" font-weight="500">más clases: son criterios</text>
+      <text x="235" y="312" text-anchor="middle" fill="#a7b4c8" font-size="21" font-weight="500">para aislar cambios,</text>
+      <text x="235" y="342" text-anchor="middle" fill="#a7b4c8" font-size="21" font-weight="500">proteger contratos y</text>
+      <text x="235" y="372" text-anchor="middle" fill="#a7b4c8" font-size="21" font-weight="500">depender de abstracciones.</text>
+
+      <path d="M128 448h214" stroke="#60a5fa" stroke-opacity="0.36" stroke-width="2"/>
+      <text x="235" y="492" text-anchor="middle" fill="#bbf7d0" font-size="20" font-weight="700">Pregunta clave</text>
+      <text x="235" y="524" text-anchor="middle" fill="#a7b4c8" font-size="19" font-weight="500">Si esto cambia,</text>
+      <text x="235" y="552" text-anchor="middle" fill="#a7b4c8" font-size="19" font-weight="500">¿qué más arrastra?</text>
+    </g>
+
+    <g filter="url(#shadow)">
+      <g transform="translate(460 54)">
+        <rect width="670" height="88" rx="18" fill="#0b1424" fill-opacity="0.95" stroke="#60a5fa" stroke-opacity="0.35"/>
+        <circle cx="48" cy="44" r="27" fill="#2563eb" fill-opacity="0.78"/>
+        <text x="48" y="54" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="800">S</text>
+        <text x="92" y="39" fill="#f8fafc" font-size="28" font-weight="800">Responsabilidad única</text>
+        <text x="92" y="67" fill="#bfdbfe" font-size="18" font-weight="650">Agrupa lo que cambia por la misma razón.</text>
+      </g>
+
+      <g transform="translate(460 152)">
+        <rect width="670" height="88" rx="18" fill="#0b1424" fill-opacity="0.95" stroke="#22c55e" stroke-opacity="0.32"/>
+        <circle cx="48" cy="44" r="27" fill="#16a34a" fill-opacity="0.78"/>
+        <text x="48" y="54" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="800">O</text>
+        <text x="92" y="39" fill="#f8fafc" font-size="28" font-weight="800">Abierto/cerrado</text>
+        <text x="92" y="67" fill="#bbf7d0" font-size="18" font-weight="650">Añade variantes sin reabrir código estable.</text>
+      </g>
+
+      <g transform="translate(460 250)">
+        <rect width="670" height="88" rx="18" fill="#0b1424" fill-opacity="0.95" stroke="#60a5fa" stroke-opacity="0.35"/>
+        <circle cx="48" cy="44" r="27" fill="#0ea5e9" fill-opacity="0.78"/>
+        <text x="48" y="54" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="800">L</text>
+        <text x="92" y="39" fill="#f8fafc" font-size="28" font-weight="800">Sustitución de Liskov</text>
+        <text x="92" y="67" fill="#bfdbfe" font-size="18" font-weight="650">Un subtipo no debe romper el contrato observable.</text>
+      </g>
+
+      <g transform="translate(460 348)">
+        <rect width="670" height="88" rx="18" fill="#0b1424" fill-opacity="0.95" stroke="#22c55e" stroke-opacity="0.32"/>
+        <circle cx="48" cy="44" r="27" fill="#0891b2" fill-opacity="0.78"/>
+        <text x="48" y="54" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="800">I</text>
+        <text x="92" y="39" fill="#f8fafc" font-size="28" font-weight="800">Segregación de interfaces</text>
+        <text x="92" y="67" fill="#bbf7d0" font-size="18" font-weight="650">Cada cliente depende solo de lo que usa.</text>
+      </g>
+
+      <g transform="translate(460 446)">
+        <rect width="670" height="88" rx="18" fill="#0b1424" fill-opacity="0.95" stroke="#60a5fa" stroke-opacity="0.35"/>
+        <circle cx="48" cy="44" r="27" fill="#1d4ed8" fill-opacity="0.78"/>
+        <text x="48" y="54" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="800">D</text>
+        <text x="92" y="39" fill="#f8fafc" font-size="28" font-weight="800">Inversión de dependencias</text>
+        <text x="92" y="67" fill="#bfdbfe" font-size="18" font-weight="650">La política define puertos; los detalles se enchufan.</text>
+      </g>
+    </g>
+
+    <g fill="none" stroke-linecap="round" stroke-width="3" stroke-opacity="0.34">
+      <path d="M410 312C430 312 430 98 460 98" stroke="#60a5fa"/>
+      <path d="M410 312C430 312 430 196 460 196" stroke="#22c55e"/>
+      <path d="M410 312H460" stroke="#60a5fa"/>
+      <path d="M410 312C430 312 430 392 460 392" stroke="#22c55e"/>
+      <path d="M410 312C430 312 430 490 460 490" stroke="#60a5fa"/>
+    </g>
+  </g>
+</svg>

@@ -85,9 +85,29 @@ def _get_agent():
     return _agent_graph
 
 
+def _page_context_dict(page_context: "PageContext | None") -> dict | None:
+    """Convert optional page context model to a plain dict."""
+    if page_context is None:
+        return None
+    return page_context.model_dump(exclude_none=True)
+
+
 # ---------------------------------------------------------------------------
 # Request / Response models
 # ---------------------------------------------------------------------------
+
+
+class PageContext(BaseModel):
+    path: str | None = Field(
+        default=None,
+        max_length=220,
+        description="Path the user was viewing when opening or using the chatbot.",
+    )
+    title: str | None = Field(
+        default=None,
+        max_length=220,
+        description="Title of the page the user was viewing.",
+    )
 
 
 class ChatRequest(BaseModel):
@@ -100,6 +120,10 @@ class ChatRequest(BaseModel):
     session_id: str | None = Field(
         default=None,
         description="Optional session ID for conversation continuity.",
+    )
+    page_context: PageContext | None = Field(
+        default=None,
+        description="Optional browser page context used as a weak navigation hint.",
     )
 
 
@@ -159,7 +183,12 @@ async def chat(request: Request, body: ChatRequest):
 
     try:
         graph = _get_agent()
-        result = await invoke_agent(graph, body.message, session_id)
+        result = await invoke_agent(
+            graph,
+            body.message,
+            session_id,
+            page_context=_page_context_dict(body.page_context),
+        )
         
         # Track malicious intents
         if MALICIOUS_PHRASE in result["response"]:
@@ -237,7 +266,12 @@ async def chat_stream(request: Request, body: ChatRequest):
             # Send session_id as first event
             yield _sse_event({"type": "session", "session_id": session_id})
 
-            async for event in stream_agent(graph, body.message, session_id):
+            async for event in stream_agent(
+                graph,
+                body.message,
+                session_id,
+                page_context=_page_context_dict(body.page_context),
+            ):
                 yield _sse_event(event)
                 
                 if event.get("type") == "token":

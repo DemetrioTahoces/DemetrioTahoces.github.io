@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Blog"
+  short_description: "Mantiene el blog técnico del CV"
+  default_prompt: "Use $manage-blog to crear o actualizar artículos del blog técnico y borradores de LinkedIn."

@@ -1,3 +1,10 @@
+---
+type: cv
+title: "Desarrollador de Software en Securitas Direct"
+route: "/CV/securitas-direct.html"
+tags: ["cv", "securitas direct", "procesado de senales"]
+---
+
 # Desarrollador de Software — Vector ITC → Securitas Direct
 **03/2021 — 11/2021** | Asturias
 
