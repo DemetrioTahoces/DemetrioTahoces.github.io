@@ -63,12 +63,6 @@ Health check:
 http://localhost:3000/api/health
 ```
 
-Documentación OpenAPI local:
-
-```text
-http://localhost:3000/api/docs
-```
-
 ## Variables de entorno
 
 El backend lee configuración desde variables de entorno o desde un archivo `.env` en `CV/Chatbot`.
