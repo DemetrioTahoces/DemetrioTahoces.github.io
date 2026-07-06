@@ -41,6 +41,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - No introduzcas bundlers, `package.json`, frameworks frontend ni pasos de compilación salvo petición explícita.
 - Las dependencias frontend se cargan por CDN, principalmente Tailwind CSS, Google Fonts, Chart.js, Phosphor Icons y marked.js.
 - Mantén el tono visual existente: tema oscuro, profesional, técnico y sobrio.
+- En animaciones de entrada por scroll, evita dejar contenido invisible hasta que esté demasiado dentro del viewport. El contenido debe empezar a revelarse prácticamente al entrar en pantalla, especialmente en móvil; prioriza continuidad visual sobre efectos de aparición llamativos.
 - Revisa rutas relativas, enlaces internos, anclas, metadatos SEO/Open Graph y navegación cuando cambies páginas.
 
 ## Backend del chatbot
@@ -125,4 +126,3 @@ python test/test_agent.py
 - Añade comentarios solo cuando aclaren lógica no obvia.
 - No introduzcas dependencias nuevas para cambios de contenido o presentación simple.
 - Antes de cerrar una tarea, revisa que los enlaces/rutas afectadas sigan teniendo sentido.
-

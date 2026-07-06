@@ -166,7 +166,7 @@
             box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22);
             opacity: 1;
             transform: none;
-            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.45s ease;
+            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.8s ease;
             backdrop-filter: blur(12px);
         }
         .card:hover { border-color: var(--border-strong); background: rgba(15, 23, 42, 0.92); transform: translateY(-2px); box-shadow: 0 20px 56px rgba(2, 6, 23, 0.28); }
@@ -417,7 +417,7 @@
                             observer.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+                }, { threshold: 0.01, rootMargin: '0px 0px 20% 0px' });
                 animatedItems.forEach(function (item) { observer.observe(item); });
             } else {
                 animatedItems.forEach(function (item) { item.classList.add('visible'); });

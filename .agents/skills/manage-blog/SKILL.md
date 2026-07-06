@@ -31,7 +31,7 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 - Hacer que cada artículo sea ameno y humano: abrir con una situación reconocible, pero con contexto técnico inmediato y sin ambigüedades de lectura. Usar ejemplos de desarrollo cotidiano o vida real, variar el ritmo y sostener una opinión técnica clara.
 - Cada post debe incluir título, descripción, fecha, etiquetas, tiempo estimado de lectura si aplica, enlaces de vuelta al blog/CV y metadatos SEO/OG.
 - Cada tarjeta del listado debe incluir título, descripción breve, fecha, etiquetas, enlace al artículo e imagen si aplica. Si no hay imagen, usar una composición visual CSS coherente o una card textual sobria.
-- El Markdown para el chatbot debe ser una ficha RAG muy resumida, no una copia del artículo. Objetivo: bajo consumo de tokens al inyectarse en contexto. Mantener título H1, descripción, fecha, etiquetas, URL pública, idea central, puntos clave, errores habituales y fuentes principales. Evitar ejemplos largos, bloques de código extensos, texto narrativo y secciones completas del HTML.
+- El Markdown para el chatbot debe ser una ficha RAG muy resumida, no una copia del artículo. Objetivo: bajo consumo de tokens al inyectarse en contexto. Mantener título H1, descripción, fecha, etiquetas, URL pública, idea central, puntos clave, errores habituales y fuentes principales (sección final de "Fuentes"). Evitar ejemplos largos, bloques de código extensos, texto narrativo y secciones completas del HTML.
 - Mantener el slug sincronizado entre `blog/posts/<slug>.html`, la tarjeta de `blog/index.html`, `CV/Chatbot/docs/blog/<slug>.md` y `blog/linkedin-drafts/<slug>.txt`.
 
 ## Borradores de LinkedIn

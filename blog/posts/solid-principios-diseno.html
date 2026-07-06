@@ -150,7 +150,7 @@
             box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22);
             opacity: 1;
             transform: none;
-            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.45s ease;
+            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.8s ease;
             backdrop-filter: blur(12px);
         }
         .card:hover { border-color: var(--border-strong); background: rgba(15, 23, 42, 0.92); transform: translateY(-2px); box-shadow: 0 20px 56px rgba(2, 6, 23, 0.28); }
@@ -304,7 +304,7 @@
             <div class="article-prose">
                 <section>
                     <h2>La escena típica</h2>
-                    <p>En código, muchas deudas empiezan igual: una clase pequeña dentro de un servicio backend. Hace una cosa, se entiende rápido y nadie se queja. Dos meses después calcula precios, guarda datos, manda emails, publica eventos y tiene un <code>if</code> nuevo por cada caso raro que aparece. Aún funciona, pero ya da pereza tocarla.</p>
+                    <p>Cuando hablamos de código, la deuda técnica empieza igual en muchas ocasiones: una clase pequeña dentro de un servicio backend. Hace una cosa, se entiende rápido y nadie se queja. Dos meses después calcula precios, guarda datos, manda emails, publica eventos y tiene un <code>if</code> nuevo por cada caso raro que aparece. Aún funciona, pero ya da pereza tocarla.</p>
                     <p>Ahí es donde SOLID empieza a tener sentido. No como una religión de interfaces, sino como una forma de preguntar: si mañana cambia esta regla, ¿cuánto código arrastra detrás?</p>
                 </section>
 
@@ -437,7 +437,7 @@
                 </section>
 
                 <section>
-                    <h2>Fuentes consultadas</h2>
+                    <h2>Fuentes</h2>
                     <ul>
                         <li><a href="https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html" target="_blank" rel="noopener noreferrer">Robert C. Martin, "The Single Responsibility Principle"</a>.</li>
                         <li><a href="https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html" target="_blank" rel="noopener noreferrer">Robert C. Martin, "The Open Closed Principle"</a>.</li>
@@ -466,7 +466,7 @@
                             observer.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+                }, { threshold: 0.01, rootMargin: '0px 0px 20% 0px' });
                 animatedItems.forEach(function (item) { observer.observe(item); });
             } else {
                 animatedItems.forEach(function (item) { item.classList.add('visible'); });

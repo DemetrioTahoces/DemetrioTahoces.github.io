@@ -36,7 +36,7 @@ Los cinco principios se refuerzan: SRP detecta ejes de cambio, OCP crea puntos d
 
 Antes de aplicar SOLID, preguntar: qué cambio se quiere facilitar, qué parte se quiere proteger, si la abstracción reduce acoplamiento real, si el contrato es estable para el consumidor y si los tests quedan más simples.
 
-## Fuentes principales
+## Fuentes
 
 - Robert C. Martin: SRP, OCP y relevancia de SOLID.
 - Barbara Liskov y Jeannette Wing: subtipado de comportamiento.

@@ -1,4 +1,4 @@
-En código, una clase empieza siendo inocente.
+Cuando hablamos de código, una clase empieza siendo inocente.
 
 Hace una cosa, se entiende rápido y nadie se preocupa demasiado.
 
