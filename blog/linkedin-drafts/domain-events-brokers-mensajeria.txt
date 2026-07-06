@@ -1,0 +1,24 @@
+Una cola llamada users no dice casi nada cuando algo falla.
+
+En sistemas event-driven, el nombre de la topología debería contar tres cosas:
+
+Qué ocurrió.
+Qué reacción se ejecuta.
+De dónde viene el trigger.
+
+Para domain events, me parece útil separar así:
+
+El evento se nombra en pasado: UserCreated, OrderPaid, InvoiceIssued.
+El exchange o topic usa el hecho en kebab-case: user-created.
+La routing key describe la acción técnica con puntos: send.email.
+La cola dice la acción sobre el hecho: send-email-on-user-created.
+
+Esa última parte parece un detalle menor, pero ayuda mucho en operación. Una DLQ llamada send-email-on-user-created.dlq es bastante más clara que notification-worker.dlq.
+
+También hay una trampa importante: si el productor publica UserCreated con una routing key como send.email, puede acabar conociendo una reacción que debería pertenecer al consumidor. El dominio emite hechos. La infraestructura y los consumidores deciden qué hacer con ellos.
+
+He desarrollado la idea con ejemplos de RabbitMQ, Kafka, consumer groups, colas por consumidor lógico y errores habituales:
+
+https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html
+
+#SoftwareEngineering #DDD #Backend #EventDrivenArchitecture #RabbitMQ #Kafka

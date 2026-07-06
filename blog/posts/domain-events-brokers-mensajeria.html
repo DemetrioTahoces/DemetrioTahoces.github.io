@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain events y brokers de mensajería: nombrar colas para entender el sistema - Demetrio Tahoces</title>
+    <meta name="description" content="Guía práctica sobre domain events, exchanges, routing keys y colas en brokers como RabbitMQ o Kafka, con una convención de nombrado orientada a trazabilidad y desacoplamiento.">
+    <meta property="og:title" content="Domain events y brokers de mensajería">
+    <meta property="og:description" content="Cómo nombrar eventos, exchanges, routing keys y colas para que la topología explique qué ocurrió, qué reacción se ejecuta y de dónde viene cada trigger.">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/domain-events-brokers-mensajeria.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Domain events y brokers de mensajería">
+    <meta name="twitter:description" content="Una convención práctica para que cada exchange, routing key y cola cuente qué hecho ocurrió y qué reacción ejecuta cada consumidor.">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/domain-events-brokers-mensajeria.svg">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Domain events y brokers de mensajería: nombrar colas para entender el sistema",
+      "description": "Guía práctica sobre domain events, exchanges, routing keys y colas en brokers como RabbitMQ o Kafka.",
+      "datePublished": "2026-07-06",
+      "dateModified": "2026-07-06",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/domain-events-brokers-mensajeria.svg",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html"
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #07111f;
+            --surface: rgba(15, 23, 42, 0.78);
+            --surface-strong: #0f172a;
+            --border: rgba(148, 163, 184, 0.16);
+            --border-strong: rgba(96, 165, 250, 0.42);
+            --text: #e5edf7;
+            --text-muted: #a7b4c8;
+            --text-soft: #7f8ea3;
+            --accent: #60a5fa;
+            --accent-strong: #38bdf8;
+            --accent-warm: #22c55e;
+            --shadow-soft: 0 24px 80px rgba(2, 6, 23, 0.42);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, 0.14), transparent 30rem),
+                radial-gradient(circle at 86% 8%, rgba(34, 197, 94, 0.075), transparent 24rem),
+                linear-gradient(180deg, #07111f 0%, #08101c 52%, #060b13 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 1rem 3rem;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 72%);
+        }
+
+        a { transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease; }
+        a:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
+
+        .skip-link {
+            position: fixed;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 100;
+            transform: translateY(-160%);
+            background: #e5edf7;
+            color: #07111f;
+            padding: 0.65rem 0.9rem;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        .skip-link:focus { transform: translateY(0); }
+
+        .site-nav {
+            position: sticky;
+            top: 0.75rem;
+            z-index: 40;
+            max-width: 64rem;
+            margin: 0.75rem auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(7, 17, 31, 0.78);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 16px 44px rgba(2, 6, 23, 0.34);
+        }
+
+        .site-brand { color: var(--text); font-weight: 800; padding: 0.45rem 0.75rem; white-space: nowrap; }
+        .site-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.25rem; }
+        .site-nav-links a { color: var(--text-muted); font-size: 0.86rem; font-weight: 650; padding: 0.45rem 0.7rem; border-radius: 999px; }
+        .site-nav-links a:hover, .site-nav-links a[aria-current="page"] { color: var(--text); background: rgba(96, 165, 250, 0.12); }
+
+        .page-shell { position: relative; width: min(100%, 64rem); padding-top: 0.25rem; }
+
+        .back-link {
+            color: #93c5fd;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            background: rgba(15, 23, 42, 0.48);
+            border-radius: 999px;
+            padding: 0.55rem 0.8rem;
+        }
+        .back-link:hover { color: #ffffff; border-color: rgba(96, 165, 250, 0.48); background: rgba(96, 165, 250, 0.12); transform: translateY(-1px); }
+
+        .header-bg {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            background:
+                linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(14, 39, 73, 0.9)),
+                radial-gradient(circle at 20% 10%, rgba(96, 165, 250, 0.24), transparent 24rem);
+            box-shadow: var(--shadow-soft);
+            text-align: left;
+        }
+
+        .article-hero > * { position: relative; z-index: 1; }
+        .article-hero h1 { letter-spacing: 0; line-height: 1.04; }
+
+        .card {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22);
+            opacity: 1;
+            transform: none;
+            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.8s ease;
+            backdrop-filter: blur(12px);
+        }
+        .card:hover { border-color: var(--border-strong); background: rgba(15, 23, 42, 0.92); transform: translateY(-2px); box-shadow: 0 20px 56px rgba(2, 6, 23, 0.28); }
+
+        .badge {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.22);
+            color: #bfdbfe;
+        }
+
+        .article-prose {
+            color: #cbd5e1;
+            font-size: 1.02rem;
+            line-height: 1.78;
+        }
+        .article-prose h2 {
+            margin: 2.5rem 0 1rem;
+            color: #f8fafc;
+            font-size: 1.65rem;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+        .article-prose h3 {
+            margin: 1.8rem 0 0.75rem;
+            color: #e5edf7;
+            font-size: 1.22rem;
+            line-height: 1.3;
+            font-weight: 800;
+        }
+        .article-prose p { margin: 1rem 0; }
+        .article-prose ul, .article-prose ol { margin: 1rem 0 1rem 1.25rem; }
+        .article-prose li { margin: 0.45rem 0; }
+        .article-prose strong { color: #f8fafc; }
+        .article-prose a { color: #93c5fd; text-decoration: underline; text-decoration-color: rgba(147, 197, 253, 0.38); text-underline-offset: 0.2rem; }
+        .article-prose a:hover { color: #ffffff; text-decoration-color: rgba(255, 255, 255, 0.62); }
+        .article-prose pre {
+            overflow-x: auto;
+            margin: 1.35rem 0;
+            padding: 1rem;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 0.75rem;
+            background: rgba(2, 6, 23, 0.52);
+            color: #dbeafe;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+        .article-prose code {
+            color: #bfdbfe;
+            background: rgba(96, 165, 250, 0.12);
+            border: 1px solid rgba(96, 165, 250, 0.14);
+            border-radius: 0.35rem;
+            padding: 0.1rem 0.28rem;
+        }
+        .article-prose pre code { background: transparent; border: 0; padding: 0; color: inherit; }
+
+        .callout {
+            border-left: 3px solid rgba(34, 197, 94, 0.58);
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .warning {
+            border-left: 3px solid rgba(96, 165, 250, 0.72);
+            background: rgba(96, 165, 250, 0.08);
+        }
+
+        .route-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .naming-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 0.85rem;
+            margin: 1.25rem 0;
+        }
+        .naming-table th, .naming-table td {
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+            padding: 0.85rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        .naming-table th {
+            color: #e5edf7;
+            background: rgba(96, 165, 250, 0.11);
+            font-size: 0.92rem;
+        }
+        .naming-table tr:last-child td { border-bottom: 0; }
+
+        .site-footer { margin: 1rem 0 0; padding: 2rem 0 0; border-top: 1px solid var(--border); color: var(--text-soft); font-size: 0.9rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            html.motion-ready .article-hero { opacity: 0; transform: translateY(14px); animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards; }
+            html.motion-ready .card { opacity: 0; transform: translateY(18px); }
+            html.motion-ready .card.visible { opacity: 1; transform: translateY(0); }
+            @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+        }
+
+        @media (max-width: 760px) {
+            body { padding: 0 0.85rem 2rem; }
+            .site-nav { position: static; align-items: flex-start; border-radius: 1rem; flex-direction: column; }
+            .site-nav-links { justify-content: flex-start; }
+            .site-nav-links a { padding: 0.4rem 0.55rem; }
+            .article-hero h1 { font-size: clamp(2.15rem, 10vw, 3.35rem); }
+            .route-grid { grid-template-columns: 1fr; }
+            .naming-table { display: block; overflow-x: auto; }
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            a { touch-action: manipulation; }
+            .back-link:hover, .card:hover { transform: none !important; }
+            .card:hover { box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22) !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
+        }
+    </style>
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">DDD</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Event-driven architecture</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Backend</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3">Mensajería con intención explícita</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5">Domain events y brokers de mensajería: nombrar colas para entender el sistema</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed">
+                Una convención práctica para que cada exchange, routing key y cola explique qué hecho ocurrió, qué reacción se ejecuta y de dónde viene cada trigger.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300">
+                <span>6 julio 2026</span>
+                <span class="text-gray-600">&middot;</span>
+                <span>8 min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card visible rounded-xl p-6 md:p-8 mb-8">
+            <figure class="mb-8">
+                <img src="../assets/domain-events-brokers-mensajeria.svg" alt="Diagrama de un domain event UserCreated publicado en el exchange user-created y consumido por varias colas con acciones separadas." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <div class="route-grid mb-8">
+                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Exchange</strong><span class="text-sm">el hecho: <code>user-created</code></span></div>
+                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Routing key</strong><span class="text-sm">la acción: <code>send.email</code></span></div>
+                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Cola</strong><span class="text-sm">acción sobre hecho: <code>send-email-on-user-created</code></span></div>
+            </div>
+
+            <div class="article-prose">
+                <section>
+                    <h2>La escena típica</h2>
+                    <p>Un backend empieza con un evento sencillo: un usuario se registra. Hay que enviar un email, crear una cuenta de prueba, sincronizar el CRM y actualizar un índice de búsqueda. Al principio todo cabe en un handler. Luego llegan reintentos, colas muertas, métricas, despliegues por separado y una pregunta incómoda: ¿qué demonios hace esta cola llamada <code>users</code>?</p>
+                    <p>El problema no suele ser RabbitMQ, Kafka, SQS o cualquier otro broker. El problema es que la topología no habla el lenguaje del sistema. Se ven colas, topics y consumidores, pero no se ve el hecho de negocio que lo disparó ni la reacción concreta que se está ejecutando.</p>
+                    <p>Una buena convención de nombrado no arregla una arquitectura mal planteada, pero evita mucha niebla operativa. Cuando algo falla a las tres de la mañana, <code>send-email-on-user-created</code> cuenta bastante más que <code>notification-worker-2</code>.</p>
+                </section>
+
+                <section>
+                    <h2>Primero el domain event, después el broker</h2>
+                    <p>Un domain event es un hecho relevante que ya ocurrió en el dominio. No es una orden para que otro servicio haga algo. Martin Fowler lo define como la memoria de algo interesante que afecta al dominio, y Microsoft insiste en la misma idea práctica: un evento es algo que pasó en el pasado y otras partes del sistema pueden reaccionar a ello.</p>
+                    <p>La diferencia parece menor hasta que se nombra mal:</p>
+                    <ul>
+                        <li><code>CreateUser</code> es un comando.</li>
+                        <li><code>SendWelcomeEmail</code> es una acción.</li>
+                        <li><code>UserCreated</code> es un evento.</li>
+                    </ul>
+                    <p>El evento debe informar, no decidir la reacción. Si el evento ya dice <code>SendEmailToUser</code>, el productor ha elegido una consecuencia. El consumidor deja de interpretar un hecho y empieza a obedecer una instrucción. Eso es acoplamiento con otro nombre.</p>
+                    <p>Por eso conviene emitir eventos en pasado, con nombres claros y cercanos al lenguaje ubicuo: <code>UserCreated</code>, <code>OrderPaid</code>, <code>InvoiceIssued</code>, <code>SubscriptionCancelled</code>. Si no se puede escribir en pasado sin sonar raro, quizá no es un evento de dominio.</p>
+                </section>
+
+                <section>
+                    <h2>La convención de nombrado</h2>
+                    <p>La convención que defiendo aquí separa tres conceptos que muchas topologías mezclan: el hecho, la acción técnica que reacciona al hecho y la cola donde vive esa reacción.</p>
+
+                    <table class="naming-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>Qué representa</th>
+                                <th>Formato</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Domain event</strong></td>
+                                <td>Hecho ocurrido en el dominio.</td>
+                                <td>Pasado, semántica de negocio.</td>
+                                <td><code>UserCreated</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Exchange</strong></td>
+                                <td>Canal del hecho publicado.</td>
+                                <td>Nombre del evento en kebab-case.</td>
+                                <td><code>user-created</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Routing key</strong></td>
+                                <td>Acción lógica que se ejecuta ante el evento.</td>
+                                <td>Verbos o segmentos separados por puntos.</td>
+                                <td><code>send.email</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cola</strong></td>
+                                <td>Trabajo concreto que reacciona al evento.</td>
+                                <td><code>accion-on-evento</code>, separado por guiones.</td>
+                                <td><code>send-email-on-user-created</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Con esta regla, la topología se puede leer casi como una frase:</p>
+                    <pre><code>Exchange:    user-created
+Routing key: send.email
+Queue:       send-email-on-user-created</code></pre>
+                    <p>El sistema dice: "cuando ocurrió <code>user-created</code>, esta cola ejecuta <code>send.email</code>". Si mañana aparece una integración con CRM, no se esconde detrás de la misma cola:</p>
+                    <pre><code>Exchange:    user-created
+Routing key: sync.crm
+Queue:       sync-crm-on-user-created</code></pre>
+                    <p>Esto tiene valor en diseño, observabilidad y soporte. En diseño, fuerza a separar reacciones. En observabilidad, las métricas ya llevan intención. En soporte, una DLQ llamada <code>sync-crm-on-user-created.dlq</code> no necesita arqueología.</p>
+                </section>
+
+                <section class="warning rounded-xl p-5 my-8">
+                    <h2 class="mt-0">Cuidado con la routing key</h2>
+                    <p>Hay una tensión técnica que conviene mirar de frente. En AMQP, la routing key se envía al publicar el mensaje. Si el caso de uso que emite <code>UserCreated</code> publica directamente con <code>send.email</code>, ese caso de uso acaba sabiendo que alguien enviará un email. Eso contradice la idea de domain event como hecho neutro.</p>
+                    <p>Hay varias formas razonables de resolverlo:</p>
+                    <ul>
+                        <li>usar un exchange tipo <code>fanout</code> por domain event y dejar que el nombre de la cola documente la acción;</li>
+                        <li>mantener la routing key de acción en una capa de infraestructura que configura suscripciones, no dentro del dominio ni del caso de uso;</li>
+                        <li>usar un router técnico que recibe el evento puro y publica hacia las rutas de acción declaradas;</li>
+                        <li>si se usa <code>topic</code>, asumir explícitamente que la routing key forma parte de la suscripción y no del lenguaje del dominio.</li>
+                    </ul>
+                    <p>La regla práctica: el dominio emite <code>UserCreated</code>. La decisión de que eso provoque <code>send.email</code>, <code>sync.crm</code> o <code>index.search</code> pertenece a los consumidores y a la configuración de infraestructura.</p>
+                </section>
+
+                <section>
+                    <h2>Una cola, un consumidor lógico</h2>
+                    <p>Cada cola debería tener un único consumidor lógico. Puede haber varias instancias ejecutándose para escalar o ganar disponibilidad, pero todas deben hacer el mismo trabajo.</p>
+                    <p>Esto encaja con el patrón de competing consumers: varios procesos leen de un mismo canal para repartir carga. La trampa aparece cuando se conectan consumidores distintos a la misma cola. En ese momento ya no tienes dos reacciones; tienes una carrera. Un mensaje lo procesará uno u otro según el broker y el estado de los consumidores.</p>
+                    <p>Por eso esta estructura es sana:</p>
+                    <pre><code>send-email-on-user-created
+  - instance-1: SendWelcomeEmailOnUserCreated
+  - instance-2: SendWelcomeEmailOnUserCreated
+
+sync-crm-on-user-created
+  - instance-1: SyncCrmOnUserCreated</code></pre>
+                    <p>Y esta otra es peligrosa:</p>
+                    <pre><code>user-created-workers
+  - SendWelcomeEmailOnUserCreated
+  - SyncCrmOnUserCreated
+  - ProvisionTrialOnUserCreated</code></pre>
+                    <p>La segunda opción parece ahorrar colas, pero rompe propiedad operativa. ¿Qué retry aplica? ¿Qué DLQ se revisa? ¿Qué métrica representa el lag? ¿Qué handler es idempotente y cuál no? Cada reacción tiene una razón de cambio distinta. Merece su propia cola.</p>
+                </section>
+
+                <section>
+                    <h2>RabbitMQ y Kafka no son la misma cosa</h2>
+                    <p>RabbitMQ trabaja de forma natural con exchanges, routing keys, bindings y colas. La documentación de topic exchanges muestra routing keys compuestas por palabras separadas por puntos, justo el formato que encaja con <code>send.email</code> o <code>sync.crm</code>. En RabbitMQ, esta convención se expresa de forma directa.</p>
+                    <p>Kafka tiene otra semántica. La unidad principal es el topic: un log ordenado y duradero de eventos. Los consumidores leen por offsets y los grupos de consumidores reparten particiones. No hay exchanges ni colas AMQP. Si aplicas la convención a Kafka, la traducción habitual sería:</p>
+                    <ul>
+                        <li>topic: <code>user-created</code>, si decides topic por tipo de evento;</li>
+                        <li>consumer group: <code>send-email-on-user-created</code>;</li>
+                        <li>handler: <code>SendEmailOnUserCreated</code>.</li>
+                    </ul>
+                    <p>Ese mapeo conserva la intención: un hecho publicado y una reacción lógica por grupo. La advertencia es que Kafka no siempre agradece un topic por cada evento si el dominio tiene cientos de eventos de bajo volumen, esquemas muy relacionados o necesidades de orden por agregado. En algunos sistemas tiene más sentido un topic por agregado o bounded context, con <code>eventType</code> en el payload o en headers. Si se toma esa ruta, el nombre del consumer group sigue siendo el sitio donde declarar la acción: <code>send-email-on-user-created</code>.</p>
+                </section>
+
+                <section>
+                    <h2>Qué debe llevar el evento</h2>
+                    <p>El nombre no basta. Un evento que va a salir del proceso necesita metadatos mínimos para poder operar bien:</p>
+                    <ul>
+                        <li><code>eventId</code>, para idempotencia y trazabilidad;</li>
+                        <li><code>eventType</code>, por ejemplo <code>UserCreated</code> o <code>user-created</code>;</li>
+                        <li><code>occurredOn</code>, cuándo ocurrió el hecho en el dominio;</li>
+                        <li><code>aggregateId</code>, para correlacionar y particionar;</li>
+                        <li><code>schemaVersion</code>, porque el contrato cambiará;</li>
+                        <li><code>correlationId</code> y <code>causationId</code>, para seguir una operación completa.</li>
+                    </ul>
+                    <p>El payload debe contener lo necesario para interpretar el hecho, no una copia entera del estado interno. Si el consumidor necesita todos los datos del usuario para mandar un email, puede que el evento deba incluir una proyección mínima. Si necesita media base de datos, probablemente el límite entre contextos o la reacción está mal diseñada.</p>
+                </section>
+
+                <section>
+                    <h2>Domain event e integration event</h2>
+                    <p>Un domain event puede vivir dentro del mismo proceso. No todos los eventos de dominio deben acabar en un broker. Microsoft distingue bien el matiz: el domain event expresa efectos dentro del dominio; el integration event propaga cambios confirmados hacia otros bounded contexts, microservicios o aplicaciones externas.</p>
+                    <p>Una forma práctica de verlo:</p>
+                    <ul>
+                        <li>el agregado registra <code>UserCreated</code> como hecho de dominio;</li>
+                        <li>la aplicación decide cuándo despacharlo, normalmente alrededor del commit;</li>
+                        <li>si debe salir del proceso, una capa de infraestructura lo transforma o publica como evento de integración;</li>
+                        <li>el broker no entra en el modelo de dominio.</li>
+                    </ul>
+                    <p>Los ejemplos públicos de CodelyTV para DDD en TypeScript siguen esa separación conceptual: existe un <code>DomainEvent</code>, un contrato <code>DomainEventSubscriber</code> y configuración de RabbitMQ en infraestructura. Ese reparto es sano porque evita que el dominio dependa de AMQP, Kafka o la librería cliente de turno.</p>
+                </section>
+
+                <section>
+                    <h2>Errores habituales</h2>
+                    <h3>Nombrar eventos como comandos</h3>
+                    <p><code>SendPasswordResetEmail</code> no describe algo que ocurrió; describe una intención. Si el hecho es que el usuario pidió recuperar contraseña, el evento debería sonar a <code>PasswordResetRequested</code>. La acción de enviar email vive en la cola <code>send-password-reset-email-on-password-reset-requested</code>.</p>
+
+                    <h3>Crear colas genéricas por dominio</h3>
+                    <p><code>users</code>, <code>notifications</code> o <code>events</code> parecen nombres limpios hasta que hay que depurar. No dicen qué acción ejecutan ni ante qué evento. Si una cola puede necesitar una wiki para explicarse, el nombre está fallando.</p>
+
+                    <h3>Compartir cola entre reacciones distintas</h3>
+                    <p>Dos consumidores lógicos en la misma cola compiten por mensajes. Si ambos deben reaccionar al mismo evento, necesitan colas distintas en RabbitMQ o grupos de consumidores distintos en Kafka.</p>
+
+                    <h3>Publicar antes de confirmar la transacción</h3>
+                    <p>Si el evento sale al broker y luego falla el commit, otros sistemas reaccionan a algo que nunca quedó persistido. En sistemas con consistencia eventual, el patrón outbox suele ser una respuesta más honesta que publicar a pelo dentro de la transacción de negocio.</p>
+
+                    <h3>Meter demasiados datos en el evento</h3>
+                    <p>Un evento no debería convertirse en una API encubierta para transportar cualquier dato que alguien podría necesitar. Payload grande, esquemas sin versionar y consumidores que dependen de campos accidentales son deuda distribuida.</p>
+                </section>
+
+                <section class="callout rounded-xl p-5 my-8">
+                    <h2 class="mt-0">Checklist pragmático</h2>
+                    <ol>
+                        <li>¿El evento está en pasado y expresa un hecho de negocio?</li>
+                        <li>¿El exchange o topic puede leerse como ese hecho en kebab-case?</li>
+                        <li>¿La cola expresa una única acción con formato <code>accion-on-evento</code>?</li>
+                        <li>¿Hay un único consumidor lógico por cola o consumer group?</li>
+                        <li>¿La acción del consumidor no se ha filtrado al dominio productor?</li>
+                        <li>¿La DLQ, los retries y las métricas quedan separados por reacción?</li>
+                        <li>¿El evento incluye identificadores, fecha de ocurrencia, versión y correlación?</li>
+                    </ol>
+                    <p>Si una respuesta es "no", el problema no es cosmético. Probablemente la topología está ocultando acoplamiento.</p>
+                </section>
+
+                <section>
+                    <h2>Conclusión</h2>
+                    <p>Los domain events ayudan cuando se tratan como hechos, no como comandos diferidos. El broker es una consecuencia técnica: permite que esos hechos crucen procesos, se reintenten, se observen y se escalen. Pero si la topología no cuenta la historia correcta, el sistema acaba lleno de colas opacas y consumidores difíciles de razonar.</p>
+                    <p>Nombrar el exchange como <code>user-created</code>, la routing key como <code>send.email</code> y la cola como <code>send-email-on-user-created</code> deja visible el contrato operativo: ocurrió un hecho y esta reacción se ejecuta por ese hecho. Es simple, pero obliga a tomar buenas decisiones: eventos en pasado, acciones en consumidores, una cola por reacción y varias instancias solo cuando hacen el mismo trabajo lógico.</p>
+                </section>
+
+                <section>
+                    <h2>Fuentes</h2>
+                    <ul>
+                        <li><a href="https://martinfowler.com/eaaDev/DomainEvent.html" target="_blank" rel="noopener noreferrer">Martin Fowler, "Domain Event"</a>.</li>
+                        <li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation" target="_blank" rel="noopener noreferrer">Microsoft Learn, "Domain events: Design and implementation"</a>.</li>
+                        <li><a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/EventMessage.html" target="_blank" rel="noopener noreferrer">Enterprise Integration Patterns, "Event Message"</a>.</li>
+                        <li><a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/CommandMessage.html" target="_blank" rel="noopener noreferrer">Enterprise Integration Patterns, "Command Message"</a>.</li>
+                        <li><a href="https://www.enterpriseintegrationpatterns.com/patterns/messaging/CompetingConsumers.html" target="_blank" rel="noopener noreferrer">Enterprise Integration Patterns, "Competing Consumers"</a>.</li>
+                        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-python" target="_blank" rel="noopener noreferrer">RabbitMQ, "Topics"</a>.</li>
+                        <li><a href="https://docs.confluent.io/kafka/introduction.html" target="_blank" rel="noopener noreferrer">Confluent Documentation, "Introduction to Apache Kafka"</a>.</li>
+                        <li><a href="https://github.com/CodelyTV/typescript-ddd-example" target="_blank" rel="noopener noreferrer">CodelyTV, "Hexagonal Architecture, DDD &amp; CQRS in TypeScript"</a>.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var animatedItems = document.querySelectorAll('.card');
+            if ('IntersectionObserver' in window && document.documentElement.classList.contains('motion-ready')) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.01, rootMargin: '0px 0px 20% 0px' });
+                animatedItems.forEach(function (item) { observer.observe(item); });
+            } else {
+                animatedItems.forEach(function (item) { item.classList.add('visible'); });
+            }
+        });
+    </script>
+</body>
+
+</html>
