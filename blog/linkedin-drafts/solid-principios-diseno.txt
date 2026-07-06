@@ -1,35 +1,32 @@
-SOLID no va de crear más clases.
+En código, una clase empieza siendo inocente.
 
-Va de reducir el coste del cambio.
+Hace una cosa, se entiende rápido y nadie se preocupa demasiado.
 
-Durante mucho tiempo es fácil interpretar SOLID como una lista de reglas:
+Luego alguien añade un cálculo.
+Después una llamada a base de datos.
+Más tarde un email.
+Luego un evento.
+Y un día te das cuenta de que cambiar una regla pequeña implica revisar medio sistema.
 
-S: una clase hace una cosa
-O: no modificar código existente
-L: las subclases deben funcionar
-I: interfaces pequeñas
-D: depender de abstracciones
+Ahí SOLID empieza a tener sentido.
 
-Pero esa lectura se queda corta.
+No como una lista de normas para crear más interfaces.
+Tampoco como una excusa para meter capas por todas partes.
 
-La idea útil es más pragmática:
-
-Separar lo que cambia por razones distintas.
-Extender comportamientos previsibles sin tocar código estable.
-Proteger contratos para que las implementaciones no sorprendan al cliente.
-Evitar interfaces gigantes que acoplan consumidores a cosas que no usan.
-Hacer que las reglas importantes no dependan directamente de detalles técnicos.
-
-Bien aplicado, SOLID no produce más arquitectura por estética.
-Produce menos daño cuando el sistema cambia.
-
-Mal aplicado, genera interfaces vacías, capas artificiales y navegación mental innecesaria.
-
-La pregunta que mejor resume el tema para mí es:
+Para mí, SOLID va de una pregunta bastante simple:
 
 Si esto cambia, ¿qué más arrastra?
 
-He dejado una explicación completa, con ejemplos de backend y una lectura crítica de cada principio:
+SRP ayuda a separar motivos de cambio.
+OCP da un sitio natural a las variantes que aparecen a menudo.
+LSP recuerda que un contrato no debe sorprender al cliente.
+ISP evita que un consumidor cargue con métodos que no usa.
+DIP hace que las reglas importantes no dependan directamente de detalles técnicos.
+
+Bien aplicado, SOLID no hace el código más "académico".
+Lo hace menos frágil cuando llega el siguiente cambio.
+
+He resumido los cinco principios con ejemplos cotidianos de backend y una lectura bastante pragmática:
 
 https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html
 

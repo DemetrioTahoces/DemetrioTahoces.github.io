@@ -17,7 +17,8 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 4. Crear o actualizar siempre la versión Markdown del artículo en `CV/Chatbot/docs/blog/<slug>.md` para que el chatbot pueda consultarlo sin cambios de código.
 5. Si el artículo usa imagen, guardar el asset en `blog/assets/` y referenciarlo desde la tarjeta, el artículo y los metadatos OG/Twitter.
 6. Crear o actualizar siempre `blog/linkedin-drafts/<slug>.txt` con el texto final para LinkedIn, listo para copiar y pegar.
-7. Verificar enlaces relativos, metadatos, responsive básico, coherencia visual con el CV, disponibilidad del Markdown para el chatbot y existencia del borrador de LinkedIn.
+7. Leer `references/humanizer.md` y pasar obligatoriamente el artículo HTML y el draft de LinkedIn por esa auditoría antes de cerrar.
+8. Verificar enlaces relativos, metadatos, responsive básico, coherencia visual con el CV, disponibilidad del Markdown para el chatbot y existencia del borrador de LinkedIn.
 
 ## Diseño y Contenido
 
@@ -26,6 +27,8 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 - Escribir en castellano profesional, educativo, directo y sobrio. Evitar marketing vacío, exageraciones y claims no defendibles.
 - No mencionar empresa, cliente, compañero, curso, fuente concreta o contexto laboral sensible salvo que el usuario lo pida expresamente.
 - Mantener artículos orientados a aprendizaje: problema, contexto técnico, explicación, tradeoffs, ejemplo práctico y conclusiones accionables.
+- Mantener cada artículo en una lectura aproximada de 5-8 minutos. Priorizar claridad y utilidad sobre exhaustividad; no abrumar al lector con ejemplos largos, listas excesivas o desarrollo enciclopédico.
+- Hacer que cada artículo sea ameno y humano: abrir con una situación reconocible, pero con contexto técnico inmediato y sin ambigüedades de lectura. Usar ejemplos de desarrollo cotidiano o vida real, variar el ritmo y sostener una opinión técnica clara.
 - Cada post debe incluir título, descripción, fecha, etiquetas, tiempo estimado de lectura si aplica, enlaces de vuelta al blog/CV y metadatos SEO/OG.
 - Cada tarjeta del listado debe incluir título, descripción breve, fecha, etiquetas, enlace al artículo e imagen si aplica. Si no hay imagen, usar una composición visual CSS coherente o una card textual sobria.
 - El Markdown para el chatbot debe ser una ficha RAG muy resumida, no una copia del artículo. Objetivo: bajo consumo de tokens al inyectarse en contexto. Mantener título H1, descripción, fecha, etiquetas, URL pública, idea central, puntos clave, errores habituales y fuentes principales. Evitar ejemplos largos, bloques de código extensos, texto narrativo y secciones completas del HTML.
@@ -47,5 +50,6 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 - Comprobar que el listado no enlaza a posts inexistentes.
 - Comprobar que `CV/Chatbot/docs/blog/<slug>.md` existe para cada artículo publicado, que el chatbot lo descubrirá como documento `blog/<slug>` y que está resumido para RAG, no duplicado del artículo HTML.
 - Comprobar que `blog/linkedin-drafts/<slug>.txt` existe, no está vacío y contiene un post final de LinkedIn con la URL pública del artículo.
+- Comprobar que el artículo y el draft han pasado la auditoría de `references/humanizer.md`.
 - Probar con un servidor estático local cuando se modifique HTML visible.
 - Validar que los borradores de LinkedIn son copiables completos sin edición manual.

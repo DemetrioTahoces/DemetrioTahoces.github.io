@@ -284,7 +284,7 @@
             <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300">
                 <span>5 julio 2026</span>
                 <span class="text-gray-600">·</span>
-                <span>18 min de lectura</span>
+                <span>7 min de lectura</span>
             </div>
         </header>
 
@@ -303,56 +303,42 @@
 
             <div class="article-prose">
                 <section>
-                    <h2>Idea central</h2>
-                    <p>SOLID no es una lista de reglas para crear más clases. Es una forma de reducir el coste del cambio. Los cinco principios intentan que una modificación razonable afecte a pocas piezas, que el código viejo estable no se toque innecesariamente, que las abstracciones mantengan contratos fiables y que las dependencias apunten hacia las decisiones importantes del sistema.</p>
-                    <p>Aplicar SOLID bien no significa convertir cada método en una interfaz ni envolver cualquier detalle en una abstracción. Eso suele producir lo contrario: más indirección, más archivos, más navegación mental y menos claridad. La lectura útil es más pragmática: detectar ejes de cambio, proteger contratos, aislar políticas de detalles y diseñar puntos de extensión donde el negocio o la tecnología realmente varían.</p>
+                    <h2>La escena típica</h2>
+                    <p>En código, muchas deudas empiezan igual: una clase pequeña dentro de un servicio backend. Hace una cosa, se entiende rápido y nadie se queja. Dos meses después calcula precios, guarda datos, manda emails, publica eventos y tiene un <code>if</code> nuevo por cada caso raro que aparece. Aún funciona, pero ya da pereza tocarla.</p>
+                    <p>Ahí es donde SOLID empieza a tener sentido. No como una religión de interfaces, sino como una forma de preguntar: si mañana cambia esta regla, ¿cuánto código arrastra detrás?</p>
                 </section>
 
                 <section>
-                    <h2>Antes de las letras: el problema es el cambio</h2>
-                    <p>El software no se degrada físicamente, pero se vuelve rígido cuando cada cambio obliga a tocar demasiadas zonas. Esa rigidez suele aparecer por tres causas:</p>
+                    <h2>El problema real: cambiar sin romper medio sistema</h2>
+                    <p>El software no se desgasta como una pieza mecánica. Se vuelve difícil cuando cada cambio pequeño obliga a revisar demasiadas zonas. Suele pasar por tres motivos bastante mundanos:</p>
                     <ul>
                         <li>responsabilidades mezcladas;</li>
                         <li>contratos poco claros;</li>
                         <li>dependencias hacia detalles volátiles.</li>
                     </ul>
-                    <p>SOLID intenta atacar esas causas. Sus principios vienen de la tradición de diseño orientado a objetos, pero muchas ideas también aplican en servicios, módulos, casos de uso, componentes funcionales o paquetes. La unidad concreta importa menos que la pregunta: <strong>si esto cambia, ¿qué más se ve arrastrado?</strong></p>
+                    <p>Los principios vienen del diseño orientado a objetos, pero la idea aplica igual a servicios, módulos, casos de uso o paquetes. La unidad concreta importa menos que el olor: si para tocar una regla de negocio tienes que entender infraestructura, formato de salida y mensajería, algo se ha mezclado.</p>
                 </section>
 
                 <section>
                     <h2>S: Single Responsibility Principle</h2>
-                    <p>La interpretación superficial dice: "una clase debe hacer una sola cosa". Es una frase útil para empezar, pero incompleta. La idea más precisa es: <strong>un módulo debería responder a un único actor o grupo de cambio</strong>.</p>
-                    <p>Una clase <code>InvoiceService</code> que calcula impuestos, persiste facturas, genera PDF y publica eventos no tiene un único motivo de cambio. Hacienda puede cambiar reglas fiscales, operaciones puede cambiar el formato del PDF, infraestructura puede cambiar la base de datos y arquitectura puede cambiar la mensajería. Aunque todo tenga relación con "facturas", no todo cambia por la misma razón.</p>
-                    <p>Una separación más sana sería:</p>
-                    <pre><code>InvoiceCalculator       -> reglas de cálculo
-InvoiceRepository       -> persistencia
-InvoicePdfRenderer      -> representación documental
-InvoicePublishedEvent   -> integración/eventos</code></pre>
-                    <p>No es una invitación a atomizar por verbos. Si dos decisiones cambian siempre juntas, separarlas añade ceremonia. SRP pide cohesión alrededor de una razón real de cambio, no una clase por método.</p>
-                    <h3>Señales de violación</h3>
+                    <p>La versión de pegatina dice: "una clase debe hacer una sola cosa". Está bien para empezar, pero se queda corta. La pregunta útil es: <strong>¿quién pide que esto cambie?</strong></p>
+                    <p>Una clase <code>InvoiceService</code> que calcula impuestos, guarda facturas, genera PDF y publica eventos mezcla motivos de cambio distintos. Fiscalidad, almacenamiento, documento e integración no cambian por el mismo actor, aunque todo hable de facturas.</p>
+                    <p>Esto no significa una clase por verbo. Si dos decisiones cambian siempre juntas, separarlas solo añade ceremonia. SRP pide cohesión alrededor de una razón real de cambio.</p>
+                    <h3>Señales rápidas</h3>
                     <ul>
                         <li>cambios pequeños obligan a tocar una clase enorme;</li>
                         <li>hay métodos usados por actores distintos;</li>
-                        <li>los tests de una clase necesitan mocks de persistencia, formato, validación, red y dominio;</li>
-                        <li>el nombre de la clase contiene palabras como <code>Manager</code>, <code>Processor</code>, <code>Helper</code> o <code>Service</code> y no explica una responsabilidad concreta.</li>
+                        <li>los tests necesitan mocks de persistencia, formato, red y dominio a la vez;</li>
+                        <li>el nombre contiene <code>Manager</code>, <code>Processor</code> o <code>Helper</code> y no explica una responsabilidad clara.</li>
                     </ul>
                 </section>
 
                 <section>
                     <h2>O: Open/Closed Principle</h2>
-                    <p>El principio abierto/cerrado dice que un módulo debe poder extenderse sin modificar su código existente. La frase puede sonar imposible, porque todo cambio real modifica algo. La lectura útil es: <strong>el código estable debe permitir nuevas variantes mediante puntos de extensión explícitos</strong>.</p>
-                    <p>Ejemplo típico: cálculo de descuentos.</p>
-                    <pre><code>DiscountService
-  if customer.type == VIP
-  if customer.type == EMPLOYEE
-  if campaign == BLACK_FRIDAY</code></pre>
-                    <p>Cada nueva regla obliga a modificar el mismo bloque. Eso aumenta riesgo, conflictos de merge y regresiones. Una alternativa es modelar una abstracción <code>DiscountPolicy</code> y añadir implementaciones:</p>
-                    <pre><code>DiscountPolicy
-  VipDiscountPolicy
-  EmployeeDiscountPolicy
-  BlackFridayDiscountPolicy</code></pre>
-                    <p>El código que aplica descuentos queda cerrado respecto a la mecánica de aplicación y abierto a nuevas políticas. No se trata de usar herencia por defecto; composición, estrategia, registro de handlers, plugins o funciones de primera clase pueden cumplir el mismo papel.</p>
-                    <h3>Cuándo no aplicarlo</h3>
+                    <p>OCP suele sonar a promesa imposible: extender sin modificar. En la práctica significa algo más razonable: si una variación aparece cada dos semanas, dale un sitio claro donde entrar.</p>
+                    <p>Piensa en descuentos. Primero hay un descuento VIP. Luego empleados. Luego Black Friday. Luego una campaña para partners. Si cada regla nueva acaba en el mismo método con otro <code>if</code>, ese método se convierte en una centralita telefónica.</p>
+                    <p>Una política de descuento, un handler o una función registrada pueden dejar estable la mecánica y mover la variación a piezas pequeñas. No hace falta herencia para cumplir OCP.</p>
+                    <h3>Cuándo no merece la pena</h3>
                     <ul>
                         <li>si solo existe una variante y no hay señal real de cambio;</li>
                         <li>si la abstracción se diseña antes de entender el dominio;</li>
@@ -363,22 +349,10 @@ InvoicePublishedEvent   -> integración/eventos</code></pre>
 
                 <section>
                     <h2>L: Liskov Substitution Principle</h2>
-                    <p>LSP es el principio más maltratado. No trata de que "una subclase compile donde se espera la clase base". Trata de que <strong>un subtipo respete el contrato observable del tipo que sustituye</strong>.</p>
-                    <p>Si una función recibe un <code>PaymentMethod</code>, debería poder trabajar con <code>CardPayment</code>, <code>BankTransfer</code> o <code>WalletPayment</code> sin descubrir condiciones especiales, excepciones inesperadas o cambios semánticos. El subtipo puede especializar comportamiento, pero no puede romper las expectativas que el cliente tenía sobre el contrato.</p>
-                    <p>Ejemplo clásico de violación:</p>
-                    <pre><code>Bird
-  fly()
-
-Penguin extends Bird
-  fly() -> error</code></pre>
-                    <p>El problema no es que el pingüino sea o no sea un ave en biología. El problema es que el contrato <code>Bird</code> prometía vuelo. Si no todas las aves vuelan, el contrato está mal. Un diseño mejor separa capacidades:</p>
-                    <pre><code>Bird
-FlyingBird
-  fly()
-Penguin extends Bird
-Sparrow extends FlyingBird</code></pre>
-                    <p>En backend aparece con frecuencia en repositorios, clientes HTTP, providers y adaptadores. Una implementación que devuelve <code>null</code> donde el contrato promete una lista vacía, que lanza una excepción no documentada o que ignora una transacción esperada puede romper LSP sin que el compilador se entere.</p>
-                    <h3>Checklist práctico</h3>
+                    <p>LSP no va de que el compilador acepte una subclase. Va de no sorprender al código que la usa.</p>
+                    <p>Si una función recibe un <code>PaymentMethod</code>, debería poder trabajar con tarjeta, transferencia o wallet sin preguntar por el tipo concreto. Si una implementación devuelve <code>null</code> donde el contrato promete una lista vacía, o lanza una excepción que nadie esperaba, el contrato está roto aunque todo compile.</p>
+                    <p>El ejemplo del pingüino y el método <code>fly()</code> sigue siendo útil por eso: el problema no es biológico, es contractual. Si no todos los pájaros vuelan, el tipo base no debe prometer vuelo.</p>
+                    <h3>Checklist</h3>
                     <ul>
                         <li>no fortalecer precondiciones en el subtipo;</li>
                         <li>no debilitar postcondiciones;</li>
@@ -390,38 +364,23 @@ Sparrow extends FlyingBird</code></pre>
 
                 <section>
                     <h2>I: Interface Segregation Principle</h2>
-                    <p>ISP dice que un cliente no debería depender de métodos que no usa. El síntoma habitual es una interfaz "gorda":</p>
-                    <pre><code>UserGateway
-  createUser()
-  deleteUser()
-  exportUsers()
-  sendWelcomeEmail()
-  recalculateUserScore()</code></pre>
-                    <p>Un caso de uso que solo crea usuarios queda acoplado a operaciones de exportación, email y scoring. Ese acoplamiento puede parecer barato, pero contamina tests, implementaciones, permisos y evolución.</p>
-                    <p>Separar por cliente suele producir contratos más honestos:</p>
-                    <pre><code>CreatesUsers
-DeletesUsers
-ExportsUsers
-SendsWelcomeEmails</code></pre>
-                    <p>La clave es "por cliente", no "por método" de forma mecánica. Si dos operaciones son consumidas siempre por el mismo caso de uso y forman un contrato estable, pueden convivir.</p>
-                    <p>En APIs internas y microservicios, ISP se traduce en evitar contratos gigantes que fuerzan a todos los consumidores a conocer todo el modelo. A veces se resuelve con interfaces pequeñas; otras, con endpoints específicos, DTOs de lectura por caso de uso o eventos más focalizados.</p>
+                    <p>ISP es el principio del menú corto. Si solo quieres un café, no deberían obligarte a cargar con toda la carta del restaurante.</p>
+                    <p>En código pasa con interfaces que mezclan creación, borrado, exportación, email y scoring. Un caso de uso que solo crea usuarios acaba acoplado a operaciones que no necesita. Eso contamina tests, permisos e implementaciones.</p>
+                    <p>La separación buena no es una interfaz por método. Es una interfaz por cliente o caso de uso. Si dos operaciones se consumen siempre juntas y forman un contrato estable, pueden vivir juntas sin problema.</p>
                 </section>
 
                 <section>
                     <h2>D: Dependency Inversion Principle</h2>
-                    <p>DIP dice que los módulos de alto nivel no deberían depender de módulos de bajo nivel; ambos deberían depender de abstracciones. Además, las abstracciones no deberían depender de detalles: los detalles deberían depender de abstracciones.</p>
-                    <p>Traducido a arquitectura: las reglas importantes del sistema no deberían importar directamente el cliente HTTP, el ORM, Kafka, Redis o el proveedor cloud. El dominio o caso de uso define lo que necesita; la infraestructura implementa ese contrato.</p>
-                    <p>Ejemplo:</p>
-                    <pre><code>RegisterUserUseCase -> UserRepository
-PostgresUserRepository -> UserRepository</code></pre>
-                    <p>El caso de uso no sabe si los usuarios viven en PostgreSQL, MongoDB o un servicio remoto. Solo expresa una necesidad: guardar y recuperar usuarios con un contrato concreto.</p>
+                    <p>DIP es fácil de confundir con "usar inyección de dependencias". No es eso. La inyección es una técnica; la inversión es decidir quién define el contrato.</p>
+                    <p>Las reglas importantes del sistema no deberían importar directamente el cliente HTTP, el ORM, Kafka, Redis o el proveedor cloud. El caso de uso define lo que necesita; la infraestructura se adapta.</p>
+                    <p>Un <code>RegisterUserUseCase</code> debería depender de algo como <code>UserRepository</code>, no de <code>PostgresUserRepository</code>. El negocio no debería saber si hoy guardas en PostgreSQL y mañana en otro sitio.</p>
                     <p>Esto conecta directamente con arquitectura hexagonal:</p>
                     <ul>
                         <li>el centro define puertos;</li>
                         <li>los adaptadores implementan detalles;</li>
                         <li>la composición decide qué implementación concreta se enchufa.</li>
                     </ul>
-                    <p>DIP no es lo mismo que inyección de dependencias. La inyección es una técnica para suministrar dependencias. La inversión es una decisión de diseño: quién define el contrato y hacia dónde apunta la dependencia.</p>
+                    <p>La idea encaja muy bien con arquitectura hexagonal: el centro define puertos y los adaptadores técnicos se enchufan fuera.</p>
                 </section>
 
                 <section>
@@ -434,31 +393,7 @@ PostgresUserRepository -> UserRepository</code></pre>
                         <li><strong>ISP</strong> mantiene pequeños los contratos que cruzan límites.</li>
                         <li><strong>DIP</strong> hace que las políticas importantes no dependan de detalles técnicos.</li>
                     </ul>
-                    <p>En conjunto, SOLID empuja a una arquitectura donde el cambio entra por zonas previstas y no atraviesa todo el sistema.</p>
-                </section>
-
-                <section>
-                    <h2>Ejemplo integrado</h2>
-                    <p>Supongamos un sistema que notifica a usuarios cuando se crea una alerta IoT. Un diseño frágil podría tener:</p>
-                    <pre><code>AlertService
-  valida alerta
-  consulta usuario en PostgreSQL
-  decide canal
-  envía email con SMTP
-  envía push con Firebase
-  registra auditoría</code></pre>
-                    <p>Funciona, pero cada cambio toca el mismo sitio: nueva regla de alerta, nuevo canal, cambio de proveedor, cambio de auditoría.</p>
-                    <p>Una versión más SOLID:</p>
-                    <pre><code>CreateAlertUseCase
-  AlertPolicy
-  UserRepository
-  NotificationChannel
-  AuditTrail
-
-EmailNotificationChannel implements NotificationChannel
-PushNotificationChannel implements NotificationChannel
-PostgresUserRepository implements UserRepository</code></pre>
-                    <p>No es solo "más limpio". El beneficio operativo es que añadir un canal como WhatsApp o cambiar Firebase por otro proveedor no debería modificar la política central de creación de alertas.</p>
+                    <p>La gracia está en usarlos juntos, no en recitarlos por separado. SOLID empuja a que el cambio entre por zonas previstas y no atraviese todo el sistema como una gotera.</p>
                 </section>
 
                 <section>
@@ -470,29 +405,16 @@ PostgresUserRepository implements UserRepository</code></pre>
                     <p>Muchos problemas que se intentan resolver con jerarquías se expresan mejor con composición. LSP es una advertencia: si una subclase necesita desactivar o contradecir parte del padre, probablemente no hay relación de subtipo.</p>
 
                     <h3>Aplicar OCP a todo</h3>
-                    <p>No todo merece un plugin system. Conviene cerrar aquello que ya es estable y abrir aquello que cambia con frecuencia. El diseño debe seguir evidencia, no ansiedad.</p>
+                    <p>No todo merece un sistema de plugins. Conviene cerrar aquello que ya es estable y abrir aquello que cambia con frecuencia. El diseño debe seguir evidencia, no ansiedad.</p>
 
                     <h3>Diseñar interfaces desde la implementación</h3>
                     <p>Una interfaz que copia todos los métodos de una clase concreta no invierte nada. Solo duplica el detalle. Las buenas abstracciones nacen del consumidor: "qué necesita este caso de uso para cumplir su responsabilidad".</p>
                 </section>
 
                 <section>
-                    <h2>Relación con testing</h2>
-                    <p>SOLID y testing se retroalimentan. Un módulo con una responsabilidad clara se prueba con menos contexto. Un contrato pequeño reduce mocks. Una dependencia invertida permite sustituir infraestructura por dobles de prueba. Un subtipo que respeta contratos evita tests condicionales por implementación.</p>
-                    <p>Pero los tests también desenmascaran excesos: si para probar un caso simple hay que construir diez interfaces vacías, quizá el diseño está demasiado fragmentado.</p>
-                </section>
-
-                <section>
                     <h2>SOLID en código moderno</h2>
-                    <p>Aunque SOLID nació en el contexto de orientación a objetos, su valor no depende de escribir Java o C#. En TypeScript, Python, Go o arquitecturas funcionales siguen existiendo los mismos problemas:</p>
-                    <ul>
-                        <li>funciones con demasiadas razones de cambio;</li>
-                        <li>módulos cerrados a extensión razonable;</li>
-                        <li>contratos que prometen más de lo que algunas implementaciones cumplen;</li>
-                        <li>consumidores acoplados a APIs demasiado grandes;</li>
-                        <li>políticas de negocio dependiendo de detalles técnicos.</li>
-                    </ul>
-                    <p>La forma cambia, el criterio permanece. Un estudio experimental reciente sobre código de Machine Learning encontró evidencia estadísticamente significativa de que aplicar SOLID mejoraba la comprensión del código por parte de participantes del estudio. No convierte SOLID en dogma universal, pero sí refuerza una intuición práctica: separar responsabilidades y contratos ayuda cuando el código debe ser leído, entendido y modificado por otros.</p>
+                    <p>Aunque SOLID nació en el contexto de orientación a objetos, su valor no depende de escribir Java o C#. En TypeScript, Python, Go o arquitecturas funcionales siguen existiendo los mismos problemas: demasiadas razones de cambio, contratos excesivos, implementaciones que sorprenden al cliente y políticas de negocio atadas a detalles técnicos.</p>
+                    <p>Un estudio reciente sobre código de Machine Learning encontró evidencia de que aplicar SOLID mejoraba la comprensión del código por parte de participantes del estudio. No lo convierte en dogma, pero sí refuerza una intuición sencilla: separar responsabilidades y contratos ayuda cuando otro tiene que leer tu código un martes por la tarde.</p>
                 </section>
 
                 <section class="callout rounded-xl p-5 my-8">
