@@ -7,14 +7,14 @@
     <title>Domain events y brokers de mensajería: nombrar colas para entender el sistema - Demetrio Tahoces</title>
     <meta name="description" content="Guía práctica sobre domain events, exchanges, routing keys y colas en brokers como RabbitMQ o Kafka, con una convención de nombrado orientada a trazabilidad y desacoplamiento.">
     <meta property="og:title" content="Domain events y brokers de mensajería">
-    <meta property="og:description" content="Cómo nombrar eventos, exchanges, routing keys y colas para que la topología explique qué ocurrió, qué reacción se ejecuta y de dónde viene cada trigger.">
+    <meta property="og:description" content="Cómo nombrar eventos, exchanges, routing keys y colas para que la topología sugiera qué entidad de dominio disparó el evento, qué ocurrió y qué reacción se ejecuta.">
     <meta property="og:type" content="article">
     <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html">
     <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html">
     <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/domain-events-brokers-mensajeria.svg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Domain events y brokers de mensajería">
-    <meta name="twitter:description" content="Una convención práctica para que cada exchange, routing key y cola cuente qué hecho ocurrió y qué reacción ejecuta cada consumidor.">
+    <meta name="twitter:description" content="Una convención práctica para RabbitMQ, extrapolable a Kafka y otros brokers, que separa entidad de dominio, hecho ocurrido y reacción de consumidor.">
     <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/domain-events-brokers-mensajeria.svg">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
@@ -307,7 +307,7 @@
             <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3">Mensajería con intención explícita</p>
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-5">Domain events y brokers de mensajería: nombrar colas para entender el sistema</h1>
             <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed">
-                Una convención práctica para que cada exchange, routing key y cola explique qué hecho ocurrió, qué reacción se ejecuta y de dónde viene cada trigger.
+                Una convención práctica, explicada con RabbitMQ y extrapolable a Kafka u otros brokers, para que la topología sugiera qué entidad de dominio disparó el evento, qué ocurrió y qué reacción se ejecuta.
             </p>
             <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300">
                 <span>6 julio 2026</span>
@@ -318,13 +318,13 @@
 
         <article class="card visible rounded-xl p-6 md:p-8 mb-8">
             <figure class="mb-8">
-                <img src="../assets/domain-events-brokers-mensajeria.svg" alt="Diagrama de un domain event UserCreated publicado en el exchange user-created y consumido por varias colas con acciones separadas." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+                <img src="../assets/domain-events-brokers-mensajeria.svg" alt="Diagrama de un domain event UserCreated publicado en el exchange user con routing key created y consumido por varias colas con acciones separadas." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
             </figure>
 
             <div class="route-grid mb-8">
-                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Exchange</strong><span class="text-sm">el hecho: <code>user-created</code></span></div>
-                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Routing key</strong><span class="text-sm">la acción: <code>send.email</code></span></div>
-                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Cola</strong><span class="text-sm">acción sobre hecho: <code>send-email-on-user-created</code></span></div>
+                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Exchange</strong><span class="text-sm">entidad: <code>user</code></span></div>
+                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Routing key</strong><span class="text-sm">qué ocurrió: <code>created</code></span></div>
+                <div class="badge rounded-xl p-3"><strong class="block text-white text-lg">Cola</strong><span class="text-sm">reacción: <code>send-email-on-user-created</code></span></div>
             </div>
 
             <div class="article-prose">
@@ -350,7 +350,13 @@
 
                 <section>
                     <h2>La convención de nombrado</h2>
-                    <p>La convención que defiendo aquí separa tres conceptos que muchas topologías mezclan: el hecho, la acción técnica que reacciona al hecho y la cola donde vive esa reacción.</p>
+                    <p>En sistemas event-driven, los nombres de topics, exchanges y colas deberían sugerir al menos tres cosas:</p>
+                    <ul>
+                        <li>qué entidad de dominio ha disparado el evento;</li>
+                        <li>qué ocurrió;</li>
+                        <li>qué reacción se ejecuta.</li>
+                    </ul>
+                    <p>Para conseguirlo, la convención separa cuatro piezas técnicas que muchas topologías mezclan: el evento de dominio, la entidad sobre la que ocurrió, la acción que ocurrió sobre esa entidad y la cola donde vive cada reacción.</p>
 
                     <table class="naming-table">
                         <thead>
@@ -370,15 +376,15 @@
                             </tr>
                             <tr>
                                 <td><strong>Exchange</strong></td>
-                                <td>Canal del hecho publicado.</td>
-                                <td>Nombre del evento en kebab-case.</td>
-                                <td><code>user-created</code></td>
+                                <td>Canal de la entidad publicada.</td>
+                                <td>Entidad del evento en kebab-case.</td>
+                                <td><code>user</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Routing key</strong></td>
-                                <td>Acción lógica que se ejecuta ante el evento.</td>
-                                <td>Verbos o segmentos separados por puntos.</td>
-                                <td><code>send.email</code></td>
+                                <td>Acción técnica que se ha hecho sobre la entidad del exchange.</td>
+                                <td>Acción del evento en pasado, separada por puntos si hay más segmentos.</td>
+                                <td><code>created</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Cola</strong></td>
@@ -390,27 +396,26 @@
                     </table>
 
                     <p>Con esta regla, la topología se puede leer casi como una frase:</p>
-                    <pre><code>Exchange:    user-created
-Routing key: send.email
+                    <pre><code>Exchange:    user
+Routing key: created
 Queue:       send-email-on-user-created</code></pre>
-                    <p>El sistema dice: "cuando ocurrió <code>user-created</code>, esta cola ejecuta <code>send.email</code>". Si mañana aparece una integración con CRM, no se esconde detrás de la misma cola:</p>
-                    <pre><code>Exchange:    user-created
-Routing key: sync.crm
+                    <p>El sistema dice: "cuando sobre la entidad <code>user</code> se produjo <code>created</code>, esta cola ejecuta <code>send-email</code>". Si mañana aparece una integración con CRM, no se esconde detrás de la misma cola:</p>
+                    <pre><code>Exchange:    user
+Routing key: created
 Queue:       sync-crm-on-user-created</code></pre>
                     <p>Esto tiene valor en diseño, observabilidad y soporte. En diseño, fuerza a separar reacciones. En observabilidad, las métricas ya llevan intención. En soporte, una DLQ llamada <code>sync-crm-on-user-created.dlq</code> no necesita arqueología.</p>
                 </section>
 
                 <section class="warning rounded-xl p-5 my-8">
-                    <h2 class="mt-0">Cuidado con la routing key</h2>
-                    <p>Hay una tensión técnica que conviene mirar de frente. En AMQP, la routing key se envía al publicar el mensaje. Si el caso de uso que emite <code>UserCreated</code> publica directamente con <code>send.email</code>, ese caso de uso acaba sabiendo que alguien enviará un email. Eso contradice la idea de domain event como hecho neutro.</p>
-                    <p>Hay varias formas razonables de resolverlo:</p>
+                    <h2 class="mt-0">El ejemplo usa RabbitMQ</h2>
+                    <p>Esta convención está explicada con RabbitMQ porque su modelo encaja muy bien con la separación entre exchange, routing key, binding y cola. Aun así, la idea de fondo es extrapolable a Kafka, SQS, Pub/Sub u otros brokers: separar la entidad, el hecho ocurrido y la reacción que ejecuta cada consumidor.</p>
+                    <p>El mapeo exacto cambia según el broker:</p>
                     <ul>
-                        <li>usar un exchange tipo <code>fanout</code> por domain event y dejar que el nombre de la cola documente la acción;</li>
-                        <li>mantener la routing key de acción en una capa de infraestructura que configura suscripciones, no dentro del dominio ni del caso de uso;</li>
-                        <li>usar un router técnico que recibe el evento puro y publica hacia las rutas de acción declaradas;</li>
-                        <li>si se usa <code>topic</code>, asumir explícitamente que la routing key forma parte de la suscripción y no del lenguaje del dominio.</li>
+                        <li>en RabbitMQ, <code>user</code> puede ser el exchange y <code>created</code> la routing key;</li>
+                        <li>en Kafka, <code>user</code> puede ser el topic y <code>created</code> puede viajar como <code>eventType</code>, header o parte del esquema;</li>
+                        <li>en brokers sin routing key, la cola, suscripción o consumer group mantiene la reacción: <code>send-email-on-user-created</code>.</li>
                     </ul>
-                    <p>La regla práctica: el dominio emite <code>UserCreated</code>. La decisión de que eso provoque <code>send.email</code>, <code>sync.crm</code> o <code>index.search</code> pertenece a los consumidores y a la configuración de infraestructura.</p>
+                    <p>Lo importante es no perder la semántica. <code>UserCreated</code> sigue siendo el evento. <code>user</code> identifica la entidad publicada. <code>created</code> identifica qué ocurrió sobre esa entidad. La acción de negocio o infraestructura queda en la cola y en su consumidor.</p>
                 </section>
 
                 <section>
@@ -434,14 +439,15 @@ sync-crm-on-user-created
 
                 <section>
                     <h2>RabbitMQ y Kafka no son la misma cosa</h2>
-                    <p>RabbitMQ trabaja de forma natural con exchanges, routing keys, bindings y colas. La documentación de topic exchanges muestra routing keys compuestas por palabras separadas por puntos, justo el formato que encaja con <code>send.email</code> o <code>sync.crm</code>. En RabbitMQ, esta convención se expresa de forma directa.</p>
+                    <p>RabbitMQ trabaja de forma natural con exchanges, routing keys, bindings y colas. La documentación de topic exchanges muestra routing keys compuestas por palabras separadas por puntos. En un caso simple, <code>created</code> basta; si el dominio pide más precisión, podrían aparecer claves como <code>password.reset.requested</code> o <code>email.verified</code>.</p>
                     <p>Kafka tiene otra semántica. La unidad principal es el topic: un log ordenado y duradero de eventos. Los consumidores leen por offsets y los grupos de consumidores reparten particiones. No hay exchanges ni colas AMQP. Si aplicas la convención a Kafka, la traducción habitual sería:</p>
                     <ul>
-                        <li>topic: <code>user-created</code>, si decides topic por tipo de evento;</li>
+                        <li>topic: <code>user</code>, si decides topic por entidad o agregado;</li>
+                        <li>event type, header o campo de payload: <code>created</code> o <code>UserCreated</code>;</li>
                         <li>consumer group: <code>send-email-on-user-created</code>;</li>
                         <li>handler: <code>SendEmailOnUserCreated</code>.</li>
                     </ul>
-                    <p>Ese mapeo conserva la intención: un hecho publicado y una reacción lógica por grupo. La advertencia es que Kafka no siempre agradece un topic por cada evento si el dominio tiene cientos de eventos de bajo volumen, esquemas muy relacionados o necesidades de orden por agregado. En algunos sistemas tiene más sentido un topic por agregado o bounded context, con <code>eventType</code> en el payload o en headers. Si se toma esa ruta, el nombre del consumer group sigue siendo el sitio donde declarar la acción: <code>send-email-on-user-created</code>.</p>
+                    <p>Ese mapeo conserva la intención: una entidad publicada, un hecho identificable y una reacción lógica por grupo. En Kafka suele tener más sentido evitar un topic por cada evento si el dominio tiene muchos eventos de bajo volumen, esquemas relacionados o necesidades de orden por agregado. Si se usa un topic por agregado, entidad o bounded context, el nombre del consumer group sigue siendo el sitio donde declarar la reacción: <code>send-email-on-user-created</code>.</p>
                 </section>
 
                 <section>
@@ -449,7 +455,7 @@ sync-crm-on-user-created
                     <p>El nombre no basta. Un evento que va a salir del proceso necesita metadatos mínimos para poder operar bien:</p>
                     <ul>
                         <li><code>eventId</code>, para idempotencia y trazabilidad;</li>
-                        <li><code>eventType</code>, por ejemplo <code>UserCreated</code> o <code>user-created</code>;</li>
+                        <li><code>eventType</code>, por ejemplo <code>UserCreated</code> o <code>created</code> dentro del topic/exchange <code>user</code>;</li>
                         <li><code>occurredOn</code>, cuándo ocurrió el hecho en el dominio;</li>
                         <li><code>aggregateId</code>, para correlacionar y particionar;</li>
                         <li><code>schemaVersion</code>, porque el contrato cambiará;</li>
@@ -493,7 +499,8 @@ sync-crm-on-user-created
                     <h2 class="mt-0">Checklist pragmático</h2>
                     <ol>
                         <li>¿El evento está en pasado y expresa un hecho de negocio?</li>
-                        <li>¿El exchange o topic puede leerse como ese hecho en kebab-case?</li>
+                        <li>¿El exchange o topic representa la entidad en kebab-case?</li>
+                        <li>¿La routing key o tipo de evento representa lo ocurrido sobre esa entidad?</li>
                         <li>¿La cola expresa una única acción con formato <code>accion-on-evento</code>?</li>
                         <li>¿Hay un único consumidor lógico por cola o consumer group?</li>
                         <li>¿La acción del consumidor no se ha filtrado al dominio productor?</li>
@@ -506,7 +513,7 @@ sync-crm-on-user-created
                 <section>
                     <h2>Conclusión</h2>
                     <p>Los domain events ayudan cuando se tratan como hechos, no como comandos diferidos. El broker es una consecuencia técnica: permite que esos hechos crucen procesos, se reintenten, se observen y se escalen. Pero si la topología no cuenta la historia correcta, el sistema acaba lleno de colas opacas y consumidores difíciles de razonar.</p>
-                    <p>Nombrar el exchange como <code>user-created</code>, la routing key como <code>send.email</code> y la cola como <code>send-email-on-user-created</code> deja visible el contrato operativo: ocurrió un hecho y esta reacción se ejecuta por ese hecho. Es simple, pero obliga a tomar buenas decisiones: eventos en pasado, acciones en consumidores, una cola por reacción y varias instancias solo cuando hacen el mismo trabajo lógico.</p>
+                    <p>Nombrar el exchange como <code>user</code>, la routing key como <code>created</code> y la cola como <code>send-email-on-user-created</code> deja visible el contrato operativo: ocurrió un hecho sobre una entidad y esta reacción se ejecuta por ese hecho. Es simple, pero obliga a tomar buenas decisiones: eventos en pasado, acciones en consumidores, una cola por reacción y varias instancias solo cuando hacen el mismo trabajo lógico.</p>
                 </section>
 
                 <section>

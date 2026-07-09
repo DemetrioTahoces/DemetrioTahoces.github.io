@@ -10,25 +10,25 @@
 
 ## Idea central
 
-Los domain events deben modelarse como hechos de negocio ocurridos en el pasado, no como comandos para otros servicios. Cuando esos eventos atraviesan infraestructura de mensajería, la topología debe dejar claro qué ocurrió, qué reacción se ejecuta y de dónde procede el trigger.
+Los domain events deben modelarse como hechos de negocio ocurridos en el pasado, no como comandos para otros servicios. Cuando esos eventos atraviesan infraestructura de mensajería, los nombres de topics, exchanges y colas deberían sugerir al menos tres cosas: qué entidad de dominio ha disparado el evento, qué ocurrió y qué reacción ejecuta cada consumidor.
 
 ## Convención de nombrado
 
 - **Domain event:** hecho en pasado, con lenguaje de dominio. Ejemplos: `UserCreated`, `OrderPaid`, `InvoiceIssued`, `SubscriptionCancelled`.
-- **Exchange o topic por evento:** nombre del domain event en kebab-case. Ejemplo: `user-created`.
-- **Routing key:** acción lógica que se ejecuta sobre el evento, separada por puntos. Ejemplo: `send.email`, `sync.crm`, `index.search`.
+- **Exchange o topic:** entidad del evento en kebab-case. Ejemplo: `user`.
+- **Routing key:** acción técnica que se ha hecho sobre la entidad del exchange, en pasado y separada por puntos si hay más segmentos. Ejemplo: `created`, `password.reset.requested`, `email.verified`.
 - **Cola:** acción que se ejecuta "on" evento, separada por guiones. Ejemplo: `send-email-on-user-created`.
 - **Consumidor lógico:** cada cola debe tener un único consumidor lógico, aunque pueda haber varias instancias idénticas para escalar o tolerar fallos.
 
 ## Matiz técnico importante
 
-En AMQP, la routing key se envía al publicar. Si el caso de uso productor publica `UserCreated` con routing key `send.email`, se acopla a una reacción concreta. Para preservar el evento como hecho neutro, la acción debe vivir en la configuración de infraestructura, en un router técnico, en bindings de suscripción o directamente en el nombre de la cola si se usa `fanout`.
+El ejemplo principal está planteado con RabbitMQ: exchange `user`, routing key `created` y cola `send-email-on-user-created`. La idea es extrapolable a otros brokers de mensajería, aunque el mapeo exacto cambie. En Kafka, por ejemplo, `user` puede ser el topic, `created` puede ir como `eventType`, header o campo de payload, y `send-email-on-user-created` puede ser el consumer group.
 
 ## RabbitMQ y Kafka
 
-- RabbitMQ encaja bien con exchanges, routing keys y colas. Un exchange `user-created` y colas como `send-email-on-user-created` hacen la topología legible.
-- Kafka no tiene exchanges ni colas AMQP. La traducción habitual es topic `user-created` y consumer group `send-email-on-user-created`.
-- En Kafka no siempre conviene un topic por evento. Si hay muchos eventos de bajo volumen o necesidades de orden por agregado, puede usarse un topic por agregado o bounded context con `eventType` en payload o headers.
+- RabbitMQ encaja bien con exchanges, routing keys y colas. Un exchange `user`, routing key `created` y colas como `send-email-on-user-created` hacen la topología legible.
+- Kafka no tiene exchanges ni colas AMQP. La traducción habitual sería topic `user`, `eventType` `created` o `UserCreated`, y consumer group `send-email-on-user-created`.
+- En Kafka no siempre conviene un topic por cada evento. Si hay muchos eventos de bajo volumen o necesidades de orden por agregado, puede usarse un topic por entidad, agregado o bounded context con `eventType` en payload o headers.
 
 ## Buenas prácticas
 

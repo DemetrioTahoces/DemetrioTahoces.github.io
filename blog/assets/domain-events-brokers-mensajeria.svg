@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
   <title id="title">Topologia de domain events y colas</title>
-  <desc id="desc">Diagrama visual de un domain event que llega a un exchange y dispara varias colas de accion con consumidores logicos separados.</desc>
+  <desc id="desc">Diagrama visual de un domain event publicado en un exchange de entidad con una routing key de hecho y varias colas de reaccion.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#07111f"/>
@@ -34,7 +34,7 @@
   <g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#shadow)">
     <rect x="72" y="86" width="1136" height="548" rx="24" fill="#0f172a" opacity="0.72" stroke="#60a5fa" stroke-opacity="0.18"/>
     <text x="112" y="150" fill="#e5edf7" font-size="38" font-weight="800">Domain event como contrato de hechos</text>
-    <text x="112" y="190" fill="#a7b4c8" font-size="22">El evento informa. Cada cola declara la accion que ejecuta cuando ese hecho ocurre.</text>
+    <text x="112" y="190" fill="#a7b4c8" font-size="22">El evento informa. El broker separa entidad, hecho ocurrido y reaccion de consumidor.</text>
 
     <g>
       <rect x="112" y="266" width="230" height="126" rx="16" fill="#111f33" stroke="#60a5fa" stroke-opacity="0.34"/>
@@ -47,8 +47,8 @@
     <g>
       <rect x="506" y="248" width="256" height="164" rx="20" fill="#0b253d" stroke="#38bdf8" stroke-opacity="0.52"/>
       <text x="538" y="294" fill="#bfdbfe" font-size="18" font-weight="700">Exchange</text>
-      <text x="538" y="338" fill="#ffffff" font-size="34" font-weight="800">user-created</text>
-      <text x="538" y="374" fill="#a7b4c8" font-size="18">kebab-case del hecho</text>
+      <text x="538" y="338" fill="#ffffff" font-size="34" font-weight="800">user</text>
+      <text x="538" y="374" fill="#a7b4c8" font-size="18">kebab-case de la entidad</text>
     </g>
 
     <path d="M778 300C842 272 888 260 936 252" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)" fill="none" opacity="0.9"/>
@@ -57,19 +57,19 @@
 
     <g>
       <rect x="950" y="216" width="236" height="76" rx="14" fill="#10231d" stroke="#22c55e" stroke-opacity="0.44"/>
-      <text x="976" y="248" fill="#bbf7d0" font-size="17" font-weight="700">send.email</text>
+      <text x="976" y="248" fill="#bbf7d0" font-size="17" font-weight="700">created</text>
       <text x="976" y="272" fill="#e5edf7" font-size="17">send-email-on-user-created</text>
     </g>
 
     <g>
       <rect x="950" y="316" width="236" height="76" rx="14" fill="#10231d" stroke="#22c55e" stroke-opacity="0.44"/>
-      <text x="976" y="348" fill="#bbf7d0" font-size="17" font-weight="700">sync.crm</text>
+      <text x="976" y="348" fill="#bbf7d0" font-size="17" font-weight="700">created</text>
       <text x="976" y="372" fill="#e5edf7" font-size="17">sync-crm-on-user-created</text>
     </g>
 
     <g>
       <rect x="950" y="416" width="236" height="76" rx="14" fill="#10231d" stroke="#22c55e" stroke-opacity="0.44"/>
-      <text x="976" y="448" fill="#bbf7d0" font-size="17" font-weight="700">index.search</text>
+      <text x="976" y="448" fill="#bbf7d0" font-size="17" font-weight="700">created</text>
       <text x="976" y="472" fill="#e5edf7" font-size="17">index-user-on-user-created</text>
     </g>
 
@@ -83,7 +83,7 @@
     <g>
       <rect x="506" y="492" width="400" height="74" rx="16" fill="#111f33" stroke="#60a5fa" stroke-opacity="0.22"/>
       <text x="530" y="522" fill="#bfdbfe" font-size="17" font-weight="700">Lectura operacional</text>
-      <text x="530" y="548" fill="#e5edf7" font-size="19">que paso, quien reacciona y que accion ejecuta</text>
+      <text x="530" y="548" fill="#e5edf7" font-size="19">entidad, hecho ocurrido y accion ejecutada</text>
     </g>
   </g>
 </svg>
