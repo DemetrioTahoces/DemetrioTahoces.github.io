@@ -42,6 +42,7 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 - Usar URL visible del artículo cuando exista publicación pública, por ejemplo `https://demetriotahoces.github.io/blog/posts/<slug>.html`.
 - Estructura recomendada del borrador: gancho inicial, idea aprendida, 2-4 puntos breves en texto plano, cierre con pregunta o reflexión y hashtags moderados.
 - Si hay imagen sugerida para LinkedIn, no mezclar notas editoriales dentro del `.txt`; el archivo debe seguir siendo copiable completo.
+- Convertir el SVG generado para el articulo (si lo hay) en PNG y guardarlo en `blog/linkedin-drafts/` para usarlo como imagen sugerida en LinkedIn.
 - No generar automatizaciones ni publicar en LinkedIn.
 
 ## Validación

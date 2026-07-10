@@ -1,89 +1,204 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
-  <title id="title">Topologia de domain events y colas</title>
-  <desc id="desc">Diagrama visual de un domain event publicado en un exchange de entidad con una routing key de hecho y varias colas de reaccion.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Topolog&#237;a de Domain Events y Colas - LinkedIn</title>
+  <desc id="desc">Diagrama visual de un domain event publicado en un exchange de entidad con una routing key de hecho y varias colas de reacci&#243;n, optimizado para LinkedIn.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#07111f"/>
-      <stop offset="0.58" stop-color="#0f233a"/>
-      <stop offset="1" stop-color="#06121f"/>
+    <!-- Degradado de fondo -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0e1d35"/>
+      <stop offset="60%" stop-color="#08101e"/>
+      <stop offset="100%" stop-color="#040812"/>
+    </radialGradient>
+
+    <!-- Degradados para cajas -->
+    <linearGradient id="event-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
     </linearGradient>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#60a5fa"/>
-      <stop offset="1" stop-color="#38bdf8"/>
+    <linearGradient id="exchange-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f2b48"/>
+      <stop offset="100%" stop-color="#08182b"/>
     </linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#22c55e"/>
-      <stop offset="1" stop-color="#84cc16"/>
+    <linearGradient id="queue-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c2e24"/>
+      <stop offset="100%" stop-color="#061a14"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#020617" flood-opacity="0.42"/>
+    <linearGradient id="panel-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111e36"/>
+      <stop offset="100%" stop-color="#0b1323"/>
+    </linearGradient>
+
+    <!-- Degradados para las flechas (conectores) -->
+    <linearGradient id="arrow1-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="arrow2-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+
+    <!-- Filtros de resplandor / sombras -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#010307" flood-opacity="0.65"/>
     </filter>
-    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
-      <path d="M44 0H0V44" fill="none" stroke="#94a3b8" stroke-width="1" opacity="0.08"/>
+    <filter id="glow-event" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="glow-exchange" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="glow-queue" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Patrón de cuadrícula de fondo -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.04"/>
     </pattern>
-    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M0 0L10 5L0 10Z" fill="#93c5fd"/>
+
+    <!-- Marcadores de flechas -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1L8 5L0 9Z" fill="#60a5fa"/>
+    </marker>
+    <marker id="arrow-cyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1L8 5L0 9Z" fill="#22d3ee"/>
     </marker>
   </defs>
 
-  <rect width="1280" height="720" fill="url(#bg)"/>
-  <rect width="1280" height="720" fill="url(#grid)"/>
-  <circle cx="1080" cy="110" r="220" fill="#22c55e" opacity="0.08"/>
-  <circle cx="170" cy="635" r="260" fill="#60a5fa" opacity="0.1"/>
+  <!-- Fondo -->
+  <rect width="1200" height="630" fill="url(#bg-grad)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#shadow)">
-    <rect x="72" y="86" width="1136" height="548" rx="24" fill="#0f172a" opacity="0.72" stroke="#60a5fa" stroke-opacity="0.18"/>
-    <text x="112" y="150" fill="#e5edf7" font-size="38" font-weight="800">Domain event como contrato de hechos</text>
-    <text x="112" y="190" fill="#a7b4c8" font-size="22">El evento informa. El broker separa entidad, hecho ocurrido y reaccion de consumidor.</text>
+  <!-- Círculos decorativos de ambiente (brillo de fondo) -->
+  <circle cx="150" cy="450" r="250" fill="#3b82f6" opacity="0.08" filter="url(#glow-event)"/>
+  <circle cx="600" cy="270" r="220" fill="#06b6d4" opacity="0.06" filter="url(#glow-exchange)"/>
+  <circle cx="1050" cy="180" r="250" fill="#10b981" opacity="0.08" filter="url(#glow-queue)"/>
 
-    <g>
-      <rect x="112" y="266" width="230" height="126" rx="16" fill="#111f33" stroke="#60a5fa" stroke-opacity="0.34"/>
-      <text x="136" y="312" fill="#bfdbfe" font-size="18" font-weight="700">Evento de dominio</text>
-      <text x="136" y="352" fill="#ffffff" font-size="30" font-weight="800">UserCreated</text>
+  <!-- Contenedor principal de los diagramas -->
+  <g font-family="Inter, system-ui, -apple-system, sans-serif" filter="url(#shadow)">
+    
+    <!-- MARCO DEL DIAGRAMA -->
+    <rect x="50" y="50" width="1100" height="530" rx="24" fill="#080f1d" fill-opacity="0.6" stroke="#38bdf8" stroke-opacity="0.1" stroke-width="1.5"/>
+
+    <!-- CABECERA -->
+    <g transform="translate(80, 95)">
+      <!-- Pequeño indicador visual de estado/categoría -->
+      <rect x="0" y="-18" width="135" height="22" rx="11" fill="#38bdf8" fill-opacity="0.1" stroke="#38bdf8" stroke-opacity="0.25" stroke-width="1"/>
+      <circle cx="12" cy="-7" r="4" fill="#38bdf8"/>
+      <text x="24" y="-4" fill="#38bdf8" font-size="10" font-weight="700" letter-spacing="1">ARQUITECTURA</text>
+
+      <text x="0" y="26" fill="#f8fafc" font-size="28" font-weight="800" letter-spacing="-0.5">Domain Event como contrato de hechos</text>
+      <text x="0" y="52" fill="#94a3b8" font-size="15">El evento informa. El broker separa la entidad, el hecho ocurrido y la reacci&#243;n del consumidor.</text>
     </g>
 
-    <path d="M352 329H488" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)" opacity="0.9"/>
-
-    <g>
-      <rect x="506" y="248" width="256" height="164" rx="20" fill="#0b253d" stroke="#38bdf8" stroke-opacity="0.52"/>
-      <text x="538" y="294" fill="#bfdbfe" font-size="18" font-weight="700">Exchange</text>
-      <text x="538" y="338" fill="#ffffff" font-size="34" font-weight="800">user</text>
-      <text x="538" y="374" fill="#a7b4c8" font-size="18">kebab-case de la entidad</text>
+    <!-- COLUMNA 1: EVENTO DE DOMINIO -->
+    <g transform="translate(80, 215)">
+      <!-- Glow del Evento -->
+      <rect x="-3" y="-3" width="226" height="126" rx="18" fill="none" stroke="#3b82f6" stroke-opacity="0.18" stroke-width="6" filter="url(#glow-event)"/>
+      <!-- Caja Principal -->
+      <rect x="0" y="0" width="220" height="120" rx="14" fill="url(#event-grad)" stroke="#3b82f6" stroke-opacity="0.55" stroke-width="2"/>
+      
+      <!-- Contenido -->
+      <rect x="18" y="18" width="80" height="18" rx="4" fill="#3b82f6" fill-opacity="0.15"/>
+      <text x="25" y="30" fill="#93c5fd" font-size="10" font-weight="800" letter-spacing="0.8">DOMAIN EVENT</text>
+      <!-- Subrayado del Evento -->
+      <line x1="18" y1="44" x2="202" y2="44" stroke="#3b82f6" stroke-opacity="0.25" stroke-width="1.5"/>
+      <text x="18" y="78" fill="#ffffff" font-size="26" font-weight="800" letter-spacing="-0.5">UserCreated</text>
+      <text x="18" y="98" fill="#64748b" font-size="11" font-weight="500">Registrado en base de datos</text>
     </g>
 
-    <path d="M778 300C842 272 888 260 936 252" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)" fill="none" opacity="0.9"/>
-    <path d="M778 330H936" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)" opacity="0.9"/>
-    <path d="M778 360C842 388 888 400 936 408" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)" fill="none" opacity="0.9"/>
+    <!-- CONECTOR 1: EVENTO A EXCHANGE -->
+    <path d="M 300 275 L 440 275" stroke="url(#arrow1-grad)" stroke-width="4" marker-end="url(#arrow-blue)" fill="none"/>
+    <!-- Etiqueta sobre el conector -->
+    <rect x="328" y="253" width="74" height="20" rx="10" fill="#0f172a" stroke="#3b82f6" stroke-opacity="0.25" stroke-width="1"/>
+    <text x="365" y="267" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">PUBLICA</text>
 
-    <g>
-      <rect x="950" y="216" width="236" height="76" rx="14" fill="#10231d" stroke="#22c55e" stroke-opacity="0.44"/>
-      <text x="976" y="248" fill="#bbf7d0" font-size="17" font-weight="700">created</text>
-      <text x="976" y="272" fill="#e5edf7" font-size="17">send-email-on-user-created</text>
+    <!-- COLUMNA 2: EXCHANGE (TOPIC) -->
+    <g transform="translate(440, 190)">
+      <!-- Glow del Exchange -->
+      <rect x="-3" y="-3" width="256" height="176" rx="22" fill="none" stroke="#22d3ee" stroke-opacity="0.15" stroke-width="6" filter="url(#glow-exchange)"/>
+      <!-- Caja Principal -->
+      <rect x="0" y="0" width="250" height="170" rx="18" fill="url(#exchange-grad)" stroke="#22d3ee" stroke-opacity="0.55" stroke-width="2"/>
+      
+      <!-- Contenido -->
+      <rect x="22" y="20" width="130" height="20" rx="4" fill="#0891b2" fill-opacity="0.25"/>
+      <text x="30" y="33" fill="#22d3ee" font-size="10" font-weight="800" letter-spacing="0.8">EXCHANGE / TOPIC</text>
+      <text x="22" y="80" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="-0.5">user</text>
+      <text x="22" y="110" fill="#94a3b8" font-size="13" font-weight="500">kebab-case de la entidad</text>
+      <!-- Subrayado del Exchange -->
+      <line x1="22" y1="130" x2="228" y2="130" stroke="#22d3ee" stroke-opacity="0.25" stroke-width="1.5"/>
+      <text x="22" y="148" fill="#64748b" font-size="11">Agrupa hechos de la entidad</text>
     </g>
 
-    <g>
-      <rect x="950" y="316" width="236" height="76" rx="14" fill="#10231d" stroke="#22c55e" stroke-opacity="0.44"/>
-      <text x="976" y="348" fill="#bbf7d0" font-size="17" font-weight="700">created</text>
-      <text x="976" y="372" fill="#e5edf7" font-size="17">sync-crm-on-user-created</text>
+    <!-- CONECTORES 2: EXCHANGE A COLAS (Curvas dinámicas) -->
+    <!-- Flecha superior -->
+    <path d="M 690 255 C 730 230, 760 160, 840 160" stroke="url(#arrow2-grad)" stroke-width="3" marker-end="url(#arrow-cyan)" fill="none"/>
+    <!-- Flecha central -->
+    <path d="M 690 275 L 840 275" stroke="url(#arrow2-grad)" stroke-width="3" marker-end="url(#arrow-cyan)" fill="none"/>
+    <!-- Flecha inferior -->
+    <path d="M 690 295 C 730 320, 760 390, 840 390" stroke="url(#arrow2-grad)" stroke-width="3" marker-end="url(#arrow-cyan)" fill="none"/>
+
+    <!-- COLUMNA 3: COLAS DE CONSUMO (CON ANCHO AMPLIADO Y MÁXIMA SEGURIDAD DE ESPACIO) -->
+    <!-- COLA 1: Email -->
+    <g transform="translate(840, 115)">
+      <rect x="0" y="0" width="280" height="85" rx="12" fill="url(#queue-grad)" stroke="#10b981" stroke-opacity="0.38" stroke-width="1.5"/>
+      <rect x="16" y="14" width="70" height="18" rx="4" fill="#047857" fill-opacity="0.3"/>
+      <text x="22" y="27" fill="#34d399" font-size="9" font-weight="800" letter-spacing="1">ROUTING KEY</text>
+      <text x="96" y="27" fill="#a7f3d0" font-size="11" font-weight="700">created</text>
+      <!-- Subrayado de la cabecera de la cola -->
+      <line x1="16" y1="40" x2="264" y2="40" stroke="#10b981" stroke-opacity="0.25" stroke-width="1.5"/>
+      <text x="16" y="62" fill="#ffffff" font-size="13.5" font-weight="700" font-family="monospace">send-email-on-user-created</text>
     </g>
 
-    <g>
-      <rect x="950" y="416" width="236" height="76" rx="14" fill="#10231d" stroke="#22c55e" stroke-opacity="0.44"/>
-      <text x="976" y="448" fill="#bbf7d0" font-size="17" font-weight="700">created</text>
-      <text x="976" y="472" fill="#e5edf7" font-size="17">index-user-on-user-created</text>
+    <!-- COLA 2: CRM -->
+    <g transform="translate(840, 230)">
+      <rect x="0" y="0" width="280" height="85" rx="12" fill="url(#queue-grad)" stroke="#10b981" stroke-opacity="0.38" stroke-width="1.5"/>
+      <rect x="16" y="14" width="70" height="18" rx="4" fill="#047857" fill-opacity="0.3"/>
+      <text x="22" y="27" fill="#34d399" font-size="9" font-weight="800" letter-spacing="1">ROUTING KEY</text>
+      <text x="96" y="27" fill="#a7f3d0" font-size="11" font-weight="700">created</text>
+      <!-- Subrayado de la cabecera de la cola -->
+      <line x1="16" y1="40" x2="264" y2="40" stroke="#10b981" stroke-opacity="0.25" stroke-width="1.5"/>
+      <text x="16" y="62" fill="#ffffff" font-size="13.5" font-weight="700" font-family="monospace">sync-crm-on-user-created</text>
     </g>
 
-    <g>
-      <rect x="112" y="492" width="338" height="92" rx="16" fill="#111f33" stroke="#60a5fa" stroke-opacity="0.22"/>
-      <text x="136" y="522" fill="#bfdbfe" font-size="17" font-weight="700">Regla</text>
-      <text x="136" y="548" fill="#e5edf7" font-size="19">una cola, un consumidor logico</text>
-      <text x="136" y="574" fill="#e5edf7" font-size="19">varias instancias si hace falta</text>
+    <!-- COLA 3: Indexador -->
+    <g transform="translate(840, 345)">
+      <rect x="0" y="0" width="280" height="85" rx="12" fill="url(#queue-grad)" stroke="#10b981" stroke-opacity="0.38" stroke-width="1.5"/>
+      <rect x="16" y="14" width="70" height="18" rx="4" fill="#047857" fill-opacity="0.3"/>
+      <text x="22" y="27" fill="#34d399" font-size="9" font-weight="800" letter-spacing="1">ROUTING KEY</text>
+      <text x="96" y="27" fill="#a7f3d0" font-size="11" font-weight="700">created</text>
+      <!-- Subrayado de la cabecera de la cola -->
+      <line x1="16" y1="40" x2="264" y2="40" stroke="#10b981" stroke-opacity="0.25" stroke-width="1.5"/>
+      <text x="16" y="62" fill="#ffffff" font-size="13.5" font-weight="700" font-family="monospace">index-user-on-user-created</text>
     </g>
 
-    <g>
-      <rect x="506" y="492" width="400" height="74" rx="16" fill="#111f33" stroke="#60a5fa" stroke-opacity="0.22"/>
-      <text x="530" y="522" fill="#bfdbfe" font-size="17" font-weight="700">Lectura operacional</text>
-      <text x="530" y="548" fill="#e5edf7" font-size="19">entidad, hecho ocurrido y accion ejecutada</text>
+
+    <!-- PANELES DE INFORMACIÓN EN PARTE INFERIOR -->
+    
+    <!-- Panel 1: Regla Clave -->
+    <g transform="translate(80, 460)">
+      <rect x="0" y="0" width="490" height="95" rx="16" fill="url(#panel-grad)" stroke="#1e293b" stroke-width="1.5"/>
+      <rect x="18" y="14" width="60" height="18" rx="4" fill="#3b82f6" fill-opacity="0.15"/>
+      <text x="24" y="27" fill="#60a5fa" font-size="9" font-weight="800" letter-spacing="0.8">REGLA</text>
+      <text x="88" y="28" fill="#bfdbfe" font-size="14" font-weight="700">Una cola por consumidor l&#243;gico</text>
+      <text x="18" y="54" fill="#94a3b8" font-size="12.5">Cada servicio tiene su propia cola dedicada. Evita interferencias,</text>
+      <text x="18" y="72" fill="#94a3b8" font-size="12.5">permite aislar fallos y escalar instancias de forma independiente.</text>
     </g>
+
+    <!-- Panel 2: Lectura Semántica -->
+    <g transform="translate(630, 460)">
+      <rect x="0" y="0" width="490" height="95" rx="16" fill="url(#panel-grad)" stroke="#1e293b" stroke-width="1.5"/>
+      <rect x="18" y="14" width="80" height="18" rx="4" fill="#10b981" fill-opacity="0.15"/>
+      <text x="24" y="27" fill="#34d399" font-size="9" font-weight="800" letter-spacing="0.8">CONVENCI&#211;N</text>
+      <text x="108" y="28" fill="#a7f3d0" font-size="14" font-weight="700">Nomenclatura sem&#225;ntica y legible</text>
+      <text x="18" y="54" fill="#94a3b8" font-size="12.5">La topolog&#237;a se lee de forma natural en operaci&#243;n:</text>
+      <text x="18" y="74" fill="#ffffff" font-size="12.5" font-weight="600" font-family="monospace">
+        [entidad] <tspan fill="#38bdf8">-&gt;</tspan> [hecho] <tspan fill="#38bdf8">-&gt;</tspan> [acci&#243;n]-on-[entidad]-[hecho]
+      </text>
+    </g>
+
   </g>
 </svg>
