@@ -31,279 +31,13 @@
       }
     }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            color-scheme: dark;
-            --bg: #07111f;
-            --surface: rgba(15, 23, 42, 0.78);
-            --surface-strong: #0f172a;
-            --border: rgba(148, 163, 184, 0.16);
-            --border-strong: rgba(96, 165, 250, 0.42);
-            --text: #e5edf7;
-            --text-muted: #a7b4c8;
-            --text-soft: #7f8ea3;
-            --accent: #60a5fa;
-            --accent-strong: #38bdf8;
-            --accent-warm: #22c55e;
-            --shadow-soft: 0 24px 80px rgba(2, 6, 23, 0.42);
-        }
-
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(59, 130, 246, 0.14), transparent 30rem),
-                radial-gradient(circle at 86% 8%, rgba(34, 197, 94, 0.075), transparent 24rem),
-                linear-gradient(180deg, #07111f 0%, #08101c 52%, #060b13 100%);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 0 1rem 3rem;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background-image: linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
-            background-size: 56px 56px;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 72%);
-        }
-
-        a { transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease; }
-        a:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
-
-        .skip-link {
-            position: fixed;
-            top: 0.75rem;
-            left: 0.75rem;
-            z-index: 100;
-            transform: translateY(-160%);
-            background: #e5edf7;
-            color: #07111f;
-            padding: 0.65rem 0.9rem;
-            border-radius: 999px;
-            font-weight: 700;
-        }
-        .skip-link:focus { transform: translateY(0); }
-
-        .site-nav {
-            position: sticky;
-            top: 0.75rem;
-            z-index: 40;
-            max-width: 64rem;
-            margin: 0.75rem auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            padding: 0.6rem;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            background: rgba(7, 17, 31, 0.78);
-            backdrop-filter: blur(18px);
-            box-shadow: 0 16px 44px rgba(2, 6, 23, 0.34);
-        }
-
-        .site-brand {
-            color: var(--text);
-            font-weight: 800;
-            padding: 0.45rem 0.75rem;
-            white-space: nowrap;
-        }
-
-        .site-nav-links {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-        }
-
-        .site-nav-links a {
-            color: var(--text-muted);
-            font-size: 0.86rem;
-            font-weight: 650;
-            padding: 0.45rem 0.7rem;
-            border-radius: 999px;
-        }
-
-        .site-nav-links a:hover,
-        .site-nav-links a[aria-current="page"] {
-            color: var(--text);
-            background: rgba(96, 165, 250, 0.12);
-        }
-
-        .page-shell {
-            position: relative;
-            width: min(100%, 64rem);
-            padding-top: 0.25rem;
-        }
-
-        .header-bg {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(96, 165, 250, 0.24);
-            background:
-                linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(14, 39, 73, 0.9)),
-                radial-gradient(circle at 20% 10%, rgba(96, 165, 250, 0.24), transparent 24rem);
-            box-shadow: var(--shadow-soft);
-            text-align: left;
-        }
-
-        .header-bg::after {
-            content: "";
-            position: absolute;
-            inset: auto 2rem 1.35rem auto;
-            width: 10rem;
-            height: 10rem;
-            border: 1px solid rgba(56, 189, 248, 0.16);
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(34, 197, 94, 0.12), transparent 64%);
-        }
-
-        .blog-hero > * { position: relative; z-index: 1; }
-        .blog-hero h1 { letter-spacing: 0; line-height: 1.02; }
-
-        .section-title {
-            position: relative;
-            display: inline-block;
-            color: var(--text);
-            letter-spacing: 0;
-        }
-
-        .section-title::after {
-            content: "";
-            position: absolute;
-            bottom: -0.65rem;
-            left: 0;
-            width: 3rem;
-            height: 2px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-warm));
-        }
-
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.52), rgba(34, 197, 94, 0.22), transparent);
-        }
-
-        .card {
-            position: relative;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22);
-            opacity: 1;
-            transform: none;
-            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.8s ease;
-            backdrop-filter: blur(12px);
-        }
-
-        .card:hover {
-            border-color: var(--border-strong);
-            background: rgba(15, 23, 42, 0.92);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 56px rgba(2, 6, 23, 0.28);
-        }
-
-        .post-card {
-            min-height: 16rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .badge {
-            background: rgba(96, 165, 250, 0.1);
-            border: 1px solid rgba(96, 165, 250, 0.22);
-            color: #bfdbfe;
-        }
-
-        .empty-icon {
-            width: 3rem;
-            height: 3rem;
-            border: 1px solid rgba(96, 165, 250, 0.22);
-            background: rgba(96, 165, 250, 0.1);
-            color: #bfdbfe;
-            border-radius: 999px;
-        }
-
-        .site-footer {
-            margin: 1rem 0 0;
-            padding: 2rem 0 0;
-            border-top: 1px solid var(--border);
-            color: var(--text-soft);
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            html.motion-ready .blog-hero {
-                opacity: 0;
-                transform: translateY(14px);
-                animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
-            }
-
-            html.motion-ready .card,
-            html.motion-ready .section-divider {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-
-            html.motion-ready .card.visible,
-            html.motion-ready .section-divider.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            @keyframes heroIn {
-                to { opacity: 1; transform: translateY(0); }
-            }
-        }
-
-        @media (max-width: 760px) {
-            body { padding: 0 0.85rem 2rem; }
-            .site-nav {
-                position: static;
-                align-items: flex-start;
-                border-radius: 1rem;
-                flex-direction: column;
-            }
-            .site-nav-links { justify-content: flex-start; }
-            .site-nav-links a { padding: 0.4rem 0.55rem; }
-            .blog-hero h1 { font-size: clamp(2.4rem, 12vw, 3.8rem); }
-        }
-
-        @media (hover: none), (pointer: coarse) {
-            a { touch-action: manipulation; }
-            .card:hover { transform: none !important; box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22) !important; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
-                transition-duration: 0.001ms !important;
-            }
-        }
-
-        @media print {
-            body { background: white; color: black; padding: 0; }
-            body::before, .site-nav, .skip-link, .section-divider, .site-footer { display: none; }
-            .header-bg { background: #f3f4f6; box-shadow: none; border: 1px solid #ddd; }
-            .card { box-shadow: none; border: 1px solid #ddd; opacity: 1 !important; transform: none !important; }
-            a { color: #1e40af; text-decoration: none; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/tokens.css?v=1">
+    <link rel="stylesheet" href="../assets/cv.css?v=1">
+    <link rel="stylesheet" href="../assets/blog.css?v=1">
     <script>
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.documentElement.classList.add('motion-ready');
@@ -323,23 +57,23 @@
 
     <main id="contenido" class="page-shell mx-auto">
         <header class="header-bg blog-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
-            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3">Apuntes software</p>
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">Blog software</h1>
-            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed">
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3 hero-stage" style="--stage-delay: 0.05s">Apuntes software</p>
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight hero-stage" style="--stage-delay: 0.13s">Blog software</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.21s">
                 Artículos educativos sobre software, arquitectura, backend, IA y aprendizajes prácticos de proyectos reales o personales.
             </p>
         </header>
 
         <section class="mb-12" aria-labelledby="articulos">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8" data-reveal>
                 <div>
                     <h2 id="articulos" class="text-2xl font-bold text-gray-100 section-title">Artículos</h2>
                 </div>
                 <span class="badge inline-flex items-center w-fit rounded-full px-3 py-1 text-sm font-semibold">2 publicados</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <article class="card post-card rounded-xl overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" data-reveal-group>
+                <article class="card post-card rounded-xl overflow-hidden" data-reveal>
                     <a href="posts/domain-events-brokers-mensajeria.html" class="block group">
                         <img src="assets/domain-events-brokers-mensajeria.svg" alt="Topología de domain events, exchanges, routing keys y colas" class="w-full aspect-[16/9] object-cover border-b border-blue-400/10">
                     </a>
@@ -361,7 +95,7 @@
                     </div>
                 </article>
 
-                <article class="card post-card rounded-xl overflow-hidden">
+                <article class="card post-card rounded-xl overflow-hidden" data-reveal>
                     <a href="posts/solid-principios-diseno.html" class="block group">
                         <img src="assets/solid-principios-diseno.svg" alt="Mapa conceptual de SOLID" class="w-full aspect-[16/9] object-cover border-b border-blue-400/10">
                     </a>
@@ -385,32 +119,15 @@
             </div>
         </section>
 
-        <div class="section-divider mb-8 rounded-full"></div>
+        <div class="section-divider mb-8 rounded-full" data-reveal="line"></div>
 
-        <footer class="site-footer">
+        <footer class="site-footer" data-reveal="fade">
             <span>Blog software de Demetrio Tahoces</span>
             <span>GitHub Pages</span>
         </footer>
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var animatedItems = document.querySelectorAll('.card, .section-divider');
-            if ('IntersectionObserver' in window && document.documentElement.classList.contains('motion-ready')) {
-                var observer = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.01, rootMargin: '0px 0px 20% 0px' });
-                animatedItems.forEach(function (item) { observer.observe(item); });
-            } else {
-                animatedItems.forEach(function (item) { item.classList.add('visible'); });
-            }
-        });
-    </script>
+    <script src="../assets/cv.js?v=1" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
 </body>
 
 </html>

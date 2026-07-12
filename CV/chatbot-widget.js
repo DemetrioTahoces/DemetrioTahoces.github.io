@@ -36,7 +36,7 @@
         }
 
         .chatbot-fab:focus-visible {
-            outline: 2px solid #38bdf8;
+            outline: 2px solid var(--accent-strong, #38bdf8);
             outline-offset: 4px;
         }
 
@@ -56,8 +56,8 @@
             width: min(420px, calc(100vw - 40px));
             height: 580px;
             max-height: calc(100vh - 110px);
-            background: #07111f;
-            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: var(--bg, #07111f);
+            border: 1px solid var(--border-strong, rgba(148, 163, 184, 0.18));
             border-radius: 18px;
             box-shadow: 0 28px 80px rgba(2, 6, 23, 0.62);
             overflow: hidden;
@@ -204,6 +204,8 @@
         chatbotWindow = document.createElement('div');
         chatbotWindow.id = 'cv-chatbot-window';
         chatbotWindow.className = 'chatbot-window chatbot-hidden';
+        chatbotWindow.setAttribute('role', 'dialog');
+        chatbotWindow.setAttribute('aria-label', 'Asistente virtual');
 
         // Append components to container, then container to body
         container.appendChild(chatbotWindow);
@@ -215,8 +217,19 @@
 
         // Listen for postMessage from chatbot iframe
         window.addEventListener('message', (event) => {
+            // Bajo file:// el origin no es comparable; en http(s) solo aceptamos mismo origen
+            if (window.location.protocol !== 'file:' && event.origin !== window.location.origin) {
+                return;
+            }
             if (event.data && event.data.type === 'minimize') {
                 console.log('[Chatbot Widget] Received minimize event from iframe.');
+                closeChatbot();
+            }
+        });
+
+        // Escape en la página padre cierra el panel
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !chatbotWindow.classList.contains('chatbot-hidden')) {
                 closeChatbot();
             }
         });
@@ -229,7 +242,7 @@
         const isMobile = window.innerWidth <= 768;
         if (isOpen && !isMobile) {
             console.log('[Chatbot Widget] Restoring open state from storage.');
-            openChatbot();
+            openChatbot(false);
         }
 
         isLoaded = true;
@@ -255,7 +268,7 @@
         }
     }
 
-    function openChatbot() {
+    function openChatbot(focusIframe = true) {
         // Ensure iframe is loaded
         ensureIframeCreated();
 
@@ -264,12 +277,17 @@
         fab.classList.add('open');
         fab.setAttribute('aria-expanded', 'true');
         fab.setAttribute('aria-label', 'Cerrar asistente virtual');
-        
+
         const fabIcon = fab.querySelector('i');
         if (fabIcon) {
             fabIcon.className = 'ph ph-x';
         }
-        
+
+        // Mover el foco al panel (no al restaurar estado en carga de página)
+        if (focusIframe && iframe) {
+            iframe.focus();
+        }
+
         safeStorage.setItem('chatbot_open', 'true');
     }
 
@@ -285,6 +303,7 @@
             fabIcon.className = 'ph ph-robot';
         }
 
+        fab.focus();
         safeStorage.setItem('chatbot_open', 'false');
     }
 

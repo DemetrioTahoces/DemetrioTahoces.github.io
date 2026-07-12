@@ -1,0 +1,23 @@
+/* Design tokens compartidos del sitio (index, CV/, blog/ y chatbot). Única fuente de verdad de color y tipografía. */
+:root {
+    color-scheme: dark;
+    --bg: #07111f;
+    --bg-soft: #0b1424;
+    --surface: rgba(15, 23, 42, 0.78);
+    --surface-strong: #0f172a;
+    --surface-muted: rgba(17, 24, 39, 0.76);
+    --border: rgba(148, 163, 184, 0.16);
+    --border-strong: rgba(96, 165, 250, 0.42);
+    --text: #e5edf7;
+    --text-muted: #a7b4c8;
+    --text-soft: #7f8ea3;
+    --accent: #60a5fa;
+    --accent-strong: #38bdf8;
+    --accent-warm: #22c55e;
+    --shadow-soft: 0 24px 80px rgba(2, 6, 23, 0.42);
+    --radius: 14px;
+    --shell-max: 72rem;
+    --font-body: 'Inter', sans-serif;
+    --font-display: 'Space Grotesk', 'Inter', sans-serif;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

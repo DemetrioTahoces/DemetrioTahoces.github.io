@@ -22,12 +22,14 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 
 ## Diseño y Contenido
 
-- Mantener el patrón del CV: HTML inline, Tailwind CDN, fuente Inter, tema oscuro, fondo con grid sutil, cards translúcidas, acentos azul/verde y navegación accesible.
-- No añadir dependencias front-end, build step, framework ni hojas CSS separadas salvo instrucción explícita.
+- Mantener el patrón del CV: tema oscuro sobrio, fondo con grid sutil, cards translúcidas, acentos azul/verde y navegación accesible. Tipografía Space Grotesk (display) + Inter 300–800 (cuerpo).
+- El blog consume los assets compartidos: `tokens.css` + `cv.css` + `blog.css` + `cv.js` con `?v=N` (rutas `../assets/` desde `blog/`, `../../assets/` desde `blog/posts/`). Inline solo quedan el gate `motion-ready`, favicon y metadatos. Los estilos de prosa, callout/warning, tablas y post-cards viven en `assets/blog.css` — no redefinirlos inline en los posts. Copiar el `<head>` de un post existente como plantilla.
+- Animaciones: hero del post con capas `hero-stage` (`--stage-delay` 0.05/0.13/0.21/0.29/0.37s), `data-reveal` en el `<article>`, el `<figure>` del diagrama y los grids de badges. La prosa NO se trocea en reveals. En el índice, las post-cards van en un `data-reveal-group`.
+- No añadir dependencias front-end, build step ni frameworks salvo instrucción explícita. Si cambias `assets/*.css|js` de forma incompatible, incrementa el `?v=N` de los HTML afectados en el mismo commit.
 - Escribir en castellano profesional, educativo, directo y sobrio. Evitar marketing vacío, exageraciones y claims no defendibles.
 - No mencionar empresa, cliente, compañero, curso, fuente concreta o contexto laboral sensible salvo que el usuario lo pida expresamente.
 - Mantener artículos orientados a aprendizaje: problema, contexto técnico, explicación, tradeoffs, ejemplo práctico y conclusiones accionables.
-- Mantener cada artículo en una lectura aproximada de 5-8 minutos. Priorizar claridad y utilidad sobre exhaustividad; no abrumar al lector con ejemplos largos, listas excesivas o desarrollo enciclopédico.
+- Mantener cada artículo en una lectura aproximada de 3-8 minutos, cuando el tema sea sencillo, mas cercano a 3 minutos, cuando el tema sea más complejo, mas cercano a 8 minutos. Priorizar claridad y utilidad sobre exhaustividad; no abrumar al lector con ejemplos largos, listas excesivas o desarrollo enciclopédico.
 - Hacer que cada artículo sea ameno y humano: abrir con una situación reconocible, pero con contexto técnico inmediato y sin ambigüedades de lectura. Usar ejemplos de desarrollo cotidiano o vida real, variar el ritmo y sostener una opinión técnica clara.
 - Cada post debe incluir título, descripción, fecha, etiquetas, tiempo estimado de lectura si aplica, enlaces de vuelta al blog/CV y metadatos SEO/OG.
 - Cada tarjeta del listado debe incluir título, descripción breve, fecha, etiquetas, enlace al artículo e imagen si aplica. Si no hay imagen, usar una composición visual CSS coherente o una card textual sobria.

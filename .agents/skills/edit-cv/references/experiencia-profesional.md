@@ -30,7 +30,9 @@ Preservar todo lo escrito anteriormente salvo instrucción explícita de reempla
   - Arquitectura o prácticas de ingeniería.
   - Impacto o resultado.
 - Evitar duplicar literalmente párrafos largos entre `index.html` y páginas detalladas. La home debe resumir; la página de detalle debe explicar.
-- Si se crea una nueva experiencia, revisar navegación anterior/siguiente, enlaces desde `index.html`, metadatos SEO básicos y documento RAG asociado.
+- Si se crea una nueva experiencia, revisar navegación anterior/siguiente (case-nav), enlaces desde `index.html`, metadatos SEO básicos y documento RAG asociado.
+- La página nueva sigue el patrón de assets compartidos y animaciones descrito en "Patrón de página y animaciones" del SKILL.md (head con `tokens.css`/`cv.css`, gate `motion-ready`, `cv.js`, kicker + capas `hero-stage`, atributos `data-reveal`).
+- Su job-card en `index.html` se añade dentro de `.experience-list.timeline` con `data-reveal`; la línea de trayectoria y el nodo lateral se dibujan solos por CSS.
 - Si se modifica una experiencia existente, sincronizar el documento RAG correspondiente para que el chatbot responda con la misma versión.
 
 ## Competencias y temas relacionados

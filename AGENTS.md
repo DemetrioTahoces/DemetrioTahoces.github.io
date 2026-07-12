@@ -14,7 +14,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 
 - Tipo: sitio estático de CV profesional publicado en GitHub Pages, más backend serverless para un chatbot RAG.
 - URL pública principal: `https://demetriotahoces.github.io/`.
-- Frontend: HTML estático con estilos y scripts inline. No hay build step.
+- Frontend: HTML estático sin build step. El CSS/JS compartido vive en `assets/` (`tokens.css`, `cv.css`, `blog.css`, `cv.js`); inline solo quedan el gate `motion-ready`, el favicon y los metadatos de cada página.
 - Backend: FastAPI + LangGraph + LangChain en `CV/Chatbot/`, desplegable en Vercel.
 - Base RAG: documentos Markdown en `CV/Chatbot/docs/`.
 
@@ -31,16 +31,24 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `CV/Chatbot/test/`: scripts de comprobación del backend.
 - `blog/`: blog técnico estático.
 - `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
-- `assets/`: recursos compartidos.
+- `assets/tokens.css`: design tokens (`:root`) de todo el sitio — colores, radios, sombras, `--font-body`/`--font-display`, `--shell-max`.
+- `assets/cv.css`: estilos compartidos de `index.html` y `CV/*.html` (también los consume el blog): base, nav, cards, heroes, timeline de experiencia y el sistema de animación `data-reveal`.
+- `assets/blog.css`: estilos específicos del blog (prosa de artículo, callout/warning, tablas, post-cards; fija `--shell-max: 64rem`).
+- `assets/cv.js`: reveals con stagger sobre `[data-reveal]`/`[data-reveal-group]`, scroll-spy del nav, jump-nav (`[data-section-nav]`) y estado `.is-scrolled`.
+- `assets/og-card.svg`: imagen Open Graph compartida.
 - `README.md`: documentación operativa para humanos.
 
 ## Frontend
 
 - Edita los HTML directamente.
-- Mantén el patrón actual: CSS y JavaScript inline dentro de los HTML.
+- Patrón de estilos: los estilos y scripts compartidos viven en `assets/tokens.css` + `assets/cv.css` (+ `assets/blog.css` en el blog) + `assets/cv.js`, enlazados con query de versión (`?v=N`). Inline en cada HTML solo quedan el gate `motion-ready` en el `<head>`, el favicon y los metadatos. `CV/chatbot.html` mantiene su `<style>` propio pero consume `assets/tokens.css`.
+- Cache-busting: GitHub Pages cachea ~10 minutos. Si cambias un fichero de `assets/*.css|js` de forma incompatible con el HTML, incrementa el `?v=N` de sus `<link>`/`<script>` en el mismo commit.
+- Los colores salen SIEMPRE de los tokens (`var(--accent)`, etc.); no introduzcas colores nuevos hardcodeados.
+- Tipografía: Space Grotesk (display: h1, h2, `.section-title`, `.site-brand`, h3 de cards) + Inter 300–800 (cuerpo), en una única petición a Google Fonts con `preconnect`.
 - No introduzcas bundlers, `package.json`, frameworks frontend ni pasos de compilación salvo petición explícita.
-- Las dependencias frontend se cargan por CDN, principalmente Tailwind CSS, Google Fonts, Chart.js, Phosphor Icons y marked.js.
+- Las dependencias frontend se cargan por CDN, principalmente Tailwind CSS, Google Fonts (Inter y Space Grotesk), Chart.js, Phosphor Icons, marked.js y DOMPurify (sanitiza el markdown de la IA en el chatbot).
 - Mantén el tono visual existente: tema oscuro, profesional, técnico y sobrio.
+- Sistema de animación: marca elementos con `data-reveal` (variantes `fade`/`scale`/`line`; por defecto desliza 18px) y agrupa con `data-reveal-group` para stagger. `assets/cv.js` los revela con IntersectionObserver bajo el gate `html.motion-ready`; sin JS o con `prefers-reduced-motion` todo queda visible. Los efectos ligados al scroll (línea de trayectoria del timeline, parallax del hero) van solo bajo `@supports (animation-timeline: view())` con estado final estático como fallback.
 - En animaciones de entrada por scroll, evita dejar contenido invisible hasta que esté demasiado dentro del viewport. El contenido debe empezar a revelarse prácticamente al entrar en pantalla, especialmente en móvil; prioriza continuidad visual sobre efectos de aparición llamativos.
 - Revisa rutas relativas, enlaces internos, anclas, metadatos SEO/Open Graph y navegación cuando cambies páginas.
 
@@ -81,7 +89,7 @@ Mantén el contenido en castellano profesional, concreto y defendible. Evita mar
 ## Blog
 
 - El blog está en `blog/`.
-- Mantén el estilo estático e inline del resto del proyecto.
+- El blog consume los assets compartidos (`tokens.css` + `cv.css` + `blog.css` + `cv.js`, rutas `../assets/` desde `blog/` y `../../assets/` desde `blog/posts/`). Los estilos de prosa de artículo viven en `assets/blog.css`, no inline.
 - Si se añaden artículos que el chatbot deba conocer, añade o sincroniza también el contenido Markdown correspondiente bajo `CV/Chatbot/docs/`, normalmente en una subcarpeta si el patrón existente lo permite.
 
 ## Desarrollo local

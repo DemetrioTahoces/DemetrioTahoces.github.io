@@ -29,389 +29,12 @@
       "sameAs": ["https://www.linkedin.com/in/demetrio-antonio-tahoces-s%C3%A1nchez-17905a181"]
     }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-
-        :root {
-            color-scheme: dark;
-            --bg: #07111f;
-            --bg-soft: #0b1424;
-            --surface: rgba(15, 23, 42, 0.78);
-            --surface-strong: #0f172a;
-            --surface-muted: rgba(17, 24, 39, 0.76);
-            --border: rgba(148, 163, 184, 0.16);
-            --border-strong: rgba(96, 165, 250, 0.42);
-            --text: #e5edf7;
-            --text-muted: #a7b4c8;
-            --text-soft: #7f8ea3;
-            --accent: #60a5fa;
-            --accent-strong: #38bdf8;
-            --accent-warm: #22c55e;
-            --shadow-soft: 0 24px 80px rgba(2, 6, 23, 0.42);
-            --radius: 14px;
-        }
-
-        * { box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 30rem),
-                radial-gradient(circle at 80% 10%, rgba(34, 197, 94, 0.08), transparent 24rem),
-                linear-gradient(180deg, #07111f 0%, #08101c 48%, #060b13 100%);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 0 1rem 3rem;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background-image: linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
-            background-size: 56px 56px;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 72%);
-        }
-
-        a { transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease; }
-
-        a:focus-visible, button:focus-visible, textarea:focus-visible {
-            outline: 2px solid var(--accent-strong);
-            outline-offset: 3px;
-        }
-
-        .skip-link {
-            position: fixed;
-            top: 0.75rem;
-            left: 0.75rem;
-            z-index: 100;
-            transform: translateY(-160%);
-            background: #e5edf7;
-            color: #07111f;
-            padding: 0.65rem 0.9rem;
-            border-radius: 999px;
-            font-weight: 700;
-        }
-
-        .skip-link:focus { transform: translateY(0); }
-
-        .site-nav {
-            position: sticky;
-            top: 0.75rem;
-            z-index: 40;
-            max-width: 64rem;
-            margin: 0.75rem auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            padding: 0.6rem;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            background: rgba(7, 17, 31, 0.78);
-            backdrop-filter: blur(18px);
-            box-shadow: 0 16px 44px rgba(2, 6, 23, 0.34);
-        }
-
-        .site-brand {
-            color: var(--text);
-            font-weight: 800;
-            letter-spacing: 0;
-            padding: 0.45rem 0.75rem;
-            white-space: nowrap;
-        }
-
-        .site-nav-links {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-        }
-
-        .site-nav-links a {
-            color: var(--text-muted);
-            font-size: 0.86rem;
-            font-weight: 650;
-            padding: 0.45rem 0.7rem;
-            border-radius: 999px;
-        }
-
-        .site-nav-links a:hover,
-        .site-nav-links a.active {
-            color: var(--text);
-            background: rgba(96, 165, 250, 0.12);
-        }
-
-        .site-nav-links .external-section-link {
-            position: relative;
-            margin-left: 0.45rem;
-            color: #bbf7d0;
-            border: 1px solid rgba(34, 197, 94, 0.32);
-            background: rgba(34, 197, 94, 0.08);
-        }
-
-        .site-nav-links .external-section-link::before {
-            content: "";
-            position: absolute;
-            left: -0.48rem;
-            top: 50%;
-            width: 1px;
-            height: 1.15rem;
-            transform: translateY(-50%);
-            background: rgba(148, 163, 184, 0.26);
-        }
-
-        .site-nav-links .external-section-link:hover {
-            color: #ffffff;
-            border-color: rgba(34, 197, 94, 0.58);
-            background: rgba(34, 197, 94, 0.15);
-        }
-
-        .page-shell {
-            position: relative;
-            width: min(100%, 72rem);
-            padding-top: 0.25rem;
-        }
-
-        .header-bg {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(96, 165, 250, 0.24);
-            background:
-                linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(14, 39, 73, 0.9)),
-                radial-gradient(circle at 20% 10%, rgba(96, 165, 250, 0.24), transparent 24rem);
-            box-shadow: var(--shadow-soft);
-            text-align: left;
-        }
-
-        .header-bg::after {
-            content: "";
-            position: absolute;
-            inset: auto 2rem 1.35rem auto;
-            width: 11rem;
-            height: 11rem;
-            border: 1px solid rgba(56, 189, 248, 0.18);
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(34, 197, 94, 0.13), transparent 64%);
-            opacity: 0.85;
-        }
-
-        .hero-shell > * { position: relative; z-index: 1; }
-
-        .hero-shell > .flex { align-items: flex-start; }
-        .hero-actions { align-items: flex-start; }
-
-        .hero-shell h1 {
-            max-width: 12ch;
-            line-height: 0.98;
-            letter-spacing: 0;
-        }
-
-        .hero-actions a {
-            min-height: 2.55rem;
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            background: rgba(15, 23, 42, 0.56);
-            border-radius: 999px;
-            padding: 0.58rem 0.9rem;
-            color: var(--text);
-        }
-
-        .hero-actions a:hover {
-            border-color: rgba(96, 165, 250, 0.55);
-            background: rgba(96, 165, 250, 0.13);
-            transform: translateY(-1px);
-        }
-
-        .section-block, section { scroll-margin-top: 6rem; }
-
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.52), rgba(34, 197, 94, 0.22), transparent);
-        }
-
-        .section-title {
-            position: relative;
-            display: inline-block;
-            color: var(--text);
-            letter-spacing: 0;
-        }
-
-        .section-title::after {
-            content: "";
-            position: absolute;
-            bottom: -0.65rem;
-            left: 0;
-            width: 3rem;
-            height: 2px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-warm));
-        }
-
-        .card {
-            position: relative;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22);
-            opacity: 1;
-            transform: none;
-            transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease, opacity 0.8s ease;
-            backdrop-filter: blur(12px);
-        }
-
-        .card:hover {
-            border-color: var(--border-strong);
-            background: rgba(15, 23, 42, 0.92);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 56px rgba(2, 6, 23, 0.28);
-        }
-
-        .job-card {
-            border-left: 0;
-            padding-left: 1.5rem;
-        }
-
-        .experience-list {
-            margin: -1.25rem;
-            padding: 1.25rem;
-        }
-
-        .job-card:hover {
-            transform: translateY(-2px);
-            box-shadow:
-                0 20px 56px rgba(2, 6, 23, 0.3),
-                0 0 0 1px rgba(96, 165, 250, 0.22),
-                0 0 34px rgba(96, 165, 250, 0.2);
-        }
-
-        .skill-tag {
-            background: rgba(96, 165, 250, 0.1);
-            border: 1px solid rgba(96, 165, 250, 0.22);
-            color: #bfdbfe;
-        }
-
-        .btn-cv {
-            background-color: #2563eb;
-            color: #ffffff;
-            border-radius: 999px;
-            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .btn-cv:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
-        }
-
-        .site-footer {
-            margin: 1rem 0 0;
-            padding: 2rem 0 0;
-            border-top: 1px solid var(--border);
-            color: var(--text-soft);
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            html.motion-ready .hero-shell {
-                opacity: 0;
-                transform: translateY(14px);
-                animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
-            }
-
-            html.motion-ready .card,
-            html.motion-ready .section-divider {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-
-            html.motion-ready .card.visible,
-            html.motion-ready .section-divider.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            @keyframes heroIn {
-                to { opacity: 1; transform: translateY(0); }
-            }
-        }
-
-        @media (max-width: 760px) {
-            body { padding: 0 0.85rem 2rem; }
-            .site-nav {
-                position: static;
-                align-items: flex-start;
-                border-radius: 1rem;
-                flex-direction: column;
-            }
-            .site-nav-links { justify-content: flex-start; }
-            .site-nav-links a { padding: 0.4rem 0.55rem; }
-            .site-nav-links .external-section-link {
-                margin-left: 0;
-                margin-top: 0.15rem;
-            }
-            .site-nav-links .external-section-link::before { display: none; }
-            .header-bg { text-align: left; }
-            .hero-shell h1 { font-size: clamp(2.7rem, 14vw, 4rem); }
-            .hero-actions a { width: 100%; justify-content: center; }
-        }
-
-        @media (hover: none), (pointer: coarse) {
-            a, button {
-                touch-action: manipulation;
-            }
-
-            .hero-actions a:hover,
-            .card:hover,
-            .job-card:hover,
-            .btn-cv:hover {
-                transform: none !important;
-            }
-
-            .card:hover,
-            .job-card:hover {
-                box-shadow: 0 16px 48px rgba(2, 6, 23, 0.22) !important;
-            }
-
-            .group:hover .group-hover\:text-blue-400 {
-                color: inherit !important;
-            }
-
-            .group:hover .group-hover\:opacity-100 {
-                opacity: 0.5 !important;
-            }
-
-            .group:hover .group-hover\:translate-x-1 {
-                transform: none !important;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
-                transition-duration: 0.001ms !important;
-            }
-        }
-
-        @media print {
-            body { background: white; color: black; padding: 0; }
-            body::before, .site-nav, .skip-link, .section-divider, .btn-cv, .site-footer { display: none; }
-            .header-bg { background: #f3f4f6; box-shadow: none; border: 1px solid #ddd; }
-            .card, .job-card { box-shadow: none; border: 1px solid #ddd; opacity: 1 !important; transform: none !important; }
-            a { color: #1e40af; text-decoration: none; }
-        }
-
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/tokens.css?v=1">
+    <link rel="stylesheet" href="assets/cv.css?v=1">
     <script>
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.documentElement.classList.add('motion-ready');
@@ -436,14 +59,15 @@
     <main id="contenido" class="page-shell max-w-5xl mx-auto">
 
         <header id="inicio" class="header-bg hero-shell rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+            <h1 class="text-6xl md:text-7xl font-bold text-white mb-4 tracking-tight hero-stage" style="--stage-delay: 0.05s">
                 Demetrio
             </h1>
-            <div class="flex flex-col items-center gap-4">
-                <p class="text-xl md:text-2xl text-blue-200">Software Engineer</p>
+            <div class="flex flex-col items-start gap-4">
+                <p class="text-xl md:text-2xl hero-stage" style="color: var(--text-muted); --stage-delay: 0.17s">Software Engineer</p>
+                <p class="hero-eyebrow hero-stage" style="--stage-delay: 0.25s">Backend · IoT · IA aplicada</p>
                 <div class="hero-actions flex flex-col md:flex-row items-center gap-2 md:gap-4">
                     <a href="mailto:tonitahoces@gmail.com?subject=Solicitud%20de%20CV&body=Hola%20Demetrio,%0A%0AMe%20gustar%C3%ADa%20recibir%20una%20copia%20de%20tu%20CV%20en%20PDF.%0A%0ASaludos"
-                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2">
+                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.31s">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -452,14 +76,14 @@
                     </a>
                     <a href="https://www.linkedin.com/in/demetrio-antonio-tahoces-s%C3%A1nchez-17905a181"
                         target="_blank" rel="noopener noreferrer"
-                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2">
+                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.38s">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                         </svg>
                         LinkedIn
                     </a>
-                    <a href="CV/chatbot.html" class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2">
+                    <a href="CV/chatbot.html" class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.45s">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8V5m-4 7h.01M16 12h.01M7 20h10a3 3 0 003-3v-5a5 5 0 00-5-5H9a5 5 0 00-5 5v5a3 3 0 003 3zM9 16h6" />
@@ -470,8 +94,9 @@
             </div>
         </header>
 
-        <section id="resumen" class="mb-12 section-block">
-            <div class="card p-8 rounded-xl">
+        <section id="resumen" class="mb-16 section-block">
+            <div class="card p-8 rounded-xl" data-reveal>
+                <p class="section-kicker">Perfil</p>
                 <a href="CV/resumen-profesional.html" class="block group">
                     <h2
                         class="text-2xl font-bold text-gray-100 mb-4 section-title group-hover:text-blue-400 transition-colors">
@@ -497,13 +122,15 @@
             </div>
         </section>
 
-        <div class="section-divider mb-12 rounded-full"></div>
+        <div class="section-divider mb-16 rounded-full" data-reveal="line"></div>
 
-        <section id="experiencia" class="mb-12 section-block">
-            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Experiencia Profesional</h2>
+        <section id="experiencia" class="mb-16 section-block">
+            <p class="section-kicker" data-reveal="fade">Trayectoria</p>
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Experiencia Profesional</h2>
 
-            <div class="experience-list space-y-6">
-                <div class="card job-card p-6 rounded-xl">
+            <div class="experience-list timeline space-y-6" data-reveal-group>
+                <div class="timeline-line" aria-hidden="true"></div>
+                <div class="card job-card p-6 rounded-xl" data-reveal>
                     <a href="CV/fermax.html" class="block group">
                         <div class="flex flex-wrap justify-between items-start mb-2">
                             <h3 class="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
@@ -532,7 +159,7 @@
                     </a>
                 </div>
 
-                <div class="card job-card p-6 rounded-xl">
+                <div class="card job-card p-6 rounded-xl" data-reveal>
                     <a href="CV/opendit.html" class="block group">
                         <div class="flex flex-wrap justify-between items-start mb-2">
                             <h3 class="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
@@ -562,7 +189,7 @@
                     </a>
                 </div>
 
-                <div class="card job-card p-6 rounded-xl">
+                <div class="card job-card p-6 rounded-xl" data-reveal>
                     <a href="CV/inditex.html" class="block group">
                         <div class="flex flex-wrap justify-between items-start mb-2">
                             <h3 class="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
@@ -593,7 +220,7 @@
                     </a>
                 </div>
 
-                <div class="card job-card p-6 rounded-xl">
+                <div class="card job-card p-6 rounded-xl" data-reveal>
                     <a href="CV/securitas-direct.html" class="block group">
                         <div class="flex flex-wrap justify-between items-start mb-2">
                             <h3 class="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
@@ -624,7 +251,7 @@
                     </a>
                 </div>
 
-                <div class="card job-card p-6 rounded-xl">
+                <div class="card job-card p-6 rounded-xl" data-reveal>
                     <a href="CV/alisys.html" class="block group">
                         <div class="flex flex-wrap justify-between items-start mb-2">
                             <h3 class="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
@@ -653,7 +280,7 @@
                     </a>
                 </div>
 
-                <div class="card job-card p-6 rounded-xl">
+                <div class="card job-card p-6 rounded-xl" data-reveal>
                     <a href="CV/imagine800.html" class="block group">
                         <div class="flex flex-wrap justify-between items-start mb-2">
                             <h3 class="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
@@ -685,13 +312,14 @@
             </div>
         </section>
 
-        <div class="section-divider mb-12 rounded-full"></div>
+        <div class="section-divider mb-16 rounded-full" data-reveal="line"></div>
 
-        <section id="formacion" class="mb-12 section-block">
-            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Formación Académica</h2>
+        <section id="formacion" class="mb-16 section-block">
+            <p class="section-kicker" data-reveal="fade">Titulaciones</p>
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Formación Académica</h2>
 
-            <div class="space-y-6">
-                <div class="card p-6 rounded-xl">
+            <div class="space-y-6" data-reveal-group>
+                <div class="card p-6 rounded-xl" data-reveal>
                     <div class="flex flex-wrap justify-between items-start mb-2">
                         <h3 class="text-xl font-bold text-gray-100"><a href="https://visualbusiness.school/"
                                 target="_blank" rel="noopener noreferrer"
@@ -716,7 +344,7 @@
                     </ul>
                 </div>
 
-                <div class="card p-6 rounded-xl">
+                <div class="card p-6 rounded-xl" data-reveal>
                     <div class="flex flex-wrap justify-between items-start mb-2">
                         <h3 class="text-xl font-bold text-gray-100"><a
                                 href="https://www.uniovi.es/estudia/masteres/ingenieriayarquitectura/telecomunicacion"
@@ -736,7 +364,7 @@
                             Voz.</a></p>
                 </div>
 
-                <div class="card p-6 rounded-xl">
+                <div class="card p-6 rounded-xl" data-reveal>
                     <div class="flex flex-wrap justify-between items-start mb-2">
                         <h3 class="text-xl font-bold text-gray-100"><a
                                 href="https://www.uniovi.es/estudia/grados/ingenieria/telecomunicacion" target="_blank"
@@ -755,55 +383,57 @@
             </div>
         </section>
 
-        <div class="section-divider mb-12 rounded-full"></div>
+        <div class="section-divider mb-16 rounded-full" data-reveal="line"></div>
 
-        <section id="formacion-complementaria" class="mb-12 section-block">
-            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Formación Complementaria</h2>
+        <section id="formacion-complementaria" class="mb-16 section-block">
+            <p class="section-kicker" data-reveal="fade">Siempre aprendiendo</p>
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Formación Complementaria</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="card p-4 rounded-xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" data-reveal-group>
+                <div class="card p-4 rounded-xl" data-reveal>
                     <p class="text-gray-100 font-semibold mb-2">Data & Distributed Systems</p>
                     <p class="text-gray-400 text-sm">Especialización en Apache Kafka (S. Mareek) y Masterclass en
                         Snowflake (N. Schuler).</p>
                 </div>
-                <div class="card p-4 rounded-xl">
+                <div class="card p-4 rounded-xl" data-reveal>
                     <p class="text-gray-100 font-semibold mb-2">Inteligencia Artificial</p>
                     <p class="text-gray-400 text-sm">Big Data e IA con Deep Learning (Colegio Oficial de Ingenieros de
                         Minas, 2019).</p>
                 </div>
-                <div class="card p-4 rounded-xl">
+                <div class="card p-4 rounded-xl" data-reveal>
                     <p class="text-gray-100 font-semibold mb-2">Desarrollo Mobile</p>
                     <p class="text-gray-400 text-sm">Especialización en Flutter y Dart (F. Herrera).</p>
                 </div>
             </div>
         </section>
 
-        <div class="section-divider mb-12 rounded-full"></div>
+        <div class="section-divider mb-16 rounded-full" data-reveal="line"></div>
 
-        <section id="competencias" class="mb-12 section-block">
-            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Competencias Técnicas</h2>
+        <section id="competencias" class="mb-16 section-block">
+            <p class="section-kicker" data-reveal="fade">Herramientas</p>
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Competencias Técnicas</h2>
 
-            <div class="card p-6 rounded-xl space-y-4">
-                <div>
+            <div class="card p-6 rounded-xl space-y-4" data-reveal data-reveal-group>
+                <div data-reveal="fade">
                     <h3 class="text-lg font-semibold text-gray-100 mb-2">Backend & Core</h3>
                     <p class="text-gray-400 text-sm">Java (Spring Boot), TypeScript/Node.js (NestJS), Python,
                         Arquitectura Hexagonal, DDD, CQR, BFF.</p>
                 </div>
-                <div>
+                <div data-reveal="fade">
                     <h3 class="text-lg font-semibold text-gray-100 mb-2">Data & Event-Driven</h3>
                     <p class="text-gray-400 text-sm">Apache Kafka, RabbitMQ, PostgreSQL, MongoDB, Redis, Snowflake.</p>
                 </div>
-                <div>
+                <div data-reveal="fade">
                     <h3 class="text-lg font-semibold text-gray-100 mb-2">Cloud & Infra</h3>
                     <p class="text-gray-400 text-sm">Kubernetes (K8s), Docker, DAPR, Azure Service Bus, Azure DevOps,
                         GitHub.</p>
                 </div>
-                <div>
+                <div data-reveal="fade">
                     <h3 class="text-lg font-semibold text-gray-100 mb-2">IA & Agentes (Enfoque actual)</h3>
                     <p class="text-gray-400 text-sm">Arquitecturas RAG, LangChain/LangGraph, Integración de Agentes
                         Autónomos, Prompting.</p>
                 </div>
-                <div>
+                <div data-reveal="fade">
                     <h3 class="text-lg font-semibold text-gray-100 mb-2">Comunicaciones & Otros</h3>
                     <p class="text-gray-400 text-sm">OpenAPI, GraphQL, gRPC, OAuth2, WebRTC, VoIP (Asterisk), Dart
                         (Flutter).</p>
@@ -811,13 +441,14 @@
             </div>
         </section>
 
-        <div class="section-divider mb-12 rounded-full"></div>
+        <div class="section-divider mb-16 rounded-full" data-reveal="line"></div>
 
-        <section id="idiomas" class="mb-12 section-block">
-            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title">Idiomas</h2>
+        <section id="idiomas" class="mb-16 section-block">
+            <p class="section-kicker" data-reveal="fade">Comunicación</p>
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Idiomas</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="card p-6 rounded-xl text-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-reveal-group>
+                <div class="card p-6 rounded-xl text-center" data-reveal="scale">
                     <div class="flex justify-center mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="48" height="24"
                             class="rounded shadow-sm">
@@ -837,7 +468,7 @@
                             rel="noopener noreferrer" class="hover:text-blue-300 transition-colors">Cambridge First
                             Certificate</a></p>
                 </div>
-                <div class="card p-6 rounded-xl text-center">
+                <div class="card p-6 rounded-xl text-center" data-reveal="scale">
                     <div class="flex justify-center mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="48" height="32"
                             class="rounded shadow-sm">
@@ -851,45 +482,13 @@
             </div>
         </section>
 
-        <footer class="site-footer">
+        <footer class="site-footer" data-reveal="fade">
             <span>CV de Demetrio Tahoces</span>
             <span>GitHub Pages · Asistente IA disponible</span>
         </footer>
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var animatedItems = document.querySelectorAll('.card, .section-divider');
-            if ('IntersectionObserver' in window && document.documentElement.classList.contains('motion-ready')) {
-                var observer = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.01, rootMargin: '0px 0px 20% 0px' });
-                animatedItems.forEach(function (item) { observer.observe(item); });
-            } else {
-                animatedItems.forEach(function (item) { item.classList.add('visible'); });
-            }
-
-            var navLinks = Array.from(document.querySelectorAll('.site-nav-links a[href^="#"]'));
-            var sections = navLinks.map(function (link) { return document.querySelector(link.getAttribute('href')); }).filter(Boolean);
-            if ('IntersectionObserver' in window && sections.length) {
-                var navObserver = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            navLinks.forEach(function (link) { link.classList.remove('active'); });
-                            var active = document.querySelector('.site-nav-links a[href="#' + entry.target.id + '"]');
-                            if (active) active.classList.add('active');
-                        }
-                    });
-                }, { threshold: 0.32, rootMargin: '-20% 0px -55% 0px' });
-                sections.forEach(function (section) { navObserver.observe(section); });
-            }
-        });
-    </script>
+    <script src="assets/cv.js?v=1" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
     <script src="CV/chatbot-widget.js" defer></script>
 </body>
 

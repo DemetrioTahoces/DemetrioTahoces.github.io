@@ -22,7 +22,7 @@ Usar esta skill para modificar el CV del proyecto sin perder contenido previo ni
    - Ampliar, matizar o reorganizar solo lo imprescindible.
    - No eliminar, condensar agresivamente ni sustituir frases salvo petición totalmente explícita.
 5. Revisar si el cambio exige actualizar competencias técnicas, tecnologías, dominios, metodologías o temas relacionados. Si aplica, sincronizar `index.html#competencias` y `CV/Chatbot/docs/CV.md`.
-6. Mantener el estilo del repo: HTML inline, Tailwind CDN, tema oscuro cyber-neon, sin build step ni nuevas dependencias front-end.
+6. Mantener el estilo del repo: tema oscuro profesional y sobrio, Tailwind CDN para utilidades, sin build step ni nuevas dependencias front-end. Los estilos/JS compartidos viven en `assets/tokens.css`, `assets/cv.css` y `assets/cv.js` (enlazados con `?v=N`); inline solo quedan el gate `motion-ready`, favicon y metadatos. Colores siempre vía tokens (`var(--accent)`, etc.), nunca hardcodeados nuevos. Tipografía: Space Grotesk (display) + Inter (cuerpo) en una única petición a Google Fonts con preconnect.
 7. Verificar enlaces, anclas, navegación y coherencia entre la vista pública y la documentación RAG.
 
 ## Criterios Editoriales
@@ -33,6 +33,18 @@ Usar esta skill para modificar el CV del proyecto sin perder contenido previo ni
 - Mantener primera persona cuando el bloque existente la use, y tercera persona solo si el bloque ya está redactado así.
 - Si una nueva información contradice el CV existente, parar y resolver la contradicción antes de editar.
 - Si el usuario pide "mejorar" o "ampliar" sin pedir eliminación, preservar el contenido actual y añadir precisión.
+
+## Patrón de página y animaciones
+
+Al crear una página nueva de CV o tocar la estructura de una existente:
+
+- Copiar el patrón de `<head>` de cualquier página migrada (p. ej. `CV/fermax.html`): preconnect ×2 → script Tailwind CDN → link de fuentes (Inter 300..800 + Space Grotesk 500..700) → `../assets/tokens.css?v=N` → `../assets/cv.css?v=N` → script inline del gate `motion-ready`. Al final del body: `<script src="../assets/cv.js?v=N" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>`.
+- El `<body>` de las páginas de detalle lleva la clase `detail-page` (activa el shell estrecho de 64rem).
+- Hero: kicker (`<p class="section-kicker hero-stage">Caso · Empresa</p>`) + capas `hero-stage` con `--stage-delay` creciente (0.05/0.13/0.21/0.29/0.37s); badges con `justify-start`.
+- Animaciones de scroll: `data-reveal` en cards y títulos de sección (variantes `fade`/`scale`/`line`), `data-reveal-group` en contenedores de varias cards para el stagger. No trocear prosa ni listas internas. El contenido debe revelarse al asomar en viewport, nunca quedar oculto hasta muy dentro.
+- Nueva experiencia en `index.html`: la job-card va dentro de `.experience-list.timeline` con `data-reveal`; la línea de trayectoria y el nodo lateral son automáticos por CSS.
+- Encadenar la página nueva en el `case-nav` (Anterior/Índice/Siguiente) de sus vecinas.
+- Si cambias `assets/*.css|js` de forma incompatible, incrementa el `?v=N` en los HTML en el mismo commit (GitHub Pages cachea ~10 min).
 
 ## Superficies del CV
 
