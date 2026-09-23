@@ -3,6 +3,7 @@ Centralized configuration loaded from environment variables.
 """
 
 import os
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
@@ -18,6 +19,8 @@ class Settings(BaseSettings):
     # --- Model ---
     provider_name: str = os.getenv("PROVIDER_NAME", "gemini").lower()
     model_name: str = os.getenv("MODEL_NAME", "gemini-2.5-flash-lite")
+    # Only applies to OpenAI reasoning models (gpt-5.x). Empty = provider default.
+    reasoning_effort: str | None = os.getenv("REASONING_EFFORT")
 
     # --- Rate Limiting ---
     rate_limit_per_minute: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "5"))
@@ -34,6 +37,11 @@ class Settings(BaseSettings):
 
     # --- Docs path (relative to project root) ---
     docs_path: str = os.getenv("DOCS_PATH", "docs")
+
+    @field_validator("reasoning_effort", mode="before")
+    @classmethod
+    def _normalize_reasoning_effort(cls, value):
+        return (value or "").strip().lower() or None
 
     class Config:
         env_file = ".env"

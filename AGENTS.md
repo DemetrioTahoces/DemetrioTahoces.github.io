@@ -61,6 +61,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
   - `API_KEY`
   - `PROVIDER_NAME`
   - `MODEL_NAME`
+  - `REASONING_EFFORT` (solo OpenAI gpt-5.x; si no es `none` no se envía `temperature`)
   - `RATE_LIMIT_PER_MINUTE`
   - `RATE_LIMIT_PER_HOUR`
   - `ALLOWED_ORIGINS`

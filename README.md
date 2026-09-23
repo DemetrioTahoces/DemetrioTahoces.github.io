@@ -74,6 +74,7 @@ Variables principales:
 | `API_KEY` | Sí | Vacío | API key del proveedor LLM configurado. |
 | `PROVIDER_NAME` | No | `gemini` | Proveedor del modelo. Valores esperados: `gemini` u `openai`. |
 | `MODEL_NAME` | No | `gemini-2.5-flash-lite` | Modelo usado por el agente. |
+| `REASONING_EFFORT` | No | Vacío (default del proveedor) | Solo `openai` con modelos de razonamiento (`gpt-5.x`): `none`, `low`, `medium`, `high`… Con `none` se envía `temperature=0.3`; con cualquier otro valor se omite `temperature`, porque la API lo rechaza. |
 | `RATE_LIMIT_PER_MINUTE` | No | `5` | Límite de peticiones por minuto. |
 | `RATE_LIMIT_PER_HOUR` | No | `20` | Límite de peticiones por hora. |
 | `ALLOWED_ORIGINS` | No | GitHub Pages y localhost | Orígenes permitidos para CORS. |
@@ -86,6 +87,15 @@ Ejemplo mínimo:
 API_KEY=tu_api_key
 PROVIDER_NAME=gemini
 MODEL_NAME=gemini-2.5-flash-lite
+```
+
+Ejemplo con OpenAI GPT-5.6 Luna:
+
+```env
+API_KEY=tu_api_key_de_openai
+PROVIDER_NAME=openai
+MODEL_NAME=gpt-5.6-luna
+REASONING_EFFORT=none
 ```
 
 ## Endpoints del chatbot
@@ -144,7 +154,7 @@ CV/Chatbot/vercel.json
 
 Las rutas `/api/*` se reescriben hacia `api/index.py`.
 
-En Vercel deben configurarse las variables de entorno necesarias, especialmente `API_KEY`, `PROVIDER_NAME` y `MODEL_NAME` si se quiere sobrescribir el modelo por defecto.
+En Vercel deben configurarse las variables de entorno necesarias, especialmente `API_KEY`, `PROVIDER_NAME`, `MODEL_NAME` y `REASONING_EFFORT` si se quiere sobrescribir el modelo por defecto.
 
 ## Mantenimiento del contenido
 
