@@ -32,9 +32,11 @@ def _create_model():
         # Reasoning models reject temperature unless reasoning is disabled
         if settings.reasoning_effort in (None, "none"):
             kwargs["temperature"] = 0.3
+        # gpt-5.x rejects function tools + reasoning_effort on /v1/chat/completions
         return ChatOpenAI(
             model=settings.model_name,
             api_key=settings.api_key,
+            use_responses_api=True,
             stream_usage=True,
             **kwargs,
         )
