@@ -71,7 +71,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
   - `GET /api/health`
   - `POST /api/chat`
   - `POST /api/chat/stream`
-- Vercel usa `CV/Chatbot/vercel.json` para reescribir `/api/*` hacia `api/index.py`.
+- Vercel usa el preset FastAPI (entrypoint `api/index.py`); `CV/Chatbot/vercel.json` solo define cabeceras CORS. No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
 
 ## Contenido curricular y RAG
 
