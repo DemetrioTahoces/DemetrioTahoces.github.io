@@ -144,7 +144,7 @@ El backend del chatbot se despliega en Vercel usando:
 CV/Chatbot/vercel.json
 ```
 
-Las rutas `/api/*` se reescriben hacia `api/index.py`.
+El proyecto de Vercel usa el preset FastAPI, que enruta todas las peticiones a la app de `api/index.py` conservando la ruta original. No añadas rewrites hacia `api/index.py`: el runtime actual pasa la ruta reescrita a FastAPI y todas las rutas devuelven 404.
 
 En Vercel deben configurarse las variables de entorno necesarias, especialmente `API_KEY`, `PROVIDER_NAME`, `MODEL_NAME` y `REASONING_EFFORT` si se quiere sobrescribir el modelo por defecto.
 
