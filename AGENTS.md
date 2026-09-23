@@ -59,9 +59,9 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - La configuración se lee desde variables de entorno o `.env` mediante `CV/Chatbot/core/config.py`.
 - Variables relevantes:
   - `API_KEY`
-  - `PROVIDER_NAME`
-  - `MODEL_NAME`
-  - `REASONING_EFFORT` (solo OpenAI gpt-5.x; si no es `none` no se envía `temperature`)
+  - `PROVIDER_NAME` (por defecto `openai`)
+  - `MODEL_NAME` (por defecto `gpt-5.6-luna`)
+  - `REASONING_EFFORT` (por defecto `low`; solo OpenAI gpt-5.x; si no es `none` no se envía `temperature`)
   - `RATE_LIMIT_PER_MINUTE`
   - `RATE_LIMIT_PER_HOUR`
   - `ALLOWED_ORIGINS`

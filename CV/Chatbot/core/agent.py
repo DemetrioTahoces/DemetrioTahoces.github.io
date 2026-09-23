@@ -39,7 +39,7 @@ def _create_model():
             **kwargs,
         )
     else:
-        # Default to Gemini
+        # Any other provider falls back to Gemini
         from langchain_google_genai import ChatGoogleGenerativeAI
         return ChatGoogleGenerativeAI(
             model=settings.model_name,

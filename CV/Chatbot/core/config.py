@@ -17,10 +17,10 @@ class Settings(BaseSettings):
     api_key: str = os.getenv("API_KEY", "")
 
     # --- Model ---
-    provider_name: str = os.getenv("PROVIDER_NAME", "gemini").lower()
-    model_name: str = os.getenv("MODEL_NAME", "gemini-2.5-flash-lite")
+    provider_name: str = os.getenv("PROVIDER_NAME", "openai").lower()
+    model_name: str = os.getenv("MODEL_NAME", "gpt-5.6-luna")
     # Only applies to OpenAI reasoning models (gpt-5.x). Empty = provider default.
-    reasoning_effort: str | None = os.getenv("REASONING_EFFORT")
+    reasoning_effort: str | None = os.getenv("REASONING_EFFORT", "low")
 
     # --- Rate Limiting ---
     rate_limit_per_minute: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "5"))
