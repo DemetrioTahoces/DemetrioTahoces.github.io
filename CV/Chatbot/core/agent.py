@@ -26,13 +26,20 @@ def _create_model():
 
     if settings.provider_name == "openai":
         from langchain_openai import ChatOpenAI
+        kwargs = {}
+        if settings.reasoning_effort:
+            kwargs["reasoning_effort"] = settings.reasoning_effort
+        # Reasoning models reject temperature unless reasoning is disabled
+        if settings.reasoning_effort in (None, "none"):
+            kwargs["temperature"] = 0.3
         return ChatOpenAI(
             model=settings.model_name,
             api_key=settings.api_key,
-            temperature=0.3,
+            stream_usage=True,
+            **kwargs,
         )
     else:
-        # Default to Gemini
+        # Any other provider falls back to Gemini
         from langchain_google_genai import ChatGoogleGenerativeAI
         return ChatGoogleGenerativeAI(
             model=settings.model_name,
