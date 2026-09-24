@@ -25,3 +25,15 @@ def test_reasoning_effort_is_normalized(monkeypatch):
 def test_unknown_legacy_variables_are_ignored(monkeypatch):
     monkeypatch.setenv("PROVIDER_NAME", "OpenAI")
     Settings(_env_file=None)
+
+
+def test_abuse_settings(monkeypatch):
+    for var in ("ABUSE_MODE", "UPSTASH_REDIS_REST_URL", "KV_REST_API_URL"):
+        monkeypatch.delenv(var, raising=False)
+    settings = Settings(_env_file=None)
+    assert settings.abuse_mode == "log-only" and settings.abuse_max_strikes == 3
+    assert settings.redis_rest_url == ""
+    monkeypatch.setenv("ABUSE_MODE", " Log_Only ")
+    monkeypatch.setenv("KV_REST_API_URL", "https://kv.example")
+    settings = Settings(_env_file=None)
+    assert settings.abuse_mode == "log-only" and settings.redis_rest_url == "https://kv.example"

@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from core.abuse_classifier import AbuseClassifier  # noqa: E402
 from core.agent import create_agent_graph, stream_agent  # noqa: E402
 from core.citations import _is_site_url, sanitize_links  # noqa: E402
 from core.config import settings  # noqa: E402
@@ -41,6 +42,8 @@ CASES = [
     for case in yaml.safe_load((Path(__file__).parent / "dataset.yaml").read_text(encoding="utf-8"))
     for n in range(case.get("repeticiones", 1))
 ]
+AGENT_CASES = [c for c in CASES if not c.get("solo_clasificador")]
+ABUSE_CASES = [c for c in CASES if "maliciosa" in c and "#" not in c["id"]]
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
 # The agent's prompt only carries the blog index; when it reads an article the
@@ -126,7 +129,7 @@ def judge():
     return model.with_structured_output(Verdict)
 
 
-@pytest.mark.parametrize("case", CASES, ids=[c["id"] for c in CASES])
+@pytest.mark.parametrize("case", AGENT_CASES, ids=[c["id"] for c in AGENT_CASES])
 def test_case(case, graph, judge, loop):
     page_context = {"path": case["pagina"]} if case.get("pagina") else None
 
@@ -165,6 +168,15 @@ def test_case(case, graph, judge, loop):
         verdict = loop.run_until_complete(judge.ainvoke(JUDGE_PROMPT.format(
             conocimiento=knowledge, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
         assert verdict.aprobado, f"Juez ({JUDGE_MODEL}): {verdict.motivo}{report}"
+
+
+@pytest.mark.parametrize("case", ABUSE_CASES, ids=[f"abuso:{c['id']}" for c in ABUSE_CASES])
+def test_abuse_classifier(case, graph, loop):
+    """Jailbreaks and prompt extraction are flagged; out-of-scope questions are not (no strikes)."""
+    verdict = loop.run_until_complete(AbuseClassifier()(case["pregunta"]))
+    assert verdict.malicious == case["maliciosa"], (
+        f"Clasificador: {verdict.category}, esperado maliciosa={case['maliciosa']} — {case['pregunta']}"
+    )
 
 
 def test_citation_metrics(graph):

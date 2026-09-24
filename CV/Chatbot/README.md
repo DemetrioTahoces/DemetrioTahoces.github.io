@@ -84,7 +84,7 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | --- | --- |
 | Bucles de herramientas | `ModelCallLimitMiddleware` (3) · `ToolCallLimitMiddleware` (2) |
 | Coste por llamada | `max_output_tokens=2000`, `timeout=30s`, límite de gasto en OpenAI |
-| Abuso | Rate limit por IP (5/min, 20/h) · CORS solo para el dominio del CV |
+| Abuso | Rate limit por IP (5/min, 20/h) · CORS solo para el dominio del CV · bloqueo temporal por consultas malintencionadas reiteradas (ver abajo) |
 | Prompt injection | Reglas fijas en el prompt · historial solo texto user/assistant · `page_context` solo por ruta conocida |
 | Invención | Solo responde con la base de conocimiento; evals de «no inventar» |
 | Enlaces inventados | `core/citations.py` reescribe todo enlace al sitio a su URL canónica: ancla desconocida → página; página desconocida → sin enlace. También en streaming |
@@ -94,11 +94,13 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 
 | Ruta | Qué hay |
 | --- | --- |
-| `api/index.py` | App FastAPI: endpoints, CORS, rate limit, montaje MCP |
+| `api/index.py` | App FastAPI: endpoints, CORS, rate limit, bloqueo por abuso, montaje MCP |
 | `core/agent.py` | Modelo, agente, middleware, streaming |
 | `core/knowledge.py` | Carga de `docs/`, frontmatter, secciones con ancla, lista blanca de URLs, render del prompt, pista de página |
 | `core/citations.py` | Validación de enlaces al sitio (respuesta completa y streaming) |
 | `core/prompts.py` | Reglas del asistente + fecha |
+| `core/abuse_classifier.py` | Clasificador de intención maliciosa (structured output) |
+| `middleware/abuse_guard.py` | Strikes y bloqueo temporal por `HMAC(ip)` en Upstash Redis |
 | `core/tools.py` | Tool `read_blog_article` (solo blog) |
 | `core/mcp_server.py` | Servidor MCP (`list_documents`, `get_document`) |
 | `core/tracing.py` | LangSmith opcional + feedback |
@@ -138,10 +140,28 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | `MAX_MODEL_CALLS` / `MAX_TOOL_CALLS` | `3` / `2` | Por petición |
 | `MAX_HISTORY_MESSAGES` | `10` | Mensajes previos aceptados |
 | `RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `5` / `20` | Por IP y por instancia |
+| `ABUSE_MODE` | `log-only` | `off` (sin clasificador) · `log-only` (registra strikes, no bloquea) · `block` |
+| `ABUSE_MAX_STRIKES` / `ABUSE_STRIKE_WINDOW_HOURS` | `3` / `24` | Strikes dentro de la ventana deslizante que provocan el bloqueo |
+| `ABUSE_BLOCK_MINUTES` | `60` | Duración del bloqueo (`403` + `Retry-After`) |
+| `ABUSE_CLASSIFIER_MODEL` / `_REASONING_EFFORT` | `MODEL_NAME` / `low` | Modelo del clasificador; conviene uno pequeño |
+| `UPSTASH_REDIS_REST_URL` / `_TOKEN` | — | Store compartido (también acepta `KV_REST_API_URL` / `_TOKEN`). Sin él: fail-open, nadie se bloquea |
 | `ALLOWED_ORIGINS` | GitHub Pages + localhost | Separados por comas |
 | `LANGSMITH_TRACING` / `_API_KEY` / `_PROJECT` | `false` | Tracing opcional |
 
 Plantilla completa en [.env.example](.env.example).
+
+## Bloqueo temporal por abuso
+
+Capa disuasoria, no una barrera de seguridad: el prompt ya declina las inyecciones; esto corta a quien insiste.
+
+1. En `/api/chat` y `/api/chat/stream`, si `HMAC(ip)` tiene un bloqueo activo → `403` con `Retry-After` y `{"error": "temporarily_blocked", "message", "retry_after"}`. El frontend muestra el tiempo restante y no vuelve a llamar hasta que expire.
+2. Si no, un clasificador aparte (`core/abuse_classifier.py`) evalúa **solo el mensaje actual** en paralelo con el agente (no añade latencia ni toca el prompt cacheado): `prompt_injection`, `prompt_extraction`, `abuse` o `none`. Fuera de ámbito, pedir código o preguntar qué es un prompt injection es `none`.
+3. Cada mensaje malicioso suma un strike en un sorted set de Redis (ventana deslizante de `ABUSE_STRIKE_WINDOW_HOURS`). Al llegar a `ABUSE_MAX_STRIKES` se crea la clave de bloqueo con TTL `ABUSE_BLOCK_MINUTES` y se limpian los strikes.
+4. Logs: `Abuse strike` / `Abuse block` con `ip_hash`, `abuse_category` y `strikes`; nunca el texto.
+
+`/api/feedback` y `/api/mcp` no se bloquean: no gastan tokens del modelo. Cualquier fallo del store o del clasificador es fail-open.
+
+Puesta en marcha: crear un Upstash Redis (Vercel → Storage/Marketplace, inyecta `KV_REST_API_*`), dejar `ABUSE_MODE=log-only` unos días, revisar los `Abuse strike` en los logs para medir falsos positivos y pasar a `block`. Limitaciones: la IP se cambia fácil (VPN) y una NAT compartida (oficina, universidad) puede penalizar a usuarios legítimos. En Vercel la IP sale de `x-real-ip`/`x-forwarded-for` (los fija el edge); fuera de Vercel, de la conexión.
 
 ## Desarrollo
 
@@ -155,7 +175,7 @@ uv run pytest -m evals                                # evals (gasta tokens; sol
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces | 0 |
-| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `gpt-6-luna` | Céntimos |
+| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `gpt-6-luna` | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
 | Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |
 
@@ -172,6 +192,7 @@ Las evals nunca se ejecutan de forma automática: solo las lanza un humano, en l
 | `uv.lock` + Python 3.14 | `requirements.txt` con `>=` | Builds reproducibles en Vercel |
 | Anclas declaradas en el Markdown (`{#id}`) | Slugs derivados del título | Un cambio de título no rompe citas; el test de consistencia detecta desincronizaciones |
 | Validación de enlaces token a token (se retiene solo el enlace en curso) | Validar al final | El streaming sigue fluyendo y nunca llega un enlace sin validar |
+| Clasificador aparte en paralelo | Flag en la salida del agente | No altera el prompt cacheado ni el streaming y no añade latencia; se puede usar un modelo pequeño |
 | Citas en la misma pestaña: no (`target=_blank`) | Abrir en la misma pestaña | El chat puede vivir en el iframe del widget; salir perdería la conversación |
 
 ## Despliegue

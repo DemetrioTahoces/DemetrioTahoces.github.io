@@ -453,6 +453,8 @@
         const FEEDBACK_URL = API_URL + "/api/feedback";
         // El backend es stateless: cada petición lleva los últimos turnos de la conversación
         const MAX_HISTORY_MESSAGES = 10;
+        // Bloqueo temporal (403) por consultas malintencionadas reiteradas: se recuerda para no llamar al backend
+        const BLOCKED_UNTIL_STORAGE_KEY = 'chatbot_blocked_until';
 
         // DOM Elements
         const chatForm = document.getElementById('chat-form');
@@ -868,12 +870,27 @@
             if (contentBox) contentBox.classList.remove('hidden');
         }
 
+        function blockedMessage(seconds) {
+            const minutes = Math.max(1, Math.ceil(seconds / 60));
+            return `Acceso bloqueado temporalmente por reiteradas consultas inapropiadas. Podrás volver a preguntar en ${minutes} min.`;
+        }
+
+        function getRemainingBlockSeconds() {
+            const blockedUntil = Number(safeStorage.getItem(BLOCKED_UNTIL_STORAGE_KEY)) || 0;
+            return Math.max(0, Math.ceil((blockedUntil - Date.now()) / 1000));
+        }
+
         async function getApiErrorMessage(response) {
             if (response.status === 429) {
                 return "Límite de peticiones excedido. Por favor, espera un minuto.";
             }
 
             const errData = await response.json().catch(() => ({}));
+            if (response.status === 403 && errData.error === 'temporarily_blocked') {
+                const seconds = Number(errData.retry_after) || 3600;
+                safeStorage.setItem(BLOCKED_UNTIL_STORAGE_KEY, String(Date.now() + seconds * 1000));
+                return blockedMessage(seconds);
+            }
             return errData.message || errData.error || "Error de conexión con el servidor.";
         }
 
@@ -1097,6 +1114,11 @@
             const aiWrapper = appendAILoading();
 
             try {
+                const blockedSeconds = getRemainingBlockSeconds();
+                if (blockedSeconds > 0) {
+                    throw new Error(blockedMessage(blockedSeconds));
+                }
+
                 try {
                     await sendChatStream(message, aiWrapper);
                 } catch (streamError) {

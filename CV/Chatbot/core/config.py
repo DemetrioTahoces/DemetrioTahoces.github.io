@@ -3,9 +3,9 @@ Centralized configuration loaded from environment variables (or CV/Chatbot/.env)
 """
 
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
-from pydantic import field_validator
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -44,6 +44,22 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 5
     rate_limit_per_hour: int = 20
 
+    # --- Temporary block for repeated malicious questions (see middleware/abuse_guard.py) ---
+    # off: no classifier · log-only: classify and log strikes, never block · block: enforce.
+    abuse_mode: Literal["off", "log-only", "block"] = "log-only"
+    abuse_max_strikes: int = 3
+    abuse_block_minutes: int = 60
+    abuse_strike_window_hours: int = 24
+    # Empty = MODEL_NAME. The classifier only sees the current message, not the CV.
+    abuse_classifier_model: str = ""
+    abuse_classifier_reasoning_effort: str | None = "low"
+    # Shared store (Upstash Redis REST; Vercel's Upstash integration injects KV_REST_API_*).
+    # Unset = fail-open: strikes are only logged and nobody is blocked.
+    redis_rest_url: str = Field(default="", validation_alias=AliasChoices("UPSTASH_REDIS_REST_URL", "KV_REST_API_URL"))
+    redis_rest_token: str = Field(
+        default="", validation_alias=AliasChoices("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN")
+    )
+
     # --- CORS: comma-separated list in ALLOWED_ORIGINS ---
     allowed_origins: Annotated[list[str], NoDecode] = DEFAULT_ALLOWED_ORIGINS
 
@@ -58,10 +74,15 @@ class Settings(BaseSettings):
     langsmith_api_key: str = ""
     langsmith_project: str = "cv-chatbot"
 
-    @field_validator("reasoning_effort", mode="before")
+    @field_validator("reasoning_effort", "abuse_classifier_reasoning_effort", mode="before")
     @classmethod
     def _normalize_reasoning_effort(cls, value):
         return (value or "").strip().lower() or None
+
+    @field_validator("abuse_mode", mode="before")
+    @classmethod
+    def _normalize_abuse_mode(cls, value):
+        return str(value).strip().lower().replace("_", "-") if isinstance(value, str) else value
 
     @field_validator("allowed_origins", mode="before")
     @classmethod
