@@ -3,6 +3,8 @@ type: cv
 title: "Ingeniero de Datos en Inditex"
 route: "/CV/inditex.html"
 tags: ["cv", "inditex", "datos"]
+summary: "Ingeniero de Datos en Inditex vía Nunegal (2021–2022): Kafka y Snowflake"
+order: 12
 ---
 
 # Ingeniero de Datos — Nunegal Consulting → Inditex

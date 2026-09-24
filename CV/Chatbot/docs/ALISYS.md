@@ -3,6 +3,8 @@ type: cv
 title: "Ingeniero de Software en Alisys"
 route: "/CV/alisys.html"
 tags: ["cv", "alisys", "robotica", "android"]
+summary: "Ingeniero de Software en Alisys (2019–2021): Android, robótica, IA y VoIP"
+order: 14
 ---
 
 # Ingeniero de Software & Especialista en Robótica e IA — Alisys S.L.U

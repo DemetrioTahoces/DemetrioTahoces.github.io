@@ -1,3 +1,12 @@
+---
+type: formacion
+title: "Máster en Ingeniería de Telecomunicación"
+route: "/#formacion"
+tags: ["formacion", "master", "telecomunicacion"]
+summary: "Máster en Ingeniería de Telecomunicación, Universidad de Oviedo (2017–2019): VoIP y Android"
+order: 21
+---
+
 # Máster Universitario en Ingeniería de Telecomunicación (PARS)
 **Universidad de Oviedo — Escuela Politécnica de Ingeniería de Gijón**
 2017 — 2019 | Presencial | 120 ECTS | Castellano

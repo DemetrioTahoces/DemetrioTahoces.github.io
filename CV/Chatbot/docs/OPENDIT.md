@@ -3,6 +3,8 @@ type: cv
 title: "Backend Engineer en Opendit"
 route: "/CV/opendit.html"
 tags: ["cv", "opendit", "backend", "iot"]
+summary: "Backend Engineer en Opendit (2022–2024): DAPR, BFF, CQRS e IoT"
+order: 11
 ---
 
 # Backend Engineer — Opendit

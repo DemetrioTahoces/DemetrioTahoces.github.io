@@ -3,6 +3,8 @@ type: cv
 title: "Software Engineer en Fermax"
 route: "/CV/fermax.html"
 tags: ["cv", "fermax", "backend", "iot", "ia", "agentes", "claude code", "desarrollo agentico"]
+summary: "Experiencia actual (01/2025–presente): Software Engineer; backend IoT, DDD, Kubernetes y liderazgo del desarrollo agéntico con Claude Code"
+order: 10
 ---
 
 # Software Engineer — Fermax

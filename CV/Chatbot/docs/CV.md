@@ -3,13 +3,15 @@ type: cv
 title: "CV completo"
 route: "/"
 tags: ["cv", "perfil profesional"]
+summary: "Currículum completo: resumen, experiencia, formación, competencias técnicas, idiomas y contacto"
+order: 1
 ---
 
 # Demetrio Antonio Tahoces Sánchez
 **Software Engineer** · tonitahoces@gmail.com · LinkedIn: demetrio-antonio-tahoces-sánchez-17905a181
 
 ## Resumen
-Soy Ingeniero de Telecomunicación y Software Engineer. Llevo más de 7 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes: en Fermax lidero el diseño de los workflows de agentes con los que el equipo desarrolla software, y por mi cuenta construyo agentes con RAG y LangGraph, como el asistente de este CV. Me interesa especialmente llevar este tipo de agentes a casos de uso reales en producción.
+Soy Ingeniero de Telecomunicación y Software Engineer. Llevo más de 7 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes: en Fermax lidero el diseño de los workflows de agentes con los que el equipo desarrolla software, y por mi cuenta construyo agentes con RAG y LangGraph, como el asistente de este CV (Python, FastAPI y LangChain/LangGraph, desplegado en Vercel). Me interesa especialmente llevar este tipo de agentes a casos de uso reales en producción.
 
 ## Experiencia Profesional
 

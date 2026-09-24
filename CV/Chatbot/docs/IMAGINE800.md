@@ -3,6 +3,8 @@ type: cv
 title: "Desarrollador Android en Imagine800"
 route: "/CV/imagine800.html"
 tags: ["cv", "imagine800", "android", "voip"]
+summary: "Desarrollador Android en Imagine800 (2019, incluye el TFM): apps Android, VoIP y Asterisk"
+order: 15
 ---
 
 # Desarrollador Android — Imagine800 S.L
