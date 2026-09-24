@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     api_key: str = ""
     model_name: str = "gpt-6-luna"
     # none | low | medium | high ... Empty = provider default.
-    reasoning_effort: str | None = "low"
+    reasoning_effort: str | None = "medium"
     # Cap per model call; on reasoning models it includes reasoning tokens.
     max_output_tokens: int = 2000
     request_timeout: float = 30.0

@@ -9,6 +9,7 @@
 #   no_contiene       subcadenas prohibidas
 #   usa_herramienta   true/false: si debe (o no) llamar a read_blog_article
 #   criterio          regla que valida un LLM juez (hechos, tono, idioma, honestidad)
+#   repeticiones      nº de ejecuciones (por defecto 1) para comportamientos intermitentes
 #
 # Añade un caso cada vez que el chatbot falle en producción.
 
@@ -35,6 +36,7 @@
   criterio: "Menciona su uso de Kafka en Inditex (pipelines con Spring Boot, Snowflake) y/o en Securitas Direct. No inventa otros proyectos con Kafka."
 
 - id: python-honesto
+  repeticiones: 3
   pregunta: "¿Tiene experiencia profesional con Python?"
   criterio: "Solo afirma lo que consta: Python aparece en sus competencias y en sus proyectos de IA personales (RAG, LangGraph). No se inventa años ni proyectos profesionales en Python en ninguna empresa."
 
@@ -158,6 +160,7 @@
   criterio: "Explica el concepto apoyándose en el artículo del blog sobre domain events y brokers, citándolo."
 
 - id: enlace-fuente
+  repeticiones: 3
   pregunta: "Cuéntame su experiencia en Opendit"
   usa_herramienta: false
   contiene: ["demetriotahoces.github.io/CV/opendit.html"]
@@ -166,3 +169,11 @@
 - id: brevedad
   pregunta: "¿Conoce Docker?"
   criterio: "Respuesta corta (no más de 5 frases) que confirma Docker con contexto concreto (p. ej. Securitas Direct, Imagine800 con Asterisk en Docker)."
+
+- id: enlace-en-ingles
+  repeticiones: 3
+  pregunta: "Tell me about his experience at Inditex"
+  contiene: ["demetriotahoces.github.io/CV/inditex.html"]
+  no_contiene: ["Más detalle", "More detalle"]
+  usa_herramienta: false
+  criterio: "Responde en inglés sobre su etapa en Inditex (datos en tiempo real, Kafka, Snowflake) y el enlace final también está en inglés."

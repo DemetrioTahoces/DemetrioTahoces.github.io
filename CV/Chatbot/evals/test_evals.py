@@ -26,7 +26,13 @@ from core.knowledge import get_knowledge_base  # noqa: E402
 
 pytestmark = pytest.mark.evals
 
-CASES = yaml.safe_load((Path(__file__).parent / "dataset.yaml").read_text(encoding="utf-8"))
+# Cases with `repeticiones: N` run N times: some behaviours (tool misuse,
+# language of fixed phrases) are intermittent and a single run hides them.
+CASES = [
+    {**case, "id": case["id"] if n == 0 else f"{case['id']}#{n + 1}"}
+    for case in yaml.safe_load((Path(__file__).parent / "dataset.yaml").read_text(encoding="utf-8"))
+    for n in range(case.get("repeticiones", 1))
+]
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-sol")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
 
