@@ -82,6 +82,7 @@ Superficies que suelen requerir sincronización:
 - `index.html`
 - `CV/*.html`
 - `CV/Chatbot/docs/*.md`
+- `assets/CV-Demetrio-Tahoces.pdf` (se regenera desde la vista de impresión de `index.html`; comando en `README.md`)
 
 Regla práctica: si una experiencia, tecnología, formación, responsabilidad o logro aparece en la web pública y el chatbot debería poder responder sobre ello, debe existir también una representación razonable en los documentos Markdown de `CV/Chatbot/docs/`.
 

@@ -16,8 +16,9 @@
             return;
         }
 
-        var STAGGER = 70;
-        var MAX_DELAY = 420;
+        // Stagger corto y tope bajo: en scroll rápido el contenido no debe quedarse vacío.
+        var STAGGER = 45;
+        var MAX_DELAY = 180;
 
         var observer = new IntersectionObserver(function (entries) {
             // El stagger solo se aplica entre elementos que entran en el mismo lote,
@@ -33,11 +34,20 @@
             byGroup.forEach(function (els) {
                 els.forEach(function (el, i) {
                     el.style.setProperty('--reveal-delay', Math.min(i * STAGGER, MAX_DELAY) + 'ms');
-                    el.classList.add('is-visible');
-                    observer.unobserve(el);
+                    reveal(el);
                 });
             });
-        }, { threshold: 0.01, rootMargin: '0px 0px 15% 0px' });
+            // Un salto de scroll (ancla, tecla Fin, flick en móvil) puede dejar atrás
+            // elementos que nunca llegaron a intersectar: se marcan como visibles igualmente.
+            items.forEach(function (el) {
+                if (!el.classList.contains('is-visible') && el.getBoundingClientRect().bottom < 0) reveal(el);
+            });
+        }, { threshold: 0, rootMargin: '0px 0px 35% 0px' });
+
+        function reveal(el) {
+            el.classList.add('is-visible');
+            observer.unobserve(el);
+        }
 
         items.forEach(function (el) { observer.observe(el); });
     }
@@ -94,8 +104,8 @@
     }
 
     function init() {
-        initReveals();
         initJumpNav();
+        initReveals();
         initScrollSpy();
         initNavScrolled();
     }

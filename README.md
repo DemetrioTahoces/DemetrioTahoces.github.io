@@ -155,6 +155,11 @@ Cuando se cambie contenido curricular, conviene mantener sincronizadas estas sup
 - `index.html`
 - páginas detalladas de `CV/*.html`
 - documentos Markdown de `CV/Chatbot/docs/*.md`
+- `assets/CV-Demetrio-Tahoces.pdf` (descargable desde la cabecera): se genera desde la hoja `@media print` de `index.html`. Regenéralo tras cualquier cambio de contenido con el servidor local levantado (`python -m http.server 8000`):
+
+```powershell
+& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf="$PWD\assets\CV-Demetrio-Tahoces.pdf" "http://localhost:8000/"
+```
 
 El chatbot responde a partir de la base documental Markdown. Si una experiencia, tecnología o formación aparece en la web pública pero no en `CV/Chatbot/docs/`, el asistente puede no conocerla o responder de forma incompleta.
 

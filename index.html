@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - Demetrio</title>
+    <title>CV - Demetrio Tahoces</title>
     <meta name="description" content="Software Engineer especializado en Backend, IoT e IA aplicada.">
     <meta property="og:title" content="CV - Demetrio Tahoces">
     <meta property="og:description" content="Software Engineer especializado en Backend, IoT e IA aplicada.">
@@ -33,8 +33,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/tokens.css?v=1">
-    <link rel="stylesheet" href="assets/cv.css?v=1">
+    <link rel="stylesheet" href="assets/tokens.css?v=2">
+    <link rel="stylesheet" href="assets/cv.css?v=2">
     <script>
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.documentElement.classList.add('motion-ready');
@@ -60,14 +60,27 @@
 
         <header id="inicio" class="header-bg hero-shell rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
             <h1 class="text-6xl md:text-7xl font-bold text-white mb-4 tracking-tight hero-stage" style="--stage-delay: 0.05s">
-                Demetrio
+                Demetrio Tahoces
             </h1>
             <div class="flex flex-col items-start gap-4">
                 <p class="text-xl md:text-2xl hero-stage" style="color: var(--text-muted); --stage-delay: 0.17s">Software Engineer</p>
                 <p class="hero-eyebrow hero-stage" style="--stage-delay: 0.25s">Backend · IoT · IA aplicada</p>
-                <div class="hero-actions flex flex-col md:flex-row items-center gap-2 md:gap-4">
-                    <a href="mailto:tonitahoces@gmail.com?subject=Solicitud%20de%20CV&body=Hola%20Demetrio,%0A%0AMe%20gustar%C3%ADa%20recibir%20una%20copia%20de%20tu%20CV%20en%20PDF.%0A%0ASaludos"
-                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.31s">
+                <ul class="hero-highlights hero-stage" style="--stage-delay: 0.28s" aria-label="Datos destacados">
+                    <li><strong>7+ años</strong><span>desarrollando software, con foco en backend e IoT</span></li>
+                    <li><strong>Equipo de 10</strong><span>liderando el desarrollo agéntico con Claude Code</span></li>
+                    <li><strong>+80%</strong><span>de PRs exitosas a la primera con ese modelo</span></li>
+                </ul>
+                <div class="hero-actions flex flex-col md:flex-row md:flex-wrap items-center gap-2 md:gap-3">
+                    <a href="assets/CV-Demetrio-Tahoces.pdf" download
+                        class="hero-action-primary no-print text-lg flex items-center gap-2 hero-stage" style="--stage-delay: 0.31s">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" />
+                        </svg>
+                        Descargar CV (PDF)
+                    </a>
+                    <a href="mailto:tonitahoces@gmail.com?subject=Contacto%20desde%20tu%20CV"
+                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.36s">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -76,19 +89,19 @@
                     </a>
                     <a href="https://www.linkedin.com/in/demetrio-antonio-tahoces-s%C3%A1nchez-17905a181"
                         target="_blank" rel="noopener noreferrer"
-                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.38s">
+                        class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.41s">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                         </svg>
                         LinkedIn
                     </a>
-                    <a href="CV/chatbot.html" class="text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.45s">
+                    <a href="CV/chatbot.html" class="no-print text-lg text-blue-200 hover:text-white transition-colors flex items-center gap-2 hero-stage" style="--stage-delay: 0.46s">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8V5m-4 7h.01M16 12h.01M7 20h10a3 3 0 003-3v-5a5 5 0 00-5-5H9a5 5 0 00-5 5v5a3 3 0 003 3zM9 16h6" />
                         </svg>
-                        Asistente IA
+                        Pregúntale a mi CV (IA)
                     </a>
                 </div>
             </div>
@@ -109,7 +122,7 @@
                     </h2>
                 </a>
                 <p class="text-gray-300 leading-relaxed">
-                    Soy Ingeniero de Telecomunicación y Software Engineer. Llevo 6 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes autónomos, buscando formas prácticas de integrarlos en aplicaciones reales.
+                    Soy Ingeniero de Telecomunicación y Software Engineer. Llevo más de 7 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes autónomos, buscando formas prácticas de integrarlos en aplicaciones reales.
                 </p>
                 <a href="CV/resumen-profesional.html"
                     class="inline-flex items-center gap-2 mt-4 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">
@@ -413,30 +426,62 @@
             <p class="section-kicker" data-reveal="fade">Herramientas</p>
             <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Competencias Técnicas</h2>
 
-            <div class="card p-6 rounded-xl space-y-4" data-reveal data-reveal-group>
-                <div data-reveal="fade">
-                    <h3 class="text-lg font-semibold text-gray-100 mb-2">Backend & Core</h3>
-                    <p class="text-gray-400 text-sm">Java (Spring Boot), TypeScript/Node.js (NestJS), Python,
-                        Arquitectura Hexagonal, DDD, CQR, BFF.</p>
+            <div class="skills-grid" data-reveal-group>
+                <div class="card skill-group skill-group--focus p-6 rounded-xl" data-reveal>
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">IA &amp; Agentes <span class="skill-focus">Enfoque actual</span></h3>
+                    <ul class="skill-tags">
+                        <li class="skill-tag">Desarrollo agéntico con Claude Code (workflows multiagente, skills)</li>
+                        <li class="skill-tag">Arquitecturas RAG</li>
+                        <li class="skill-tag">LangChain/LangGraph</li>
+                        <li class="skill-tag">Integración de Agentes Autónomos</li>
+                        <li class="skill-tag">Prompting</li>
+                    </ul>
                 </div>
-                <div data-reveal="fade">
-                    <h3 class="text-lg font-semibold text-gray-100 mb-2">Data & Event-Driven</h3>
-                    <p class="text-gray-400 text-sm">Apache Kafka, RabbitMQ, PostgreSQL, MongoDB, Redis, Snowflake.</p>
+                <div class="card skill-group p-6 rounded-xl" data-reveal>
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Backend &amp; Core</h3>
+                    <ul class="skill-tags">
+                        <li class="skill-tag">Java (Spring Boot)</li>
+                        <li class="skill-tag">TypeScript/Node.js (NestJS)</li>
+                        <li class="skill-tag">Python</li>
+                        <li class="skill-tag">Arquitectura Hexagonal</li>
+                        <li class="skill-tag">DDD</li>
+                        <li class="skill-tag">CQRS</li>
+                        <li class="skill-tag">BFF</li>
+                    </ul>
                 </div>
-                <div data-reveal="fade">
-                    <h3 class="text-lg font-semibold text-gray-100 mb-2">Cloud & Infra</h3>
-                    <p class="text-gray-400 text-sm">Kubernetes (K8s), Docker, DAPR, Azure Service Bus, Azure DevOps,
-                        GitHub.</p>
+                <div class="card skill-group p-6 rounded-xl" data-reveal>
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Data &amp; Event-Driven</h3>
+                    <ul class="skill-tags">
+                        <li class="skill-tag">Apache Kafka</li>
+                        <li class="skill-tag">RabbitMQ</li>
+                        <li class="skill-tag">PostgreSQL</li>
+                        <li class="skill-tag">MongoDB</li>
+                        <li class="skill-tag">Redis</li>
+                        <li class="skill-tag">Snowflake</li>
+                    </ul>
                 </div>
-                <div data-reveal="fade">
-                    <h3 class="text-lg font-semibold text-gray-100 mb-2">IA & Agentes (Enfoque actual)</h3>
-                    <p class="text-gray-400 text-sm">Desarrollo agéntico con Claude Code (workflows multiagente, skills),
-                        Arquitecturas RAG, LangChain/LangGraph, Integración de Agentes Autónomos, Prompting.</p>
+                <div class="card skill-group p-6 rounded-xl" data-reveal>
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Cloud &amp; Infra</h3>
+                    <ul class="skill-tags">
+                        <li class="skill-tag">Kubernetes (K8s)</li>
+                        <li class="skill-tag">Docker</li>
+                        <li class="skill-tag">DAPR</li>
+                        <li class="skill-tag">Azure Service Bus</li>
+                        <li class="skill-tag">Azure DevOps</li>
+                        <li class="skill-tag">GitHub</li>
+                    </ul>
                 </div>
-                <div data-reveal="fade">
-                    <h3 class="text-lg font-semibold text-gray-100 mb-2">Comunicaciones & Otros</h3>
-                    <p class="text-gray-400 text-sm">OpenAPI, GraphQL, gRPC, OAuth2, WebRTC, VoIP (Asterisk), Dart
-                        (Flutter).</p>
+                <div class="card skill-group p-6 rounded-xl" data-reveal>
+                    <h3 class="text-lg font-semibold text-gray-100 mb-3">Comunicaciones &amp; Otros</h3>
+                    <ul class="skill-tags">
+                        <li class="skill-tag">OpenAPI</li>
+                        <li class="skill-tag">GraphQL</li>
+                        <li class="skill-tag">gRPC</li>
+                        <li class="skill-tag">OAuth2</li>
+                        <li class="skill-tag">WebRTC</li>
+                        <li class="skill-tag">VoIP (Asterisk)</li>
+                        <li class="skill-tag">Dart (Flutter)</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -448,9 +493,9 @@
             <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Idiomas</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-reveal-group>
-                <div class="card p-6 rounded-xl text-center" data-reveal="scale">
-                    <div class="flex justify-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="48" height="24"
+                <div class="card language-card p-4 rounded-xl" data-reveal="scale">
+                    <div class="language-flag">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="40" height="20" aria-hidden="true"
                             class="rounded shadow-sm">
                             <clipPath id="uk-t">
                                 <path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z" />
@@ -462,22 +507,24 @@
                             <path d="M30,0v30m-30-15h60" stroke="#C8102E" stroke-width="6" />
                         </svg>
                     </div>
-                    <p class="text-gray-100 font-semibold text-lg">Inglés</p>
-                    <p class="text-blue-400 font-semibold">Nivel B2</p>
-                    <p class="text-gray-400 text-sm"><a href="https://www.cambridge.es/" target="_blank"
-                            rel="noopener noreferrer" class="hover:text-blue-300 transition-colors">Cambridge First
-                            Certificate</a></p>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Inglés <span class="text-blue-400">· Nivel B2</span></p>
+                        <p class="text-gray-400 text-sm"><a href="https://www.cambridge.es/" target="_blank"
+                                rel="noopener noreferrer" class="hover:text-blue-300 transition-colors">Cambridge First
+                                Certificate</a></p>
+                    </div>
                 </div>
-                <div class="card p-6 rounded-xl text-center" data-reveal="scale">
-                    <div class="flex justify-center mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="48" height="32"
+                <div class="card language-card p-4 rounded-xl" data-reveal="scale">
+                    <div class="language-flag">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" width="30" height="20" aria-hidden="true"
                             class="rounded shadow-sm">
                             <rect width="3" height="2" fill="#c60b1e" />
                             <rect y="0.5" width="3" height="1" fill="#ffc400" />
                         </svg>
                     </div>
-                    <p class="text-gray-100 font-semibold text-lg">Español</p>
-                    <p class="text-blue-400 font-semibold">Nativo</p>
+                    <div>
+                        <p class="text-gray-100 font-semibold">Español <span class="text-blue-400">· Nativo</span></p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -488,7 +535,7 @@
         </footer>
     </main>
 
-    <script src="assets/cv.js?v=1" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+    <script src="assets/cv.js?v=2" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
     <script src="CV/chatbot-widget.js" defer></script>
 </body>
 

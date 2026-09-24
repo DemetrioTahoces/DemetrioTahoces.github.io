@@ -9,7 +9,7 @@ tags: ["cv", "perfil profesional"]
 **Software Engineer** · tonitahoces@gmail.com · LinkedIn: demetrio-antonio-tahoces-sánchez-17905a181
 
 ## Resumen
-Soy Ingeniero de Telecomunicación y Software Engineer. Llevo 6 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes autónomos, buscando formas prácticas de integrarlos en aplicaciones reales.
+Soy Ingeniero de Telecomunicación y Software Engineer. Llevo más de 7 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes autónomos, buscando formas prácticas de integrarlos en aplicaciones reales.
 
 ## Experiencia Profesional
 

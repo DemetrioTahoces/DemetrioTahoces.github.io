@@ -20,4 +20,11 @@
     --font-body: 'Inter', sans-serif;
     --font-display: 'Space Grotesk', 'Inter', sans-serif;
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    /* Impresión / PDF del CV (fondo blanco). */
+    --print-bg: #ffffff;
+    --print-text: #1f2937;
+    --print-heading: #0f172a;
+    --print-accent: #1e40af;
+    --print-border: #e2e8f0;
+    --print-border-strong: #cbd5e1;
 }
