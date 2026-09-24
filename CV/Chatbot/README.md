@@ -175,7 +175,7 @@ uv run pytest -m evals                                # evals (gasta tokens; sol
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces | 0 |
-| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 16 casos del clasificador de abuso (`maliciosa`). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 90 % y cobertura de párrafos ≥ 80 %. Juez: `gpt-6-luna` | Céntimos |
+| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 90 % y cobertura de párrafos ≥ 80 %. Juez: `gpt-6-luna` | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
 | Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |
 
