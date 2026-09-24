@@ -18,6 +18,7 @@ _EXTRA_FIELDS = (
     "message_chars", "history_messages", "page_route",
     "input_tokens", "cached_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
     "error_type", "rating", "has_comment",
+    "abuse_category", "abuse_mode", "strikes", "blocked_seconds",
 )
 
 

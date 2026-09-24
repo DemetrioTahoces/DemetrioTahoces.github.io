@@ -41,6 +41,61 @@ def scripted_graph():
     return _build
 
 
+@pytest.fixture(scope="session")
+def client():
+    # One lifespan per process: the MCP session manager can only run once.
+    from fastapi.testclient import TestClient
+
+    import api.index as api_module
+
+    with TestClient(api_module.app) as test_client:
+        yield test_client
+
+
 @pytest.fixture
 def anyio_backend():
     return "asyncio"
+
+
+class FakeAbuseStore:
+    """In-memory AbuseStore with an injectable clock (the real one is Upstash Redis)."""
+
+    def __init__(self, clock):
+        self.clock = clock
+        self.strikes: dict[str, list[float]] = {}
+        self.blocked_until: dict[str, float] = {}
+
+    async def block_ttl(self, key):
+        return int(self.blocked_until.get(key, 0) - self.clock())
+
+    async def add_strike(self, key, member, now, window_seconds):
+        recent = [t for t in self.strikes.get(key, []) if t > now - window_seconds]
+        self.strikes[key] = recent + [now]
+        return len(self.strikes[key])
+
+    async def block(self, key, seconds):
+        self.blocked_until[key] = self.clock() + seconds
+        self.strikes.pop(key, None)
+
+
+def keyword_classifier(*malicious_markers: str):
+    """Fake classifier: prompt_injection if the message contains any marker."""
+    from core.abuse_classifier import AbuseVerdict
+
+    async def classify(message: str) -> AbuseVerdict:
+        hit = any(marker in message.lower() for marker in malicious_markers)
+        return AbuseVerdict(category="prompt_injection" if hit else "none")
+
+    return classify
+
+
+@pytest.fixture(autouse=True)
+def offline_abuse_guard(monkeypatch):
+    """Tests never reach the real classifier or store, even with API_KEY in .env."""
+    import api.index as api_module
+    from middleware.abuse_guard import AbuseGuard
+
+    guard = AbuseGuard(store=None, classifier=keyword_classifier(), mode="off",
+                       max_strikes=3, block_seconds=3600, window_seconds=86400)
+    monkeypatch.setattr(api_module, "abuse_guard", guard)
+    return guard

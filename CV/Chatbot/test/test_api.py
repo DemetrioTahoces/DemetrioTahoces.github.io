@@ -1,20 +1,12 @@
 import json
 
 import pytest
-from fastapi.testclient import TestClient
 
 import api.index as api_module
 from conftest import ScriptedToolModel, ai, read_call
 from core.agent import create_agent_graph
 
 ORIGIN = "https://demetriotahoces.github.io"
-
-
-@pytest.fixture(scope="module")
-def client():
-    # One lifespan per module: the MCP session manager can only run once per process.
-    with TestClient(api_module.app) as test_client:
-        yield test_client
 
 
 @pytest.fixture

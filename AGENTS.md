@@ -26,7 +26,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `CV/chatbot-widget.js`: widget del chatbot.
 - `CV/Chatbot/api/index.py`: entrada FastAPI serverless.
 - `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, tool `read_blog_article`, servidor MCP, tracing y generador de `llms.txt`.
-- `CV/Chatbot/middleware/`: logging y rate limiting.
+- `CV/Chatbot/middleware/`: logging, rate limiting y bloqueo temporal por abuso (`abuse_guard.py`, store Upstash Redis, fail-open).
 - `CV/Chatbot/docs/*.md`: documentos que alimentan el chatbot (frontmatter obligatorio).
 - `CV/Chatbot/test/`: tests offline con pytest (modelo falso, sin API key).
 - `CV/Chatbot/evals/`: dataset y evals contra el modelo real.

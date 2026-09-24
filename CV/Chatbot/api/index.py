@@ -9,6 +9,7 @@ Endpoints:
     POST /api/mcp         — Read-only MCP server (Streamable HTTP, stateless)
 """
 
+import asyncio
 import json
 import sys
 import time
@@ -35,11 +36,13 @@ from core.config import settings
 from core.knowledge import get_knowledge_base, normalize_route_path
 from core.mcp_server import mcp_http_app, mcp_server
 from core.tracing import configure_tracing, run_config, send_feedback
+from middleware.abuse_guard import blocked_response, client_ip, create_abuse_guard
 from middleware.rate_limiter import get_rate_limit_string, limiter, rate_limit_exceeded_handler
 from middleware.request_logger import log_error, log_request, log_response, setup_logging
 
 logger = setup_logging()
 configure_tracing()
+abuse_guard = create_abuse_guard()
 
 
 @asynccontextmanager
@@ -135,7 +138,7 @@ def _prepare(request: Request, body: ChatRequest, endpoint: str) -> tuple[str, s
     log_request(
         logger,
         request_id=request_id,
-        ip=request.client.host if request.client else "unknown",
+        ip=client_ip(request),
         endpoint=endpoint,
         message_chars=len(body.message),
         history_messages=len(history),
@@ -173,7 +176,13 @@ async def health_check():
 @limiter.limit(get_rate_limit_string())
 async def chat(request: Request, body: ChatRequest):
     start = time.perf_counter()
+    ip = client_ip(request)
+    if retry_after := await abuse_guard.retry_after(ip):
+        return blocked_response(retry_after)
     request_id, session_id, history, page_context = _prepare(request, body, "/api/chat")
+    # The classifier runs alongside the agent; awaited before returning because
+    # Vercel may freeze the instance once the response is sent.
+    inspection = asyncio.create_task(abuse_guard.inspect(ip, body.message, request_id))
     try:
         result = await invoke_agent(
             _get_agent(), body.message, history, page_context, config=run_config(request_id, "/api/chat")
@@ -181,6 +190,8 @@ async def chat(request: Request, body: ChatRequest):
     except Exception as e:
         log_error(logger, request_id=request_id, error=e, duration_ms=(time.perf_counter() - start) * 1000)
         return _internal_error(request_id)
+    finally:
+        await inspection
 
     duration_ms = (time.perf_counter() - start) * 1000
     log_response(logger, request_id=request_id, status_code=200, duration_ms=duration_ms, usage=result["usage"])
@@ -197,11 +208,15 @@ async def chat(request: Request, body: ChatRequest):
 @limiter.limit(get_rate_limit_string())
 async def chat_stream(request: Request, body: ChatRequest):
     start = time.perf_counter()
+    ip = client_ip(request)
+    if retry_after := await abuse_guard.retry_after(ip):
+        return blocked_response(retry_after)
     request_id, session_id, history, page_context = _prepare(request, body, "/api/chat/stream")
 
     async def event_generator():
-        yield _sse_event({"type": "session", "session_id": session_id, "request_id": request_id})
+        inspection = asyncio.create_task(abuse_guard.inspect(ip, body.message, request_id))
         try:
+            yield _sse_event({"type": "session", "session_id": session_id, "request_id": request_id})
             config = run_config(request_id, "/api/chat/stream")
             async for event in stream_agent(_get_agent(), body.message, history, page_context, config=config):
                 yield _sse_event(event)
@@ -216,6 +231,8 @@ async def chat_stream(request: Request, body: ChatRequest):
         except Exception as e:
             log_error(logger, request_id=request_id, error=e, duration_ms=(time.perf_counter() - start) * 1000)
             yield _sse_event({"type": "error", "message": "Ha ocurrido un error procesando tu pregunta."})
+        finally:
+            await inspection
 
     return StreamingResponse(
         event_generator(),
