@@ -1,3 +1,12 @@
+---
+type: formacion
+title: "Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación"
+route: "/#formacion"
+tags: ["formacion", "grado", "telecomunicacion"]
+summary: "Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación, Universidad de Oviedo (2012–2017)"
+order: 22
+---
+
 # Grado en Ingeniería en Tecnologías y Servicios de Telecomunicación (PARS)
 **Universidad de Oviedo — Escuela Politécnica de Ingeniería de Gijón**
 2012 — 2017 | Presencial | 240 ECTS | Castellano/Inglés

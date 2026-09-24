@@ -15,8 +15,8 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - Tipo: sitio estático de CV profesional publicado en GitHub Pages, más backend serverless para un chatbot RAG.
 - URL pública principal: `https://demetriotahoces.github.io/`.
 - Frontend: HTML estático sin build step. El CSS/JS compartido vive en `assets/` (`tokens.css`, `cv.css`, `blog.css`, `cv.js`); inline solo quedan el gate `motion-ready`, el favicon y los metadatos de cada página.
-- Backend: FastAPI + LangGraph + LangChain en `CV/Chatbot/`, desplegable en Vercel.
-- Base RAG: documentos Markdown en `CV/Chatbot/docs/`.
+- Backend: FastAPI + LangChain (`create_agent`) en `CV/Chatbot/`, desplegado en Vercel. Documentación completa en `CV/Chatbot/README.md`.
+- Base de conocimiento: documentos Markdown con frontmatter en `CV/Chatbot/docs/`.
 
 ## Estructura relevante
 
@@ -25,10 +25,13 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `CV/chatbot.html`: interfaz web del asistente del CV.
 - `CV/chatbot-widget.js`: widget del chatbot.
 - `CV/Chatbot/api/index.py`: entrada FastAPI serverless.
-- `CV/Chatbot/core/`: configuración, agente, prompts y herramientas RAG.
+- `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, tool `read_document`, servidor MCP, tracing y generador de `llms.txt`.
 - `CV/Chatbot/middleware/`: logging y rate limiting.
-- `CV/Chatbot/docs/*.md`: documentos que alimentan el chatbot.
-- `CV/Chatbot/test/`: scripts de comprobación del backend.
+- `CV/Chatbot/docs/*.md`: documentos que alimentan el chatbot (frontmatter obligatorio).
+- `CV/Chatbot/test/`: tests offline con pytest (modelo falso, sin API key).
+- `CV/Chatbot/evals/`: dataset y evals contra el modelo real.
+- `llms.txt`: índice del sitio para LLMs, generado desde `CV/Chatbot/docs/`.
+- `.github/workflows/chatbot.yml`: CI del chatbot (tests y evals).
 - `blog/`: blog técnico estático.
 - `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
 - `assets/tokens.css`: design tokens (`:root`) de todo el sitio — colores, radios, sombras, `--font-body`/`--font-display`, `--shell-max`.
@@ -55,23 +58,12 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 ## Backend del chatbot
 
 - Haz cambios backend dentro de `CV/Chatbot/`.
-- Las dependencias están en `CV/Chatbot/requirements.txt`.
-- La configuración se lee desde variables de entorno o `.env` mediante `CV/Chatbot/core/config.py`.
-- Variables relevantes:
-  - `API_KEY`
-  - `PROVIDER_NAME` (por defecto `openai`)
-  - `MODEL_NAME` (por defecto `gpt-5.6-luna`)
-  - `REASONING_EFFORT` (por defecto `low`; solo OpenAI gpt-5.x; si no es `none` no se envía `temperature`)
-  - `RATE_LIMIT_PER_MINUTE`
-  - `RATE_LIMIT_PER_HOUR`
-  - `ALLOWED_ORIGINS`
-  - `LOG_LEVEL`
-  - `DOCS_PATH`
-- Endpoints principales:
-  - `GET /api/health`
-  - `POST /api/chat`
-  - `POST /api/chat/stream`
-- Vercel usa el preset FastAPI (entrypoint `api/index.py`); `CV/Chatbot/vercel.json` solo define cabeceras CORS. No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
+- Dependencias en `CV/Chatbot/pyproject.toml` con versiones fijadas en `uv.lock` (Python 3.14, `.python-version`). Tras cambiar dependencias ejecuta `uv lock` y commitea el lock.
+- La configuración se lee desde variables de entorno o `CV/Chatbot/.env` mediante `CV/Chatbot/core/config.py`. Variables y valores por defecto: tabla en `CV/Chatbot/README.md` y plantilla en `.env.example` (modelo por defecto `gpt-6-luna`).
+- Endpoints: `POST /api/chat/stream`, `POST /api/chat`, `POST /api/feedback`, `GET /api/health` y el servidor MCP de solo lectura en `POST /api/mcp`.
+- El backend es stateless: el frontend envía los últimos mensajes en `history`. No reintroduzcas memoria en servidor (`MemorySaver`).
+- El CV completo va en el system prompt (cacheado); los artículos del blog se leen con la tool `read_document`. Mantén el prompt estable y la fecha al final para no romper la caché.
+- CORS se configura solo en FastAPI (`ALLOWED_ORIGINS`); no hay `vercel.json`. Vercel usa el preset FastAPI (entrypoint `api/index.py`). No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
 
 ## Contenido curricular y RAG
 
@@ -88,6 +80,8 @@ Regla práctica: si una experiencia, tecnología, formación, responsabilidad o 
 
 Mantén el contenido en castellano profesional, concreto y defendible. Evita marketing vacío, claims inflados y listas de buzzwords sin evidencia.
 
+Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `formacion` o `blog_post`), `title`, `route` (ruta pública), `summary`, `tags` y `order` (CV/formación) o `date` (blog). Tras añadir o cambiar documentos, regenera `llms.txt` con `uv run python -m core.llms_txt` y ejecuta `uv run pytest` desde `CV/Chatbot` (un test valida el frontmatter y que `llms.txt` esté al día).
+
 ## Blog
 
 - El blog está en `blog/`.
@@ -102,30 +96,28 @@ Frontend desde la raíz:
 python -m http.server 8000
 ```
 
-Backend desde `CV/Chatbot`:
+Backend desde `CV/Chatbot` (requiere `uv`):
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn api.index:app --reload --host 0.0.0.0 --port 3000
+uv sync
+uv run uvicorn api.index:app --reload --host 0.0.0.0 --port 3000
 ```
 
 Comprobaciones backend desde `CV/Chatbot`:
 
 ```powershell
-python test/test_rate_limit.py
-python test/test_agent.py
+uv run pytest            # tests offline, sin API key
+uv run pytest -m evals   # evals contra el modelo real: requiere API_KEY y consume tokens
 ```
 
-`test_agent.py` requiere `API_KEY` válida y puede consumir tokens del proveedor configurado.
+Si cambias el prompt, el modelo o los documentos, ejecuta las evals antes de abrir la PR y añade un caso a `evals/dataset.yaml` por cada fallo real que detectes.
 
 ## Despliegue
 
 - Frontend: push a `main` publica en GitHub Pages.
 - Backend: desplegado en Vercel desde `CV/Chatbot/`.
 - No hay build del frontend.
-- No asumas CI, linting o suite de tests automatizada en la raíz: no existe en este proyecto.
+- CI solo para el chatbot: `.github/workflows/chatbot.yml` ejecuta los tests offline en PRs y pushes a `main`, y las evals en PRs si existe el secreto `CHATBOT_API_KEY`. El frontend no tiene CI ni build.
 
 ## Convenciones de edición
 

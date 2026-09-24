@@ -3,6 +3,8 @@ type: cv
 title: "Desarrollador de Software en Securitas Direct"
 route: "/CV/securitas-direct.html"
 tags: ["cv", "securitas direct", "procesado de senales"]
+summary: "Desarrollador de Software en Securitas Direct vía Vector ITC (2021): procesado de señales"
+order: 13
 ---
 
 # Desarrollador de Software — Vector ITC → Securitas Direct

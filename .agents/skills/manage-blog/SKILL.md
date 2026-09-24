@@ -33,7 +33,21 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 - Hacer que cada artículo sea ameno y humano: abrir con una situación reconocible, pero con contexto técnico inmediato y sin ambigüedades de lectura. Usar ejemplos de desarrollo cotidiano o vida real, variar el ritmo y sostener una opinión técnica clara.
 - Cada post debe incluir título, descripción, fecha, etiquetas, tiempo estimado de lectura si aplica, enlaces de vuelta al blog/CV y metadatos SEO/OG.
 - Cada tarjeta del listado debe incluir título, descripción breve, fecha, etiquetas, enlace al artículo e imagen si aplica. Si no hay imagen, usar una composición visual CSS coherente o una card textual sobria.
-- El Markdown para el chatbot debe ser una ficha RAG muy resumida, no una copia del artículo. Objetivo: bajo consumo de tokens al inyectarse en contexto. Mantener título H1, descripción, fecha, etiquetas, URL pública, idea central, puntos clave, errores habituales y fuentes principales (sección final de "Fuentes"). Evitar ejemplos largos, bloques de código extensos, texto narrativo y secciones completas del HTML.
+- El Markdown para el chatbot debe ser una ficha muy resumida, no una copia del artículo: el chatbot la carga entera con la tool `read_document` cuando le preguntan por el artículo. Empieza con frontmatter YAML obligatorio:
+
+  ```markdown
+  ---
+  type: blog_post
+  title: "<título del artículo>"
+  route: "/blog/posts/<slug>.html"
+  date: "AAAA-MM-DD"
+  tags: ["Etiqueta 1", "Etiqueta 2"]
+  summary: "<una frase: de qué trata; aparece en el índice del chatbot, el MCP y llms.txt>"
+  ---
+  ```
+
+  Después: título H1, idea central, puntos clave, errores habituales y fuentes principales (sección final de "Fuentes"). Evitar ejemplos largos, bloques de código extensos, texto narrativo y secciones completas del HTML.
+- Tras crear o editar la ficha, desde `CV/Chatbot` ejecutar `uv run python -m core.llms_txt` (regenera `/llms.txt`) y `uv run pytest`.
 - Mantener el slug sincronizado entre `blog/posts/<slug>.html`, la tarjeta de `blog/index.html`, `CV/Chatbot/docs/blog/<slug>.md` y `blog/linkedin-drafts/<slug>.txt`.
 
 ## Borradores de LinkedIn
@@ -51,7 +65,7 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 
 - Revisar que las rutas relativas funcionan desde `/blog/` y desde `/blog/posts/`.
 - Comprobar que el listado no enlaza a posts inexistentes.
-- Comprobar que `CV/Chatbot/docs/blog/<slug>.md` existe para cada artículo publicado, que el chatbot lo descubrirá como documento `blog/<slug>` y que está resumido para RAG, no duplicado del artículo HTML.
+- Comprobar que `CV/Chatbot/docs/blog/<slug>.md` existe para cada artículo publicado, con frontmatter completo (`route` coincide con el HTML), que el chatbot lo verá en su índice como `blog/<slug>` y que está resumido, no duplicado del artículo HTML. `uv run pytest` en `CV/Chatbot` lo valida.
 - Comprobar que `blog/linkedin-drafts/<slug>.txt` existe, no está vacío y contiene un post final de LinkedIn con la URL pública del artículo.
 - Comprobar que el artículo y el draft han pasado la auditoría de `references/humanizer.md`.
 - Probar con un servidor estático local cuando se modifique HTML visible.

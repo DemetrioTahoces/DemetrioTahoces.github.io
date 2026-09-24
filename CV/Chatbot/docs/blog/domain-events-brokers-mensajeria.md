@@ -1,12 +1,13 @@
+---
+type: blog_post
+title: "Domain events y brokers de mensajería"
+route: "/blog/posts/domain-events-brokers-mensajeria.html"
+date: "2026-07-06"
+tags: ["DDD", "Domain Events", "Event-driven Architecture", "RabbitMQ", "Kafka", "Backend", "Mensajería"]
+summary: "Domain events, exchanges, routing keys, colas y consumidores en brokers de mensajería"
+---
+
 # Domain events y brokers de mensajería
-
-**Descripción:** Ficha resumida para responder sobre el artículo del blog acerca de domain events, exchanges, routing keys, colas y consumidores en brokers de mensajería.
-
-**Fecha:** 2026-07-06
-
-**URL:** https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html
-
-**Etiquetas:** DDD, Domain Events, Event-driven Architecture, RabbitMQ, Kafka, Backend, Mensajería
 
 ## Idea central
 

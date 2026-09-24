@@ -1,8 +1,10 @@
 ---
-type: cv
+type: formacion
 title: "TFG - Procesado de Arrays de Antenas"
 route: "/CV/tfg.html"
 tags: ["cv", "tfg", "telecomunicacion"]
+summary: "Trabajo de Fin de Grado: redes neuronales para el procesado de arrays de antenas"
+order: 23
 ---
 
 # TFG: Procesado de Arrays de Antenas mediante Deep Learning

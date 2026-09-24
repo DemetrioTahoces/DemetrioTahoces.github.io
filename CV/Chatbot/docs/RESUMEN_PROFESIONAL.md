@@ -3,6 +3,8 @@ type: cv
 title: "Resumen profesional"
 route: "/CV/resumen-profesional.html"
 tags: ["cv", "resumen profesional"]
+summary: "Resumen extendido: pilares de valor, evolución técnica y filosofía de trabajo"
+order: 2
 ---
 
 # Resumen Profesional: Demetrio Tahoces

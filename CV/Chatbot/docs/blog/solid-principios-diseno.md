@@ -1,12 +1,13 @@
+---
+type: blog_post
+title: "SOLID: principios de diseño para software que cambia"
+route: "/blog/posts/solid-principios-diseno.html"
+date: "2026-07-05"
+tags: ["Arquitectura", "Diseño de software", "Backend", "OOP", "Mantenibilidad"]
+summary: "Los principios SOLID como criterios para reducir el coste del cambio"
+---
+
 # SOLID: principios de diseño para software que cambia
-
-**Descripción:** Ficha resumida para responder sobre el artículo del blog acerca de SOLID.
-
-**Fecha:** 2026-07-05
-
-**URL:** https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html
-
-**Etiquetas:** Arquitectura, Diseño de software, Backend, OOP, Mantenibilidad
 
 ## Idea central
 

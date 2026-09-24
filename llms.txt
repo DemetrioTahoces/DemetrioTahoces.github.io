@@ -1,0 +1,26 @@
+# Demetrio Tahoces
+
+> Software Engineer (backend, sistemas distribuidos, IoT e IA agéntica). CV, experiencia, formación y blog técnico. Contenido en castellano.
+
+- Asistente conversacional del CV: https://demetriotahoces.github.io/CV/chatbot.html
+- Servidor MCP de solo lectura (Streamable HTTP, sin autenticación): https://demetrio-tahoces-cv-chatbot.vercel.app/api/mcp
+
+## CV y experiencia
+- [CV completo](https://demetriotahoces.github.io/): Currículum completo: resumen, experiencia, formación, competencias técnicas, idiomas y contacto
+- [Resumen profesional](https://demetriotahoces.github.io/CV/resumen-profesional.html): Resumen extendido: pilares de valor, evolución técnica y filosofía de trabajo
+- [Software Engineer en Fermax](https://demetriotahoces.github.io/CV/fermax.html): Experiencia actual (01/2025–presente): Software Engineer; backend IoT, DDD, Kubernetes y liderazgo del desarrollo agéntico con Claude Code
+- [Backend Engineer en Opendit](https://demetriotahoces.github.io/CV/opendit.html): Backend Engineer en Opendit (2022–2024): DAPR, BFF, CQRS e IoT
+- [Ingeniero de Datos en Inditex](https://demetriotahoces.github.io/CV/inditex.html): Ingeniero de Datos en Inditex vía Nunegal (2021–2022): Kafka y Snowflake
+- [Desarrollador de Software en Securitas Direct](https://demetriotahoces.github.io/CV/securitas-direct.html): Desarrollador de Software en Securitas Direct vía Vector ITC (2021): procesado de señales
+- [Ingeniero de Software en Alisys](https://demetriotahoces.github.io/CV/alisys.html): Ingeniero de Software en Alisys (2019–2021): Android, robótica, IA y VoIP
+- [Desarrollador Android en Imagine800](https://demetriotahoces.github.io/CV/imagine800.html): Desarrollador Android en Imagine800 (2019, incluye el TFM): apps Android, VoIP y Asterisk
+
+## Formación
+- [Máster en IA Aplicada y Optimización de Procesos](https://demetriotahoces.github.io/#formacion): Máster en IA Aplicada y Optimización de Procesos (2025–2026, en curso): RAG y agentes
+- [Máster en Ingeniería de Telecomunicación](https://demetriotahoces.github.io/#formacion): Máster en Ingeniería de Telecomunicación, Universidad de Oviedo (2017–2019): VoIP y Android
+- [Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación](https://demetriotahoces.github.io/#formacion): Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación, Universidad de Oviedo (2012–2017)
+- [TFG - Procesado de Arrays de Antenas](https://demetriotahoces.github.io/CV/tfg.html): Trabajo de Fin de Grado: redes neuronales para el procesado de arrays de antenas
+
+## Blog técnico
+- [Domain events y brokers de mensajería](https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html): Domain events, exchanges, routing keys, colas y consumidores en brokers de mensajería
+- [SOLID: principios de diseño para software que cambia](https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html): Los principios SOLID como criterios para reducir el coste del cambio

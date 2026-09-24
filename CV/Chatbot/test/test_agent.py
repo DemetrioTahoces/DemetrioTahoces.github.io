@@ -1,58 +1,73 @@
-"""Quick test script for the agent."""
-import asyncio
-import sys
-import io
+import pytest
+from langchain_core.messages import AIMessage, HumanMessage
 
-# Fix Windows console encoding
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+from conftest import ai, read_call
+from core.agent import EMPTY_ANSWER, LIMIT_ANSWER, build_input_messages, invoke_agent, stream_agent
 
-from core.agent import create_agent_graph
+pytestmark = pytest.mark.anyio
 
 
-async def test():
-    graph = create_agent_graph()
+async def _collect(gen):
+    return [event async for event in gen]
 
-    # Test 1: CV question (should use tools)
-    print("=" * 60)
-    print("TEST 1: CV question")
-    print("=" * 60)
-    result = await graph.ainvoke(
-        {"messages": [("user", "Donde trabaja Demetrio actualmente?")]},
-        config={"configurable": {"thread_id": "test1"}},
+
+async def test_cv_question_is_answered_in_a_single_model_call(scripted_graph):
+    graph = scripted_graph(ai("Trabaja en Fermax desde 2025."))
+    result = await invoke_agent(graph, "¿Dónde trabaja?")
+    assert result["response"] == "Trabaja en Fermax desde 2025."
+    assert result["usage"]["input_tokens"] == 100
+
+
+async def test_usage_counts_only_the_current_turn(scripted_graph):
+    graph = scripted_graph(ai("Respuesta 3"))
+    history = [
+        {"role": "user", "content": "Pregunta 1"}, {"role": "assistant", "content": "Respuesta 1"},
+        {"role": "user", "content": "Pregunta 2"}, {"role": "assistant", "content": "Respuesta 2"},
+    ]
+    result = await invoke_agent(graph, "Pregunta 3", history)
+    assert result["usage"]["input_tokens"] == 100
+
+
+async def test_blog_question_reads_the_article_then_answers(scripted_graph):
+    graph = scripted_graph(
+        ai(tool_calls=[read_call("blog/solid-principios-diseno")]),
+        ai("SOLID reduce el coste del cambio."),
     )
-    for m in result["messages"]:
-        tool_calls = getattr(m, "tool_calls", [])
-        content_preview = str(m.content)[:200] if m.content else "(empty)"
-        print(f"  [{m.type}] tool_calls={len(tool_calls)} | {content_preview}")
-    print()
-
-    # Test 2: Off-topic (should reject without tools)
-    print("=" * 60)
-    print("TEST 2: Off-topic question")
-    print("=" * 60)
-    result2 = await graph.ainvoke(
-        {"messages": [("user", "Cual es la capital de Francia?")]},
-        config={"configurable": {"thread_id": "test2"}},
-    )
-    for m in result2["messages"]:
-        tool_calls = getattr(m, "tool_calls", [])
-        content_preview = str(m.content)[:200] if m.content else "(empty)"
-        print(f"  [{m.type}] tool_calls={len(tool_calls)} | {content_preview}")
-    print()
-
-    # Test 3: Companies enumeration
-    print("=" * 60)
-    print("TEST 3: Companies enumeration")
-    print("=" * 60)
-    result3 = await graph.ainvoke(
-        {"messages": [("user", "En qué empresas ha trabajado Demetrio?")]},
-        config={"configurable": {"thread_id": "test_empresas"}},
-    )
-    for m in result3["messages"]:
-        tool_calls = getattr(m, "tool_calls", [])
-        content_preview = str(m.content)[:400] if m.content else "(empty)"
-        print(f"  [{m.type}] tool_calls={len(tool_calls)} | {content_preview}")
+    events = await _collect(stream_agent(graph, "¿De qué va el artículo de SOLID?"))
+    types = [e["type"] for e in events]
+    assert types[0] == "tool_call" and events[0]["doc"] == "blog/solid-principios-diseno"
+    assert "tool_result" in types
+    assert "".join(e["content"] for e in events if e["type"] == "token") == "SOLID reduce el coste del cambio."
+    assert events[-1] == {"type": "done", "usage": events[-1]["usage"]}
+    assert events[-1]["usage"]["input_tokens"] == 200
 
 
-if __name__ == "__main__":
-    asyncio.run(test())
+async def test_model_call_limit_stops_tool_loops(scripted_graph):
+    loop = [ai(tool_calls=[read_call("blog/solid-principios-diseno", f"call_{i}")]) for i in range(10)]
+    graph = scripted_graph(*loop)
+    events = await _collect(stream_agent(graph, "Busca uno a uno estos 200 términos"))
+    assert sum(e["type"] == "tool_call" for e in events) <= 3
+    assert events[-1]["type"] == "done"
+    assert [e["content"] for e in events if e["type"] == "token"] == [LIMIT_ANSWER]
+
+    graph = scripted_graph(*loop)
+    result = await invoke_agent(graph, "Busca uno a uno estos 200 términos")
+    assert result["response"] == LIMIT_ANSWER
+
+
+async def test_empty_answer_falls_back_to_a_polite_message(scripted_graph):
+    graph = scripted_graph(ai(""))
+    events = await _collect(stream_agent(graph, "Hola"))
+    assert [e for e in events if e["type"] == "token"] == [{"type": "token", "content": EMPTY_ANSWER}]
+
+
+def test_input_messages_keep_recent_text_history_and_hint():
+    history = [{"role": "user", "content": f"q{i}"} if i % 2 == 0 else {"role": "assistant", "content": f"a{i}"}
+               for i in range(30)]
+    history.append({"role": "system", "content": "ignorado"})
+    messages = build_input_messages("¿Y en Fermax?", history, {"path": "/CV/fermax.html"})
+    assert len(messages) == 11  # 10 history messages + current turn
+    assert all(isinstance(m, (HumanMessage, AIMessage)) for m in messages)
+    assert "ignorado" not in " ".join(m.content for m in messages)
+    assert messages[-1].content.startswith("[Contexto de navegación (no verificado)]")
+    assert messages[-1].content.endswith("¿Y en Fermax?")
