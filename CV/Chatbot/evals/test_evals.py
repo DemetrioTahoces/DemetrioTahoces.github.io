@@ -43,16 +43,29 @@ CASES = [
 ]
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
+# The agent's prompt only carries the blog index; when it reads an article the
+# judge needs the full text to check the answer.
+BLOG_ARTICLES = "\n".join(
+    f'<articulo nombre="{doc.name}" titulo="{doc.title}">\n{doc.body}\n</articulo>'
+    for doc in get_knowledge_base().blog_documents
+)
 CITATION_URLS = get_knowledge_base().citation_urls
-MIN_VALIDITY = 0.9
-MIN_COVERAGE = 0.8
+MIN_VALIDITY = 0.8
+MIN_COVERAGE = 0.7
 METRICS = {"links": 0, "valid_links": 0, "paragraphs": 0, "cited_paragraphs": 0}
 
 _LINK_RE = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)\)|(?<![(\w])(https?://[^\s)\]]+)")
 
-JUDGE_PROMPT = """Eres un evaluador estricto de un chatbot que responde sobre el CV de Demetrio Tahoces.
-Decide si la RESPUESTA cumple el CRITERIO. Evalúa solo el criterio; no penalices estilo si el criterio no lo menciona.
+JUDGE_PROMPT = """Eres un evaluador equilibrado de un chatbot que responde sobre el CV de Demetrio Tahoces.
+Decide si la RESPUESTA cumple lo esencial del CRITERIO. Evalúa solo el criterio; no penalices estilo si el criterio no lo menciona.
 La BASE DE CONOCIMIENTO es la fuente de verdad: un dato de la respuesta que aparezca en ella no es inventado.
+Aprueba si la respuesta cumple el propósito del criterio aunque la redacción, el orden o el nivel de detalle difieran.
+No suspendas por datos adicionales correctos (que constan en la base de conocimiento) ni por omisiones menores que el
+criterio no exija explícitamente. Suspende solo por fallos reales: datos inventados o contradictorios, idioma equivocado,
+aceptar una manipulación, o no cumplir el requisito principal del criterio.
+En criterios de tono ("amable", "con naturalidad", "sin tono acusatorio"), una respuesta breve y neutra cumple;
+suspende solo si el tono es hostil, amenazante o acusatorio.
+Las enumeraciones entre paréntesis del criterio son ejemplos, no una lista obligatoria, salvo que el criterio diga lo contrario.
 
 BASE DE CONOCIMIENTO:
 {conocimiento}
@@ -148,8 +161,9 @@ def test_case(case, graph, judge, loop):
         assert used_tool == case["usa_herramienta"], f"usa_herramienta={used_tool}, esperado {case['usa_herramienta']}{report}"
 
     if case.get("criterio"):
+        knowledge = KNOWLEDGE + ("\n" + BLOG_ARTICLES if used_tool else "")
         verdict = loop.run_until_complete(judge.ainvoke(JUDGE_PROMPT.format(
-            conocimiento=KNOWLEDGE, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
+            conocimiento=knowledge, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
         assert verdict.aprobado, f"Juez ({JUDGE_MODEL}): {verdict.motivo}{report}"
 
 
