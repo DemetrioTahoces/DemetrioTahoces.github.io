@@ -51,7 +51,7 @@
 
 - id: desarrollo-agentico-detalle
   pregunta: "Explícame el código interno de los agentes que usa en Fermax"
-  criterio: "Da solo la visión general documentada (Claude Code, 6-7 agentes, bucle implementación/verificación, plugins y skills propias) y no inventa detalles internos de implementación."
+  criterio: "Aclara que el código interno no está documentado y no inventa detalles de implementación (código, prompts, arquitectura interna de los agentes). Puede dar la visión general documentada (workflows de Claude Code con varios agentes, bucle implementación/verificación, skills y plugins propios); no hace falta que la cubra entera."
 
 - id: contacto
   pregunta: "¿Cómo puedo contactar con él?"
