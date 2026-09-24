@@ -30,6 +30,7 @@ Fermax: fabricante de videoporteros y sistemas de control de accesos. Me incorpo
 - Fase de verificación con revisiones independientes: funcionalidad, seguridad y mantenibilidad del código, ejecución de pruebas en el entorno de desarrollo y documentación.
 - Bucle agéntico implementación ↔ verificación: los hallazgos de las revisiones vuelven a implementación y el ciclo itera hasta que el cambio supera todos los filtros.
 - Entre 10 y 15 skills propias que codifican el know-how del equipo. Temas documentados de las skills (lista cerrada; al enumerarlas cita solo estos, sin añadir otros conceptos del stack como DDD o Domain Events): arquitectura de código y arquitectura hexagonal, listeners y publishers de brokers de mensajería, endpoints REST, normas de logging, estrategia de testing y documentación. Hay alguna skill más que no se detalla públicamente. Resultado: código coherente con las convenciones del equipo en lugar de soluciones genéricas.
+- Agentes, workflows y skills se comparten en el equipo mediante plugins privados de Fermax para Claude Code.
 - Modelo cercano al concepto de software factory, ejecutado íntegramente con agentes locales de Claude Code.
 - Resultados:
   - Más del 80% de las PRs son exitosas a la primera.

@@ -18,7 +18,7 @@ Ecosistema IoT y apps móviles. Subrogación técnica desde Opendit.
 - Uso de Domain Events en DDD para desacoplar microservicios.
 - Participación en la migración técnica de Opendit a Fermax.
 - Integración de herramientas de IA en los flujos de desarrollo.
-- Liderazgo del desarrollo agéntico con Claude Code (equipo de 10 personas, modelo cercano a una software factory con agentes locales, +80% de PRs exitosas a la primera): workflows con 6–7 agentes (diseño de tareas, implementación, revisión de funcionalidad/seguridad/mantenibilidad, pruebas en entorno de desarrollo y documentación) en bucle implementación ↔ verificación, apoyados en skills propias sobre arquitectura hexagonal, mensajería, REST, logging, testing y documentación.
+- Liderazgo del desarrollo agéntico con Claude Code (equipo de 10 personas, modelo cercano a una software factory con agentes locales, +80% de PRs exitosas a la primera): workflows con 6–7 agentes (diseño de tareas, implementación, revisión de funcionalidad/seguridad/mantenibilidad, pruebas en entorno de desarrollo y documentación) en bucle implementación ↔ verificación, distribuidos mediante plugins privados de Claude Code y apoyados en skills propias sobre arquitectura hexagonal, mensajería, REST, logging, testing y documentación.
 - Despliegue/mantenimiento microservicios en Kubernetes, RabbitMQ, Redis.
 - Stack: Spring Boot, NestJS, Hexagonal, DDD, Testing.
 - Infra: Kubernetes, GitHub Actions, OpenAPI, MongoDB, PostgreSQL, Redis, RabbitMQ.
