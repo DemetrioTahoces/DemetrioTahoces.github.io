@@ -7,7 +7,9 @@
 #   contiene          subcadenas que deben aparecer (sin distinguir mayúsculas ni tildes)
 #   contiene_alguno   al menos una de estas subcadenas debe aparecer
 #   no_contiene       subcadenas prohibidas
-#   usa_herramienta   true/false: si debe (o no) llamar a read_blog_article
+#   usa_herramienta   true/false: si debe (o no) llamar a read_blog_article. En casos de citas del CV
+#                     no se exige false: una lectura de más del blog no cambia la respuesta y
+#                     hacía intermitentes las evals; lo cubren casos dedicados (empleo-actual, blog-listado...)
 #   criterio          regla que valida un LLM juez (hechos, tono, idioma, honestidad)
 #   repeticiones      nº de ejecuciones (por defecto 1) para comportamientos intermitentes
 #   citas             true: la respuesta debe citar por párrafo secciones de la web (cuenta para la cobertura)
@@ -40,7 +42,7 @@
   pregunta: "¿Ha trabajado con Kafka? ¿Dónde?"
   contiene: ["Kafka"]
   contiene_alguno: ["Inditex", "Securitas"]
-  criterio: "Menciona su uso de Kafka en Inditex (pipelines con Spring Boot, Snowflake) y/o en Securitas Direct. No inventa otros proyectos con Kafka."
+  criterio: "Menciona su uso de Kafka en Inditex (pipelines con Spring Boot, Snowflake) y/o en Securitas Direct. Mencionar también Alisys (productores/consumidores para sensores de robots) es correcto porque consta en el CV. No inventa otros proyectos con Kafka."
 
 - id: python-honesto
   repeticiones: 3
@@ -177,7 +179,6 @@
 - id: enlace-fuente
   repeticiones: 3
   pregunta: "Cuéntame su experiencia en Opendit"
-  usa_herramienta: false
   citas: true
   contiene: ["demetriotahoces.github.io/CV/opendit.html#"]
   criterio: "Resume su etapa en Opendit y cita secciones de la página de Opendit con enlaces [↗ ...]."
@@ -192,14 +193,12 @@
   citas: true
   contiene: ["demetriotahoces.github.io/CV/inditex.html#"]
   no_contiene: ["Más detalle", "More detalle"]
-  usa_herramienta: false
   criterio: "Responde en inglés sobre su etapa en Inditex (p. ej. datos en tiempo real, Kafka, Snowflake). Las citas [↗ ...] pueden usar el nombre propio de la sección aunque esté en castellano."
 
 - id: citas-por-parrafo
   repeticiones: 2
   pregunta: "¿Qué ha hecho en Fermax?"
   citas: true
-  usa_herramienta: false
   contiene: ["demetriotahoces.github.io/CV/fermax.html#"]
   criterio: "Los párrafos con datos sobre Demetrio llevan en general citas [↗ ...] y las citas apuntan a secciones relacionadas con lo que se afirma. Suspende solo si una cita apunta a una sección claramente sin relación o si casi no hay citas; no suspendas por detalles menores ni porque las citas se agrupen al final."
 
@@ -207,7 +206,6 @@
   repeticiones: 3
   pregunta: "¿Qué resultados ha conseguido con los flujos de Claude Code?"
   citas: true
-  usa_herramienta: false
   contiene: ["demetriotahoces.github.io/CV/fermax.html#desarrollo-agentico"]
   criterio: "Da al menos uno de los resultados documentados (más del 80% de PRs exitosas a la primera; esfuerzo de verificación y correcciones reducido a menos de la mitad) sin inventar otros, y lo cita con un enlace a Fermax."
 
