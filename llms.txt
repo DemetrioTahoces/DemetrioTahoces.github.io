@@ -16,9 +16,9 @@
 - [Desarrollador Android en Imagine800](https://demetriotahoces.github.io/CV/imagine800.html): Desarrollador Android en Imagine800 (2019, incluye el TFM): apps Android, VoIP y Asterisk
 
 ## Formación
-- [Máster en IA Aplicada y Optimización de Procesos](https://demetriotahoces.github.io/#formacion): Máster en IA Aplicada y Optimización de Procesos (2025–2026, en curso): RAG y agentes
-- [Máster en Ingeniería de Telecomunicación](https://demetriotahoces.github.io/#formacion): Máster en Ingeniería de Telecomunicación, Universidad de Oviedo (2017–2019): VoIP y Android
-- [Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación](https://demetriotahoces.github.io/#formacion): Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación, Universidad de Oviedo (2012–2017)
+- [Máster en IA Aplicada y Optimización de Procesos](https://demetriotahoces.github.io/#master-ia-aplicada): Máster en IA Aplicada y Optimización de Procesos (2025–2026, en curso): RAG y agentes
+- [Máster en Ingeniería de Telecomunicación](https://demetriotahoces.github.io/#master-telecomunicacion): Máster en Ingeniería de Telecomunicación, Universidad de Oviedo (2017–2019): VoIP y Android
+- [Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación](https://demetriotahoces.github.io/#grado-telecomunicacion): Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación, Universidad de Oviedo (2012–2017)
 - [TFG - Procesado de Arrays de Antenas](https://demetriotahoces.github.io/CV/tfg.html): Trabajo de Fin de Grado: redes neuronales para el procesado de arrays de antenas
 
 ## Blog técnico

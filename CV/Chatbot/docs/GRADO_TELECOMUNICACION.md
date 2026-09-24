@@ -1,7 +1,7 @@
 ---
 type: formacion
 title: "Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación"
-route: "/#formacion"
+route: "/#grado-telecomunicacion"
 tags: ["formacion", "grado", "telecomunicacion"]
 summary: "Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación, Universidad de Oviedo (2012–2017)"
 order: 22

@@ -10,20 +10,20 @@ order: 15
 # Desarrollador Android — Imagine800 S.L
 **02/2019 — 09/2019** | imagine800.com
 
-## Contexto
+## Contexto {#contexto}
 Primer empleo. El desarrollo realizado fue simultáneamente el TFM (Universidad de Oviedo, Máster Ingeniería Telecomunicaciones). Integración real formación-industria.
 
-## TFM: Apps Android con VoIP y Transcripción de Voz
+## TFM: Apps Android con VoIP y Transcripción de Voz {#trabajo-de-fin-de-master-tfm}
 - Llamadas VoIP en Android: protocolos SIP (señalización) + RTP (transporte audio), ciclo vida completo llamada.
 - STT: transcripción conversación durante llamada.
 - Iluminación sincronizada transcripción: estilo karaoke, resaltado palabra a palabra sincronizado con audio.
 - Infraestructura Asterisk desplegada con Docker.
 
-## Contribuciones Profesionales
+## Contribuciones Profesionales {#contribuciones-clave}
 - Apps Android VoIP: llamadas entrantes/salientes, hold, mute, manejo interrupciones sistema.
 - Despliegue servidores Asterisk en contenedores Docker.
 
-## Stack
+## Stack {#stack-tecnico}
 - Mobile: Android (Java), servicios segundo plano.
 - Comunicaciones: VoIP (SIP, RTP), Asterisk.
 - Transcripción: Speech-to-Text (streaming).

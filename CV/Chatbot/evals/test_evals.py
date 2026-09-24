@@ -7,10 +7,16 @@ Evaluations against the real model (consume tokens; excluded from the default ru
 Run only by a human, by hand: never from CI, agents or automations.
 Each case runs the real agent and is checked with deterministic assertions
 (expected substrings, tool usage) plus an LLM judge for the free-text criterion.
+
+Citation metrics, reported at the end of the run:
+    validez    % of links to the site the model writes with an exact whitelisted URL
+               (measured on the raw model output, before core.citations fixes it)
+    cobertura  % of substantive paragraphs cited (cases with `citas: true`)
 """
 
 import asyncio
 import os
+import re
 import sys
 import unicodedata
 from pathlib import Path
@@ -22,6 +28,7 @@ from pydantic import BaseModel, Field
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from core.agent import create_agent_graph, stream_agent  # noqa: E402
+from core.citations import _is_site_url, sanitize_links  # noqa: E402
 from core.config import settings  # noqa: E402
 from core.knowledge import get_knowledge_base  # noqa: E402
 
@@ -36,6 +43,12 @@ CASES = [
 ]
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
+CITATION_URLS = get_knowledge_base().citation_urls
+MIN_VALIDITY = 0.9
+MIN_COVERAGE = 0.8
+METRICS = {"links": 0, "valid_links": 0, "paragraphs": 0, "cited_paragraphs": 0}
+
+_LINK_RE = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)\)|(?<![(\w])(https?://[^\s)\]]+)")
 
 JUDGE_PROMPT = """Eres un evaluador estricto de un chatbot que responde sobre el CV de Demetrio Tahoces.
 Decide si la RESPUESTA cumple el CRITERIO. Evalúa solo el criterio; no penalices estilo si el criterio no lo menciona.
@@ -53,6 +66,23 @@ RESPUESTA:
 class Verdict(BaseModel):
     aprobado: bool = Field(description="True si la respuesta cumple el criterio")
     motivo: str = Field(description="Una frase explicando la decisión")
+
+
+def _site_links(text: str) -> list[str]:
+    links = [a or b.rstrip(".,;:") for a, b in _LINK_RE.findall(text)]
+    return [url for url in links if _is_site_url(url)]
+
+
+def _paragraph_coverage(answer: str) -> tuple[int, int]:
+    """(substantive paragraphs, cited ones). An uncited paragraph right before a cited
+    one counts as cited: the prompt allows one citation for consecutive paragraphs."""
+    units = []
+    for block in re.split(r"\n\s*\n", answer):
+        units.extend(i.strip() for i in re.split(r"\n(?=\s*(?:[-*]|\d+\.)\s)", block) if i.strip())
+    substantive = [u for u in units if len(re.sub(r"\[[^\]]*\]\([^)]*\)", "", u)) >= 60]
+    cited = [bool(_site_links(u)) for u in substantive]
+    covered = sum(c or any(cited[i + 1:i + 2]) for i, c in enumerate(cited))
+    return len(substantive), covered
 
 
 def _fold(text: str) -> str:
@@ -88,13 +118,25 @@ def test_case(case, graph, judge, loop):
     page_context = {"path": case["pagina"]} if case.get("pagina") else None
 
     async def run():
-        return [e async for e in stream_agent(graph, case["pregunta"], case.get("historial"), page_context)]
+        stream = stream_agent(graph, case["pregunta"], case.get("historial"), page_context, validate_links=False)
+        return [e async for e in stream]
 
     events = loop.run_until_complete(run())
-    answer = "".join(e["content"] for e in events if e["type"] == "token")
+    raw = "".join(e["content"] for e in events if e["type"] == "token")
+    # What the user sees: the backend validates links (same function as in production).
+    answer = sanitize_links(raw)
+    links = _site_links(raw)
+    METRICS["links"] += len(links)
+    METRICS["valid_links"] += sum(url in CITATION_URLS for url in links)
+    if case.get("citas"):
+        paragraphs, cited = _paragraph_coverage(raw)
+        METRICS["paragraphs"] += paragraphs
+        METRICS["cited_paragraphs"] += cited
     used_tool = any(e["type"] == "tool_call" for e in events)
     folded = _fold(answer)
-    report = f"\n--- {case['id']} ({settings.model_name}) ---\n{answer}\n"
+    report = f"\n--- {case['id']} ({settings.model_name}) ---\n{raw}\n"
+    if case.get("citas"):
+        assert links, f"Sin citas a la web{report}"
 
     for expected in case.get("contiene", []):
         assert _fold(expected) in folded, f"Falta '{expected}'{report}"
@@ -109,3 +151,15 @@ def test_case(case, graph, judge, loop):
         verdict = loop.run_until_complete(judge.ainvoke(JUDGE_PROMPT.format(
             conocimiento=KNOWLEDGE, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
         assert verdict.aprobado, f"Juez ({JUDGE_MODEL}): {verdict.motivo}{report}"
+
+
+def test_citation_metrics(graph):
+    """Runs after the cases (file order): aggregate citation validity and coverage."""
+    if not METRICS["links"]:
+        pytest.skip("No se ha ejecutado ningún caso con enlaces")
+    validity = METRICS["valid_links"] / METRICS["links"]
+    coverage = METRICS["cited_paragraphs"] / METRICS["paragraphs"] if METRICS["paragraphs"] else 1.0
+    print(f"\nCitas ({settings.model_name}): validez {validity:.0%} ({METRICS['valid_links']}/{METRICS['links']}), "
+          f"cobertura {coverage:.0%} ({METRICS['cited_paragraphs']}/{METRICS['paragraphs']})")
+    assert validity >= MIN_VALIDITY, f"Validez de citas {validity:.0%} < {MIN_VALIDITY:.0%}"
+    assert coverage >= MIN_COVERAGE, f"Cobertura de citas {coverage:.0%} < {MIN_COVERAGE:.0%}"

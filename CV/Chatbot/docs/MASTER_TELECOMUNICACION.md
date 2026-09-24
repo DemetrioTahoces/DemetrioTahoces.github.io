@@ -1,7 +1,7 @@
 ---
 type: formacion
 title: "Máster en Ingeniería de Telecomunicación"
-route: "/#formacion"
+route: "/#master-telecomunicacion"
 tags: ["formacion", "master", "telecomunicacion"]
 summary: "Máster en Ingeniería de Telecomunicación, Universidad de Oviedo (2017–2019): VoIP y Android"
 order: 21

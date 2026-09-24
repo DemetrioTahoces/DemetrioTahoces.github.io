@@ -26,7 +26,9 @@ def test_system_prompt_contains_full_cv_and_blog_index_only():
     kb = get_knowledge_base()
     prompt = build_static_prompt()
     for doc in kb.cv_documents:
-        assert doc.body[:200] in prompt, doc.name
+        assert doc.sections, doc.name
+        for section in doc.sections:
+            assert f'<seccion url="{doc.section_url(section)}">\n{section.content}\n</seccion>' in prompt, doc.name
     for doc in kb.blog_documents:
         assert doc.url in prompt and doc.summary in prompt
         # Blog bodies are loaded on demand through read_blog_article.

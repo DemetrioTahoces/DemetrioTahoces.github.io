@@ -38,11 +38,12 @@ def list_documents() -> list[dict]:
 
 @mcp_server.tool(annotations=READ_ONLY)
 def get_document(name: str) -> str:
-    """Devuelve el contenido Markdown de un documento. `name` es el campo name de list_documents, p. ej. 'FERMAX' o 'CV'."""
+    """Devuelve el contenido Markdown de un documento, seguido de la URL de cada sección para citarla. `name` es el campo name de list_documents, p. ej. 'FERMAX' o 'CV'."""
     doc = get_knowledge_base().get(name)
     if doc is None:
         raise ValueError(f"Documento '{name}' no encontrado. Usa list_documents para ver los nombres válidos.")
-    return f"# {doc.title}\nURL: {doc.url}\n\n{doc.body}"
+    sections = "\n".join(f"- {s.title}: {doc.section_url(s)}" for s in doc.sections)
+    return f"# {doc.title}\nURL: {doc.url}\n\n{doc.body}\n\n## URLs de las secciones\n{sections}"
 
 
 # Stateless Streamable HTTP (MCP spec 2026-07-28): any serverless instance can
