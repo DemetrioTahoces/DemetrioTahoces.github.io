@@ -33,7 +33,7 @@ CASES = [
     for case in yaml.safe_load((Path(__file__).parent / "dataset.yaml").read_text(encoding="utf-8"))
     for n in range(case.get("repeticiones", 1))
 ]
-JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-sol")
+JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
 
 JUDGE_PROMPT = """Eres un evaluador estricto de un chatbot que responde sobre el CV de Demetrio Tahoces.

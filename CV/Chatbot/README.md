@@ -147,7 +147,7 @@ uv run pytest -m evals                                # evals (gasta tokens)
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt` | 0 |
-| `pytest -m evals` | 31 casos (37 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog. Juez: `gpt-6-sol` | Céntimos |
+| `pytest -m evals` | 31 casos (37 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog. Juez: `gpt-6-luna` | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests en cada PR/push; evals en PR si existe el secreto `CHATBOT_API_KEY` | Céntimos por PR |
 
 ## Decisiones
