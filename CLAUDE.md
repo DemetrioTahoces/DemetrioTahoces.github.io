@@ -1,7 +1,7 @@
 # CLAUDE
 
 Este repositorio usa AGENTS.md como la guía principal para agentes y asistentes de coding.
-Lee siempre AGENTS.md antes de realizar cambios o responder sobre este proyecto.
+Lee siempre AGENTS.md antes de realizar cambios o responder sobre este proyecto, y `context.md` para continuar trabajo de sesiones anteriores (se actualiza con cada cambio o PR).
 
 Referencia principal:
 

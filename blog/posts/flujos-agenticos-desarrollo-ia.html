@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujos agénticos de desarrollo: el humano decide, el agente ejecuta - Demetrio Tahoces</title>
+    <meta name="description" content="Cómo montar una fábrica de tareas con agentes de IA: spec en disco, implementación por capas, puertas deterministas, verificación en paralelo y triage, con decisiones humanas.">
+    <meta property="og:title" content="Flujos agénticos de desarrollo: el humano decide, el agente ejecuta">
+    <meta property="og:description" content="Una fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage.">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/flujos-agenticos-desarrollo-ia.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Flujos agénticos de desarrollo: el humano decide, el agente ejecuta">
+    <meta name="twitter:description" content="Una fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage.">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/flujos-agenticos-desarrollo-ia.png">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Flujos agénticos de desarrollo: el humano decide, el agente ejecuta",
+      "description": "Una fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/flujos-agenticos-desarrollo-ia.png",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/tokens.css?v=2">
+    <link rel="stylesheet" href="../../assets/cv.css?v=3">
+    <link rel="stylesheet" href="../../assets/blog.css?v=2">
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5 hero-stage" style="--stage-delay: 0.05s">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">IA</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Agentes</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Desarrollo de software</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3 hero-stage" style="--stage-delay: 0.13s">Desarrollo con agentes</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight hero-stage" style="--stage-delay: 0.21s">Flujos agénticos de desarrollo: el humano decide, el agente ejecuta</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.29s">
+                De un agente que analiza, programa y se da el visto bueno a sí mismo a una fábrica de tareas: una spec como contrato, implementadores por capa, puertas que no opinan y un triage que sabe a dónde devolver cada fallo.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
+                <span>24 septiembre 2026</span>
+                <span class="text-gray-600">·</span>
+                <span>5 min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
+            <figure class="mb-8" data-reveal>
+                <img src="../assets/flujos-agenticos-desarrollo-ia.svg" alt="Fábrica de tareas con agentes: el humano da el visto bueno, un analista escribe la spec en disco, implementadores por capa, puerta de build y tests, verificación en paralelo y triage de fallos hacia código, spec o test hasta que la tarea está limpia; el humano acepta el desarrollo, revisa la PR y decide la promoción a preproducción y producción." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <div class="principle-grid mb-8" data-reveal>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Spec</strong><span class="text-sm">Contrato en disco</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Capas</strong><span class="text-sm">Un agente por capa</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Puerta</strong><span class="text-sm">Build y tests</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Paralelo</strong><span class="text-sm">Verificación</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Triage</strong><span class="text-sm">Tres destinos</span></div>
+            </div>
+
+            <div class="article-prose">
+                <section id="la-escena-tipica">
+                    <h2>La escena típica</h2>
+                    <p>Le das a un agente de código una tarea de backend que toca dominio, casos de uso y un listener de mensajería. En la misma conversación analiza, programa, ejecuta los tests y te dice que está hecho. Abres el diff: 600 líneas. Compila, los tests pasan, y aun así falta un criterio de aceptación, el log no sigue el formato del equipo y un caso de error devuelve un 500.</p>
+                    <p>El agente escribe bien. Lo que falla es el reparto: el mismo contexto que decidió el diseño es el que da el trabajo por bueno, y la única verificación independiente eres tú, leyendo todo al final. Un flujo agéntico separa esas responsabilidades con una regla sencilla: <strong>el humano decide, el agente ejecuta</strong>.</p>
+                </section>
+
+                <section id="un-orquestador-que-no-programa">
+                    <h2>Un orquestador que no programa</h2>
+                    <p>La pieza central es un agente que no analiza, no escribe código y no revisa. Reparte cada fase a un subagente, juzga lo que vuelve y decide si hace falta otra vuelta. Es también el único que habla con la persona: si a un subagente le falta algo, no improvisa, lo devuelve como bloqueado y el orquestador lo resuelve entre vueltas.</p>
+                    <p>Cada fase arranca con un subagente nuevo, sin el contexto de la anterior. Parece un detalle, pero es lo que hace honesta la verificación: un revisor que hereda lo que el implementador creía haber conseguido tiende a darle la razón.</p>
+                </section>
+
+                <section id="la-spec-como-contrato">
+                    <h2>La spec como contrato</h2>
+                    <p>Antes de tocar código, un agente analista escribe la especificación de la tarea en disco: qué cambia y por qué, decisiones de diseño, escenarios de aceptación en formato WHEN/THEN con un identificador estable, y el contexto que necesita cada capa de cada servicio. Ahí se usa el modelo más capaz y con más razonamiento, una sola vez.</p>
+                    <p>El resto de fases recibe la ruta de esa spec, nunca un resumen pegado en el prompt. Un plan parafraseado deriva en cuanto alguien lo resume entre vueltas; un fichero se lee igual en la primera vuelta y en la quinta. La spec es material de trabajo, así que no entra en el repositorio.</p>
+                    <p>Si el analista deja dudas abiertas, se resuelven con la persona antes de implementar. Una suposición que se cuela en la primera vuelta se paga en todas las siguientes.</p>
+                </section>
+
+                <section id="implementar-por-capas">
+                    <h2>Implementar por capas</h2>
+                    <p>En una arquitectura hexagonal, la implementación se reparte con un agente por capa y servicio: dominio, después aplicación, después infraestructura. Cada capa se apoya en el código ya compilado de la anterior, y varios servicios avanzan en paralelo.</p>
+                    <p>Los implementadores usan un modelo más barato y tienen prohibido investigar: leen su fichero de capa y lo que este enumera. Si falta información, el fallo está en la spec y se corrige allí. Tampoco se confía en su informe para lo mecánico: un script comprueba que ninguno ha usado git ni ha tocado ficheros fuera de su capa.</p>
+                </section>
+
+                <section id="puertas-y-verificacion">
+                    <h2>Puertas y verificación en paralelo</h2>
+                    <p>Antes de revisar nada, una puerta determinista compila y ejecuta los tests de cada servicio. Si está en rojo no se sigue, y el orquestador no arregla lo que falla: lo devuelve al implementador que corresponde. Con la puerta en verde se abre la PR.</p>
+                    <p>Después, la verificación sale en paralelo, cada una con su subagente: un revisor que contrasta el diff con la spec y solo reporta hallazgos que puede defender, pruebas en un entorno de desarrollo con una matriz sacada de los escenarios, una revisión de seguridad cuando el cambio toca superficie sensible, la documentación y un repaso de mantenimiento que separa lo que introduce este cambio de lo que ya estaba mal antes.</p>
+                </section>
+
+                <section id="el-triage">
+                    <h2>El triage y cuándo está terminado</h2>
+                    <p>Cuando algo falla, el orquestador decide a dónde vuelve, y solo hay tres destinos. Si falla el código, al implementador de esa capa. Si la spec estaba equivocada, el analista la enmienda solo en lo afectado. Si lo que fallaba era la expectativa del test, se corrige la prueba y no se toca código.</p>
+                    <p>"Terminado" tiene una definición estricta: puerta en verde, sin hallazgos abiertos y cada escenario de la spec cubierto por una prueba que pasa o marcado como no probable con un motivo aceptado. Un caso que no llegó a ejecutarse por falta de un token no cuenta como aprobado. Y el bucle tiene presupuesto: si tras cinco vueltas no está limpio, se para y vuelve a la persona. Nunca se termina a mano fuera del bucle, porque eso se salta la revisión y las pruebas.</p>
+                </section>
+
+                <section id="donde-decide-el-humano" class="callout rounded-xl p-5 my-8">
+                    <h2>Dónde decide el humano</h2>
+                    <ul>
+                        <li>Al arrancar: si la tarea merece el flujo y un único visto bueno a lo que va a hacer.</li>
+                        <li>Tras el análisis: las dudas abiertas de la spec.</li>
+                        <li>Durante el bucle: los permisos y credenciales, justo cuando hacen falta.</li>
+                        <li>Al final: verificar y aceptar el desarrollo, revisar la PR y decidir cuándo se promociona a preproducción y a producción. El bucle solo despliega en el entorno de desarrollo.</li>
+                    </ul>
+                </section>
+
+                <section id="limites">
+                    <h2>Límites</h2>
+                    <p>Una tarea pequeña no merece la fábrica: cambiar un nivel de log no necesita análisis, despliegue y documentación. Lo razonable es decirlo al arrancar y ofrecer el camino directo. Y cada vuelta cuesta tiempo y tokens, así que la calidad de la spec y de las skills que describen las convenciones del equipo pesa más que el número de agentes. Con una spec floja, los revisores comprobarán con rigor algo que no era lo que se pedía.</p>
+                </section>
+
+                <section id="conclusion">
+                    <h2>Conclusión</h2>
+                    <p>Lo que convierte un asistente en una fábrica de tareas son los contratos: una spec en disco que todos leen igual, puertas que no opinan, verificadores que no heredan el sesgo del que implementó y un triage que sabe a dónde devolver cada fallo. Con eso, la persona deja de ser el único control de calidad y pasa a decidir en los cuatro puntos donde su criterio importa.</p>
+                </section>
+
+                <section id="fuentes">
+                    <h2>Fuentes</h2>
+                    <ul>
+                        <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Anthropic, "Building effective agents"</a>, diciembre 2024.</li>
+                        <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">"Best practices for Claude Code"</a>, documentación de Claude Code.</li>
+                        <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">"Agent Skills"</a>, documentación de la plataforma de Claude.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer" data-reveal="fade">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script src="../../assets/cv.js?v=2" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+</body>
+
+</html>

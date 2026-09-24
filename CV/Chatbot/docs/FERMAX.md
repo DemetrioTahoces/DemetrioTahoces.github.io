@@ -37,7 +37,7 @@ Fermax: fabricante de videoporteros y sistemas de control de accesos. Me incorpo
 - Resultados:
   - Más del 80% de las PRs son exitosas a la primera.
   - Estimación del equipo (no medición exacta), frente al desarrollo previo ya asistido por IA pero sin estos flujos: el esfuerzo de verificación (revisión + tests) y el de correcciones posteriores se ha reducido a menos de la mitad; la fase de definición y análisis también requiere algo menos de esfuerzo.
-- El diseño concreto (reparto de responsabilidades entre agentes, criterios de salida del bucle, forma de las skills) es know-how propio fruto de iterar sobre el desarrollo real del equipo; no está documentado públicamente en detalle y Demetrio lo explica encantado en una conversación.
+- El patrón general (orquestador que no programa, spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage) es conocimiento que Demetrio comparte en su blog técnico. Los detalles de implementación del equipo (agentes concretos, prompts, herramientas internas, reglas exactas) son know-how propio no publicado; Demetrio los explica encantado en una conversación.
 
 ### Early Adopter IA (GitHub Copilot) {#github-copilot}
 - Referente en uso avanzado de agentes y skills de Copilot.

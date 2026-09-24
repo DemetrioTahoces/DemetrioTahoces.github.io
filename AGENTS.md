@@ -41,6 +41,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `assets/cv.js`: reveals con stagger sobre `[data-reveal]`/`[data-reveal-group]`, scroll-spy del nav, jump-nav (`[data-section-nav]`) y estado `.is-scrolled`.
 - `assets/og-card.svg`: imagen Open Graph compartida.
 - `README.md`: documentación operativa para humanos.
+- `context.md`: traspaso de contexto entre sesiones de agentes, una entrada por PR o cambio.
 
 ## Frontend
 
@@ -89,6 +90,7 @@ Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `f
 
 - El blog está en `blog/`.
 - El blog consume los assets compartidos (`tokens.css` + `cv.css` + `blog.css` + `cv.js`, rutas `../assets/` desde `blog/` y `../../assets/` desde `blog/posts/`). Los estilos de prosa de artículo viven en `assets/blog.css`, no inline.
+- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` se exponen a Claude Code mediante enlaces simbólicos en `.claude/skills/`; edita siempre el original.
 - Si se añaden artículos que el chatbot deba conocer, añade o sincroniza también el contenido Markdown correspondiente bajo `CV/Chatbot/docs/`, normalmente en una subcarpeta si el patrón existente lo permite.
 
 ## Desarrollo local
@@ -122,6 +124,14 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - No hay build del frontend.
 - CI solo para el chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions. El frontend no tiene CI ni build.
 
+## Contexto entre sesiones
+
+- `context.md` (raíz) guarda el contexto que necesita la siguiente sesión para continuar un trabajo: qué se ha hecho, decisiones ya tomadas con el usuario (no volver a preguntarlas), pendientes, restricciones y notas de entorno.
+- Norma: cada cambio o PR actualiza su entrada de `context.md` en el mismo commit o PR. Si no existe, se crea. Entradas de la más reciente a la más antigua, con número de PR, rama y fecha.
+- Al empezar una tarea, lee `context.md` y continúa desde la entrada correspondiente.
+- Cuando una PR se mergea o se cierra, su entrada se reduce a un resumen de dos o tres líneas.
+- Nada de secretos, contenido de `.env`, datos personales de terceros ni URLs internas.
+
 ## Convenciones de edición
 
 - Mantén los cambios acotados a la petición.
@@ -138,7 +148,7 @@ Lo siguiente aplica solo al modo Cowork y no está cubierto por AGENTS.md.
 
 - Ignora `.venv`, `CV/Chatbot/.venv`, `node_modules` y `__pycache__` en exploraciones, búsquedas o auditorías: son dependencias empaquetadas, no código propio del proyecto. Incluirlas satura resultados y contexto sin aportar nada.
 - No ejecutes `git commit` ni `git push` salvo petición explícita. El usuario gestiona el historial y decide cuándo publicar.
-- Antes de crear contenido nuevo, comprueba si ya existe una skill local aplicable en `.agents/skills/`: `edit-cv` para cambios de contenido curricular, `manage-blog` para artículos y assets de blog (incluye conversión SVG→PNG para drafts de LinkedIn). Úsalas en vez de reinventar el flujo.
+- Antes de crear contenido nuevo, comprueba si ya existe una skill local aplicable en `.agents/skills/`: `edit-cv` para cambios de contenido curricular, `manage-blog` para artículos y assets de blog (incluye conversión SVG→PNG para OG y LinkedIn). Úsalas en vez de reinventar el flujo.
 - Edita los archivos finales directamente en su ruta real del repo (el HTML, el Markdown, los assets). El paso intermedio por la carpeta de outputs es solo para género de imágenes o borradores exploratorios que aún no tienen destino claro.
 - Nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` — contiene la API key del proveedor LLM.
 - `python -m http.server` y `uvicorn ... --reload` son solo para verificación manual puntual; no hay CI ni build. No los lances por defecto, solo si la tarea concreta lo requiere.

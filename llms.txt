@@ -22,5 +22,6 @@
 - [TFG - Procesado de Arrays de Antenas](https://demetriotahoces.github.io/CV/tfg.html): Trabajo de Fin de Grado: redes neuronales para el procesado de arrays de antenas
 
 ## Blog técnico
+- [Flujos agénticos de desarrollo: el humano decide, el agente ejecuta](https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html): Fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage, con decisiones humanas
 - [Domain events y brokers de mensajería](https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html): Domain events, exchanges, routing keys, colas y consumidores en brokers de mensajería
 - [SOLID: principios de diseño para software que cambia](https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html): Los principios SOLID como criterios para reducir el coste del cambio
