@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Fábrica de tareas con agentes: el humano decide, el agente ejecuta</title>
-  <desc id="desc">El humano da el visto bueno y resuelve dudas. Un analista escribe la spec en disco. Implementadores por capa (dominio, aplicación, infraestructura). Una puerta determinista de build y tests. Verificación en paralelo: revisión, pruebas, seguridad, documentación y mantenimiento. Si no está limpio, el triage devuelve el fallo al código, a la spec o al test. Si está limpio, el humano revisa la PR. Un orquestador reparte y juzga, con un máximo de cinco vueltas.</desc>
+  <desc id="desc">El humano da el visto bueno y resuelve dudas. Un analista escribe la spec en disco. Implementadores por capa (dominio, aplicación, infraestructura). Una puerta determinista de build y tests. Verificación en paralelo: revisión, pruebas, seguridad, documentación y mantenimiento. Si no está limpio, el triage devuelve el fallo al código, a la spec o al test. Si está limpio, el humano acepta el desarrollo, revisa la PR y decide si se promociona a preproducción y producción; el bucle solo despliega en desarrollo. Un orquestador reparte y juzga, con un máximo de cinco vueltas.</desc>
   <defs>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" fill="none" stroke="#94a3b8" stroke-opacity="0.06" stroke-width="1"/>
@@ -95,9 +95,11 @@
 
     <path d="M1050 448V480" stroke="#22c55e" stroke-width="2.5" fill="none" marker-end="url(#arrow-ok)"/>
     <text x="1062" y="470" fill="#22c55e" font-size="14" font-weight="700">sí</text>
-    <rect x="950" y="484" width="210" height="74" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
-    <text x="1055" y="514" fill="#22c55e" font-size="14" font-weight="700" text-anchor="middle">HUMANO</text>
-    <text x="1055" y="540" fill="#e5edf7" font-size="17" font-weight="700" text-anchor="middle">Revisa la PR</text>
+    <rect x="950" y="484" width="210" height="104" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+    <text x="1055" y="510" fill="#22c55e" font-size="14" font-weight="700" text-anchor="middle">HUMANO</text>
+    <text x="1055" y="536" fill="#e5edf7" font-size="15" font-weight="700" text-anchor="middle">Acepta y promociona</text>
+    <text x="1055" y="558" fill="#a7b4c8" font-size="13" text-anchor="middle">revisa la PR</text>
+    <text x="1055" y="577" fill="#a7b4c8" font-size="13" text-anchor="middle">desarrollo → pre → pro</text>
 
     <!-- Triage -->
     <path d="M998 406H868" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arrow-loop)"/>

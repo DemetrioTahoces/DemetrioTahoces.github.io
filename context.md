@@ -23,6 +23,8 @@ El autor compartió en la sesión el plugin privado de su equipo (skill `task-fa
 - Ideas del patrón que recoge el post (ids estables): escena inicial (`la-escena-tipica`), orquestador que no programa y subagentes nuevos por fase (`un-orquestador-que-no-programa`), spec en disco como contrato leída por ruta y fuera del repo (`la-spec-como-contrato`), un implementador por capa hexagonal sin investigar y verificado por script (`implementar-por-capas`), puerta determinista y verificación en paralelo (`puertas-y-verificacion`), triage con tres destinos, definición de "terminado" y máximo de cinco vueltas (`el-triage`), puntos de decisión humana (`donde-decide-el-humano`), límites (`limites`).
 - `CV/Chatbot/docs/FERMAX.md`: la frase de "no documentado públicamente" se cambió por "el patrón general está en el blog; los detalles del equipo no se publican". El post no nombra la empresa ni la ficha enlaza el post (decisión conservadora; el autor puede pedir enlazarlos).
 
+- Paso final humano (indicado por el autor): verificar y aceptar el desarrollo, revisar la PR y decidir la promoción a preproducción y producción. El bucle solo despliega en desarrollo. Reflejado en el callout `donde-decide-el-humano`, el diagrama, la ficha y el draft.
+
 Pendiente del autor: revisar el post en local o en Pages (sobre todo en móvil) y, si quiere, cambiar la escena inicial genérica (agente, 600 líneas, 500 en un caso de error) por un ejemplo propio. Si se toca la prosa: auditoría del humanizer, `check_post.py`, `llms.txt` + `pytest`, y actualizar el draft de LinkedIn y esta entrada.
 
 ### Decisiones pendientes del autor

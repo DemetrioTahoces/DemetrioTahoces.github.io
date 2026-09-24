@@ -10,7 +10,7 @@ Un agente por capa: dominio, aplicación, infraestructura. Sin investigar: si fa
 Una puerta de build y tests que no opina, y después revisión, pruebas, seguridad y documentación en paralelo, cada una con un subagente sin el sesgo del que implementó.
 Un triage con tres destinos: el código, la spec o el propio test.
 
-La persona decide al arrancar, cuando hay dudas en la spec y al revisar la PR. El resto lo ejecutan los agentes, con un máximo de cinco vueltas.
+La persona decide al arrancar, cuando hay dudas en la spec y al final: acepta lo que se ha hecho, revisa la PR y decide cuándo sube a preproducción y a producción. Los agentes no pasan de desarrollo, y tienen un máximo de cinco vueltas.
 
 Lo he contado aquí:
 

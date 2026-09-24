@@ -35,7 +35,7 @@ Tres destinos: código → implementador de la capa; spec → el analista la enm
 - Al arrancar: si la tarea merece el flujo y un visto bueno único.
 - Tras el análisis: dudas abiertas de la spec.
 - Durante el bucle: permisos y credenciales, cuando hacen falta.
-- Al final: revisión de la PR y merge.
+- Al final: verificar y aceptar el desarrollo, revisar la PR y decidir la promoción a preproducción y producción (el bucle solo despliega en desarrollo).
 
 ## Errores habituales {#limites}
 
