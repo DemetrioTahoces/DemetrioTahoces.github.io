@@ -4,6 +4,7 @@ Evaluations against the real model (consume tokens; excluded from the default ru
     uv run pytest -m evals                       # modelo de MODEL_NAME
     MODEL_NAME=gpt-5.6-luna uv run pytest -m evals
 
+Run only by a human, by hand: never from CI, agents or automations.
 Each case runs the real agent and is checked with deterministic assertions
 (expected substrings, tool usage) plus an LLM judge for the free-text criterion.
 """

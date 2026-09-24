@@ -141,14 +141,17 @@ Plantilla completa en [.env.example](.env.example).
 uv sync                                               # dependencias (uv.lock)
 uv run uvicorn api.index:app --reload --port 3000    # API local
 uv run pytest                                         # tests offline
-uv run pytest -m evals                                # evals (gasta tokens)
+uv run pytest -m evals                                # evals (gasta tokens; solo a mano)
 ```
 
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt` | 0 |
 | `pytest -m evals` | 31 casos (37 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog. Juez: `gpt-6-luna` | Céntimos |
-| CI (`.github/workflows/chatbot.yml`) | Tests en cada PR/push; evals en PR si existe el secreto `CHATBOT_API_KEY` | Céntimos por PR |
+| CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
+| Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |
+
+Las evals nunca se ejecutan de forma automática: solo las lanza un humano, en local o desde Actions → *Chatbot evals* → *Run workflow*. Ningún agente, pipeline ni automatización debe ejecutarlas.
 
 ## Decisiones
 

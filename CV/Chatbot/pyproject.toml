@@ -26,5 +26,5 @@ dev = [
 testpaths = ["test", "evals"]
 addopts = "-m 'not evals'"
 markers = [
-    "evals: evaluaciones contra el modelo real (requieren API_KEY y consumen tokens)",
+    "evals: evaluaciones contra el modelo real (requieren API_KEY, consumen tokens; solo las ejecuta un humano a mano)",
 ]

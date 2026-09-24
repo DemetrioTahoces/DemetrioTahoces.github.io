@@ -7,6 +7,10 @@ Referencia principal:
 
 - [AGENTS.md](AGENTS.md)
 
+## Evals del chatbot
+
+- Las evals (`uv run pytest -m evals`, workflow `chatbot-evals.yml`) solo las ejecuta un humano a mano: gastan tokens de pago. Ningún agente, pipeline ni automatización las ejecuta ni las lanza. Ver AGENTS.md.
+
 ## Despliegue del chatbot (Vercel)
 
 - Flujo: cambios vía PR; probar en el preview de la rama y seguir pusheando al PR hasta que funcione. No pushear a `main` salvo petición explícita.
