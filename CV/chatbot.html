@@ -1002,9 +1002,7 @@
                                 else if (data.type === "tool_call") {
                                     const statusText = aiWrapper.querySelector('.ai-status-text');
                                     if (statusText) {
-                                        statusText.textContent = data.tool === "read_document"
-                                            ? "Leyendo el artículo del blog..."
-                                            : "Consultando...";
+                                        statusText.textContent = "Leyendo el artículo del blog...";
                                     }
                                 }
                                 else if (data.type === "tool_result") {

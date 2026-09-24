@@ -3,7 +3,7 @@ Knowledge base built from the Markdown documents in docs/.
 
 The CV corpus is small (~7k tokens), so it is injected whole into the system
 prompt (and cached by the provider). Blog articles are only listed in the
-prompt; their content is loaded on demand through the read_document tool.
+prompt; their content is loaded on demand through the read_blog_article tool.
 """
 
 from __future__ import annotations
