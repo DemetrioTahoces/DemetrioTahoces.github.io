@@ -1,0 +1,30 @@
+name: Blog
+
+# Valida que cada post del blog está completo y sincronizado (HTML, tarjeta,
+# ficha del chatbot, draft de LinkedIn, metadatos). Solo stdlib, sin dependencias.
+
+on:
+  pull_request:
+    paths:
+      - "blog/**"
+      - "CV/Chatbot/docs/blog/**"
+      - ".agents/skills/manage-blog/**"
+      - ".github/workflows/blog.yml"
+  push:
+    branches: [main]
+    paths:
+      - "blog/**"
+      - "CV/Chatbot/docs/blog/**"
+      - ".agents/skills/manage-blog/**"
+
+concurrency:
+  group: blog-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check posts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 .agents/skills/manage-blog/scripts/check_post.py --all

@@ -4,44 +4,28 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
-## PR #19: mejora de la skill manage-blog y post de flujos agénticos
+## Mejoras de la skill manage-blog y OG en PNG (push directo a `main`, 2026-09-24)
 
-- Rama: `claude/blog-post-generation-skill-x19nsv`. Issue: #17. Estado: abierta, CI verde, esperando revisión del autor.
-- Última actualización: 2026-09-24 (post reescrito con el patrón fábrica de tareas).
+- Push directo a `main` por petición explícita del autor, sin PR.
+- `SKILL.md` más corto: detalle movido a `references/{diagrama,fuentes,linkedin,ficha-chatbot,edicion}.md`. Nuevo flujo para editar posts publicados (`references/edicion.md`).
+- `scripts/check_post.py`: errores nuevos para anclas `{#id}` de la ficha inexistentes, minutos distintos entre post y tarjeta, y OG/Twitter que no sean PNG. Avisos nuevos: etiquetas distintas entre post y tarjeta, estilo del humanizer (vocabulario y fórmulas vetadas, más de 3 negritas, headings en title case). Los posts antiguos dan avisos esperados: etiquetas cortas en la tarjeta y los nombres de los principios SOLID en inglés.
+- `scripts/screenshot.mjs <slug>`: capturas de escritorio y móvil del post y del índice, con aviso de desbordamiento y de recursos que no cargan.
+- Posts antiguos con OG/Twitter/JSON-LD en PNG: `blog/assets/solid-principios-diseno.png` (generado) y `blog/assets/domain-events-brokers-mensajeria.png` (el PNG original de `linkedin-drafts/`, movido; regenerarlo sin Google Fonts solapa el texto).
+- CI nuevo `.github/workflows/blog.yml` (`check_post.py --all`); `AGENTS.md` actualizado.
 
-### Qué se ha hecho
+Pendiente del autor (no bloquea):
 
-- Skill `.agents/skills/manage-blog` mejorada: paso 0 de briefing y paso 2 de propuesta de índice, `references/post-template.html`, `scripts/check_post.py` (validador sin dependencias), OG/Twitter en PNG, `svg-to-png.mjs` encuentra Chromium en Linux/Playwright, reglas de fuentes verificadas y pautas de diagrama.
-- `.claude/skills/{manage-blog,edit-cv}`: enlaces simbólicos a `.agents/skills/` para que Claude Code descubra las skills. Se edita siempre el original.
-- Post `flujos-agenticos-desarrollo-ia` con todas sus superficies: `blog/posts/…html`, `blog/assets/…{svg,png}`, tarjeta en `blog/index.html`, `CV/Chatbot/docs/blog/…md`, `blog/linkedin-drafts/…txt` y `llms.txt` regenerado.
+- Revisar en Pages los posts, sobre todo en móvil (desde el entorno cloud no cargan Tailwind ni Google Fonts), y las previsualizaciones OG en LinkedIn.
+- Ejecutar las evals del chatbot (ficha nueva del blog y cambio en `FERMAX.md`).
+- Escena inicial genérica del post `flujos-agenticos-desarrollo-ia` (agente, 600 líneas, 500): sustituir si aporta un ejemplo propio.
+- Decidir si la ficha `CV/Chatbot/docs/FERMAX.md` enlaza el post (ahora no, para no asociarlo a la empresa).
+- Probar la skill con otros casos (editar un post, solo draft de LinkedIn) y ajustar.
 
-### Post reescrito sobre el patrón "fábrica de tareas" (2026-09-24)
+## PR #19 (mergeada): skill manage-blog mejorada y post de flujos agénticos
 
-El autor compartió en la sesión el plugin privado de su equipo (skill `task-factory`) como referencia. El material **no está en el repo** ni debe entrar. Decisiones del autor, no volver a preguntarlas:
+Skill con briefing, plantilla, `check_post.py` y enlaces en `.claude/skills/`; `context.md` y su norma en `AGENTS.md`. Post `flujos-agenticos-desarrollo-ia` sobre el patrón "fábrica de tareas": solo el patrón, sin internos del equipo ni nombre de la empresa (decisión del autor); el humano decide al arrancar, en las dudas de la spec y al final (acepta, revisa la PR y decide la promoción a pre y pro).
 
-- Publicar el **patrón, sin internos**: nada de nombres de agentes, herramientas, repos, gestores de tareas, credenciales, modelos concretos ni empresa. Lectura ~5 min.
-- Ideas del patrón que recoge el post (ids estables): escena inicial (`la-escena-tipica`), orquestador que no programa y subagentes nuevos por fase (`un-orquestador-que-no-programa`), spec en disco como contrato leída por ruta y fuera del repo (`la-spec-como-contrato`), un implementador por capa hexagonal sin investigar y verificado por script (`implementar-por-capas`), puerta determinista y verificación en paralelo (`puertas-y-verificacion`), triage con tres destinos, definición de "terminado" y máximo de cinco vueltas (`el-triage`), puntos de decisión humana (`donde-decide-el-humano`), límites (`limites`).
-- `CV/Chatbot/docs/FERMAX.md`: la frase de "no documentado públicamente" se cambió por "el patrón general está en el blog; los detalles del equipo no se publican". El post no nombra la empresa ni la ficha enlaza el post (decisión conservadora; el autor puede pedir enlazarlos).
-
-- Paso final humano (indicado por el autor): verificar y aceptar el desarrollo, revisar la PR y decidir la promoción a preproducción y producción. El bucle solo despliega en desarrollo. Reflejado en el callout `donde-decide-el-humano`, el diagrama, la ficha y el draft.
-
-Pendiente del autor: revisar el post en local o en Pages (sobre todo en móvil) y, si quiere, cambiar la escena inicial genérica (agente, 600 líneas, 500 en un caso de error) por un ejemplo propio. Si se toca la prosa: auditoría del humanizer, `check_post.py`, `llms.txt` + `pytest`, y actualizar el draft de LinkedIn y esta entrada.
-
-### Decisiones pendientes del autor
-
-Mejoras de la skill propuestas y no hechas todavía:
-
-1. Partir `SKILL.md` y mover LinkedIn, diagrama, fuentes y ficha a `references/` (carga bajo demanda).
-2. Revisión léxica del humanizer en `check_post.py` (palabras y fórmulas vetadas, exceso de negritas).
-3. `check_post.py`: anclas `{#id}` de la ficha, etiquetas y minutos coherentes entre post, tarjeta y ficha.
-4. Script de capturas escritorio/móvil dentro de la skill.
-5. Flujo de edición de posts publicados (`dateModified`, ids estables, resincronizar ficha y draft).
-6. Migrar a OG PNG los dos posts antiguos. Toca contenido publicado: requiere el visto bueno del autor.
-7. Ejecutar `check_post.py --all` en CI. Cambia la política "el frontend no tiene CI": requiere el visto bueno del autor.
-
-Además, evaluar la skill con dos o tres peticiones distintas (post nuevo, edición, solo draft).
-
-### Notas de entorno (sesiones cloud)
+## Notas de entorno (sesiones cloud)
 
 - El proxy bloquea `cdn.tailwindcss.com`, Google Fonts, `metr.org` y `arxiv.org`. Las capturas salen sin Tailwind (la imagen desborda en móvil también en posts antiguos): la revisión visual real se hace en local o en GitHub Pages.
 - El `uv` preinstalado (0.8.x) solo conoce Python 3.14.0rc2, incompatible con pydantic. Solución usada: instalar un uv reciente con `pip install --target <scratchpad> uv` y ejecutar con ese binario.

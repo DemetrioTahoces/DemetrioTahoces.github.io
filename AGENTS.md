@@ -32,6 +32,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `CV/Chatbot/evals/`: dataset y evals contra el modelo real.
 - `llms.txt`: índice del sitio para LLMs, generado desde `CV/Chatbot/docs/`.
 - `.github/workflows/chatbot.yml`: CI del chatbot (solo tests offline).
+- `.github/workflows/blog.yml`: CI del blog (`check_post.py --all` de la skill `manage-blog`).
 - `.github/workflows/chatbot-evals.yml`: evals, solo con lanzamiento manual por un humano.
 - `blog/`: blog técnico estático.
 - `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
@@ -122,7 +123,8 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - Frontend: push a `main` publica en GitHub Pages.
 - Backend: desplegado en Vercel desde `CV/Chatbot/`.
 - No hay build del frontend.
-- CI solo para el chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions. El frontend no tiene CI ni build.
+- CI del chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions.
+- CI del blog: `.github/workflows/blog.yml` ejecuta `python3 .agents/skills/manage-blog/scripts/check_post.py --all` (solo stdlib) en PRs y pushes a `main` que tocan el blog, sus fichas o la skill. El resto del frontend no tiene CI ni build.
 
 ## Contexto entre sesiones
 
@@ -151,4 +153,4 @@ Lo siguiente aplica solo al modo Cowork y no está cubierto por AGENTS.md.
 - Antes de crear contenido nuevo, comprueba si ya existe una skill local aplicable en `.agents/skills/`: `edit-cv` para cambios de contenido curricular, `manage-blog` para artículos y assets de blog (incluye conversión SVG→PNG para OG y LinkedIn). Úsalas en vez de reinventar el flujo.
 - Edita los archivos finales directamente en su ruta real del repo (el HTML, el Markdown, los assets). El paso intermedio por la carpeta de outputs es solo para género de imágenes o borradores exploratorios que aún no tienen destino claro.
 - Nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` — contiene la API key del proveedor LLM.
-- `python -m http.server` y `uvicorn ... --reload` son solo para verificación manual puntual; no hay CI ni build. No los lances por defecto, solo si la tarea concreta lo requiere.
+- `python -m http.server` y `uvicorn ... --reload` son solo para verificación manual puntual; no hay build. No los lances por defecto, solo si la tarea concreta lo requiere.

@@ -6,7 +6,8 @@ Uso (desde la raíz del repo, solo stdlib):
     python3 .agents/skills/manage-blog/scripts/check_post.py --all
 
 Errores (exit 1) = el post no se puede cerrar. Avisos = revisar a mano.
-Las anclas `{#id}` de la ficha del chatbot las valida `uv run pytest` en CV/Chatbot.
+Los avisos de estilo (humanizer) no bloquean: se revisan a mano con
+references/humanizer.md.
 """
 
 from __future__ import annotations
@@ -23,6 +24,17 @@ WORDS_PER_MINUTE = 220
 MONTHS = {m: i for i, m in enumerate(
     "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split(), 1)}
 DASHES = re.compile("[—–]")
+# Patrones de references/humanizer.md detectables sin contexto.
+STYLE_PATTERNS = [
+    r"\bcrucial", r"\bpivotal", r"\btestament", r"\btransformador", r"\brevolucionari",
+    r"\bvibrante", r"\bimpresionante", r"\blandscape\b", r"\bshowcase\b", r"\btapestry\b",
+    r"en este art[ií]culo", r"vamos a (explorar|ver)", r"\ba continuaci[oó]n\b",
+    r"sin m[aá]s pre[aá]mbulos", r"let'?s dive", r"no es solo", r"no solo\b[^.]{0,80}\bsino\b",
+    r"la clave est[aá] en", r"en el coraz[oó]n de", r"lo que realmente importa",
+    r"la pregunta real", r"futuro es prometedor", r"antes y un despu[eé]s",
+    r"espero que (te|os) (ayude|sirva)", r"los expertos (dicen|coinciden)", r"seamos sinceros",
+]
+MAX_BOLD = 3
 
 
 class Page(HTMLParser):
@@ -140,8 +152,8 @@ def check(slug: str) -> tuple[list[str], list[str]]:
         image = page.meta.get(key, "")
         if image.startswith(SITE) and not (ROOT / image.removeprefix(SITE + "/")).is_file():
             errors.append(f"{key} apunta a un fichero inexistente: {image}")
-        if image.endswith(".svg"):
-            warnings.append(f"{key} es SVG: LinkedIn y X no lo renderizan, usa el PNG 1200x630")
+        if not image.endswith(".png"):
+            errors.append(f"{key} debe ser el PNG 1200x630 (LinkedIn y X no renderizan SVG): {image}")
 
     # JSON-LD
     try:
@@ -167,8 +179,12 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     for key in ("title", "date", "tags", "summary"):
         if not fm.get(key):
             errors.append(f"ficha: falta {key}")
-    if "## Fuentes" not in md_path.read_text(encoding="utf-8"):
+    md_text = md_path.read_text(encoding="utf-8")
+    if "## Fuentes" not in md_text:
         warnings.append("ficha: sin sección final '## Fuentes'")
+    for anchor in re.findall(r"^#{2,3} .*\{#([\w-]+)\}\s*$", md_text, re.M):
+        if anchor not in page.ids:
+            errors.append(f"ficha: el ancla {{#{anchor}}} no existe en el HTML")
 
     # Enlaces relativos
     for tag, link in page.links:
@@ -199,6 +215,24 @@ def check(slug: str) -> tuple[list[str], list[str]]:
         if DASHES.search(text):
             errors.append(f"em/en dash en {path.relative_to(ROOT)}")
 
+    # Estilo (humanizer): avisos, no errores
+    html_text = html_path.read_text(encoding="utf-8")
+    prose_text = " ".join(page.prose)
+    for path, text in ((html_path, prose_text), (txt_path, txt_path.read_text(encoding="utf-8"))):
+        for pattern in STYLE_PATTERNS:
+            match = re.search(pattern, text, re.I)
+            if match:
+                warnings.append(f"estilo: '{match.group(0)}' en {path.relative_to(ROOT)}")
+    prose_html = html_text[html_text.find('class="article-prose"'):]
+    bold = len(re.findall(r"<(?:strong|b)>", prose_html))
+    if bold > MAX_BOLD:
+        warnings.append(f"estilo: {bold} negritas en la prosa (máximo orientativo {MAX_BOLD})")
+    for heading in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", prose_html, re.S):
+        words = re.sub(r"<[^>]+>", "", heading).split()[1:]
+        capitalized = [w for w in words if len(w) > 3 and w[0].isupper() and not w.isupper()]
+        if len(capitalized) >= 2:
+            warnings.append(f"estilo: heading en title case: {heading.strip()!r}")
+
     # Draft de LinkedIn copiable
     draft = txt_path.read_text(encoding="utf-8")
     if url not in draft:
@@ -212,8 +246,16 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     card = next((c for c in cards if f'href="posts/{slug}.html"' in c), None)
     if card is None:
         errors.append("blog/index.html sin tarjeta para el post")
-    elif spanish_date(card) != fm.get("date"):
-        errors.append(f"fecha de la tarjeta ({spanish_date(card)}) != ficha ({fm.get('date')})")
+    else:
+        if spanish_date(card) != fm.get("date"):
+            errors.append(f"fecha de la tarjeta ({spanish_date(card)}) != ficha ({fm.get('date')})")
+        header = html_text[html_text.find("<header"):html_text.find("</header>")]
+        badges = lambda text: re.findall(r'<span class="badge[^"]*">([^<]+)</span>', text)
+        if badges(header) != badges(card):
+            warnings.append(f"etiquetas del post {badges(header)} != tarjeta {badges(card)}")
+        card_minutes = re.search(r"(\d+) min", card)
+        if declared and card_minutes and card_minutes.group(1) != declared.group(1):
+            errors.append(f"minutos de la tarjeta ({card_minutes.group(1)}) != post ({declared.group(1)})")
     card_dates = [spanish_date(c) or "" for c in cards]
     if card_dates != sorted(card_dates, reverse=True):
         errors.append("tarjetas del índice no ordenadas de más reciente a más antigua")
