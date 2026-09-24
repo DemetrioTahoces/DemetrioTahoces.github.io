@@ -17,7 +17,7 @@ from langchain.agents.middleware import (
     dynamic_prompt,
 )
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import AIMessage, AIMessageChunk, AnyMessage, HumanMessage, ToolMessage
+from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 
 from core.config import settings
 from core.knowledge import build_page_context_hint, get_knowledge_base
@@ -29,6 +29,8 @@ logger = logging.getLogger("cv_chatbot.agent")
 MODEL_NODE = "model"
 TOOLS_NODE = "tools"
 EMPTY_ANSWER = "Lo siento, no he podido generar una respuesta para esta consulta. ¿Puedes reformularla?"
+# Replaces the technical English text that ModelCallLimitMiddleware injects.
+LIMIT_ANSWER = "No he podido completar la respuesta dentro de los límites de esta consulta. ¿Puedes concretar un poco más la pregunta?"
 
 
 def create_chat_model() -> BaseChatModel:
@@ -123,7 +125,8 @@ def _usage_of(messages: Sequence[AnyMessage]) -> dict[str, int]:
 def _final_text(messages: Sequence[AnyMessage]) -> str:
     for m in reversed(messages):
         if isinstance(m, AIMessage) and not m.tool_calls and m.text.strip():
-            return m.text
+            # Messages injected by middleware (call limit reached) carry no usage.
+            return m.text if m.usage_metadata else LIMIT_ANSWER
     return ""
 
 
@@ -156,7 +159,8 @@ async def stream_agent(
     async for mode, chunk in graph.astream({"messages": inputs}, config=config, stream_mode=["messages", "updates"]):
         if mode == "messages":
             message_chunk, metadata = chunk
-            if metadata.get("langgraph_node") == MODEL_NODE and isinstance(message_chunk, AIMessageChunk):
+            # Streaming models emit AIMessageChunk; non-streaming ones, the full AIMessage.
+            if metadata.get("langgraph_node") == MODEL_NODE and isinstance(message_chunk, AIMessage):
                 text = message_chunk.text
                 if text:
                     streamed_text = True
@@ -173,9 +177,11 @@ async def stream_agent(
                         ai_messages.append(m)
                         for call in m.tool_calls:
                             yield {"type": "tool_call", "tool": call["name"], "doc": call["args"].get("doc_name")}
-                    if not m.tool_calls and m.text.strip():
-                        # Covers answers injected by middleware (e.g. call limit reached).
-                        fallback_text = m.text
+                        if not m.tool_calls and m.text.strip():
+                            fallback_text = m.text
+                    elif not m.tool_calls and m.text.strip():
+                        # Answer injected by middleware: the model call limit was reached.
+                        fallback_text = LIMIT_ANSWER
                 elif isinstance(m, ToolMessage) and node == TOOLS_NODE:
                     yield {"type": "tool_result", "tool": m.name}
 

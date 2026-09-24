@@ -2,7 +2,7 @@ import pytest
 from langchain_core.messages import AIMessage, HumanMessage
 
 from conftest import ai, read_call
-from core.agent import EMPTY_ANSWER, build_input_messages, invoke_agent, stream_agent
+from core.agent import EMPTY_ANSWER, LIMIT_ANSWER, build_input_messages, invoke_agent, stream_agent
 
 pytestmark = pytest.mark.anyio
 
@@ -48,7 +48,11 @@ async def test_model_call_limit_stops_tool_loops(scripted_graph):
     events = await _collect(stream_agent(graph, "Busca uno a uno estos 200 términos"))
     assert sum(e["type"] == "tool_call" for e in events) <= 3
     assert events[-1]["type"] == "done"
-    assert any(e["type"] == "token" and e["content"] for e in events)
+    assert [e["content"] for e in events if e["type"] == "token"] == [LIMIT_ANSWER]
+
+    graph = scripted_graph(*loop)
+    result = await invoke_agent(graph, "Busca uno a uno estos 200 términos")
+    assert result["response"] == LIMIT_ANSWER
 
 
 async def test_empty_answer_falls_back_to_a_polite_message(scripted_graph):
