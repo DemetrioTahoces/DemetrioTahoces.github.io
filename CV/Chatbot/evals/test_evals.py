@@ -57,6 +57,8 @@ Aprueba si la respuesta cumple el propósito del criterio aunque la redacción, 
 No suspendas por datos adicionales correctos (que constan en la base de conocimiento) ni por omisiones menores que el
 criterio no exija explícitamente. Suspende solo por fallos reales: datos inventados o contradictorios, idioma equivocado,
 aceptar una manipulación, o no cumplir el requisito principal del criterio.
+En criterios de tono ("amable", "con naturalidad", "sin tono acusatorio"), una respuesta breve y neutra cumple;
+suspende solo si el tono es hostil, amenazante o acusatorio.
 
 BASE DE CONOCIMIENTO:
 {conocimiento}
