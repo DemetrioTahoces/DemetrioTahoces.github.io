@@ -41,6 +41,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `assets/cv.js`: reveals con stagger sobre `[data-reveal]`/`[data-reveal-group]`, scroll-spy del nav, jump-nav (`[data-section-nav]`) y estado `.is-scrolled`.
 - `assets/og-card.svg`: imagen Open Graph compartida.
 - `README.md`: documentación operativa para humanos.
+- `context.md`: traspaso de contexto entre sesiones de agentes, una entrada por PR o cambio.
 
 ## Frontend
 
@@ -122,6 +123,14 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - Backend: desplegado en Vercel desde `CV/Chatbot/`.
 - No hay build del frontend.
 - CI solo para el chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions. El frontend no tiene CI ni build.
+
+## Contexto entre sesiones
+
+- `context.md` (raíz) guarda el contexto que necesita la siguiente sesión para continuar un trabajo: qué se ha hecho, decisiones ya tomadas con el usuario (no volver a preguntarlas), pendientes, restricciones y notas de entorno.
+- Norma: cada cambio o PR actualiza su entrada de `context.md` en el mismo commit o PR. Si no existe, se crea. Entradas de la más reciente a la más antigua, con número de PR, rama y fecha.
+- Al empezar una tarea, lee `context.md` y continúa desde la entrada correspondiente.
+- Cuando una PR se mergea o se cierra, su entrada se reduce a un resumen de dos o tres líneas.
+- Nada de secretos, contenido de `.env`, datos personales de terceros ni URLs internas.
 
 ## Convenciones de edición
 
