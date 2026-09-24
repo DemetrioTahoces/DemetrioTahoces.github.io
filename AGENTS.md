@@ -31,7 +31,8 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `CV/Chatbot/test/`: tests offline con pytest (modelo falso, sin API key).
 - `CV/Chatbot/evals/`: dataset y evals contra el modelo real.
 - `llms.txt`: índice del sitio para LLMs, generado desde `CV/Chatbot/docs/`.
-- `.github/workflows/chatbot.yml`: CI del chatbot (tests y evals).
+- `.github/workflows/chatbot.yml`: CI del chatbot (solo tests offline).
+- `.github/workflows/chatbot-evals.yml`: evals, solo con lanzamiento manual por un humano.
 - `blog/`: blog técnico estático.
 - `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
 - `assets/tokens.css`: design tokens (`:root`) de todo el sitio — colores, radios, sombras, `--font-body`/`--font-display`, `--shell-max`.
@@ -109,17 +110,17 @@ Comprobaciones backend desde `CV/Chatbot`:
 
 ```powershell
 uv run pytest            # tests offline, sin API key
-uv run pytest -m evals   # evals contra el modelo real: requiere API_KEY y consume tokens
+uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un humano (ver abajo)
 ```
 
-Si cambias el prompt, el modelo o los documentos, ejecuta las evals antes de abrir la PR y añade un caso a `evals/dataset.yaml` por cada fallo real que detectes.
+**Evals: solo las ejecuta un humano, a mano.** Consumen tokens de pago en cada ejecución. Ningún agente (Claude Code incluido), pipeline de CI, hook, Routine ni automatización puede ejecutar `pytest -m evals` ni lanzar el workflow `chatbot-evals.yml`, tampoco para "verificar" un cambio. Si cambias el prompt, el modelo o los documentos, pide al humano que ejecute las evals y lo indicas en la PR. Sí puedes añadir o editar casos en `evals/dataset.yaml` (uno por cada fallo real detectado).
 
 ## Despliegue
 
 - Frontend: push a `main` publica en GitHub Pages.
 - Backend: desplegado en Vercel desde `CV/Chatbot/`.
 - No hay build del frontend.
-- CI solo para el chatbot: `.github/workflows/chatbot.yml` ejecuta los tests offline en PRs y pushes a `main`, y las evals en PRs si existe el secreto `CHATBOT_API_KEY`. El frontend no tiene CI ni build.
+- CI solo para el chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions. El frontend no tiene CI ni build.
 
 ## Convenciones de edición
 
