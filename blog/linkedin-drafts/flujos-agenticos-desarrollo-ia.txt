@@ -1,0 +1,25 @@
+Un agente de código te escribe 600 líneas en tres minutos.
+
+Revisarlas te sigue costando lo mismo que antes.
+
+Eso es lo que cambia al trabajar con agentes: escribir ya no es el cuello de botella, revisar sí. Y si todo lo que genera el agente pasa por tus ojos sin filtro previo, solo has movido el problema.
+
+Lo que mejor me ha funcionado es pasar de "chat más rápido" a un flujo con fases y una regla simple: el humano decide, el agente ejecuta.
+
+La persona aprueba qué se construye y cuándo está terminado.
+Varios agentes implementan con contextos pequeños.
+Otros agentes, con contexto limpio, revisan funcionalidad, seguridad y mantenibilidad, y se ejecutan los tests.
+Los hallazgos vuelven a implementación hasta pasar todos los filtros.
+El merge sigue siendo humano.
+
+Debajo de todo, skills: las convenciones del equipo por escrito para que el agente no escriba código correcto pero genérico.
+
+No es gratis. Renombrar una variable no necesita cuatro agentes, y con tests flojos los revisores aprueban cambios mediocres con toda la confianza del mundo.
+
+Lo he resumido aquí:
+
+https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html
+
+¿Qué decisión no delegaríais nunca a un agente?
+
+#IA #DesarrolloDeSoftware #AgentesIA #ClaudeCode #SoftwareEngineering

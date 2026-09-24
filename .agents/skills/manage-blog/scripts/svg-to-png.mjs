@@ -2,8 +2,10 @@
 /**
  * svg-to-png.mjs – Convierte SVG a PNG con fuentes web (Inter, JetBrains Mono).
  *
- * Requisito (una vez desde la raíz del repo):
- *   npm install puppeteer-core --prefix .agents/skills/manage-blog/scripts
+ * Requisito (una vez desde la raíz del repo; node_modules está en .gitignore):
+ *   npm ci --prefix .agents/skills/manage-blog/scripts
+ * Chrome/Chromium: se busca en rutas habituales de Windows, macOS, Linux y
+ * Playwright (PLAYWRIGHT_BROWSERS_PATH). Si no aparece, define CHROME_PATH.
  *
  * Uso:
  *   node .agents/skills/manage-blog/scripts/svg-to-png.mjs <entrada.svg> <salida.png> [ancho] [alto]
@@ -14,7 +16,7 @@
 
 import puppeteer from 'puppeteer-core';
 import { readFileSync, existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 
 function findChrome() {
   const candidates = [
@@ -24,6 +26,10 @@ function findChrome() {
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     '/usr/bin/google-chrome',
     '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/snap/bin/chromium',
+    join(process.env.PLAYWRIGHT_BROWSERS_PATH || '/opt/pw-browsers', 'chromium'),
   ].filter(Boolean);
 
   for (const p of candidates) {

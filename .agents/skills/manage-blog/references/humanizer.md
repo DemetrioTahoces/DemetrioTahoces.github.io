@@ -57,7 +57,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Mantener una postura clara: cuándo aplicar el principio y cuándo no.
 - Preferir verbos simples: "es", "tiene", "cambia", "rompe", "acopla".
 - Dejar alguna frase con filo si ayuda a recordar la idea, pero sin convertir todo en aforismos.
-- Recortar antes que rellenar. El objetivo del blog es 5-8 minutos de lectura.
+- Recortar antes que rellenar. El objetivo del blog es 3-8 minutos de lectura (ver SKILL.md).
 - Evitar secciones tipo "retos y futuro" o "conclusión prometedora" si no aportan hechos.
 - No narrar cambios del repo. El artículo debe leerse como pieza independiente, no como diff.
 - Cuidar que el primer párrafo no requiera contexto previo del lector.

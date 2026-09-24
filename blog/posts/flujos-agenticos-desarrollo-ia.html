@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flujos agénticos de desarrollo: el humano decide, el agente ejecuta - Demetrio Tahoces</title>
+    <meta name="description" content="Cómo organizar un flujo de desarrollo con agentes de IA: definición, implementación, verificación independiente y skills, con las decisiones en manos humanas.">
+    <meta property="og:title" content="Flujos agénticos de desarrollo: el humano decide, el agente ejecuta">
+    <meta property="og:description" content="Un ciclo de desarrollo con agentes especializados donde el humano define y acepta, y los agentes implementan y se verifican entre ellos.">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/flujos-agenticos-desarrollo-ia.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Flujos agénticos de desarrollo: el humano decide, el agente ejecuta">
+    <meta name="twitter:description" content="Un ciclo de desarrollo con agentes especializados donde el humano define y acepta, y los agentes implementan y se verifican entre ellos.">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/flujos-agenticos-desarrollo-ia.png">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Flujos agénticos de desarrollo: el humano decide, el agente ejecuta",
+      "description": "Un ciclo de desarrollo con agentes especializados donde el humano define y acepta, y los agentes implementan y se verifican entre ellos.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/flujos-agenticos-desarrollo-ia.png",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/tokens.css?v=2">
+    <link rel="stylesheet" href="../../assets/cv.css?v=3">
+    <link rel="stylesheet" href="../../assets/blog.css?v=2">
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5 hero-stage" style="--stage-delay: 0.05s">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">IA</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Agentes</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Desarrollo de software</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3 hero-stage" style="--stage-delay: 0.13s">Desarrollo con agentes</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight hero-stage" style="--stage-delay: 0.21s">Flujos agénticos de desarrollo: el humano decide, el agente ejecuta</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.29s">
+                Pasar del asistente que autocompleta a un flujo con fases, agentes especializados y verificación independiente. Lo que se delega es la ejecución; el criterio sigue siendo humano.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
+                <span>24 septiembre 2026</span>
+                <span class="text-gray-600">·</span>
+                <span>5 min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
+            <figure class="mb-8" data-reveal>
+                <img src="../assets/flujos-agenticos-desarrollo-ia.svg" alt="Ciclo de desarrollo agéntico: el humano define la tarea, varios agentes implementan, agentes revisores verifican funcionalidad, seguridad, mantenibilidad y tests, los hallazgos vuelven a implementación y el humano revisa y decide el merge. Las skills del equipo sostienen todas las fases." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <div class="principle-grid mb-8" data-reveal>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">1</strong><span class="text-sm">Definir</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">2</strong><span class="text-sm">Implementar</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">3</strong><span class="text-sm">Verificar</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">4</strong><span class="text-sm">Documentar</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">5</strong><span class="text-sm">Decidir</span></div>
+            </div>
+
+            <div class="article-prose">
+                <section id="la-escena-tipica">
+                    <h2>La escena típica</h2>
+                    <p>Pides a un agente de código que añada un endpoint REST a un servicio backend. En tres minutos tienes controlador, caso de uso, repositorio, tests y un mensaje de commit impecable. Abres el diff: 600 líneas. El endpoint funciona, pero el log no sigue el formato del equipo, el error de validación devuelve un 500 y hay una consulta nueva sin índice.</p>
+                    <p>Nada de eso es grave. El problema es otro: escribir ya no cuesta, y revisar cuesta lo mismo que antes. Si todo lo que genera el agente pasa por tus ojos sin filtro previo, el cuello de botella se ha movido de tus manos a tu atención.</p>
+                </section>
+
+                <section id="de-asistente-a-flujo">
+                    <h2>De asistente a flujo</h2>
+                    <p>Usar un agente como un chat más rápido deja el proceso igual: una persona pide, la máquina produce y la misma persona valida todo. Un flujo agéntico cambia la forma del proceso. Hay fases con una entrada y una salida claras, cada fase tiene agentes con un encargo acotado y el paso a la siguiente depende de un criterio que se puede comprobar.</p>
+                    <p>La regla de fondo cabe en una línea: <strong>el humano decide, el agente ejecuta</strong>. Qué construir, qué se considera terminado y qué entra en <code>main</code> son decisiones humanas. Escribir el código, pasar los tests, revisar convenciones y redactar la documentación son trabajo delegable.</p>
+                </section>
+
+                <section id="el-ciclo">
+                    <h2>El ciclo: definir, implementar, verificar</h2>
+                    <h3 id="definir-antes-de-delegar">Definir antes de delegar</h3>
+                    <p>La fase que más se suele saltar es la que más rinde. Antes de que nadie escriba código, un agente ayuda a convertir la petición en una tarea con alcance, ficheros afectados, qué queda fuera y criterios de aceptación verificables. La persona revisa esa definición y la aprueba. Corregir un malentendido aquí cuesta un párrafo; corregirlo en el diff cuesta una tarde.</p>
+                    <p>En el ejemplo del endpoint, la definición diría qué códigos HTTP devuelve cada error, qué formato de log se usa y qué tests prueban el caso feliz y los fallos de validación.</p>
+                    <h3 id="implementacion-repartida">Implementación repartida</h3>
+                    <p>Con la tarea definida, la implementación se puede repartir entre varios agentes con contextos pequeños: uno para la capa de dominio, otro para el adaptador REST, otro para los tests. Un contexto pequeño se equivoca menos que uno enorme que arrastra toda la conversación.</p>
+                    <h3 id="verificacion-independiente">Verificación independiente</h3>
+                    <p>El agente que escribe el código no debería ser quien lo aprueba. Tiende a dar por bueno lo que acaba de razonar. La verificación funciona mejor con revisores separados, cada uno con un contexto limpio y un encargo concreto: funcionalidad frente a los criterios de aceptación, seguridad, mantenibilidad y convenciones del equipo. A eso se suma algo que no opina: ejecutar los tests en un entorno de desarrollo real.</p>
+                    <h3 id="el-bucle">El bucle</h3>
+                    <p>Los hallazgos de la verificación vuelven a implementación y el ciclo se repite hasta que el cambio supera todos los filtros. Dos detalles evitan que el bucle degenere. Primero, pedir a los revisores solo hallazgos que afecten a corrección o a los criterios de la tarea: un revisor al que se le pide encontrar problemas casi siempre encuentra alguno, y perseguirlos todos lleva a sobreingeniería. Segundo, limitar las vueltas. Si el cambio no converge, el problema suele estar en la definición, y eso vuelve a ser una decisión humana.</p>
+                </section>
+
+                <section id="skills-conocimiento-del-equipo">
+                    <h2>Skills: el conocimiento del equipo por escrito</h2>
+                    <p>Sin contexto, un agente escribe código correcto y genérico. El log con otro formato y el 500 de la escena inicial salen de ahí. Las skills son la forma de darle ese contexto sin repetirlo en cada prompt: carpetas con instrucciones, plantillas y scripts que el agente carga solo cuando la tarea lo pide.</p>
+                    <p>Las que más se notan son las aburridas: cómo se organiza el código en la arquitectura del equipo, cómo se escribe un listener o un publisher del broker de mensajería, cómo se diseña un endpoint REST, qué se loguea y con qué formato, qué estrategia de testing se sigue. Una skill bien escrita convierte una revisión de convenciones en una comprobación casi mecánica.</p>
+                    <p>Tratarlas como código ayuda: versionadas, revisadas en PR y distribuidas al equipo como un paquete, por ejemplo mediante plugins. Una skill que solo vive en el portátil de una persona no es conocimiento del equipo.</p>
+                </section>
+
+                <section id="que-no-delegar" class="callout rounded-xl p-5 my-8">
+                    <h2>Qué no delegar</h2>
+                    <ul>
+                        <li>Aprobar la definición de la tarea y sus criterios de aceptación.</li>
+                        <li>Decisiones de diseño con impacto fuera del cambio: contratos públicos, modelos de datos, dependencias nuevas.</li>
+                        <li>Tradeoffs de negocio y cualquier acción que gaste dinero o toque producción.</li>
+                        <li>El merge. La última revisión es humana, aunque llegue un diff mucho más limpio.</li>
+                    </ul>
+                </section>
+
+                <section id="limites">
+                    <h2>Límites y costes</h2>
+                    <p>Un flujo así no es gratis. Cada revisor es otra ejecución de un modelo, y en tareas pequeñas el ciclo completo cuesta más de lo que ahorra: renombrar una variable no necesita cuatro agentes. Conviene empezar simple y añadir fases solo cuando resuelvan un problema que ya existe.</p>
+                    <p>La verificación automática tampoco es mejor que sus referencias. Si los tests son flojos o las skills describen convenciones que nadie sigue, los agentes aprobarán con toda la confianza del mundo cambios mediocres. Y el mantenimiento se desplaza: parte del tiempo que antes iba a escribir código pasa a mantener skills, definiciones de agentes y criterios de salida.</p>
+                </section>
+
+                <section id="conclusion">
+                    <h2>Conclusión</h2>
+                    <p>Lo que convierte un asistente en un flujo agéntico es decidir qué fases existen, qué criterio abre cada puerta y quién lo aplica. Cambiar de modelo no sustituye ese trabajo. Si la persona se queda con la definición, las decisiones de diseño y el merge, los agentes pueden encargarse de casi todo lo demás. Y la revisión humana deja de ser la de un diff de 600 líneas sin filtrar para ser la de un cambio que ya pasó por varios filtros.</p>
+                </section>
+
+                <section id="fuentes">
+                    <h2>Fuentes</h2>
+                    <ul>
+                        <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Anthropic, "Building effective agents"</a>, diciembre 2024.</li>
+                        <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">"Best practices for Claude Code"</a>, documentación de Claude Code.</li>
+                        <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">"Agent Skills"</a>, documentación de la plataforma de Claude.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer" data-reveal="fade">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script src="../../assets/cv.js?v=2" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+</body>
+
+</html>

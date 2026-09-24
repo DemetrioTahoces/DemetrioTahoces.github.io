@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  Plantilla de post. Copiar a blog/posts/<slug>.html y sustituir cada {{...}}.
+  - {{IMAGEN_OG}}: PNG 1200x630 en blog/assets/<slug>.png (LinkedIn y X no renderizan SVG).
+  - Versiones ?v=N: copiar las de blog/index.html en el momento de crear el post.
+  - Cada <section> lleva un id estable en kebab-case ASCII; la ficha del chatbot lo cita con {#id}.
+  - Borrar este comentario y los bloques opcionales que no se usen.
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITULO}} - Demetrio Tahoces</title>
+    <meta name="description" content="{{DESCRIPCION_SEO_150_160_CARACTERES}}">
+    <meta property="og:title" content="{{TITULO}}">
+    <meta property="og:description" content="{{DESCRIPCION_CORTA}}">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/{{SLUG}}.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/{{SLUG}}.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/{{SLUG}}.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{TITULO}}">
+    <meta name="twitter:description" content="{{DESCRIPCION_CORTA}}">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/{{SLUG}}.png">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{{TITULO}}",
+      "description": "{{DESCRIPCION_CORTA}}",
+      "datePublished": "{{AAAA-MM-DD}}",
+      "dateModified": "{{AAAA-MM-DD}}",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/{{SLUG}}.png",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/{{SLUG}}.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/tokens.css?v={{N}}">
+    <link rel="stylesheet" href="../../assets/cv.css?v={{N}}">
+    <link rel="stylesheet" href="../../assets/blog.css?v={{N}}">
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5 hero-stage" style="--stage-delay: 0.05s">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">{{ETIQUETA_1}}</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">{{ETIQUETA_2}}</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">{{ETIQUETA_3}}</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3 hero-stage" style="--stage-delay: 0.13s">{{ANTETITULO}}</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight hero-stage" style="--stage-delay: 0.21s">{{TITULO}}</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.29s">
+                {{ENTRADILLA}}
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
+                <span>{{D mes AAAA}}</span>
+                <span class="text-gray-600">·</span>
+                <span>{{N}} min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
+            <figure class="mb-8" data-reveal>
+                <img src="../assets/{{SLUG}}.svg" alt="{{ALT_DESCRIPTIVO_DEL_DIAGRAMA}}" class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <!-- Opcional: grid de badges resumen (principle-grid) con data-reveal. -->
+
+            <div class="article-prose">
+                <section id="{{id-escena}}">
+                    <h2>{{Escena reconocible con contexto técnico inmediato}}</h2>
+                    <p>...</p>
+                </section>
+
+                <section id="{{id-desarrollo}}">
+                    <h2>{{Desarrollo}}</h2>
+                    <p>...</p>
+                    <h3 id="{{id-subseccion}}">{{Subsección}}</h3>
+                    <p>...</p>
+                </section>
+
+                <!-- Opcional: callout (class="callout rounded-xl p-5 my-8") o warning para reglas prácticas. -->
+
+                <section id="conclusion">
+                    <h2>Conclusión</h2>
+                    <p>...</p>
+                </section>
+
+                <section id="fuentes">
+                    <h2>Fuentes</h2>
+                    <ul>
+                        <li><a href="{{URL_VERIFICADA}}" target="_blank" rel="noopener noreferrer">{{Autor, "Título"}}</a>.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer" data-reveal="fade">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script src="../../assets/cv.js?v={{N}}" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+</body>
+
+</html>
