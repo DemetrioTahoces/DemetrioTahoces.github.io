@@ -23,7 +23,8 @@ Tres pilares: escalabilidad pragmática, arquitectura limpia, IA como palanca t�
 - IoT a gran escala: señalización física → backend de control (Fermax/Opendit).
 - Big Data tiempo real: pipelines Kafka en Inditex (integridad y QA del dato).
 
-### 3. IA Agéntica & RAG (desarrollo personal)
+### 3. IA Agéntica & RAG
+- Desarrollo agéntico (profesional, Fermax): lidera la integración de Claude Code con workflows multiagente que iteran entre implementación y verificación, guiados por skills que codifican la arquitectura y convenciones del equipo. Modelo cercano a una software factory con agentes locales; +80% de PRs exitosas a la primera.
 - Arquitecturas RAG: optimización recuperación info, eliminación alucinaciones.
 - Agentes autónomos con LangChain/LangGraph para razonamiento y ejecución de tareas complejas.
 - Interés en soluciones On-premise y Edge Computing (privacidad y soberanía del dato).
@@ -39,7 +40,7 @@ Tres pilares: escalabilidad pragmática, arquitectura limpia, IA como palanca t�
 
 ## Filosofía de Trabajo
 - Mentoría activa: patrones de diseño y mentalidad de ingeniería a perfiles junior.
-- Early Adopter: historial con Copilot en Fermax; IA potencia al ingeniero.
+- Early Adopter: historial con Copilot en Fermax y, hoy, liderazgo del desarrollo agéntico con Claude Code; IA potencia al ingeniero.
 - Base matemática/analítica de Teleco: comodidad desde bajo nivel (protocolos, latencias) hasta orquestación cloud.
 
 ## Objetivo Actual
