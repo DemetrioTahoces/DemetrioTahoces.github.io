@@ -6,7 +6,7 @@ Chatbot que responde sobre el CV y el blog de Demetrio Tahoces. Backend FastAPI 
 
 | | |
 | --- | --- |
-| Modelo | OpenAI `gpt-6-luna` (Responses API, `reasoning_effort=low`) |
+| Modelo | OpenAI `gpt-6-luna` (Responses API, `reasoning_effort=medium`) |
 | Conocimiento | CV completo en el system prompt (~7,6k tokens, con caché) + artículos del blog bajo demanda |
 | Agente | `langchain.agents.create_agent` + middleware de límites |
 | Estado | Ninguno en servidor: el cliente envía los últimos 10 mensajes |
@@ -125,7 +125,7 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | --- | --- | --- |
 | `API_KEY` | — | Obligatoria (OpenAI) |
 | `MODEL_NAME` | `gpt-6-luna` | |
-| `REASONING_EFFORT` | `low` | `none` envía `temperature=0.3` |
+| `REASONING_EFFORT` | `medium` | `low` es ~0,6 s más rápido pero atribuye peor; `none` envía `temperature=0.3` |
 | `MAX_OUTPUT_TOKENS` | `2000` | Incluye tokens de razonamiento |
 | `MAX_MODEL_CALLS` / `MAX_TOOL_CALLS` | `3` / `2` | Por petición |
 | `MAX_HISTORY_MESSAGES` | `10` | Mensajes previos aceptados |
@@ -147,7 +147,7 @@ uv run pytest -m evals                                # evals (gasta tokens)
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt` | 0 |
-| `pytest -m evals` | 31 casos: hechos, honestidad, inyección, idioma, historial, blog. Juez: `gpt-6-sol` | Céntimos |
+| `pytest -m evals` | 31 casos (37 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog. Juez: `gpt-6-sol` | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests en cada PR/push; evals en PR si existe el secreto `CHATBOT_API_KEY` | Céntimos por PR |
 
 ## Decisiones
