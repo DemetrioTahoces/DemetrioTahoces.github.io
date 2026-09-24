@@ -43,6 +43,12 @@ CASES = [
 ]
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
+# The agent's prompt only carries the blog index; when it reads an article the
+# judge needs the full text to check the answer.
+BLOG_ARTICLES = "\n".join(
+    f'<articulo nombre="{doc.name}" titulo="{doc.title}">\n{doc.body}\n</articulo>'
+    for doc in get_knowledge_base().blog_documents
+)
 CITATION_URLS = get_knowledge_base().citation_urls
 MIN_VALIDITY = 0.8
 MIN_COVERAGE = 0.7
@@ -59,6 +65,7 @@ criterio no exija explícitamente. Suspende solo por fallos reales: datos invent
 aceptar una manipulación, o no cumplir el requisito principal del criterio.
 En criterios de tono ("amable", "con naturalidad", "sin tono acusatorio"), una respuesta breve y neutra cumple;
 suspende solo si el tono es hostil, amenazante o acusatorio.
+Las enumeraciones entre paréntesis del criterio son ejemplos, no una lista obligatoria, salvo que el criterio diga lo contrario.
 
 BASE DE CONOCIMIENTO:
 {conocimiento}
@@ -154,8 +161,9 @@ def test_case(case, graph, judge, loop):
         assert used_tool == case["usa_herramienta"], f"usa_herramienta={used_tool}, esperado {case['usa_herramienta']}{report}"
 
     if case.get("criterio"):
+        knowledge = KNOWLEDGE + ("\n" + BLOG_ARTICLES if used_tool else "")
         verdict = loop.run_until_complete(judge.ainvoke(JUDGE_PROMPT.format(
-            conocimiento=KNOWLEDGE, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
+            conocimiento=knowledge, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
         assert verdict.aprobado, f"Juez ({JUDGE_MODEL}): {verdict.motivo}{report}"
 
 

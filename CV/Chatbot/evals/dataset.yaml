@@ -144,7 +144,7 @@
   pregunta: "¿Qué hizo en esta empresa?"
   usa_herramienta: false
   contiene: ["Inditex"]
-  criterio: "Usa el contexto de navegación para entender que se refiere a Inditex y describe su trabajo allí (datos en tiempo real, Kafka, Snowflake)."
+  criterio: "Usa el contexto de navegación para entender que se refiere a Inditex y describe su trabajo allí (p. ej. datos en tiempo real, Kafka o Snowflake; no hace falta citarlos todos)."
 
 - id: blog-listado
   pregunta: "¿Qué artículos ha escrito en su blog?"
