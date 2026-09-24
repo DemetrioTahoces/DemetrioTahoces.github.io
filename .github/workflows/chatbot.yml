@@ -48,4 +48,4 @@ jobs:
         run: uv run pytest -m evals -p no:logging --tb=short
       - name: Aviso sin API key
         if: env.API_KEY == ''
-        run: echo "::warning::Evals omitidas: falta el secreto CHATBOT_API_KEY"
+        run: echo "::warning::Evals omitidas, falta el secreto CHATBOT_API_KEY"
