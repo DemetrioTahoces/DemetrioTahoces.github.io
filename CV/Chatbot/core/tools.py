@@ -117,7 +117,7 @@ def _document_metadata(doc_name: str, content: str) -> dict[str, object]:
 _DOC_DESCRIPTIONS = {
     "CV": "Currículum completo — resumen, experiencia, formación, competencias técnicas e idiomas",
     "RESUMEN_PROFESIONAL": "Resumen extendido — pilares de valor, evolución técnica, filosofía de trabajo",
-    "FERMAX": "Experiencia ACTUAL en Fermax — Software Engineer, IoT, DDD, Kubernetes (01/2025-Presente). Trabajo actual.",
+    "FERMAX": "Experiencia ACTUAL en Fermax — Software Engineer, IoT, DDD, Kubernetes, desarrollo agéntico con Claude Code (01/2025-Presente). Trabajo actual.",
     "OPENDIT": "Experiencia en Opendit — Backend Engineer, DAPR, BFF, CQRS (2022-2024)",
     "INDITEX": "Experiencia en Inditex (Nunegal) — Ingeniero de Datos, Kafka, Snowflake (2021-2022)",
     "SECURITAS_DIRECT": "Experiencia en Securitas Direct (Vector ITC) — Procesado de señales (2021)",
