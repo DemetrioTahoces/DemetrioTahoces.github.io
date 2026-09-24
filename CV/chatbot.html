@@ -430,6 +430,9 @@
         const CHAT_URL = API_URL + "/api/chat";
         const CHAT_STREAM_URL = API_URL + "/api/chat/stream";
         const HEALTH_URL = API_URL + "/api/health";
+        const FEEDBACK_URL = API_URL + "/api/feedback";
+        // El backend es stateless: cada petición lleva los últimos turnos de la conversación
+        const MAX_HISTORY_MESSAGES = 10;
 
         // DOM Elements
         const chatForm = document.getElementById('chat-form');
@@ -583,6 +586,7 @@
                         if (contentBox) contentBox.classList.remove('hidden');
 
                         updateAIMessage(aiWrapper, msg.text, false);
+                        renderFeedback(aiWrapper, msg);
                     }
                 });
 
@@ -738,6 +742,16 @@
             return wrapper;
         }
 
+        // Los enlaces de las respuestas se abren en otra pestaña: el chat puede vivir dentro del iframe del widget
+        if (window.DOMPurify) {
+            DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+                if (node.tagName === 'A' && node.getAttribute('href')) {
+                    node.setAttribute('target', '_blank');
+                    node.setAttribute('rel', 'noopener noreferrer');
+                }
+            });
+        }
+
         // Update AI Message Bubble (markdown sanitizado con DOMPurify)
         function updateAIMessage(wrapper, markdownText) {
             const contentDiv = wrapper.querySelector('.ai-content');
@@ -748,6 +762,45 @@
                 // Si el CDN de DOMPurify falla, degradar a texto plano: nunca HTML sin sanitizar
                 contentDiv.textContent = markdownText;
             }
+        }
+
+        // Valoración 👍/👎 de una respuesta (enlazada a su request_id en logs y trazas)
+        function renderFeedback(aiWrapper, item) {
+            if (!item || !item.requestId) return;
+            const column = aiWrapper.querySelector('.ai-content-box').parentElement;
+            const bar = document.createElement('div');
+            bar.className = 'flex items-center gap-1 ml-1 text-slate-500';
+            bar.innerHTML = `
+                <button type="button" data-rating="up" class="p-1 rounded hover:text-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 disabled:cursor-default" aria-label="Respuesta útil" title="Respuesta útil"><i class="ph ph-thumbs-up"></i></button>
+                <button type="button" data-rating="down" class="p-1 rounded hover:text-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 disabled:cursor-default" aria-label="Respuesta mejorable" title="Respuesta mejorable"><i class="ph ph-thumbs-down"></i></button>
+            `;
+            const buttons = bar.querySelectorAll('button');
+            const mark = (rating) => buttons.forEach(button => {
+                const selected = button.dataset.rating === rating;
+                button.disabled = true;
+                button.setAttribute('aria-pressed', String(selected));
+                button.classList.toggle('text-blue-400', selected);
+            });
+            if (item.feedback) mark(item.feedback);
+
+            bar.addEventListener('click', async (e) => {
+                const button = e.target.closest('button[data-rating]');
+                if (!button || button.disabled) return;
+                mark(button.dataset.rating);
+                item.feedback = button.dataset.rating;
+                saveHistory();
+                try {
+                    await fetch(FEEDBACK_URL, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ request_id: item.requestId, rating: item.feedback })
+                    });
+                } catch (error) {
+                    console.warn('No se ha podido enviar la valoración:', error);
+                }
+            });
+            column.appendChild(bar);
         }
 
         // Escape HTML to prevent XSS
@@ -796,11 +849,6 @@
                 return "Límite de peticiones excedido. Por favor, espera un minuto.";
             }
 
-            if (response.status === 403) {
-                const errData = await response.json().catch(() => ({}));
-                return errData.error || "Acceso denegado temporalmente por comportamiento inapropiado.";
-            }
-
             const errData = await response.json().catch(() => ({}));
             return errData.message || errData.error || "Error de conexión con el servidor.";
         }
@@ -829,10 +877,22 @@
             });
         }
 
+        // Últimos turnos válidos (sin errores), excluyendo la pregunta actual, que ya está en chatHistory
+        function buildHistoryPayload() {
+            return chatHistory.slice(0, -1)
+                .filter(msg => msg.text && !msg.error && !msg.text.startsWith('⚠️'))
+                .slice(-MAX_HISTORY_MESSAGES)
+                .map(msg => ({
+                    role: msg.sender === 'user' ? 'user' : 'assistant',
+                    content: msg.text.slice(0, 4000)
+                }));
+        }
+
         function buildChatPayload(message) {
             const payload = {
                 message: message,
-                session_id: sessionId
+                session_id: sessionId,
+                history: buildHistoryPayload()
             };
 
             const pageContext = getPageContext() || initialPageContext;
@@ -872,12 +932,15 @@
             revealAIContent(aiWrapper);
             updateAIMessage(aiWrapper, data.response || "");
 
-            chatHistory.push({ sender: 'ai', text: data.response || "", usage: data.usage });
+            const item = { sender: 'ai', text: data.response || "", usage: data.usage, requestId: data.request_id };
+            chatHistory.push(item);
             saveHistory();
+            renderFeedback(aiWrapper, item);
         }
 
         async function sendChatStream(message, aiWrapper) {
             let fullAiResponse = "";
+            let requestId = null;
 
             let response;
             try {
@@ -932,20 +995,21 @@
                                     if (!sessionId) {
                                         sessionId = data.session_id;
                                     }
+                                    requestId = data.request_id || null;
                                     const statusText = aiWrapper.querySelector('.ai-status-text');
                                     if (statusText) statusText.textContent = "Preparando respuesta...";
                                 }
-                                else if (data.type === "tool_result") {
+                                else if (data.type === "tool_call") {
                                     const statusText = aiWrapper.querySelector('.ai-status-text');
                                     if (statusText) {
-                                        if (data.tool === "search_documents") {
-                                            statusText.textContent = "Analizando documentos...";
-                                        } else if (data.tool === "read_document") {
-                                            statusText.textContent = "Leyendo documento relevante...";
-                                        } else {
-                                            statusText.textContent = "Utilizando herramienta: " + data.tool + "...";
-                                        }
+                                        statusText.textContent = data.tool === "read_document"
+                                            ? "Leyendo el artículo del blog..."
+                                            : "Consultando...";
                                     }
+                                }
+                                else if (data.type === "tool_result") {
+                                    const statusText = aiWrapper.querySelector('.ai-status-text');
+                                    if (statusText) statusText.textContent = "Redactando respuesta...";
                                 }
                                 else if (data.type === "token") {
                                     revealAIContent(aiWrapper);
@@ -956,15 +1020,17 @@
                                 else if (data.type === "done") {
                                     revealAIContent(aiWrapper);
 
-                                    chatHistory.push({ sender: 'ai', text: fullAiResponse, usage: data.usage });
+                                    const item = { sender: 'ai', text: fullAiResponse, usage: data.usage, requestId: requestId };
+                                    chatHistory.push(item);
                                     saveHistory();
+                                    renderFeedback(aiWrapper, item);
                                 }
                                 else if (data.type === "error") {
                                     revealAIContent(aiWrapper);
                                     fullAiResponse += "\n\n*[Error: " + data.message + "]*";
                                     updateAIMessage(aiWrapper, fullAiResponse);
 
-                                    chatHistory.push({ sender: 'ai', text: fullAiResponse });
+                                    chatHistory.push({ sender: 'ai', text: fullAiResponse, error: true });
                                     saveHistory();
                                 }
                             } catch (e) {
@@ -1030,7 +1096,7 @@
                 contentDiv.innerHTML = `<span class="text-red-400"><i class="ph ph-warning-circle"></i> ${errorMessage}</span>`;
 
                 // Save connection/network error to history
-                chatHistory.push({ sender: 'ai', text: `⚠️ ${errorMessage}` });
+                chatHistory.push({ sender: 'ai', text: `⚠️ ${errorMessage}`, error: true });
                 saveHistory();
             } finally {
                 // Unlock UI
