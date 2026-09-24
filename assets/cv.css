@@ -252,11 +252,9 @@ h1, h2, .card h3 { font-family: var(--font-display); }
     list-style: none;
     margin: 0.25rem 0 0.5rem;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
-    width: 100%;
-    max-width: 46rem;
 }
 
 .hero-highlights li {
@@ -647,7 +645,6 @@ h2.phase-label { color: #bfdbfe; letter-spacing: 0; font-family: var(--font-body
 
     .site-nav { gap: 0.35rem; }
 
-    .hero-highlights { grid-template-columns: 1fr; gap: 0.5rem; }
     .hero-highlights li { padding: 0.55rem 0.8rem; }
     .hero-highlights strong { font-size: 1.15rem; }
 
@@ -719,7 +716,6 @@ h2.phase-label { color: #bfdbfe; letter-spacing: 0; font-family: var(--font-body
     .hero-shell h1 { max-width: none; font-size: 2.4rem; color: var(--print-heading) !important; margin-bottom: 0.3rem !important; }
     .hero-shell .text-xl, .hero-shell .md\:text-2xl { font-size: 1.15rem; }
     .hero-eyebrow { border: 1px solid var(--print-border-strong); padding: 0.2rem 0.6rem; }
-    .hero-highlights { gap: 0.5rem; max-width: none; }
     .hero-highlights li { border-left-color: var(--print-accent); padding: 0.35rem 0.6rem; }
     .hero-highlights strong { font-size: 1.05rem; color: var(--print-heading) !important; }
     .hero-highlights span { font-size: 0.8rem; }
