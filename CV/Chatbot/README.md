@@ -193,7 +193,7 @@ Las evals nunca se ejecutan de forma automática: solo las lanza un humano, en l
 | Anclas declaradas en el Markdown (`{#id}`) | Slugs derivados del título | Un cambio de título no rompe citas; el test de consistencia detecta desincronizaciones |
 | Validación de enlaces token a token (se retiene solo el enlace en curso) | Validar al final | El streaming sigue fluyendo y nunca llega un enlace sin validar |
 | Clasificador aparte en paralelo | Flag en la salida del agente | No altera el prompt cacheado ni el streaming y no añade latencia; se puede usar un modelo pequeño |
-| Citas en la misma pestaña: no (`target=_blank`) | Abrir en la misma pestaña | El chat puede vivir en el iframe del widget; salir perdería la conversación |
+| Citas en la ventana principal (`target=_top`); enlaces externos en otra pestaña | Abrir las citas en otra pestaña o dentro del iframe | La cita lleva a la sección citada sin salir de la web; el widget restaura abierto el chat y su historial (localStorage) tras navegar |
 
 ## Despliegue
 

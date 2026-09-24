@@ -455,6 +455,37 @@
         const MAX_HISTORY_MESSAGES = 10;
         // Bloqueo temporal (403) por consultas malintencionadas reiteradas: se recuerda para no llamar al backend
         const BLOCKED_UNTIL_STORAGE_KEY = 'chatbot_blocked_until';
+        const SITE_HOST = 'demetriotahoces.github.io';
+
+        function isSiteLink(href) {
+            try {
+                const url = new URL(href, window.location.href);
+                return url.hostname === SITE_HOST || url.origin === window.location.origin;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Enlaces de las respuestas: los de la web (citas de trazabilidad) navegan en la ventana principal
+        // (_top sale del iframe del widget, que conserva abierto el chat y su historial); los externos, en otra pestaña.
+        // Se registra antes de loadHistory() para que también se aplique a los mensajes restaurados.
+        if (window.DOMPurify) {
+            DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+                const href = node.tagName === 'A' && node.getAttribute('href');
+                if (!href) return;
+                if (isSiteLink(href)) {
+                    node.setAttribute('target', '_top');
+                    node.removeAttribute('rel');
+                } else {
+                    node.setAttribute('target', '_blank');
+                    node.setAttribute('rel', 'noopener noreferrer');
+                }
+                if (node.textContent.trim().startsWith('↗')) {
+                    node.classList.add('cite-chip');
+                    node.setAttribute('title', node.textContent.replace('↗', '').trim());
+                }
+            });
+        }
 
         // DOM Elements
         const chatForm = document.getElementById('chat-form');
@@ -762,20 +793,6 @@
             chatContainer.appendChild(wrapper);
             scrollToBottom(true);
             return wrapper;
-        }
-
-        // Los enlaces de las respuestas se abren en otra pestaña: el chat puede vivir dentro del iframe del widget
-        if (window.DOMPurify) {
-            DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-                if (node.tagName === 'A' && node.getAttribute('href')) {
-                    node.setAttribute('target', '_blank');
-                    node.setAttribute('rel', 'noopener noreferrer');
-                    if (node.textContent.trim().startsWith('↗')) {
-                        node.classList.add('cite-chip');
-                        node.setAttribute('title', node.textContent.replace('↗', '').trim());
-                    }
-                }
-            });
         }
 
         // Update AI Message Bubble (markdown sanitizado con DOMPurify)
