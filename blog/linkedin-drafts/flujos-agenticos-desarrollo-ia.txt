@@ -1,25 +1,21 @@
-Un agente de código te escribe 600 líneas en tres minutos.
+Le das a un agente una tarea de backend. Analiza, programa, pasa los tests y te dice que está hecho.
 
-Revisarlas te sigue costando lo mismo que antes.
+El problema es que quien diseñó la solución es el mismo que la da por buena. Y el único control independiente eres tú, leyendo 600 líneas al final.
 
-Eso es lo que cambia al trabajar con agentes: escribir ya no es el cuello de botella, revisar sí. Y si todo lo que genera el agente pasa por tus ojos sin filtro previo, solo has movido el problema.
+Lo que mejor me ha funcionado es montarlo como una fábrica de tareas con una regla: el humano decide, el agente ejecuta.
 
-Lo que mejor me ha funcionado es pasar de "chat más rápido" a un flujo con fases y una regla simple: el humano decide, el agente ejecuta.
+Un orquestador que no programa: reparte fases, juzga resultados y decide si hay otra vuelta.
+Una spec en disco como contrato. Todas las fases la leen por ruta, nunca resumida en un prompt.
+Un agente por capa: dominio, aplicación, infraestructura. Sin investigar: si falta contexto, se corrige la spec.
+Una puerta de build y tests que no opina, y después revisión, pruebas, seguridad y documentación en paralelo, cada una con un subagente sin el sesgo del que implementó.
+Un triage con tres destinos: el código, la spec o el propio test.
 
-La persona aprueba qué se construye y cuándo está terminado.
-Varios agentes implementan con contextos pequeños.
-Otros agentes, con contexto limpio, revisan funcionalidad, seguridad y mantenibilidad, y se ejecutan los tests.
-Los hallazgos vuelven a implementación hasta pasar todos los filtros.
-El merge sigue siendo humano.
+La persona decide al arrancar, cuando hay dudas en la spec y al revisar la PR. El resto lo ejecutan los agentes, con un máximo de cinco vueltas.
 
-Debajo de todo, skills: las convenciones del equipo por escrito para que el agente no escriba código correcto pero genérico.
-
-No es gratis. Renombrar una variable no necesita cuatro agentes, y con tests flojos los revisores aprueban cambios mediocres con toda la confianza del mundo.
-
-Lo he resumido aquí:
+Lo he contado aquí:
 
 https://demetriotahoces.github.io/blog/posts/flujos-agenticos-desarrollo-ia.html
 
-¿Qué decisión no delegaríais nunca a un agente?
+¿En qué punto del ciclo no dejaríais nunca decidir a un agente?
 
 #IA #DesarrolloDeSoftware #AgentesIA #ClaudeCode #SoftwareEngineering

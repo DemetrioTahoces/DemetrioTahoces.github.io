@@ -7,41 +7,23 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 ## PR #19: mejora de la skill manage-blog y post de flujos agénticos
 
 - Rama: `claude/blog-post-generation-skill-x19nsv`. Issue: #17. Estado: abierta, CI verde, esperando revisión del autor.
-- Última actualización: 2026-09-24.
+- Última actualización: 2026-09-24 (post reescrito con el patrón fábrica de tareas).
 
 ### Qué se ha hecho
 
 - Skill `.agents/skills/manage-blog` mejorada: paso 0 de briefing y paso 2 de propuesta de índice, `references/post-template.html`, `scripts/check_post.py` (validador sin dependencias), OG/Twitter en PNG, `svg-to-png.mjs` encuentra Chromium en Linux/Playwright, reglas de fuentes verificadas y pautas de diagrama.
 - `.claude/skills/{manage-blog,edit-cv}`: enlaces simbólicos a `.agents/skills/` para que Claude Code descubra las skills. Se edita siempre el original.
-- Post de prueba `flujos-agenticos-desarrollo-ia` con todas sus superficies: `blog/posts/…html`, `blog/assets/…{svg,png}`, tarjeta en `blog/index.html`, `CV/Chatbot/docs/blog/…md`, `blog/linkedin-drafts/…txt` y `llms.txt` regenerado.
+- Post `flujos-agenticos-desarrollo-ia` con todas sus superficies: `blog/posts/…html`, `blog/assets/…{svg,png}`, tarjeta en `blog/index.html`, `CV/Chatbot/docs/blog/…md`, `blog/linkedin-drafts/…txt` y `llms.txt` regenerado.
 
-### Siguiente sesión: sustituir ejemplos genéricos del post
+### Post reescrito sobre el patrón "fábrica de tareas" (2026-09-24)
 
-El autor aportará ejemplos reales. Briefing ya cerrado (no volver a preguntarlo):
+El autor compartió en la sesión el plugin privado de su equipo (skill `task-factory`) como referencia. El material **no está en el repo** ni debe entrar. Decisiones del autor, no volver a preguntarlas:
 
-- Tesis: "el humano decide, el agente ejecuta". Público: devs que ya usan IA. Lectura objetivo: ~5 min (3-8 permitido).
-- Inspiración: el flujo de desarrollo agéntico descrito en `CV/Chatbot/docs/FERMAX.md` (sección `desarrollo-agentico`).
-- Restricciones: no nombrar la empresa; no incluir cifras ni métricas; no revelar el diseño interno que la ficha marca como no público (reparto concreto de agentes, criterios de salida del bucle, forma de las skills). No inventar experiencias: solo lo que aporte el autor.
+- Publicar el **patrón, sin internos**: nada de nombres de agentes, herramientas, repos, gestores de tareas, credenciales, modelos concretos ni empresa. Lectura ~5 min.
+- Ideas del patrón que recoge el post (ids estables): escena inicial (`la-escena-tipica`), orquestador que no programa y subagentes nuevos por fase (`un-orquestador-que-no-programa`), spec en disco como contrato leída por ruta y fuera del repo (`la-spec-como-contrato`), un implementador por capa hexagonal sin investigar y verificado por script (`implementar-por-capas`), puerta determinista y verificación en paralelo (`puertas-y-verificacion`), triage con tres destinos, definición de "terminado" y máximo de cinco vueltas (`el-triage`), puntos de decisión humana (`donde-decide-el-humano`), límites (`limites`).
+- `CV/Chatbot/docs/FERMAX.md`: la frase de "no documentado públicamente" se cambió por "el patrón general está en el blog; los detalles del equipo no se publican". El post no nombra la empresa ni la ficha enlaza el post (decisión conservadora; el autor puede pedir enlazarlos).
 
-Ejemplos genéricos actuales, candidatos a sustituir (ids estables, no cambiarlos):
-
-| Sección (`id`) | Ejemplo genérico actual |
-| --- | --- |
-| `la-escena-tipica` | Agente añade un endpoint REST: 600 líneas en 3 minutos, log con otro formato, 500 en validación, consulta sin índice. |
-| `definir-antes-de-delegar` | Definición del mismo endpoint: códigos HTTP por error, formato de log, tests de caso feliz y validación. |
-| `implementacion-repartida` | Reparto dominio / adaptador REST / tests. |
-| `el-bucle` | Sin ejemplo; solo reglas (hallazgos solo de corrección, limitar vueltas). |
-| `skills-conocimiento-del-equipo` | Enlaza con el log y el 500 de la escena inicial; temas de skills tomados de la ficha pública. |
-| `limites` | "Renombrar una variable no necesita cuatro agentes". |
-
-Si cambian los ejemplos, revisar también: el draft de LinkedIn (reutiliza la escena de las 600 líneas), la ficha del chatbot si cambia alguna idea y el tiempo de lectura declarado (post y tarjeta).
-
-Cierre obligatorio tras editar:
-
-1. Auditoría de `.agents/skills/manage-blog/references/humanizer.md` sobre post y draft.
-2. `python3 .agents/skills/manage-blog/scripts/check_post.py flujos-agenticos-desarrollo-ia` sin errores.
-3. Desde `CV/Chatbot`: `uv run python -m core.llms_txt` y `uv run pytest`.
-4. Actualizar esta entrada.
+Pendiente del autor: revisar el post en local o en Pages (sobre todo en móvil) y, si quiere, cambiar la escena inicial genérica (agente, 600 líneas, 500 en un caso de error) por un ejemplo propio. Si se toca la prosa: auditoría del humanizer, `check_post.py`, `llms.txt` + `pytest`, y actualizar el draft de LinkedIn y esta entrada.
 
 ### Decisiones pendientes del autor
 

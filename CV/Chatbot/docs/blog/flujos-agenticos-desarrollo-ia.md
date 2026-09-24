@@ -3,49 +3,49 @@ type: blog_post
 title: "Flujos agénticos de desarrollo: el humano decide, el agente ejecuta"
 route: "/blog/posts/flujos-agenticos-desarrollo-ia.html"
 date: "2026-09-24"
-tags: ["IA", "Agentes", "Desarrollo de software", "Claude Code", "Skills", "Code review"]
-summary: "Cómo organizar un ciclo de desarrollo con agentes especializados y verificación independiente, dejando las decisiones en manos humanas"
+tags: ["IA", "Agentes", "Desarrollo de software", "Claude Code", "Spec-driven development", "Code review"]
+summary: "Fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage, con decisiones humanas"
 ---
 
 # Flujos agénticos de desarrollo: el humano decide, el agente ejecuta
 
-## Idea central {#de-asistente-a-flujo}
+## Idea central {#la-escena-tipica}
 
-Con agentes de código, escribir deja de ser el cuello de botella y lo pasa a ser la revisión. Un flujo agéntico organiza el trabajo en fases con entrada, salida y criterio de paso comprobable. Regla: el humano decide (qué construir, qué es "terminado", qué entra en main) y el agente ejecuta (código, tests, revisión de convenciones, documentación).
+Si el mismo agente analiza, programa y da su trabajo por bueno, la única verificación independiente es la persona leyendo todo al final. Una fábrica de tareas separa responsabilidades con una regla: el humano decide, el agente ejecuta.
 
-## El ciclo {#el-ciclo}
+## Piezas del flujo
 
-### Definir antes de delegar {#definir-antes-de-delegar}
-Un agente ayuda a convertir la petición en una tarea con alcance, ficheros afectados, fuera de alcance y criterios de aceptación verificables. La persona la aprueba antes de implementar.
+### Orquestador {#un-orquestador-que-no-programa}
+No analiza, no programa ni revisa: reparte fases, juzga resultados y decide si hay otra vuelta. Es el único que habla con la persona. Cada fase usa un subagente nuevo, sin heredar el contexto (ni el sesgo) de la anterior.
 
-### Implementación repartida {#implementacion-repartida}
-Varios agentes con contextos pequeños (dominio, adaptador, tests). Un contexto pequeño se equivoca menos.
+### Spec en disco {#la-spec-como-contrato}
+Un analista (modelo más capaz, una vez) escribe la spec: cambio y motivo, diseño, escenarios WHEN/THEN con id estable y contexto por capa y servicio. Las fases la reciben por ruta, nunca resumida. No entra en el repositorio. Las dudas abiertas se resuelven con la persona antes de implementar.
 
-### Verificación independiente {#verificacion-independiente}
-Quien implementa no aprueba. Revisores separados con contexto limpio: funcionalidad frente a criterios, seguridad, mantenibilidad y convenciones, más tests en entorno de desarrollo.
+### Implementación por capas {#implementar-por-capas}
+Un agente por capa hexagonal y servicio (dominio → aplicación → infraestructura), servicios en paralelo. Modelo más barato, sin investigar: si falta contexto, se corrige la spec. Un script verifica que no usan git ni salen de su capa.
 
-### El bucle {#el-bucle}
-Los hallazgos vuelven a implementación hasta pasar todos los filtros. Pedir solo hallazgos que afecten a corrección o a criterios (evita sobreingeniería) y limitar vueltas: si no converge, el problema suele estar en la definición y decide un humano.
+### Puertas y verificación {#puertas-y-verificacion}
+Puerta determinista (build y tests) antes de revisar; en rojo no se sigue. Después, en paralelo: revisión contra la spec, pruebas en entorno de desarrollo, seguridad si aplica, documentación y mantenimiento (introducido frente a preexistente).
 
-## Skills {#skills-conocimiento-del-equipo}
+### Triage y "terminado" {#el-triage}
+Tres destinos: código → implementador de la capa; spec → el analista la enmienda; expectativa del test → se corrige la prueba. Terminado = puerta verde, sin hallazgos abiertos y cada escenario con prueba que pasa o no probable justificado. Máximo cinco vueltas; si no, vuelve a la persona.
 
-Carpetas con instrucciones, plantillas y scripts que el agente carga bajo demanda. Codifican convenciones del equipo: organización del código, listeners/publishers de mensajería, endpoints REST, logging, testing. Se versionan, se revisan en PR y se distribuyen al equipo (por ejemplo, plugins).
+## Dónde decide el humano {#donde-decide-el-humano}
 
-## Qué no delegar {#que-no-delegar}
-
-- Aprobar definición y criterios de aceptación.
-- Decisiones de diseño con impacto fuera del cambio (contratos, modelos de datos, dependencias).
-- Tradeoffs de negocio, gasto y acciones en producción.
-- El merge.
+- Al arrancar: si la tarea merece el flujo y un visto bueno único.
+- Tras el análisis: dudas abiertas de la spec.
+- Durante el bucle: permisos y credenciales, cuando hacen falta.
+- Al final: revisión de la PR y merge.
 
 ## Errores habituales {#limites}
 
-- Aplicar el ciclo completo a tareas triviales: cada revisor cuesta una ejecución de modelo.
-- Confiar en la verificación automática con tests flojos o skills desactualizadas.
-- Olvidar que mantener skills, agentes y criterios de salida es trabajo nuevo.
+- Usar la fábrica en tareas pequeñas.
+- Pasar el plan resumido en prompts en vez de un fichero.
+- Dejar que el implementador se revise a sí mismo o que el orquestador arregle fallos.
+- Confiar en revisores con una spec floja.
 
 ## Fuentes {#fuentes}
 
-- Anthropic, "Building effective agents" (diciembre 2024): patrón evaluator-optimizer y empezar simple.
-- "Best practices for Claude Code": verificación, explorar y planificar antes de codificar, revisor en contexto limpio.
-- "Agent Skills", documentación de la plataforma de Claude: skills como carpetas cargadas bajo demanda.
+- Anthropic, "Building effective agents" (diciembre 2024).
+- "Best practices for Claude Code": verificación, planificar antes de codificar, revisor con contexto limpio.
+- "Agent Skills", documentación de la plataforma de Claude.

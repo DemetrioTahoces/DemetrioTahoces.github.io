@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Flujo agéntico de desarrollo: el humano decide, el agente ejecuta</title>
-  <desc id="desc">El humano define la tarea, varios agentes implementan, agentes revisores verifican funcionalidad, seguridad, mantenibilidad y tests, los hallazgos vuelven a implementación hasta pasar los filtros, un agente documenta y el humano revisa y decide el merge. Las skills del equipo sostienen todas las fases.</desc>
+  <title id="title">Fábrica de tareas con agentes: el humano decide, el agente ejecuta</title>
+  <desc id="desc">El humano da el visto bueno y resuelve dudas. Un analista escribe la spec en disco. Implementadores por capa (dominio, aplicación, infraestructura). Una puerta determinista de build y tests. Verificación en paralelo: revisión, pruebas, seguridad, documentación y mantenimiento. Si no está limpio, el triage devuelve el fallo al código, a la spec o al test. Si está limpio, el humano revisa la PR. Un orquestador reparte y juzga, con un máximo de cinco vueltas.</desc>
   <defs>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" fill="none" stroke="#94a3b8" stroke-opacity="0.06" stroke-width="1"/>
@@ -11,94 +11,110 @@
     <marker id="arrow-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M0 0L10 5L0 10z" fill="#38bdf8"/>
     </marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#22c55e"/>
+    </marker>
   </defs>
 
   <rect width="1200" height="630" fill="#07111f"/>
   <rect width="1200" height="630" fill="url(#grid)"/>
 
   <g font-family="Inter, system-ui, sans-serif">
-    <text x="50" y="72" fill="#e5edf7" font-size="34" font-weight="700">El humano decide, el agente ejecuta</text>
-    <text x="50" y="108" fill="#a7b4c8" font-size="19">Flujo agéntico de desarrollo con verificación independiente</text>
+    <text x="40" y="66" fill="#e5edf7" font-size="32" font-weight="700">El humano decide, el agente ejecuta</text>
+    <text x="40" y="100" fill="#a7b4c8" font-size="18">Fábrica de tareas: spec en disco, capas, puertas y triage</text>
 
     <g font-size="13" font-weight="600">
-      <rect x="866" y="52" width="14" height="14" rx="3" fill="#22c55e" fill-opacity="0.25" stroke="#22c55e"/>
-      <text x="888" y="64" fill="#a7b4c8">Decisión humana</text>
-      <rect x="1062" y="52" width="14" height="14" rx="3" fill="#60a5fa" fill-opacity="0.2" stroke="#60a5fa"/>
-      <text x="1084" y="64" fill="#a7b4c8">Agentes</text>
+      <rect x="866" y="48" width="14" height="14" rx="3" fill="#22c55e" fill-opacity="0.25" stroke="#22c55e"/>
+      <text x="888" y="60" fill="#a7b4c8">Decisión humana</text>
+      <rect x="1062" y="48" width="14" height="14" rx="3" fill="#60a5fa" fill-opacity="0.2" stroke="#60a5fa"/>
+      <text x="1084" y="60" fill="#a7b4c8">Agentes</text>
     </g>
 
-    <!-- Fases -->
-    <g>
-      <rect x="50" y="170" width="180" height="170" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
-      <text x="140" y="212" fill="#22c55e" font-size="15" font-weight="700" text-anchor="middle">1 · HUMANO</text>
-      <text x="140" y="250" fill="#e5edf7" font-size="21" font-weight="700" text-anchor="middle">Definir</text>
-      <text x="140" y="282" fill="#a7b4c8" font-size="15" text-anchor="middle">alcance y</text>
-      <text x="140" y="302" fill="#a7b4c8" font-size="15" text-anchor="middle">criterios de</text>
-      <text x="140" y="322" fill="#a7b4c8" font-size="15" text-anchor="middle">aceptación</text>
+    <!-- Fila principal -->
+    <g text-anchor="middle">
+      <rect x="40" y="140" width="190" height="180" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+      <text x="135" y="178" fill="#22c55e" font-size="14" font-weight="700">HUMANO</text>
+      <text x="135" y="212" fill="#e5edf7" font-size="20" font-weight="700">Visto bueno</text>
+      <text x="135" y="244" fill="#a7b4c8" font-size="14">¿merece el flujo?</text>
+      <text x="135" y="266" fill="#a7b4c8" font-size="14">dudas abiertas</text>
+      <text x="135" y="288" fill="#a7b4c8" font-size="14">de la spec</text>
 
-      <rect x="285" y="170" width="180" height="170" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
-      <text x="375" y="212" fill="#60a5fa" font-size="15" font-weight="700" text-anchor="middle">2 · AGENTES</text>
-      <text x="375" y="250" fill="#e5edf7" font-size="21" font-weight="700" text-anchor="middle">Implementar</text>
-      <text x="375" y="282" fill="#a7b4c8" font-size="15" text-anchor="middle">trabajo repartido,</text>
-      <text x="375" y="302" fill="#a7b4c8" font-size="15" text-anchor="middle">contextos</text>
-      <text x="375" y="322" fill="#a7b4c8" font-size="15" text-anchor="middle">pequeños</text>
+      <rect x="270" y="140" width="190" height="180" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
+      <text x="365" y="178" fill="#60a5fa" font-size="14" font-weight="700">ANALISTA</text>
+      <text x="365" y="212" fill="#e5edf7" font-size="20" font-weight="700">Spec en disco</text>
+      <text x="365" y="244" fill="#a7b4c8" font-size="14">escenarios WHEN/THEN</text>
+      <text x="365" y="266" fill="#a7b4c8" font-size="14">contexto por capa</text>
+      <text x="365" y="288" fill="#a7b4c8" font-size="14">se lee por ruta</text>
 
-      <rect x="520" y="150" width="200" height="210" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
-      <text x="620" y="190" fill="#60a5fa" font-size="15" font-weight="700" text-anchor="middle">3 · REVISORES</text>
-      <text x="620" y="226" fill="#e5edf7" font-size="21" font-weight="700" text-anchor="middle">Verificar</text>
-      <g font-size="13" font-weight="600" text-anchor="middle">
-        <rect x="538" y="246" width="164" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
-        <text x="620" y="262" fill="#e5edf7">funcionalidad</text>
-        <rect x="538" y="274" width="164" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
-        <text x="620" y="290" fill="#e5edf7">seguridad</text>
-        <rect x="538" y="302" width="164" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
-        <text x="620" y="318" fill="#e5edf7">mantenibilidad</text>
-        <rect x="538" y="330" width="164" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
-        <text x="620" y="346" fill="#e5edf7">tests en entorno dev</text>
+      <rect x="500" y="140" width="190" height="180" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
+      <text x="595" y="178" fill="#60a5fa" font-size="14" font-weight="700">IMPLEMENTADORES</text>
+      <text x="595" y="212" fill="#e5edf7" font-size="20" font-weight="700">Por capas</text>
+      <g font-size="13" font-weight="600">
+        <rect x="520" y="230" width="150" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="595" y="246" fill="#e5edf7">dominio</text>
+        <rect x="520" y="258" width="150" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="595" y="274" fill="#e5edf7">aplicación</text>
+        <rect x="520" y="286" width="150" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="595" y="302" fill="#e5edf7">infraestructura</text>
       </g>
 
-      <rect x="775" y="170" width="170" height="170" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
-      <text x="860" y="212" fill="#60a5fa" font-size="15" font-weight="700" text-anchor="middle">4 · AGENTE</text>
-      <text x="860" y="250" fill="#e5edf7" font-size="21" font-weight="700" text-anchor="middle">Documentar</text>
-      <text x="860" y="282" fill="#a7b4c8" font-size="15" text-anchor="middle">solo cuando</text>
-      <text x="860" y="302" fill="#a7b4c8" font-size="15" text-anchor="middle">pasa todos</text>
-      <text x="860" y="322" fill="#a7b4c8" font-size="15" text-anchor="middle">los filtros</text>
+      <rect x="730" y="140" width="170" height="180" rx="14" fill="#0f172a" stroke="#e5edf7" stroke-opacity="0.55" stroke-width="2"/>
+      <text x="815" y="178" fill="#e5edf7" font-size="14" font-weight="700">SCRIPT</text>
+      <text x="815" y="212" fill="#e5edf7" font-size="20" font-weight="700">Puerta</text>
+      <text x="815" y="244" fill="#a7b4c8" font-size="14">build y tests</text>
+      <text x="815" y="266" fill="#a7b4c8" font-size="14">en rojo no</text>
+      <text x="815" y="288" fill="#a7b4c8" font-size="14">se sigue</text>
 
-      <rect x="1000" y="170" width="150" height="170" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
-      <text x="1075" y="212" fill="#22c55e" font-size="15" font-weight="700" text-anchor="middle">5 · HUMANO</text>
-      <text x="1075" y="250" fill="#e5edf7" font-size="21" font-weight="700" text-anchor="middle">Decidir</text>
-      <text x="1075" y="282" fill="#a7b4c8" font-size="15" text-anchor="middle">revisa el</text>
-      <text x="1075" y="302" fill="#a7b4c8" font-size="15" text-anchor="middle">cambio y</text>
-      <text x="1075" y="322" fill="#a7b4c8" font-size="15" text-anchor="middle">hace merge</text>
+      <rect x="940" y="140" width="220" height="180" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
+      <text x="1050" y="170" fill="#60a5fa" font-size="14" font-weight="700">EN PARALELO</text>
+      <g font-size="13" font-weight="600">
+        <rect x="958" y="182" width="184" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="1050" y="198" fill="#e5edf7">revisión contra la spec</text>
+        <rect x="958" y="208" width="184" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="1050" y="224" fill="#e5edf7">pruebas en desarrollo</text>
+        <rect x="958" y="234" width="184" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="1050" y="250" fill="#e5edf7">seguridad (si aplica)</text>
+        <rect x="958" y="260" width="184" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="1050" y="276" fill="#e5edf7">documentación</text>
+        <rect x="958" y="286" width="184" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="1050" y="302" fill="#e5edf7">mantenimiento</text>
+      </g>
     </g>
 
-    <!-- Flechas entre fases -->
     <g stroke="#a7b4c8" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
-      <path d="M232 240H280"/>
-      <path d="M467 240H515"/>
-      <path d="M722 240H770"/>
-      <path d="M947 240H995"/>
+      <path d="M232 230H265"/>
+      <path d="M462 230H495"/>
+      <path d="M692 230H725"/>
+      <path d="M902 230H935"/>
     </g>
 
-    <!-- Bucle implementación ↔ verificación -->
-    <path d="M620 362V410Q620 425 605 425H390Q375 425 375 410V346" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-loop)"/>
-    <text x="497" y="452" fill="#38bdf8" font-size="16" font-weight="600" text-anchor="middle">hallazgos: vuelve a implementar hasta pasar los filtros</text>
+    <!-- Decisión -->
+    <path d="M1050 322V362" stroke="#a7b4c8" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M1050 366L1100 406L1050 446L1000 406Z" fill="#0f172a" stroke="#e5edf7" stroke-opacity="0.55" stroke-width="2"/>
+    <text x="1050" y="412" fill="#e5edf7" font-size="15" font-weight="700" text-anchor="middle">¿Limpio?</text>
 
-    <!-- Skills -->
-    <rect x="50" y="490" width="1100" height="90" rx="14" fill="#0f172a" stroke="#60a5fa" stroke-opacity="0.42" stroke-width="1.5"/>
-    <text x="80" y="527" fill="#e5edf7" font-size="19" font-weight="700">Skills del equipo</text>
-    <text x="80" y="557" fill="#a7b4c8" font-size="16">Conocimiento por escrito que los agentes cargan cuando la tarea lo pide</text>
-    <g font-size="14" font-weight="600" text-anchor="middle">
-      <rect x="690" y="505" width="130" height="26" rx="13" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-opacity="0.5"/>
-      <text x="755" y="523" fill="#e5edf7">arquitectura</text>
-      <rect x="830" y="505" width="130" height="26" rx="13" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-opacity="0.5"/>
-      <text x="895" y="523" fill="#e5edf7">mensajería</text>
-      <rect x="970" y="505" width="160" height="26" rx="13" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-opacity="0.5"/>
-      <text x="1050" y="523" fill="#e5edf7">endpoints REST</text>
-      <rect x="760" y="539" width="130" height="26" rx="13" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-opacity="0.5"/>
-      <text x="825" y="557" fill="#e5edf7">logging</text>
-      <rect x="900" y="539" width="130" height="26" rx="13" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-opacity="0.5"/>
-      <text x="965" y="557" fill="#e5edf7">testing</text>
+    <path d="M1050 448V480" stroke="#22c55e" stroke-width="2.5" fill="none" marker-end="url(#arrow-ok)"/>
+    <text x="1062" y="470" fill="#22c55e" font-size="14" font-weight="700">sí</text>
+    <rect x="950" y="484" width="210" height="74" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+    <text x="1055" y="514" fill="#22c55e" font-size="14" font-weight="700" text-anchor="middle">HUMANO</text>
+    <text x="1055" y="540" fill="#e5edf7" font-size="17" font-weight="700" text-anchor="middle">Revisa la PR</text>
+
+    <!-- Triage -->
+    <path d="M998 406H868" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#arrow-loop)"/>
+    <text x="935" y="396" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">no</text>
+    <rect x="600" y="366" width="264" height="120" rx="14" fill="#38bdf8" fill-opacity="0.08" stroke="#38bdf8" stroke-width="2" stroke-dasharray="7 6"/>
+    <text x="732" y="394" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">TRIAGE: ¿QUÉ FALLÓ?</text>
+    <g font-size="14" fill="#e5edf7">
+      <text x="620" y="422">código → implementador</text>
+      <text x="620" y="446">spec → el analista la enmienda</text>
+      <text x="620" y="470">test → se corrige la prueba</text>
     </g>
+    <path d="M660 364V324" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-dasharray="7 6" marker-end="url(#arrow-loop)"/>
+    <path d="M600 446H375V324" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-dasharray="7 6" marker-end="url(#arrow-loop)"/>
+
+    <!-- Orquestador -->
+    <rect x="40" y="520" width="870" height="70" rx="14" fill="#0f172a" stroke="#60a5fa" stroke-opacity="0.42" stroke-width="1.5"/>
+    <text x="66" y="551" fill="#e5edf7" font-size="17" font-weight="700">Orquestador</text>
+    <text x="66" y="576" fill="#a7b4c8" font-size="15">Reparte cada fase a un subagente nuevo, juzga y decide otra vuelta. No programa. Máximo 5 vueltas.</text>
   </g>
 </svg>
