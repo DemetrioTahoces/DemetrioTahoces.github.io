@@ -7,7 +7,8 @@ Chatbot que responde sobre el CV y el blog de Demetrio Tahoces. Backend FastAPI 
 | | |
 | --- | --- |
 | Modelo | OpenAI `gpt-6-luna` (Responses API, `reasoning_effort=medium`) |
-| Conocimiento | CV completo en el system prompt (~7,6k tokens, con caché) + artículos del blog bajo demanda |
+| Conocimiento | CV completo en el system prompt, dividido en secciones con su URL (~9,5k tokens, con caché) + artículos del blog bajo demanda |
+| Citas | Cada párrafo enlaza a la sección de la web que lo respalda (`[↗ Sección](url#ancla)`); el backend valida cada enlace |
 | Agente | `langchain.agents.create_agent` + middleware de límites |
 | Estado | Ninguno en servidor: el cliente envía los últimos 10 mensajes |
 | Extras | Servidor MCP de solo lectura, feedback 👍/👎, tracing opcional (LangSmith) |
@@ -49,6 +50,7 @@ sequenceDiagram
         F->>M: contenido del artículo
     end
     M-->>F: tokens
+    F->>F: validación de enlaces al sitio (lista blanca)
     F-->>B: SSE token … done (usage)
 ```
 
@@ -85,6 +87,7 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | Abuso | Rate limit por IP (5/min, 20/h) · CORS solo para el dominio del CV |
 | Prompt injection | Reglas fijas en el prompt · historial solo texto user/assistant · `page_context` solo por ruta conocida |
 | Invención | Solo responde con la base de conocimiento; evals de «no inventar» |
+| Enlaces inventados | `core/citations.py` reescribe todo enlace al sitio a su URL canónica: ancla desconocida → página; página desconocida → sin enlace. También en streaming |
 | Privacidad | Sin texto del usuario en logs · IP como HMAC · `store=False` en OpenAI |
 
 ## Estructura
@@ -93,7 +96,8 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | --- | --- |
 | `api/index.py` | App FastAPI: endpoints, CORS, rate limit, montaje MCP |
 | `core/agent.py` | Modelo, agente, middleware, streaming |
-| `core/knowledge.py` | Carga de `docs/`, frontmatter, render del prompt, pista de página |
+| `core/knowledge.py` | Carga de `docs/`, frontmatter, secciones con ancla, lista blanca de URLs, render del prompt, pista de página |
+| `core/citations.py` | Validación de enlaces al sitio (respuesta completa y streaming) |
 | `core/prompts.py` | Reglas del asistente + fecha |
 | `core/tools.py` | Tool `read_blog_article` (solo blog) |
 | `core/mcp_server.py` | Servidor MCP (`list_documents`, `get_document`) |
@@ -116,6 +120,10 @@ Cada `docs/**/*.md` lleva frontmatter:
 | `order` | `10` | Orden en el prompt (estable para la caché) |
 | `date` | `"2026-07-05"` | Solo blog |
 | `tags` | `["cv", "fermax"]` | Metadatos |
+
+Cada encabezado declara el `id` de la sección HTML que respalda: `## Contexto {#contexto}`. Los `###` sin ancla heredan la de su `##`; un encabezado sin texto propio (p. ej. `## Contribuciones`) se agrupa con la sección siguiente. En el prompt cada sección va como `<seccion url="https://…/CV/fermax.html#contexto">`, y esas URLs (más las páginas) forman la lista blanca de enlaces.
+
+Si cambias o añades una sección en el HTML o en el Markdown, mantén ambos sincronizados: `test_citations.py` falla si un ancla declarada no existe como `id` en su página o si una sección queda sin ancla.
 
 Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run pytest`.
 
@@ -146,8 +154,8 @@ uv run pytest -m evals                                # evals (gasta tokens)
 
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
-| `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt` | 0 |
-| `pytest -m evals` | 31 casos (37 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog. Juez: `gpt-6-sol` | Céntimos |
+| `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces | 0 |
+| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. Métricas de citas: validez (URL exacta, antes de la validación) ≥ 90 % y cobertura de párrafos ≥ 80 %. Juez: `gpt-6-sol` | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests en cada PR/push; evals en PR si existe el secreto `CHATBOT_API_KEY` | Céntimos por PR |
 
 ## Decisiones
@@ -159,6 +167,9 @@ uv run pytest -m evals                                # evals (gasta tokens)
 | `create_agent` + middleware | `create_react_agent` | Deprecado; se elimina en LangGraph 2.0 |
 | MCP stateless en la misma app | Servicio aparte | Spec MCP 2026-07-28 sin sesión; coste cero en tokens |
 | `uv.lock` + Python 3.14 | `requirements.txt` con `>=` | Builds reproducibles en Vercel |
+| Anclas declaradas en el Markdown (`{#id}`) | Slugs derivados del título | Un cambio de título no rompe citas; el test de consistencia detecta desincronizaciones |
+| Validación de enlaces token a token (se retiene solo el enlace en curso) | Validar al final | El streaming sigue fluyendo y nunca llega un enlace sin validar |
+| Citas en la misma pestaña: no (`target=_blank`) | Abrir en la misma pestaña | El chat puede vivir en el iframe del widget; salir perdería la conversación |
 
 ## Despliegue
 

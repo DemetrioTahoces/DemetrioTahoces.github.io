@@ -19,6 +19,7 @@ from langchain.agents.middleware import (
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 
+from core.citations import StreamingLinkSanitizer, sanitize_links
 from core.config import settings
 from core.knowledge import build_page_context_hint, get_knowledge_base
 from core.prompts import build_system_prompt
@@ -136,13 +137,13 @@ async def invoke_agent(graph, message: str, history=None, page_context=None, con
     result = await graph.ainvoke({"messages": inputs}, config=config)
     new_messages = result["messages"][len(inputs):]
     return {
-        "response": _final_text(new_messages) or EMPTY_ANSWER,
+        "response": sanitize_links(_final_text(new_messages)) or EMPTY_ANSWER,
         "usage": _usage_of([m for m in new_messages if isinstance(m, AIMessage)]),
     }
 
 
 async def stream_agent(
-    graph, message: str, history=None, page_context=None, config: dict | None = None
+    graph, message: str, history=None, page_context=None, config: dict | None = None, validate_links: bool = True
 ) -> AsyncGenerator[dict, None]:
     """
     Stream SSE-ready events:
@@ -150,11 +151,16 @@ async def stream_agent(
         {"type": "tool_result", "tool": str}
         {"type": "token", "content": str}
         {"type": "done", "usage": {...}}
+
+    Links to the public site are validated on the fly (see core.citations), so
+    a token may be held back until the link it belongs to is complete.
+    validate_links=False streams the raw model text (evals measure it).
     """
     inputs = build_input_messages(message, history, page_context)
     ai_messages: list[AIMessage] = []
     streamed_text = False
     fallback_text = ""
+    links = StreamingLinkSanitizer(enabled=validate_links)
 
     async for mode, chunk in graph.astream({"messages": inputs}, config=config, stream_mode=["messages", "updates"]):
         if mode == "messages":
@@ -164,7 +170,9 @@ async def stream_agent(
                 text = message_chunk.text
                 if text:
                     streamed_text = True
-                    yield {"type": "token", "content": text}
+                    safe = links.feed(text)
+                    if safe:
+                        yield {"type": "token", "content": safe}
             continue
 
         for node, update in (chunk or {}).items():
@@ -175,6 +183,9 @@ async def stream_agent(
                 if isinstance(m, AIMessage):
                     if node == MODEL_NODE:
                         ai_messages.append(m)
+                        pending = links.flush() if m.tool_calls else ""
+                        if pending:
+                            yield {"type": "token", "content": pending}
                         for call in m.tool_calls:
                             yield {"type": "tool_call", "tool": call["name"], "doc": call["args"].get("article")}
                         if not m.tool_calls and m.text.strip():
@@ -185,6 +196,10 @@ async def stream_agent(
                 elif isinstance(m, ToolMessage) and node == TOOLS_NODE:
                     yield {"type": "tool_result", "tool": m.name}
 
+    pending = links.flush()
+    if pending:
+        yield {"type": "token", "content": pending}
     if not streamed_text:
-        yield {"type": "token", "content": fallback_text or EMPTY_ANSWER}
+        fallback = sanitize_links(fallback_text) if validate_links else fallback_text
+        yield {"type": "token", "content": fallback or EMPTY_ANSWER}
     yield {"type": "done", "usage": _usage_of(ai_messages)}

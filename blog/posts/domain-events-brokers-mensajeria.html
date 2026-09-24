@@ -96,14 +96,14 @@
             </div>
 
             <div class="article-prose">
-                <section>
+                <section id="la-escena-tipica">
                     <h2>La escena típica</h2>
                     <p>Un backend empieza con un evento sencillo: un usuario se registra. Hay que enviar un email, crear una cuenta de prueba, sincronizar el CRM y actualizar un índice de búsqueda. Al principio todo cabe en un handler. Luego llegan reintentos, colas muertas, métricas, despliegues por separado y una pregunta incómoda: ¿qué demonios hace esta cola llamada <code>users</code>?</p>
                     <p>El problema no suele ser RabbitMQ, Kafka, SQS o cualquier otro broker. El problema es que la topología no habla el lenguaje del sistema. Se ven colas, topics y consumidores, pero no se ve el hecho de negocio que lo disparó ni la reacción concreta que se está ejecutando.</p>
                     <p>Una buena convención de nombrado no arregla una arquitectura mal planteada, pero evita mucha niebla operativa. Cuando algo falla a las tres de la mañana, <code>send-email-on-user-created</code> cuenta bastante más que <code>notification-worker-2</code>.</p>
                 </section>
 
-                <section>
+                <section id="primero-el-domain-event-despues-el-broker">
                     <h2>Primero el domain event, después el broker</h2>
                     <p>Un domain event es un hecho relevante que ya ocurrió en el dominio. No es una orden para que otro servicio haga algo. Martin Fowler lo define como la memoria de algo interesante que afecta al dominio, y Microsoft insiste en la misma idea práctica: un evento es algo que pasó en el pasado y otras partes del sistema pueden reaccionar a ello.</p>
                     <p>La diferencia parece menor hasta que se nombra mal:</p>
@@ -116,7 +116,7 @@
                     <p>Por eso conviene emitir eventos en pasado, con nombres claros y cercanos al lenguaje ubicuo: <code>UserCreated</code>, <code>OrderPaid</code>, <code>InvoiceIssued</code>, <code>SubscriptionCancelled</code>. Si no se puede escribir en pasado sin sonar raro, quizá no es un evento de dominio.</p>
                 </section>
 
-                <section>
+                <section id="la-convencion-de-nombrado">
                     <h2>La convención de nombrado</h2>
                     <p>En sistemas event-driven, los nombres de topics, exchanges y colas deberían sugerir al menos tres cosas:</p>
                     <ul>
@@ -174,7 +174,7 @@ Queue:       sync-crm-on-user-created</code></pre>
                     <p>Esto tiene valor en diseño, observabilidad y soporte. En diseño, fuerza a separar reacciones. En observabilidad, las métricas ya llevan intención. En soporte, una DLQ llamada <code>sync-crm-on-user-created.dlq</code> no necesita arqueología.</p>
                 </section>
 
-                <section class="warning rounded-xl p-5 my-8">
+                <section id="el-ejemplo-usa-rabbitmq" class="warning rounded-xl p-5 my-8">
                     <h2 class="mt-0">El ejemplo usa RabbitMQ</h2>
                     <p>Esta convención está explicada con RabbitMQ porque su modelo encaja muy bien con la separación entre exchange, routing key, binding y cola. Aun así, la idea de fondo es extrapolable a Kafka, SQS, Pub/Sub u otros brokers: separar la entidad, el hecho ocurrido y la reacción que ejecuta cada consumidor.</p>
                     <p>El mapeo exacto cambia según el broker:</p>
@@ -186,7 +186,7 @@ Queue:       sync-crm-on-user-created</code></pre>
                     <p>Lo importante es no perder la semántica. <code>UserCreated</code> sigue siendo el evento. <code>user</code> identifica la entidad publicada. <code>created</code> identifica qué ocurrió sobre esa entidad. La acción de negocio o infraestructura queda en la cola y en su consumidor.</p>
                 </section>
 
-                <section>
+                <section id="una-cola-un-consumidor-logico">
                     <h2>Una cola, un consumidor lógico</h2>
                     <p>Cada cola debería tener un único consumidor lógico. Puede haber varias instancias ejecutándose para escalar o ganar disponibilidad, pero todas deben hacer el mismo trabajo.</p>
                     <p>Esto encaja con el patrón de competing consumers: varios procesos leen de un mismo canal para repartir carga. La trampa aparece cuando se conectan consumidores distintos a la misma cola. En ese momento ya no tienes dos reacciones; tienes una carrera. Un mensaje lo procesará uno u otro según el broker y el estado de los consumidores.</p>
@@ -205,7 +205,7 @@ sync-crm-on-user-created
                     <p>La segunda opción parece ahorrar colas, pero rompe propiedad operativa. ¿Qué retry aplica? ¿Qué DLQ se revisa? ¿Qué métrica representa el lag? ¿Qué handler es idempotente y cuál no? Cada reacción tiene una razón de cambio distinta. Merece su propia cola.</p>
                 </section>
 
-                <section>
+                <section id="rabbitmq-y-kafka-no-son-la-misma-cosa">
                     <h2>RabbitMQ y Kafka no son la misma cosa</h2>
                     <p>RabbitMQ trabaja de forma natural con exchanges, routing keys, bindings y colas. La documentación de topic exchanges muestra routing keys compuestas por palabras separadas por puntos. En un caso simple, <code>created</code> basta; si el dominio pide más precisión, podrían aparecer claves como <code>password.reset.requested</code> o <code>email.verified</code>.</p>
                     <p>Kafka tiene otra semántica. La unidad principal es el topic: un log ordenado y duradero de eventos. Los consumidores leen por offsets y los grupos de consumidores reparten particiones. No hay exchanges ni colas AMQP. Si aplicas la convención a Kafka, la traducción habitual sería:</p>
@@ -218,7 +218,7 @@ sync-crm-on-user-created
                     <p>Ese mapeo conserva la intención: una entidad publicada, un hecho identificable y una reacción lógica por grupo. En Kafka suele tener más sentido evitar un topic por cada evento si el dominio tiene muchos eventos de bajo volumen, esquemas relacionados o necesidades de orden por agregado. Si se usa un topic por agregado, entidad o bounded context, el nombre del consumer group sigue siendo el sitio donde declarar la reacción: <code>send-email-on-user-created</code>.</p>
                 </section>
 
-                <section>
+                <section id="que-debe-llevar-el-evento">
                     <h2>Qué debe llevar el evento</h2>
                     <p>El nombre no basta. Un evento que va a salir del proceso necesita metadatos mínimos para poder operar bien:</p>
                     <ul>
@@ -232,7 +232,7 @@ sync-crm-on-user-created
                     <p>El payload debe contener lo necesario para interpretar el hecho, no una copia entera del estado interno. Si el consumidor necesita todos los datos del usuario para mandar un email, puede que el evento deba incluir una proyección mínima. Si necesita media base de datos, probablemente el límite entre contextos o la reacción está mal diseñada.</p>
                 </section>
 
-                <section>
+                <section id="domain-event-e-integration-event">
                     <h2>Domain event e integration event</h2>
                     <p>Un domain event puede vivir dentro del mismo proceso. No todos los eventos de dominio deben acabar en un broker. Microsoft distingue bien el matiz: el domain event expresa efectos dentro del dominio; el integration event propaga cambios confirmados hacia otros bounded contexts, microservicios o aplicaciones externas.</p>
                     <p>Una forma práctica de verlo:</p>
@@ -245,25 +245,25 @@ sync-crm-on-user-created
                     <p>Los ejemplos públicos de CodelyTV para DDD en TypeScript siguen esa separación conceptual: existe un <code>DomainEvent</code>, un contrato <code>DomainEventSubscriber</code> y configuración de RabbitMQ en infraestructura. Ese reparto es sano porque evita que el dominio dependa de AMQP, Kafka o la librería cliente de turno.</p>
                 </section>
 
-                <section>
+                <section id="errores-habituales">
                     <h2>Errores habituales</h2>
-                    <h3>Nombrar eventos como comandos</h3>
+                    <h3 id="nombrar-eventos-como-comandos">Nombrar eventos como comandos</h3>
                     <p><code>SendPasswordResetEmail</code> no describe algo que ocurrió; describe una intención. Si el hecho es que el usuario pidió recuperar contraseña, el evento debería sonar a <code>PasswordResetRequested</code>. La acción de enviar email vive en la cola <code>send-password-reset-email-on-password-reset-requested</code>.</p>
 
-                    <h3>Crear colas genéricas por dominio</h3>
+                    <h3 id="crear-colas-genericas-por-dominio">Crear colas genéricas por dominio</h3>
                     <p><code>users</code>, <code>notifications</code> o <code>events</code> parecen nombres limpios hasta que hay que depurar. No dicen qué acción ejecutan ni ante qué evento. Si una cola puede necesitar una wiki para explicarse, el nombre está fallando.</p>
 
-                    <h3>Compartir cola entre reacciones distintas</h3>
+                    <h3 id="compartir-cola-entre-reacciones-distintas">Compartir cola entre reacciones distintas</h3>
                     <p>Dos consumidores lógicos en la misma cola compiten por mensajes. Si ambos deben reaccionar al mismo evento, necesitan colas distintas en RabbitMQ o grupos de consumidores distintos en Kafka.</p>
 
-                    <h3>Publicar antes de confirmar la transacción</h3>
+                    <h3 id="publicar-antes-de-confirmar-la-transaccion">Publicar antes de confirmar la transacción</h3>
                     <p>Si el evento sale al broker y luego falla el commit, otros sistemas reaccionan a algo que nunca quedó persistido. En sistemas con consistencia eventual, el patrón outbox suele ser una respuesta más honesta que publicar a pelo dentro de la transacción de negocio.</p>
 
-                    <h3>Meter demasiados datos en el evento</h3>
+                    <h3 id="meter-demasiados-datos-en-el-evento">Meter demasiados datos en el evento</h3>
                     <p>Un evento no debería convertirse en una API encubierta para transportar cualquier dato que alguien podría necesitar. Payload grande, esquemas sin versionar y consumidores que dependen de campos accidentales son deuda distribuida.</p>
                 </section>
 
-                <section class="callout rounded-xl p-5 my-8">
+                <section id="checklist-pragmatico" class="callout rounded-xl p-5 my-8">
                     <h2 class="mt-0">Checklist pragmático</h2>
                     <ol>
                         <li>¿El evento está en pasado y expresa un hecho de negocio?</li>
@@ -278,13 +278,13 @@ sync-crm-on-user-created
                     <p>Si una respuesta es "no", el problema no es cosmético. Probablemente la topología está ocultando acoplamiento.</p>
                 </section>
 
-                <section>
+                <section id="conclusion">
                     <h2>Conclusión</h2>
                     <p>Los domain events ayudan cuando se tratan como hechos, no como comandos diferidos. El broker es una consecuencia técnica: permite que esos hechos crucen procesos, se reintenten, se observen y se escalen. Pero si la topología no cuenta la historia correcta, el sistema acaba lleno de colas opacas y consumidores difíciles de razonar.</p>
                     <p>Nombrar el exchange como <code>user</code>, la routing key como <code>created</code> y la cola como <code>send-email-on-user-created</code> deja visible el contrato operativo: ocurrió un hecho sobre una entidad y esta reacción se ejecuta por ese hecho. Es simple, pero obliga a tomar buenas decisiones: eventos en pasado, acciones en consumidores, una cola por reacción y varias instancias solo cuando hacen el mismo trabajo lógico.</p>
                 </section>
 
-                <section>
+                <section id="fuentes">
                     <h2>Fuentes</h2>
                     <ul>
                         <li><a href="https://martinfowler.com/eaaDev/DomainEvent.html" target="_blank" rel="noopener noreferrer">Martin Fowler, "Domain Event"</a>.</li>

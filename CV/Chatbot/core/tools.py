@@ -28,7 +28,8 @@ def read_blog_article(article: str) -> str:
     if doc is None:
         available = ", ".join(d.name for d in kb.blog_documents) or "ninguno"
         return f"No existe el artículo '{article}'. Artículos disponibles: {available}"
-    return f"[Artículo: {doc.name} | {doc.title} | {doc.url}]\n\n{doc.body}"
+    # Sectioned like the CV in the system prompt, so blog content can be cited by section.
+    return f'<articulo nombre="{doc.name}" titulo="{doc.title}" url="{doc.url}">\n{doc.render_sections()}\n</articulo>'
 
 
 def get_tools() -> list:

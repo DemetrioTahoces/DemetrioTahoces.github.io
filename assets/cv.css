@@ -282,7 +282,15 @@ h1, h2, .card h3 { font-family: var(--font-display); }
 
 /* ---------- Secciones ---------- */
 
-.section-block, section { scroll-margin-top: 6rem; }
+.section-block, section, [id] { scroll-margin-top: 6rem; }
+
+/* Tarjeta o subtítulo destino de un enlace con ancla (p. ej. las citas del chatbot). */
+.card:target {
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 1px var(--accent), var(--shadow-soft);
+}
+
+h3:target { color: var(--accent); }
 
 .section-jump-nav {
     display: flex;

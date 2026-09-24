@@ -134,6 +134,26 @@
         .markdown-body ol { list-style-type: decimal; margin-left: 1.5em; margin-bottom: 0.75em; }
         .markdown-body li { margin-bottom: 0.25em; }
         .markdown-body code { background: rgba(0, 0, 0, 0.3); padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; font-family: monospace; color: #93c5fd; }
+        /* Cita a la sección de la web que respalda el párrafo: [↗ Sección](url#ancla) */
+        .markdown-body a.cite-chip {
+            display: inline-block;
+            max-width: 16em;
+            margin-left: 0.2em;
+            padding: 0 0.5em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: bottom;
+            font-size: 0.75rem;
+            line-height: 1.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .markdown-body a.cite-chip:hover,
+        .markdown-body a.cite-chip:focus-visible { color: var(--accent-strong); border-color: var(--accent-strong); }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -748,6 +768,10 @@
                 if (node.tagName === 'A' && node.getAttribute('href')) {
                     node.setAttribute('target', '_blank');
                     node.setAttribute('rel', 'noopener noreferrer');
+                    if (node.textContent.trim().startsWith('↗')) {
+                        node.classList.add('cite-chip');
+                        node.setAttribute('title', node.textContent.replace('↗', '').trim());
+                    }
                 }
             });
         }

@@ -1,7 +1,7 @@
 ---
 type: formacion
 title: "Máster en IA Aplicada y Optimización de Procesos"
-route: "/#formacion"
+route: "/#master-ia-aplicada"
 tags: ["formacion", "master", "ia", "rag", "agentes"]
 summary: "Máster en IA Aplicada y Optimización de Procesos (2025–2026, en curso): RAG y agentes"
 order: 20

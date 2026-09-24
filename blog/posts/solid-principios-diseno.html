@@ -98,13 +98,13 @@
             </div>
 
             <div class="article-prose">
-                <section>
+                <section id="la-escena-tipica">
                     <h2>La escena típica</h2>
                     <p>Cuando hablamos de código, la deuda técnica empieza igual en muchas ocasiones: una clase pequeña dentro de un servicio backend. Hace una cosa, se entiende rápido y nadie se queja. Dos meses después calcula precios, guarda datos, manda emails, publica eventos y tiene un <code>if</code> nuevo por cada caso raro que aparece. Aún funciona, pero ya da pereza tocarla.</p>
                     <p>Ahí es donde SOLID empieza a tener sentido. No como una religión de interfaces, sino como una forma de preguntar: si mañana cambia esta regla, ¿cuánto código arrastra detrás?</p>
                 </section>
 
-                <section>
+                <section id="el-problema-real-cambiar-sin-romper-medio-sistema">
                     <h2>El problema real: cambiar sin romper medio sistema</h2>
                     <p>El software no se desgasta como una pieza mecánica. Se vuelve difícil cuando cada cambio pequeño obliga a revisar demasiadas zonas. Suele pasar por tres motivos bastante mundanos:</p>
                     <ul>
@@ -115,12 +115,12 @@
                     <p>Los principios vienen del diseño orientado a objetos, pero la idea aplica igual a servicios, módulos, casos de uso o paquetes. La unidad concreta importa menos que el olor: si para tocar una regla de negocio tienes que entender infraestructura, formato de salida y mensajería, algo se ha mezclado.</p>
                 </section>
 
-                <section>
+                <section id="s-single-responsibility-principle">
                     <h2>S: Single Responsibility Principle</h2>
                     <p>La versión de pegatina dice: "una clase debe hacer una sola cosa". Está bien para empezar, pero se queda corta. La pregunta útil es: <strong>¿quién pide que esto cambie?</strong></p>
                     <p>Una clase <code>InvoiceService</code> que calcula impuestos, guarda facturas, genera PDF y publica eventos mezcla motivos de cambio distintos. Fiscalidad, almacenamiento, documento e integración no cambian por el mismo actor, aunque todo hable de facturas.</p>
                     <p>Esto no significa una clase por verbo. Si dos decisiones cambian siempre juntas, separarlas solo añade ceremonia. SRP pide cohesión alrededor de una razón real de cambio.</p>
-                    <h3>Señales rápidas</h3>
+                    <h3 id="senales-rapidas">Señales rápidas</h3>
                     <ul>
                         <li>cambios pequeños obligan a tocar una clase enorme;</li>
                         <li>hay métodos usados por actores distintos;</li>
@@ -129,12 +129,12 @@
                     </ul>
                 </section>
 
-                <section>
+                <section id="o-open-closed-principle">
                     <h2>O: Open/Closed Principle</h2>
                     <p>OCP suele sonar a promesa imposible: extender sin modificar. En la práctica significa algo más razonable: si una variación aparece cada dos semanas, dale un sitio claro donde entrar.</p>
                     <p>Piensa en descuentos. Primero hay un descuento VIP. Luego empleados. Luego Black Friday. Luego una campaña para partners. Si cada regla nueva acaba en el mismo método con otro <code>if</code>, ese método se convierte en una centralita telefónica.</p>
                     <p>Una política de descuento, un handler o una función registrada pueden dejar estable la mecánica y mover la variación a piezas pequeñas. No hace falta herencia para cumplir OCP.</p>
-                    <h3>Cuándo no merece la pena</h3>
+                    <h3 id="cuando-no-merece-la-pena">Cuándo no merece la pena</h3>
                     <ul>
                         <li>si solo existe una variante y no hay señal real de cambio;</li>
                         <li>si la abstracción se diseña antes de entender el dominio;</li>
@@ -143,12 +143,12 @@
                     <p>OCP no significa "no modificar nunca". Significa no tocar código estable cada vez que aparece una variación previsible.</p>
                 </section>
 
-                <section>
+                <section id="l-liskov-substitution-principle">
                     <h2>L: Liskov Substitution Principle</h2>
                     <p>LSP no va de que el compilador acepte una subclase. Va de no sorprender al código que la usa.</p>
                     <p>Si una función recibe un <code>PaymentMethod</code>, debería poder trabajar con tarjeta, transferencia o wallet sin preguntar por el tipo concreto. Si una implementación devuelve <code>null</code> donde el contrato promete una lista vacía, o lanza una excepción que nadie esperaba, el contrato está roto aunque todo compile.</p>
                     <p>El ejemplo del pingüino y el método <code>fly()</code> sigue siendo útil por eso: el problema no es biológico, es contractual. Si no todos los pájaros vuelan, el tipo base no debe prometer vuelo.</p>
-                    <h3>Checklist</h3>
+                    <h3 id="checklist">Checklist</h3>
                     <ul>
                         <li>no fortalecer precondiciones en el subtipo;</li>
                         <li>no debilitar postcondiciones;</li>
@@ -158,14 +158,14 @@
                     </ul>
                 </section>
 
-                <section>
+                <section id="i-interface-segregation-principle">
                     <h2>I: Interface Segregation Principle</h2>
                     <p>ISP es el principio del menú corto. Si solo quieres un café, no deberían obligarte a cargar con toda la carta del restaurante.</p>
                     <p>En código pasa con interfaces que mezclan creación, borrado, exportación, email y scoring. Un caso de uso que solo crea usuarios acaba acoplado a operaciones que no necesita. Eso contamina tests, permisos e implementaciones.</p>
                     <p>La separación buena no es una interfaz por método. Es una interfaz por cliente o caso de uso. Si dos operaciones se consumen siempre juntas y forman un contrato estable, pueden vivir juntas sin problema.</p>
                 </section>
 
-                <section>
+                <section id="d-dependency-inversion-principle">
                     <h2>D: Dependency Inversion Principle</h2>
                     <p>DIP es fácil de confundir con "usar inyección de dependencias". No es eso. La inyección es una técnica; la inversión es decidir quién define el contrato.</p>
                     <p>Las reglas importantes del sistema no deberían importar directamente el cliente HTTP, el ORM, Kafka, Redis o el proveedor cloud. El caso de uso define lo que necesita; la infraestructura se adapta.</p>
@@ -179,7 +179,7 @@
                     <p>La idea encaja muy bien con arquitectura hexagonal: el centro define puertos y los adaptadores técnicos se enchufan fuera.</p>
                 </section>
 
-                <section>
+                <section id="como-se-refuerzan-entre-si">
                     <h2>Cómo se refuerzan entre sí</h2>
                     <p>Los principios no viven aislados:</p>
                     <ul>
@@ -192,28 +192,28 @@
                     <p>La gracia está en usarlos juntos, no en recitarlos por separado. SOLID empuja a que el cambio entre por zonas previstas y no atraviese todo el sistema como una gotera.</p>
                 </section>
 
-                <section>
+                <section id="errores-habituales">
                     <h2>Errores habituales</h2>
-                    <h3>Confundir SOLID con más capas</h3>
+                    <h3 id="confundir-solid-con-mas-capas">Confundir SOLID con más capas</h3>
                     <p>Más capas no implican mejor diseño. Si una interfaz solo tiene una implementación, no hay previsión de variación y solo añade navegación, quizá no aporta nada. La abstracción prematura también es deuda.</p>
 
-                    <h3>Usar herencia donde basta composición</h3>
+                    <h3 id="usar-herencia-donde-basta-composicion">Usar herencia donde basta composición</h3>
                     <p>Muchos problemas que se intentan resolver con jerarquías se expresan mejor con composición. LSP es una advertencia: si una subclase necesita desactivar o contradecir parte del padre, probablemente no hay relación de subtipo.</p>
 
-                    <h3>Aplicar OCP a todo</h3>
+                    <h3 id="aplicar-ocp-a-todo">Aplicar OCP a todo</h3>
                     <p>No todo merece un sistema de plugins. Conviene cerrar aquello que ya es estable y abrir aquello que cambia con frecuencia. El diseño debe seguir evidencia, no ansiedad.</p>
 
-                    <h3>Diseñar interfaces desde la implementación</h3>
+                    <h3 id="disenar-interfaces-desde-la-implementacion">Diseñar interfaces desde la implementación</h3>
                     <p>Una interfaz que copia todos los métodos de una clase concreta no invierte nada. Solo duplica el detalle. Las buenas abstracciones nacen del consumidor: "qué necesita este caso de uso para cumplir su responsabilidad".</p>
                 </section>
 
-                <section>
+                <section id="solid-en-codigo-moderno">
                     <h2>SOLID en código moderno</h2>
                     <p>Aunque SOLID nació en el contexto de orientación a objetos, su valor no depende de escribir Java o C#. En TypeScript, Python, Go o arquitecturas funcionales siguen existiendo los mismos problemas: demasiadas razones de cambio, contratos excesivos, implementaciones que sorprenden al cliente y políticas de negocio atadas a detalles técnicos.</p>
                     <p>Un estudio reciente sobre código de Machine Learning encontró evidencia de que aplicar SOLID mejoraba la comprensión del código por parte de participantes del estudio. No lo convierte en dogma, pero sí refuerza una intuición sencilla: separar responsabilidades y contratos ayuda cuando otro tiene que leer tu código un martes por la tarde.</p>
                 </section>
 
-                <section class="callout rounded-xl p-5 my-8">
+                <section id="regla-pragmatica" class="callout rounded-xl p-5 my-8">
                     <h2 class="mt-0">Regla pragmática</h2>
                     <p>Antes de aplicar un principio, conviene preguntar:</p>
                     <ol>
@@ -226,13 +226,13 @@
                     <p>Si no puedes responder, probablemente estás aplicando SOLID como estética, no como ingeniería.</p>
                 </section>
 
-                <section>
+                <section id="conclusion">
                     <h2>Conclusión</h2>
                     <p>SOLID no garantiza buen diseño. Ayuda a razonar sobre cambio, acoplamiento y contratos. Su uso maduro consiste en aplicarlo donde el sistema muestra presión real: módulos que cambian por motivos distintos, reglas que necesitan nuevas variantes, jerarquías con contratos frágiles, interfaces demasiado amplias y casos de uso acoplados a infraestructura.</p>
                     <p>La mejor versión de SOLID no produce más código por principio. Produce código donde las decisiones importantes están protegidas, las variaciones tienen un lugar natural y los detalles reemplazables no gobiernan la arquitectura.</p>
                 </section>
 
-                <section>
+                <section id="fuentes">
                     <h2>Fuentes</h2>
                     <ul>
                         <li><a href="https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html" target="_blank" rel="noopener noreferrer">Robert C. Martin, "The Single Responsibility Principle"</a>.</li>

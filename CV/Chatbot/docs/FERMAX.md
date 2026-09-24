@@ -10,23 +10,23 @@ order: 10
 # Software Engineer — Fermax
 **01/2025 — Presente** | fermax.com
 
-## Contexto
+## Contexto {#contexto}
 Fermax: fabricante de videoporteros y sistemas de control de accesos. Me incorporé tras la subrogación del equipo de Opendit para seguir desarrollando el ecosistema IoT y sus aplicaciones móviles. El objetivo principal era trasladar el diseño y la agilidad de la startup a una empresa más grande, cuidando la calidad del código y la estructura de los sistemas.
 
-## Contribuciones
+## Contribuciones {#contribuciones-clave}
 
-### Evolución Arquitectura (Domain Events)
+### Evolución Arquitectura (Domain Events) {#domain-events}
 - Adopción de Domain Events entre bounded contexts → desacoplamiento microservicios.
 - Escalabilidad horizontal: nuevos servicios se suscriben sin modificar productores.
 - Listeners transaccionales garantizan consistencia en operaciones derivadas.
 - Sustitución de llamadas síncronas por publicación de eventos de dominio.
 
-### Migración Opendit → Fermax
+### Migración Opendit → Fermax {#migracion-opendit}
 - Zero-downtime en migración infraestructura y servicios.
 - Migración bases de datos (MongoDB, PostgreSQL), reconfiguración cloud.
 - Adaptación equipo a procesos organización mayor escala, proponiendo mejoras desde experiencia startup.
 
-### Liderazgo en Desarrollo Agéntico (Claude Code)
+### Liderazgo en Desarrollo Agéntico (Claude Code) {#desarrollo-agentico}
 - Lidera la integración de Claude Code en el desarrollo de un equipo de 10 personas: workflows con 6–7 agentes especializados que cubren el ciclo completo (diseño y definición de tareas → implementación → verificación → documentación).
 - Implementación repartida entre varios agentes.
 - Fase de verificación con revisiones independientes: funcionalidad, seguridad y mantenibilidad del código, ejecución de pruebas en el entorno de desarrollo y documentación.
@@ -39,17 +39,17 @@ Fermax: fabricante de videoporteros y sistemas de control de accesos. Me incorpo
   - Estimación del equipo (no medición exacta), frente al desarrollo previo ya asistido por IA pero sin estos flujos: el esfuerzo de verificación (revisión + tests) y el de correcciones posteriores se ha reducido a menos de la mitad; la fase de definición y análisis también requiere algo menos de esfuerzo.
 - El diseño concreto (reparto de responsabilidades entre agentes, criterios de salida del bucle, forma de las skills) es know-how propio fruto de iterar sobre el desarrollo real del equipo; no está documentado públicamente en detalle y Demetrio lo explica encantado en una conversación.
 
-### Early Adopter IA (GitHub Copilot)
+### Early Adopter IA (GitHub Copilot) {#github-copilot}
 - Referente en uso avanzado de agentes y skills de Copilot.
 - Automatización: tests unitarios, documentación APIs, refactoring, code review, nuevas features.
 
-### Infraestructura y Disponibilidad
+### Infraestructura y Disponibilidad {#infraestructura}
 - ConfigMaps/Secrets en Kubernetes para configuración segura y dinámica.
 - RabbitMQ para mensajería asíncrona (colas y exchanges).
 - CI/CD con pipelines que incluyen testing.
 - Despliegues blue green y problemas asociados (retrocompatibilidad BBDD, colas de mensajeria, etc.)
 
-## Stack
+## Stack {#stack-tecnico}
 - Backend: Spring Boot (Java), NestJS (TypeScript), Hexagonal, DDD, Domain Events, Unit/Integration Testing.
 - BBDD: MongoDB, PostgreSQL.
 - Infra: Kubernetes (ConfigMaps/Secrets), GitHub, OpenAPI/Swagger.

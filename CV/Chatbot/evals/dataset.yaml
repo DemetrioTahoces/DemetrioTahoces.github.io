@@ -10,6 +10,10 @@
 #   usa_herramienta   true/false: si debe (o no) llamar a read_blog_article
 #   criterio          regla que valida un LLM juez (hechos, tono, idioma, honestidad)
 #   repeticiones      nº de ejecuciones (por defecto 1) para comportamientos intermitentes
+#   citas             true: la respuesta debe citar por párrafo secciones de la web (cuenta para la cobertura)
+#
+# Todas las respuestas se miden además en validez de citas: % de enlaces al sitio que
+# el modelo escribe con una URL exacta de la lista blanca (antes de la validación del backend).
 #
 # Añade un caso cada vez que el chatbot falle en producción.
 
@@ -163,8 +167,9 @@
   repeticiones: 3
   pregunta: "Cuéntame su experiencia en Opendit"
   usa_herramienta: false
-  contiene: ["demetriotahoces.github.io/CV/opendit.html"]
-  criterio: "Resume su etapa en Opendit y termina con un enlace a la página de Opendit."
+  citas: true
+  contiene: ["demetriotahoces.github.io/CV/opendit.html#"]
+  criterio: "Resume su etapa en Opendit y cita secciones de la página de Opendit con enlaces [↗ ...]."
 
 - id: brevedad
   pregunta: "¿Conoce Docker?"
@@ -173,7 +178,37 @@
 - id: enlace-en-ingles
   repeticiones: 3
   pregunta: "Tell me about his experience at Inditex"
-  contiene: ["demetriotahoces.github.io/CV/inditex.html"]
+  citas: true
+  contiene: ["demetriotahoces.github.io/CV/inditex.html#"]
   no_contiene: ["Más detalle", "More detalle"]
   usa_herramienta: false
-  criterio: "Responde en inglés sobre su etapa en Inditex (datos en tiempo real, Kafka, Snowflake) y el enlace final también está en inglés."
+  criterio: "Responde en inglés sobre su etapa en Inditex (datos en tiempo real, Kafka, Snowflake) y el texto de las citas [↗ ...] también está en inglés."
+
+- id: citas-por-parrafo
+  repeticiones: 2
+  pregunta: "¿Qué ha hecho en Fermax?"
+  citas: true
+  usa_herramienta: false
+  contiene: ["demetriotahoces.github.io/CV/fermax.html#"]
+  criterio: "Cada párrafo o elemento de lista con datos sobre Demetrio termina con al menos una cita [↗ ...], y las secciones citadas respaldan las afirmaciones principales del párrafo (p. ej. el desarrollo agéntico cita la sección de desarrollo agéntico, no la de infraestructura). Suspende si una cita apunta a una sección que no tiene relación con el párrafo; no suspendas porque un detalle menor (fecha, contexto general de la empresa) no esté en la sección citada. Las citas pueden agruparse al final de varios párrafos seguidos sobre la misma sección."
+
+- id: cita-seccion-concreta
+  repeticiones: 3
+  pregunta: "¿Qué resultados ha conseguido con los flujos de Claude Code?"
+  citas: true
+  usa_herramienta: false
+  contiene: ["demetriotahoces.github.io/CV/fermax.html#desarrollo-agentico"]
+  criterio: "Da los resultados documentados (más del 80% de PRs exitosas a la primera; esfuerzo de verificación y correcciones reducido a menos de la mitad, como estimación del equipo) y los cita con la sección de desarrollo agéntico de Fermax."
+
+- id: cita-blog-seccion
+  pregunta: "¿Qué dice su artículo de SOLID sobre el principio Open/Closed?"
+  citas: true
+  usa_herramienta: true
+  contiene: ["solid-principios-diseno.html#o-open-closed-principle"]
+  criterio: "Explica el principio Open/Closed según el artículo (extender sin modificar; útil con variaciones previsibles, peligroso si se abstrae antes de tiempo) y cita la sección del artículo sobre OCP."
+
+- id: cita-formacion
+  pregunta: "¿Qué máster está cursando ahora?"
+  citas: true
+  contiene: ["demetriotahoces.github.io/#master-ia-aplicada"]
+  criterio: "Indica el Máster en IA Aplicada y Optimización de Procesos (Utamed, en curso) y lo cita."

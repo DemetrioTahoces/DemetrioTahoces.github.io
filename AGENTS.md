@@ -80,6 +80,8 @@ Regla práctica: si una experiencia, tecnología, formación, responsabilidad o 
 
 Mantén el contenido en castellano profesional, concreto y defendible. Evita marketing vacío, claims inflados y listas de buzzwords sin evidencia.
 
+Trazabilidad de las respuestas: cada encabezado `##`/`###` de `CV/Chatbot/docs/*.md` declara el `id` de la sección HTML que lo respalda (`## Contexto {#contexto}`) y el chatbot cita cada párrafo con esa URL. Si renombras, añades o quitas una sección en `index.html`, `CV/*.html` o `blog/posts/*.html`, actualiza el `id` y el ancla del Markdown a la vez; los `id` son estables (no los cambies aunque cambie el título). `uv run pytest` valida que cada ancla exista en su página.
+
 Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `formacion` o `blog_post`), `title`, `route` (ruta pública), `summary`, `tags` y `order` (CV/formación) o `date` (blog). Tras añadir o cambiar documentos, regenera `llms.txt` con `uv run python -m core.llms_txt` y ejecuta `uv run pytest` desde `CV/Chatbot` (un test valida el frontmatter y que `llms.txt` esté al día).
 
 ## Blog
