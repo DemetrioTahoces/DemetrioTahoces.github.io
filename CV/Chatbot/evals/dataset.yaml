@@ -166,3 +166,10 @@
 - id: brevedad
   pregunta: "¿Conoce Docker?"
   criterio: "Respuesta corta (no más de 5 frases) que confirma Docker con contexto concreto (p. ej. Securitas Direct, Imagine800 con Asterisk en Docker)."
+
+- id: enlace-en-ingles
+  pregunta: "Tell me about his experience at Inditex"
+  contiene: ["demetriotahoces.github.io/CV/inditex.html"]
+  no_contiene: ["Más detalle", "More detalle"]
+  usa_herramienta: false
+  criterio: "Responde en inglés sobre su etapa en Inditex (datos en tiempo real, Kafka, Snowflake) y el enlace final también está en inglés."
