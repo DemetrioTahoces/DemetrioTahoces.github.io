@@ -25,7 +25,7 @@ flowchart LR
     end
 
     KB[(docs/*.md<br/>frontmatter)] -->|CV completo| SP[System prompt<br/>cacheado]
-    KB -->|artículos| T[tool read_document]
+    KB -->|artículos| T[tool read_blog_article]
     KB --> MCP
     SP --> AG
     T <--> AG
@@ -44,7 +44,7 @@ sequenceDiagram
     F-->>B: SSE session (request_id)
     F->>M: system prompt (CV) + historial + pregunta
     alt Pregunta sobre un artículo del blog
-        M->>F: tool_call read_document
+        M->>F: tool_call read_blog_article
         F-->>B: SSE tool_call / tool_result
         F->>M: contenido del artículo
     end
@@ -95,7 +95,7 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | `core/agent.py` | Modelo, agente, middleware, streaming |
 | `core/knowledge.py` | Carga de `docs/`, frontmatter, render del prompt, pista de página |
 | `core/prompts.py` | Reglas del asistente + fecha |
-| `core/tools.py` | Tool `read_document` |
+| `core/tools.py` | Tool `read_blog_article` (solo blog) |
 | `core/mcp_server.py` | Servidor MCP (`list_documents`, `get_document`) |
 | `core/tracing.py` | LangSmith opcional + feedback |
 | `core/llms_txt.py` | Genera `/llms.txt` del sitio |

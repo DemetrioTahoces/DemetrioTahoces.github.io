@@ -176,7 +176,7 @@ async def stream_agent(
                     if node == MODEL_NODE:
                         ai_messages.append(m)
                         for call in m.tool_calls:
-                            yield {"type": "tool_call", "tool": call["name"], "doc": call["args"].get("doc_name")}
+                            yield {"type": "tool_call", "tool": call["name"], "doc": call["args"].get("article")}
                         if not m.tool_calls and m.text.strip():
                             fallback_text = m.text
                     elif not m.tool_calls and m.text.strip():

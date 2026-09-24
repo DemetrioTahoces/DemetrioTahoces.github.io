@@ -25,7 +25,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - `CV/chatbot.html`: interfaz web del asistente del CV.
 - `CV/chatbot-widget.js`: widget del chatbot.
 - `CV/Chatbot/api/index.py`: entrada FastAPI serverless.
-- `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, tool `read_document`, servidor MCP, tracing y generador de `llms.txt`.
+- `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, tool `read_blog_article`, servidor MCP, tracing y generador de `llms.txt`.
 - `CV/Chatbot/middleware/`: logging y rate limiting.
 - `CV/Chatbot/docs/*.md`: documentos que alimentan el chatbot (frontmatter obligatorio).
 - `CV/Chatbot/test/`: tests offline con pytest (modelo falso, sin API key).
@@ -62,7 +62,7 @@ Instrucciones de trabajo para agentes que modifiquen este repositorio.
 - La configuración se lee desde variables de entorno o `CV/Chatbot/.env` mediante `CV/Chatbot/core/config.py`. Variables y valores por defecto: tabla en `CV/Chatbot/README.md` y plantilla en `.env.example` (modelo por defecto `gpt-6-luna`).
 - Endpoints: `POST /api/chat/stream`, `POST /api/chat`, `POST /api/feedback`, `GET /api/health` y el servidor MCP de solo lectura en `POST /api/mcp`.
 - El backend es stateless: el frontend envía los últimos mensajes en `history`. No reintroduzcas memoria en servidor (`MemorySaver`).
-- El CV completo va en el system prompt (cacheado); los artículos del blog se leen con la tool `read_document`. Mantén el prompt estable y la fecha al final para no romper la caché.
+- El CV completo va en el system prompt (cacheado); los artículos del blog se leen con la tool `read_blog_article` (solo blog). Mantén el prompt estable y la fecha al final para no romper la caché.
 - CORS se configura solo en FastAPI (`ALLOWED_ORIGINS`); no hay `vercel.json`. Vercel usa el preset FastAPI (entrypoint `api/index.py`). No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
 
 ## Contenido curricular y RAG

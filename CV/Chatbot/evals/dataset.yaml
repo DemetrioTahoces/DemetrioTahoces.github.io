@@ -7,7 +7,7 @@
 #   contiene          subcadenas que deben aparecer (sin distinguir mayúsculas ni tildes)
 #   contiene_alguno   al menos una de estas subcadenas debe aparecer
 #   no_contiene       subcadenas prohibidas
-#   usa_herramienta   true/false: si debe (o no) llamar a read_document
+#   usa_herramienta   true/false: si debe (o no) llamar a read_blog_article
 #   criterio          regla que valida un LLM juez (hechos, tono, idioma, honestidad)
 #
 # Añade un caso cada vez que el chatbot falle en producción.
@@ -129,12 +129,14 @@
     - {role: user, content: "¿Dónde trabajó entre 2022 y 2024?"}
     - {role: assistant, content: "Entre 2022 y 2024 trabajó como Backend Engineer en Opendit."}
   pregunta: "¿Y qué patrones de arquitectura aplicó allí?"
+  usa_herramienta: false
   contiene_alguno: ["CQRS", "BFF", "DAPR", "Hexagonal"]
   criterio: "Entiende que 'allí' es Opendit y menciona al menos dos patrones que constan en el CV (BFF, CQRS, DDD, hexagonal, event-driven, DAPR). No hace falta citarlos todos."
 
 - id: contexto-pagina
   pagina: "/CV/inditex.html"
   pregunta: "¿Qué hizo en esta empresa?"
+  usa_herramienta: false
   contiene: ["Inditex"]
   criterio: "Usa el contexto de navegación para entender que se refiere a Inditex y describe su trabajo allí (datos en tiempo real, Kafka, Snowflake)."
 
@@ -157,6 +159,7 @@
 
 - id: enlace-fuente
   pregunta: "Cuéntame su experiencia en Opendit"
+  usa_herramienta: false
   contiene: ["demetriotahoces.github.io/CV/opendit.html"]
   criterio: "Resume su etapa en Opendit y termina con un enlace a la página de Opendit."
 

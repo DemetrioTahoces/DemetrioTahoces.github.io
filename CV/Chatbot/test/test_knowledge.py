@@ -2,7 +2,7 @@ from datetime import date
 
 from core.knowledge import BLOG_TYPE, get_knowledge_base
 from core.prompts import build_static_prompt, build_system_prompt
-from core.tools import read_document
+from core.tools import read_blog_article
 
 
 def test_every_document_has_complete_frontmatter():
@@ -29,7 +29,7 @@ def test_system_prompt_contains_full_cv_and_blog_index_only():
         assert doc.body[:200] in prompt, doc.name
     for doc in kb.blog_documents:
         assert doc.url in prompt and doc.summary in prompt
-        # Blog bodies are loaded on demand through read_document.
+        # Blog bodies are loaded on demand through read_blog_article.
         assert doc.body[-300:] not in prompt
 
 
@@ -40,10 +40,12 @@ def test_date_goes_last_so_the_prefix_stays_cacheable():
     assert first.removesuffix("2026-01-01") == second.removesuffix("2026-09-24")
 
 
-def test_read_document_tool_resolves_names_and_reports_missing():
-    assert "SOLID" in read_document.invoke({"doc_name": "blog/solid-principios-diseno"})
-    assert "Fermax" in read_document.invoke({"doc_name": "fermax"})
-    missing = read_document.invoke({"doc_name": "blog/no-existe"})
+def test_blog_tool_reads_articles_only():
+    assert "SOLID" in read_blog_article.invoke({"article": "blog/solid-principios-diseno"})
+    assert "SOLID" in read_blog_article.invoke({"article": "solid-principios-diseno"})
+    cv_doc = read_blog_article.invoke({"article": "fermax"})
+    assert "no es un artículo del blog" in cv_doc and "Fermax" not in cv_doc
+    missing = read_blog_article.invoke({"article": "blog/no-existe"})
     assert "No existe" in missing and "blog/solid-principios-diseno" in missing
 
 

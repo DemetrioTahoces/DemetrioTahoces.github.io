@@ -26,8 +26,8 @@ def ai(content: str = "", tool_calls: list[dict] | None = None) -> AIMessage:
     return AIMessage(content=content, tool_calls=tool_calls or [], usage_metadata=dict(USAGE))
 
 
-def read_call(doc_name: str, call_id: str = "call_1") -> dict:
-    return {"name": "read_document", "args": {"doc_name": doc_name}, "id": call_id, "type": "tool_call"}
+def read_call(article: str, call_id: str = "call_1") -> dict:
+    return {"name": "read_blog_article", "args": {"article": article}, "id": call_id, "type": "tool_call"}
 
 
 @pytest.fixture

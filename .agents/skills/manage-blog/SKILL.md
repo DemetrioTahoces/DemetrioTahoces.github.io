@@ -33,7 +33,7 @@ Mantener la sección `/blog/` como blog educativo separado del CV pero visualmen
 - Hacer que cada artículo sea ameno y humano: abrir con una situación reconocible, pero con contexto técnico inmediato y sin ambigüedades de lectura. Usar ejemplos de desarrollo cotidiano o vida real, variar el ritmo y sostener una opinión técnica clara.
 - Cada post debe incluir título, descripción, fecha, etiquetas, tiempo estimado de lectura si aplica, enlaces de vuelta al blog/CV y metadatos SEO/OG.
 - Cada tarjeta del listado debe incluir título, descripción breve, fecha, etiquetas, enlace al artículo e imagen si aplica. Si no hay imagen, usar una composición visual CSS coherente o una card textual sobria.
-- El Markdown para el chatbot debe ser una ficha muy resumida, no una copia del artículo: el chatbot la carga entera con la tool `read_document` cuando le preguntan por el artículo. Empieza con frontmatter YAML obligatorio:
+- El Markdown para el chatbot debe ser una ficha muy resumida, no una copia del artículo: el chatbot la carga entera con la tool `read_blog_article` cuando le preguntan por el artículo. Empieza con frontmatter YAML obligatorio:
 
   ```markdown
   ---
