@@ -1,290 +1,184 @@
 """
-LangGraph ReAct agent for the CV chatbot.
+CV assistant agent (LangChain create_agent on LangGraph).
+
+Stateless by design: the client sends the recent conversation with every
+request, so any Vercel instance can answer and nothing accumulates in memory.
 """
 
 import logging
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator, Sequence
+from typing import Any
 
-from langchain_core.messages import SystemMessage, trim_messages
-from langgraph.prebuilt import create_react_agent
-from langgraph.checkpoint.memory import MemorySaver
+from langchain.agents import create_agent
+from langchain.agents.middleware import (
+    ModelCallLimitMiddleware,
+    ModelRequest,
+    ToolCallLimitMiddleware,
+    dynamic_prompt,
+)
+from langchain_core.language_models import BaseChatModel
+from langchain_core.messages import AIMessage, AIMessageChunk, AnyMessage, HumanMessage, ToolMessage
 
 from core.config import settings
-from core.prompts import SYSTEM_PROMPT
-from core.tools import build_page_context_hint, get_tools
+from core.knowledge import build_page_context_hint, get_knowledge_base
+from core.prompts import build_system_prompt
+from core.tools import get_tools
 
 logger = logging.getLogger("cv_chatbot.agent")
 
+MODEL_NODE = "model"
+TOOLS_NODE = "tools"
+EMPTY_ANSWER = "Lo siento, no he podido generar una respuesta para esta consulta. ¿Puedes reformularla?"
 
-def _create_model():
-    """Instantiate the model from config."""
+
+def create_chat_model() -> BaseChatModel:
+    """OpenAI model via the Responses API (required for gpt-5.x tools + reasoning)."""
     if not settings.api_key:
-        raise ValueError(
-            "API_KEY is not set. "
-            "Set it as an environment variable or in .env file."
-        )
+        raise ValueError("API_KEY is not set. Set it as an environment variable or in CV/Chatbot/.env.")
 
-    if settings.provider_name == "openai":
-        from langchain_openai import ChatOpenAI
-        kwargs = {}
-        if settings.reasoning_effort:
-            kwargs["reasoning_effort"] = settings.reasoning_effort
-        # Reasoning models reject temperature unless reasoning is disabled
-        if settings.reasoning_effort in (None, "none"):
-            kwargs["temperature"] = 0.3
-        # gpt-5.x rejects function tools + reasoning_effort on /v1/chat/completions
-        return ChatOpenAI(
-            model=settings.model_name,
-            api_key=settings.api_key,
-            use_responses_api=True,
-            stream_usage=True,
-            **kwargs,
-        )
-    else:
-        # Any other provider falls back to Gemini
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(
-            model=settings.model_name,
-            google_api_key=settings.api_key,
-            temperature=0.3,
-            convert_system_message_to_human=False,
-        )
+    from langchain_openai import ChatOpenAI
 
+    kwargs: dict[str, Any] = {}
+    if settings.reasoning_effort:
+        kwargs["reasoning_effort"] = settings.reasoning_effort
+    # Reasoning models reject temperature unless reasoning is disabled.
+    if settings.reasoning_effort in (None, "none"):
+        kwargs["temperature"] = 0.3
 
-def _trim_messages(state):
-    """
-    Trims the conversation history to save tokens while retaining recent context.
-    Prepends the system prompt to ensure it's always available to the model.
-    """
-    messages = state.get("messages", []) if isinstance(state, dict) else state
-    if not messages:
-        return [SystemMessage(content=SYSTEM_PROMPT)]
-        
-    # 1. Encontrar el índice del último mensaje del usuario (inicio del turno actual)
-    last_human_idx = 0
-    for i in range(len(messages) - 1, -1, -1):
-        if getattr(messages[i], "type", "") == "human":
-            last_human_idx = i
-            break
-            
-    # 2. Historial antiguo: Conservar SOLO preguntas y respuestas finales de texto.
-    # Descartamos las llamadas a herramientas (AI) y sus resultados (Tool) de turnos pasados.
-    # Así ahorramos miles de tokens sin perder el hilo de la conversación.
-    past_history = []
-    for m in messages[:last_human_idx]:
-        m_type = getattr(m, "type", "")
-        if m_type == "human":
-            past_history.append(m)
-        elif m_type == "ai" and m.content and not getattr(m, "tool_calls", None):
-            past_history.append(m)
-            
-    # Opcional: quedarnos con los últimos 6 o 10 mensajes de texto del historial
-    past_history = past_history[-10:]
-    
-    # 3. Turno actual: Se mantiene íntegro para que el LLM pueda leer las herramientas que acaba de pedir
-    current_turn = messages[last_human_idx:]
-    
-    return [SystemMessage(content=SYSTEM_PROMPT)] + past_history + current_turn
-
-
-def create_agent_graph():
-    """
-    Create the LangGraph ReAct agent with document tools.
-
-    Returns:
-        A compiled LangGraph graph ready for invocation.
-    """
-    model = _create_model()
-    tools = get_tools()
-    memory = MemorySaver()
-
-    graph = create_react_agent(
-        model=model,
-        tools=tools,
-        prompt=_trim_messages,
-        checkpointer=memory,
+    return ChatOpenAI(
+        model=settings.model_name,
+        api_key=settings.api_key,
+        use_responses_api=True,
+        # Visitors' conversations are not retained by OpenAI (default is 30 days).
+        # Encrypted reasoning keeps reasoning items replayable within a tool loop.
+        store=False,
+        include=["reasoning.encrypted_content"],
+        stream_usage=True,
+        max_tokens=settings.max_output_tokens,
+        timeout=settings.request_timeout,
+        max_retries=2,
+        **kwargs,
     )
 
+
+@dynamic_prompt
+def _system_prompt(request: ModelRequest) -> str:
+    return build_system_prompt()
+
+
+def create_agent_graph(model: BaseChatModel | None = None):
+    """Build the agent. `model` is injectable so tests can run without an API key."""
+    graph = create_agent(
+        model=model or create_chat_model(),
+        tools=get_tools(),
+        middleware=[
+            _system_prompt,
+            ModelCallLimitMiddleware(run_limit=settings.max_model_calls, exit_behavior="end"),
+            ToolCallLimitMiddleware(run_limit=settings.max_tool_calls, exit_behavior="continue"),
+        ],
+    )
     logger.info(
-        "Agent graph created | model=%s | tools=%d",
+        "Agent graph created | model=%s | docs=%d",
         settings.model_name,
-        len(tools),
+        len(get_knowledge_base().documents),
     )
     return graph
 
 
-def _build_user_message(message: str, page_context: dict | None = None) -> str:
-    """Attach validated navigation context to the current user turn."""
-    context_hint = build_page_context_hint(page_context)
-    if not context_hint:
-        return message
+def build_input_messages(
+    message: str,
+    history: Sequence[dict] | None = None,
+    page_context: dict | None = None,
+) -> list[AnyMessage]:
+    """Recent history (user/assistant text only) + the current user turn."""
+    messages: list[AnyMessage] = []
+    for turn in history or []:
+        content = str(turn.get("content") or "").strip()
+        if not content:
+            continue
+        if turn.get("role") == "user":
+            messages.append(HumanMessage(content=content))
+        elif turn.get("role") == "assistant":
+            messages.append(AIMessage(content=content))
+    messages = messages[-settings.max_history_messages:]
 
-    return f"{context_hint}\n\nPregunta del usuario:\n{message}"
+    hint = build_page_context_hint(page_context)
+    current = f"{hint}\n\nPregunta:\n{message}" if hint else message
+    messages.append(HumanMessage(content=current))
+    return messages
 
 
-async def invoke_agent(graph, message: str, session_id: str, page_context: dict | None = None) -> dict:
-    """
-    Invoke the agent with a user message and return the full response.
+def _usage_of(messages: Sequence[AnyMessage]) -> dict[str, int]:
+    usage = {"input_tokens": 0, "cached_tokens": 0, "output_tokens": 0, "reasoning_tokens": 0}
+    for m in messages:
+        um = getattr(m, "usage_metadata", None) or {}
+        usage["input_tokens"] += um.get("input_tokens", 0) or 0
+        usage["output_tokens"] += um.get("output_tokens", 0) or 0
+        usage["cached_tokens"] += (um.get("input_token_details") or {}).get("cache_read", 0) or 0
+        usage["reasoning_tokens"] += (um.get("output_token_details") or {}).get("reasoning", 0) or 0
+    usage["total_tokens"] = usage["input_tokens"] + usage["output_tokens"]
+    return usage
 
-    Args:
-        graph: Compiled LangGraph agent.
-        message: User's question.
-        session_id: Session identifier for conversation context.
 
-    Returns:
-        Dict with 'response' text and 'usage' token info.
-    """
-    inputs = {"messages": [("user", _build_user_message(message, page_context))]}
+def _final_text(messages: Sequence[AnyMessage]) -> str:
+    for m in reversed(messages):
+        if isinstance(m, AIMessage) and not m.tool_calls and m.text.strip():
+            return m.text
+    return ""
 
-    config = {"configurable": {"thread_id": session_id}}
 
-    result = await graph.ainvoke(inputs, config=config)
-
-    # Extract the final AI message
-    ai_messages = [
-        m for m in result["messages"]
-        if hasattr(m, "type") and m.type == "ai" and m.content
-    ]
-
-    response_text = "No se pudo generar una respuesta."
-    if ai_messages and ai_messages[-1].content:
-        content = ai_messages[-1].content
-        if isinstance(content, list):
-            text_parts = [
-                block["text"] for block in content 
-                if isinstance(block, dict) and block.get("type") == "text" and "text" in block
-            ]
-            response_text = "".join(text_parts)
-        else:
-            response_text = str(content)
-    
-    # Accumulate token usage across all AI messages in the run
-    total_input = 0
-    total_output = 0
-    for m in ai_messages:
-        um = getattr(m, "usage_metadata", None)
-        if um:
-            total_input += um.get("input_tokens", 0)
-            total_output += um.get("output_tokens", 0)
-
-    usage = {
-        "input_tokens": total_input,
-        "output_tokens": total_output,
-        "total_tokens": total_input + total_output,
-    }
-
+async def invoke_agent(graph, message: str, history=None, page_context=None, config: dict | None = None) -> dict:
+    """Run the agent and return {'response', 'usage'} for this turn only."""
+    inputs = build_input_messages(message, history, page_context)
+    result = await graph.ainvoke({"messages": inputs}, config=config)
+    new_messages = result["messages"][len(inputs):]
     return {
-        "response": response_text,
-        "usage": usage,
+        "response": _final_text(new_messages) or EMPTY_ANSWER,
+        "usage": _usage_of([m for m in new_messages if isinstance(m, AIMessage)]),
     }
 
 
-async def stream_agent(graph, message: str, session_id: str, page_context: dict | None = None) -> AsyncGenerator[dict, None]:
+async def stream_agent(
+    graph, message: str, history=None, page_context=None, config: dict | None = None
+) -> AsyncGenerator[dict, None]:
     """
-    Stream the agent response token by token via SSE-compatible events.
-
-    Yields dicts with structure:
-        {"type": "token", "content": "..."}
-        {"type": "tool_call", "tool": "...", "args": {...}}
-        {"type": "tool_result", "tool": "...", "status": "ok"}
+    Stream SSE-ready events:
+        {"type": "tool_call", "tool": str, "doc": str | None}
+        {"type": "tool_result", "tool": str}
+        {"type": "token", "content": str}
         {"type": "done", "usage": {...}}
-
-    Args:
-        graph: Compiled LangGraph agent.
-        message: User's question.
-        session_id: Session identifier.
     """
-    inputs = {"messages": [("user", _build_user_message(message, page_context))]}
-    config = {"configurable": {"thread_id": session_id}}
+    inputs = build_input_messages(message, history, page_context)
+    ai_messages: list[AIMessage] = []
+    streamed_text = False
+    fallback_text = ""
 
-    total_input_tokens = 0
-    total_output_tokens = 0
-    has_streamed_text = False
-
-    async for stream_mode, chunk in graph.astream(
-        inputs, config=config, stream_mode=["messages", "updates"]
-    ):
-        if stream_mode == "messages":
+    async for mode, chunk in graph.astream({"messages": inputs}, config=config, stream_mode=["messages", "updates"]):
+        if mode == "messages":
             message_chunk, metadata = chunk
+            if metadata.get("langgraph_node") == MODEL_NODE and isinstance(message_chunk, AIMessageChunk):
+                text = message_chunk.text
+                if text:
+                    streamed_text = True
+                    yield {"type": "token", "content": text}
+            continue
 
-            # Stream AI content tokens
-            if hasattr(message_chunk, "content") and message_chunk.content:
-                if metadata.get("langgraph_node") == "agent":
-                    content = message_chunk.content
-                    if isinstance(content, list):
-                        text_parts = [
-                            block["text"] for block in content 
-                            if isinstance(block, dict) and block.get("type") == "text" and "text" in block
-                        ]
-                        text_val = "".join(text_parts)
-                    else:
-                        text_val = content
-                        
-                    if isinstance(text_val, str) and text_val:
-                        has_streamed_text = True
-                        yield {"type": "token", "content": text_val}
+        for node, update in (chunk or {}).items():
+            node_messages = (update or {}).get("messages", []) if isinstance(update, dict) else []
+            if not isinstance(node_messages, list):
+                node_messages = [node_messages]
+            for m in node_messages:
+                if isinstance(m, AIMessage):
+                    if node == MODEL_NODE:
+                        ai_messages.append(m)
+                        for call in m.tool_calls:
+                            yield {"type": "tool_call", "tool": call["name"], "doc": call["args"].get("doc_name")}
+                    if not m.tool_calls and m.text.strip():
+                        # Covers answers injected by middleware (e.g. call limit reached).
+                        fallback_text = m.text
+                elif isinstance(m, ToolMessage) and node == TOOLS_NODE:
+                    yield {"type": "tool_result", "tool": m.name}
 
-        elif stream_mode == "updates":
-            if "agent" in chunk:
-                messages = chunk["agent"].get("messages", [])
-                if not isinstance(messages, list):
-                    messages = [messages]
-                for m in messages:
-                    usage = _extract_usage(m)
-                    total_input_tokens += usage["input_tokens"]
-                    total_output_tokens += usage["output_tokens"]
-
-            # Detect tool calls and results
-            if "tools" in chunk:
-                tool_messages = chunk["tools"].get("messages", [])
-                if not isinstance(tool_messages, list):
-                    tool_messages = [tool_messages]
-                for tm in tool_messages:
-                    if hasattr(tm, "name"):
-                        yield {
-                            "type": "tool_result",
-                            "tool": tm.name,
-                            "status": "ok",
-                        }
-
-    if not has_streamed_text:
-        yield {
-            "type": "token", 
-            "content": "Lo siento, no he podido generar una respuesta adecuada para esta consulta."
-        }
-
-    # Final event with accumulated usage data
-    usage = {
-        "input_tokens": total_input_tokens,
-        "output_tokens": total_output_tokens,
-        "total_tokens": total_input_tokens + total_output_tokens,
-    }
-    yield {"type": "done", "usage": usage}
-
-
-def _extract_usage(message) -> dict:
-    """Extract token usage information from a LangChain AI message."""
-    if message is None:
-        return {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
-
-    usage_meta = getattr(message, "usage_metadata", None)
-    if usage_meta:
-        input_tokens = getattr(usage_meta, "input_tokens", 0) or usage_meta.get("input_tokens", 0) if isinstance(usage_meta, dict) else getattr(usage_meta, "input_tokens", 0)
-        output_tokens = getattr(usage_meta, "output_tokens", 0) or usage_meta.get("output_tokens", 0) if isinstance(usage_meta, dict) else getattr(usage_meta, "output_tokens", 0)
-        return {
-            "input_tokens": input_tokens,
-            "output_tokens": output_tokens,
-            "total_tokens": input_tokens + output_tokens,
-        }
-
-    # Fallback: try response_metadata
-    resp_meta = getattr(message, "response_metadata", {})
-    if resp_meta and "usage_metadata" in resp_meta:
-        um = resp_meta["usage_metadata"]
-        return {
-            "input_tokens": um.get("prompt_token_count", 0),
-            "output_tokens": um.get("candidates_token_count", 0),
-            "total_tokens": um.get("total_token_count", 0),
-        }
-
-    return {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+    if not streamed_text:
+        yield {"type": "token", "content": fallback_text or EMPTY_ANSWER}
+    yield {"type": "done", "usage": _usage_of(ai_messages)}
