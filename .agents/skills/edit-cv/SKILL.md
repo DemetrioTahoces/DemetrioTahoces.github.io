@@ -24,6 +24,7 @@ Usar esta skill para modificar el CV del proyecto sin perder contenido previo ni
 5. Revisar si el cambio exige actualizar competencias técnicas, tecnologías, dominios, metodologías o temas relacionados. Si aplica, sincronizar `index.html#competencias` y `CV/Chatbot/docs/CV.md`.
 6. Mantener el estilo del repo: tema oscuro profesional y sobrio, Tailwind CDN para utilidades, sin build step ni nuevas dependencias front-end. Los estilos/JS compartidos viven en `assets/tokens.css`, `assets/cv.css` y `assets/cv.js` (enlazados con `?v=N`); inline solo quedan el gate `motion-ready`, favicon y metadatos. Colores siempre vía tokens (`var(--accent)`, etc.), nunca hardcodeados nuevos. Tipografía: Space Grotesk (display) + Inter (cuerpo) en una única petición a Google Fonts con preconnect.
 7. Verificar enlaces, anclas, navegación y coherencia entre la vista pública y la documentación RAG.
+8. Documentos del chatbot: conservar el frontmatter YAML de `CV/Chatbot/docs/*.md` (`type`, `title`, `route`, `summary`, `tags`, `order`) y actualizar `summary` si cambia el alcance del documento. Un documento nuevo debe incluirlo completo. Después, desde `CV/Chatbot`, ejecutar `uv run python -m core.llms_txt` y `uv run pytest`.
 
 ## Criterios Editoriales
 

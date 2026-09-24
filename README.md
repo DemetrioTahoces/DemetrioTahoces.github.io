@@ -8,8 +8,9 @@ Repositorio del CV profesional de Demetrio Tahoces, publicado como sitio estáti
 - `CV/`: páginas HTML detalladas de experiencia, formación y proyectos.
 - `CV/chatbot.html`: interfaz web del asistente del CV.
 - `CV/chatbot-widget.js`: widget embebible del chatbot.
-- `CV/Chatbot/`: backend FastAPI + LangGraph del asistente.
-- `CV/Chatbot/docs/`: base documental Markdown usada como contexto RAG.
+- `CV/Chatbot/`: backend FastAPI + LangChain del asistente (ver su README).
+- `CV/Chatbot/docs/`: base de conocimiento Markdown del asistente.
+- `llms.txt`: índice del sitio para LLMs, generado desde `CV/Chatbot/docs/`.
 - `blog/`: blog técnico estático.
 - `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
 - `assets/`: recursos compartidos, como la tarjeta Open Graph.
@@ -21,9 +22,9 @@ El proyecto combina dos superficies independientes:
 1. Frontend estático servido por GitHub Pages.
 2. Backend serverless en Vercel para el chatbot del CV.
 
-La parte pública no tiene proceso de build. Los HTML usan estilos y scripts inline, con dependencias cargadas desde CDN, principalmente Tailwind CSS, Google Fonts, Chart.js, Phosphor Icons y marked.js.
+La parte pública no tiene proceso de build. Los HTML usan estilos y scripts compartidos en `assets/`, con dependencias cargadas desde CDN, principalmente Tailwind CSS, Google Fonts, Chart.js, Phosphor Icons, marked.js y DOMPurify.
 
-El chatbot usa FastAPI, LangGraph y LangChain. Expone endpoints bajo `/api/*` y consulta los documentos Markdown de `CV/Chatbot/docs/` mediante herramientas internas de lectura y búsqueda.
+El chatbot usa FastAPI y LangChain (`create_agent`) con `gpt-6-luna`. El CV completo va en el system prompt (con caché) y los artículos del blog se leen bajo demanda con una herramienta. También expone un servidor MCP de solo lectura en `/api/mcp`.
 
 ## Desarrollo local del frontend
 
@@ -46,83 +47,17 @@ Páginas útiles:
 - `http://localhost:8000/blog/`
 - `http://localhost:8000/FundamentosIA/`
 
-## Desarrollo local del backend del chatbot
+## Backend del chatbot
 
-Desde `CV/Chatbot`:
+Toda la documentación del asistente (arquitectura, endpoints, configuración, tests y evals) está en [CV/Chatbot/README.md](CV/Chatbot/README.md).
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn api.index:app --reload --host 0.0.0.0 --port 3000
-```
-
-Health check:
-
-```text
-http://localhost:3000/api/health
-```
-
-## Variables de entorno
-
-El backend lee configuración desde variables de entorno o desde un archivo `.env` en `CV/Chatbot`.
-
-Variables principales:
-
-| Variable | Obligatoria | Valor por defecto | Descripción |
-| --- | --- | --- | --- |
-| `API_KEY` | Sí | Vacío | API key del proveedor LLM configurado. |
-| `PROVIDER_NAME` | No | `openai` | Proveedor del modelo. Valores esperados: `openai` o `gemini`. |
-| `MODEL_NAME` | No | `gpt-5.6-luna` | Modelo usado por el agente. |
-| `REASONING_EFFORT` | No | `low` | Solo `openai` con modelos de razonamiento (`gpt-5.x`): `none`, `low`, `medium`, `high`… Con `none` se envía `temperature=0.3`; con cualquier otro valor se omite `temperature`, porque la API lo rechaza. Vacío = default del proveedor (`medium`). |
-| `RATE_LIMIT_PER_MINUTE` | No | `5` | Límite de peticiones por minuto. |
-| `RATE_LIMIT_PER_HOUR` | No | `20` | Límite de peticiones por hora. |
-| `ALLOWED_ORIGINS` | No | GitHub Pages y localhost | Orígenes permitidos para CORS. |
-| `LOG_LEVEL` | No | `INFO` | Nivel de logging. |
-| `DOCS_PATH` | No | `docs` | Ruta relativa a los documentos Markdown del RAG. |
-
-Ejemplo mínimo:
-
-```env
-API_KEY=tu_api_key_de_openai
-PROVIDER_NAME=openai
-MODEL_NAME=gpt-5.6-luna
-REASONING_EFFORT=low
-```
-
-## Endpoints del chatbot
-
-- `GET /api/health`: comprueba estado del servicio y documentos cargados.
-- `POST /api/chat`: devuelve una respuesta completa en JSON.
-- `POST /api/chat/stream`: devuelve respuesta en streaming mediante SSE.
-
-Ejemplo de petición:
+Arranque rápido desde `CV/Chatbot`:
 
 ```powershell
-Invoke-RestMethod `
-  -Method Post `
-  -Uri http://localhost:3000/api/chat `
-  -ContentType 'application/json' `
-  -Body '{"message":"Resume la experiencia de Demetrio en backend","session_id":"local"}'
+uv sync
+uv run uvicorn api.index:app --reload --port 3000
+uv run pytest
 ```
-
-## Comprobaciones
-
-Hay scripts de comprobación del backend en `CV/Chatbot/test/`.
-
-Desde `CV/Chatbot`:
-
-```powershell
-python test/test_rate_limit.py
-```
-
-Para probar el agente contra el proveedor LLM configurado:
-
-```powershell
-python test/test_agent.py
-```
-
-Esta segunda comprobación requiere `API_KEY` válida y puede consumir tokens del proveedor configurado.
 
 ## Despliegue
 
@@ -138,15 +73,9 @@ No hay paso de build, bundler ni generación de assets.
 
 ### Backend
 
-El backend del chatbot se despliega en Vercel usando:
+El backend se despliega en Vercel (preset FastAPI, raíz `CV/Chatbot`, dependencias desde `pyproject.toml` + `uv.lock`). Cada PR genera un preview y `main` publica en producción. No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
 
-```text
-CV/Chatbot/vercel.json
-```
-
-El proyecto de Vercel usa el preset FastAPI, que enruta todas las peticiones a la app de `api/index.py` conservando la ruta original. No añadas rewrites hacia `api/index.py`: el runtime actual pasa la ruta reescrita a FastAPI y todas las rutas devuelven 404.
-
-En Vercel deben configurarse las variables de entorno necesarias, especialmente `API_KEY`, `PROVIDER_NAME`, `MODEL_NAME` y `REASONING_EFFORT` si se quiere sobrescribir el modelo por defecto.
+Variables de entorno en Vercel: al menos `API_KEY` y `MODEL_NAME`. Lista completa en [CV/Chatbot/README.md](CV/Chatbot/README.md#configuración).
 
 ## Mantenimiento del contenido
 
@@ -161,7 +90,7 @@ Cuando se cambie contenido curricular, conviene mantener sincronizadas estas sup
 & "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf="$PWD\assets\CV-Demetrio-Tahoces.pdf" "http://localhost:8000/"
 ```
 
-El chatbot responde a partir de la base documental Markdown. Si una experiencia, tecnología o formación aparece en la web pública pero no en `CV/Chatbot/docs/`, el asistente puede no conocerla o responder de forma incompleta.
+El chatbot responde a partir de la base documental Markdown. Si una experiencia, tecnología o formación aparece en la web pública pero no en `CV/Chatbot/docs/`, el asistente puede no conocerla o responder de forma incompleta. Tras cambiar documentos, regenera `llms.txt` con `uv run python -m core.llms_txt` desde `CV/Chatbot`.
 
 ## Convenciones del repositorio
 
