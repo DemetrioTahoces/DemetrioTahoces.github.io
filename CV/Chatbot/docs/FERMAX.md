@@ -25,11 +25,15 @@ Fermax: fabricante de videoporteros y sistemas de control de accesos. Me incorpo
 - Adaptación equipo a procesos organización mayor escala, proponiendo mejoras desde experiencia startup.
 
 ### Liderazgo en Desarrollo Agéntico (Claude Code)
-- Lidera la integración de Claude Code en el desarrollo del equipo: workflows con agentes especializados que cubren el ciclo completo (diseño y definición de tareas → implementación → verificación → documentación).
+- Lidera la integración de Claude Code en el desarrollo de un equipo de 10 personas: workflows con 6–7 agentes especializados que cubren el ciclo completo (diseño y definición de tareas → implementación → verificación → documentación).
 - Implementación repartida entre varios agentes.
 - Fase de verificación con revisiones independientes: funcionalidad, seguridad y mantenibilidad del código, ejecución de pruebas en el entorno de desarrollo y documentación.
 - Bucle agéntico implementación ↔ verificación: los hallazgos de las revisiones vuelven a implementación y el ciclo itera hasta que el cambio supera todos los filtros.
-- Skills propias que codifican el know-how del equipo: arquitectura de código y arquitectura hexagonal, listeners y publishers de brokers de mensajería, endpoints REST, normas de logging, estrategia de testing y documentación, entre otras. Resultado: código coherente con las convenciones del equipo en lugar de soluciones genéricas.
+- Entre 10 y 15 skills propias que codifican el know-how del equipo: arquitectura de código y arquitectura hexagonal, listeners y publishers de brokers de mensajería, endpoints REST, normas de logging, estrategia de testing y documentación, entre otras. Resultado: código coherente con las convenciones del equipo en lugar de soluciones genéricas.
+- Modelo cercano al concepto de software factory, ejecutado íntegramente con agentes locales de Claude Code.
+- Resultados:
+  - Más del 80% de las PRs son exitosas a la primera.
+  - Estimación del equipo (no medición exacta), frente al desarrollo previo ya asistido por IA pero sin estos flujos: el esfuerzo de verificación (revisión + tests) y el de correcciones posteriores se ha reducido a menos de la mitad; la fase de definición y análisis también requiere algo menos de esfuerzo.
 - El diseño concreto (reparto de responsabilidades entre agentes, criterios de salida del bucle, forma de las skills) es know-how propio fruto de iterar sobre el desarrollo real del equipo; no está documentado públicamente en detalle y Demetrio lo explica encantado en una conversación.
 
 ### Early Adopter IA (GitHub Copilot)

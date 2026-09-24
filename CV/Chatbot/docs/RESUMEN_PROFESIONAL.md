@@ -24,7 +24,7 @@ Tres pilares: escalabilidad pragmática, arquitectura limpia, IA como palanca t�
 - Big Data tiempo real: pipelines Kafka en Inditex (integridad y QA del dato).
 
 ### 3. IA Agéntica & RAG
-- Desarrollo agéntico (profesional, Fermax): lidera la integración de Claude Code con workflows multiagente que iteran entre implementación y verificación, guiados por skills que codifican la arquitectura y convenciones del equipo.
+- Desarrollo agéntico (profesional, Fermax): lidera la integración de Claude Code con workflows multiagente que iteran entre implementación y verificación, guiados por skills que codifican la arquitectura y convenciones del equipo. Modelo cercano a una software factory con agentes locales; +80% de PRs exitosas a la primera.
 - Arquitecturas RAG: optimización recuperación info, eliminación alucinaciones.
 - Agentes autónomos con LangChain/LangGraph para razonamiento y ejecución de tareas complejas.
 - Interés en soluciones On-premise y Edge Computing (privacidad y soberanía del dato).
