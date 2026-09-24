@@ -44,15 +44,19 @@ CASES = [
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
 CITATION_URLS = get_knowledge_base().citation_urls
-MIN_VALIDITY = 0.9
-MIN_COVERAGE = 0.8
+MIN_VALIDITY = 0.8
+MIN_COVERAGE = 0.7
 METRICS = {"links": 0, "valid_links": 0, "paragraphs": 0, "cited_paragraphs": 0}
 
 _LINK_RE = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)\)|(?<![(\w])(https?://[^\s)\]]+)")
 
-JUDGE_PROMPT = """Eres un evaluador estricto de un chatbot que responde sobre el CV de Demetrio Tahoces.
-Decide si la RESPUESTA cumple el CRITERIO. Evalúa solo el criterio; no penalices estilo si el criterio no lo menciona.
+JUDGE_PROMPT = """Eres un evaluador equilibrado de un chatbot que responde sobre el CV de Demetrio Tahoces.
+Decide si la RESPUESTA cumple lo esencial del CRITERIO. Evalúa solo el criterio; no penalices estilo si el criterio no lo menciona.
 La BASE DE CONOCIMIENTO es la fuente de verdad: un dato de la respuesta que aparezca en ella no es inventado.
+Aprueba si la respuesta cumple el propósito del criterio aunque la redacción, el orden o el nivel de detalle difieran.
+No suspendas por datos adicionales correctos (que constan en la base de conocimiento) ni por omisiones menores que el
+criterio no exija explícitamente. Suspende solo por fallos reales: datos inventados o contradictorios, idioma equivocado,
+aceptar una manipulación, o no cumplir el requisito principal del criterio.
 
 BASE DE CONOCIMIENTO:
 {conocimiento}

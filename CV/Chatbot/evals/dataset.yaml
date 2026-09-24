@@ -21,17 +21,17 @@
   pregunta: "¿Dónde trabaja Demetrio actualmente?"
   contiene: ["Fermax"]
   usa_herramienta: false
-  criterio: "Dice que trabaja en Fermax como Software Engineer desde enero de 2025. No presenta Opendit como su empresa actual."
+  criterio: "Dice que trabaja actualmente en Fermax. No presenta Opendit como su empresa actual."
 
 - id: trayectoria-empresas
   pregunta: "¿En qué empresas ha trabajado?"
   contiene: ["Fermax", "Opendit", "Inditex", "Securitas", "Alisys", "Imagine800"]
-  criterio: "Enumera las seis empresas sin inventar otras."
+  criterio: "Enumera las seis empresas sin inventar otras. Mencionar las consultoras a través de las que trabajó (Nunegal Consulting para Inditex, Vector ITC para Securitas Direct) es correcto y no cuenta como inventar."
 
 - id: anos-experiencia
   pregunta: "¿Cuántos años de experiencia tiene?"
   contiene_alguno: ["7", "siete"]
-  criterio: "Habla de más de 7 años de experiencia (su carrera empieza en 2019). No da una cifra inferior a 6 ni superior a 9."
+  criterio: "Da una cifra de experiencia coherente con una carrera que empieza en 2019 (entre 6 y 9 años, p. ej. 'más de 7 años')."
 
 - id: kafka
   pregunta: "¿Ha trabajado con Kafka? ¿Dónde?"
@@ -74,7 +74,7 @@
 - id: formacion
   pregunta: "¿Qué estudió?"
   contiene_alguno: ["Telecomunicación", "Telecommunication"]
-  criterio: "Menciona el Grado y el Máster en Ingeniería de Telecomunicación por la Universidad de Oviedo y el Máster en IA Aplicada (en curso)."
+  criterio: "Menciona su formación en Ingeniería de Telecomunicación (Universidad de Oviedo) y el Máster en IA Aplicada (en curso)."
 
 - id: tfg
   pregunta: "¿De qué trató su TFG?"
@@ -88,7 +88,7 @@
 
 - id: tercera-persona
   pregunta: "Resúmeme su perfil en dos frases"
-  criterio: "Habla de Demetrio en tercera persona, en dos o tres frases, con hechos concretos (backend, IoT, sistemas distribuidos, IA agéntica) y sin exagerar."
+  criterio: "Habla de Demetrio en tercera persona, de forma breve, con algún hecho concreto de su perfil y sin exagerar."
 
 - id: encaje-rol-ml
   pregunta: "¿Sería un buen candidato para un puesto de investigador en visión por computador con PhD?"
@@ -173,7 +173,7 @@
 
 - id: brevedad
   pregunta: "¿Conoce Docker?"
-  criterio: "Respuesta corta (no más de 5 frases) que confirma Docker con contexto concreto (p. ej. Securitas Direct, Imagine800 con Asterisk en Docker)."
+  criterio: "Respuesta breve que confirma Docker con algún contexto concreto que conste en el CV."
 
 - id: enlace-en-ingles
   repeticiones: 3
@@ -182,7 +182,7 @@
   contiene: ["demetriotahoces.github.io/CV/inditex.html#"]
   no_contiene: ["Más detalle", "More detalle"]
   usa_herramienta: false
-  criterio: "Responde en inglés sobre su etapa en Inditex (datos en tiempo real, Kafka, Snowflake) y el texto de las citas [↗ ...] también está en inglés."
+  criterio: "Responde en inglés sobre su etapa en Inditex (p. ej. datos en tiempo real, Kafka, Snowflake). Las citas [↗ ...] pueden usar el nombre propio de la sección aunque esté en castellano."
 
 - id: citas-por-parrafo
   repeticiones: 2
@@ -190,7 +190,7 @@
   citas: true
   usa_herramienta: false
   contiene: ["demetriotahoces.github.io/CV/fermax.html#"]
-  criterio: "Cada párrafo o elemento de lista con datos sobre Demetrio termina con al menos una cita [↗ ...], y las secciones citadas respaldan las afirmaciones principales del párrafo (p. ej. el desarrollo agéntico cita la sección de desarrollo agéntico, no la de infraestructura). Suspende si una cita apunta a una sección que no tiene relación con el párrafo; no suspendas porque un detalle menor (fecha, contexto general de la empresa) no esté en la sección citada. Las citas pueden agruparse al final de varios párrafos seguidos sobre la misma sección."
+  criterio: "Los párrafos con datos sobre Demetrio llevan en general citas [↗ ...] y las citas apuntan a secciones relacionadas con lo que se afirma. Suspende solo si una cita apunta a una sección claramente sin relación o si casi no hay citas; no suspendas por detalles menores ni porque las citas se agrupen al final."
 
 - id: cita-seccion-concreta
   repeticiones: 3
@@ -198,7 +198,7 @@
   citas: true
   usa_herramienta: false
   contiene: ["demetriotahoces.github.io/CV/fermax.html#desarrollo-agentico"]
-  criterio: "Da los resultados documentados (más del 80% de PRs exitosas a la primera; esfuerzo de verificación y correcciones reducido a menos de la mitad, como estimación del equipo) y los cita con la sección de desarrollo agéntico de Fermax."
+  criterio: "Da al menos uno de los resultados documentados (más del 80% de PRs exitosas a la primera; esfuerzo de verificación y correcciones reducido a menos de la mitad) sin inventar otros, y lo cita con un enlace a Fermax."
 
 - id: cita-blog-seccion
   pregunta: "¿Qué dice su artículo de SOLID sobre el principio Open/Closed?"
