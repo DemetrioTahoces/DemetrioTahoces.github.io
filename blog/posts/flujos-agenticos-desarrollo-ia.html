@@ -24,7 +24,7 @@
       "headline": "Flujos agénticos de desarrollo: el humano decide, el agente ejecuta",
       "description": "Una fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage.",
       "datePublished": "2026-09-24",
-      "dateModified": "2026-09-24",
+      "dateModified": "2026-09-25",
       "author": {
         "@type": "Person",
         "name": "Demetrio Tahoces"
@@ -79,7 +79,7 @@
             <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
                 <span>24 septiembre 2026</span>
                 <span class="text-gray-600">·</span>
-                <span>5 min de lectura</span>
+                <span>6 min de lectura</span>
             </div>
         </header>
 
@@ -103,55 +103,67 @@
                     <p>El agente escribe bien. Lo que falla es el reparto: el mismo contexto que decidió el diseño es el que da el trabajo por bueno, y la única verificación independiente eres tú, leyendo todo al final. Un flujo agéntico separa esas responsabilidades con una regla sencilla: <strong>el humano decide, el agente ejecuta</strong>.</p>
                 </section>
 
+                <section id="donde-decide-el-humano" class="callout rounded-xl p-5 my-8">
+                    <h2>Dónde decide el humano</h2>
+                    <p>La regla separa juicio y trabajo. La persona pone el qué y el cuándo; los agentes, el cómo. Entre medias el bucle corre solo, y lo que no se puede deshacer, como subir a producción, queda fuera de su alcance.</p>
+                    <ul>
+                        <li>Al arrancar: define la tarea, con un análisis inicial de requisitos si ya lo tiene, decide si merece el flujo y da un único visto bueno a lo que se va a hacer.</li>
+                        <li>Tras el análisis: resuelve las dudas abiertas de la spec.</li>
+                        <li>Durante el bucle: concede permisos y credenciales, justo cuando hacen falta.</li>
+                        <li>Al final: con el informe final del bucle delante, verifica y acepta el desarrollo, revisa la PR y decide cuándo se promociona a preproducción y a producción. El bucle solo despliega en el entorno de desarrollo.</li>
+                    </ul>
+                </section>
+
                 <section id="un-orquestador-que-no-programa">
                     <h2>Un orquestador que no programa</h2>
-                    <p>La pieza central es un agente que no analiza, no escribe código y no revisa. Reparte cada fase a un subagente, juzga lo que vuelve y decide si hace falta otra vuelta. Es también el único que habla con la persona: si a un subagente le falta algo, no improvisa, lo devuelve como bloqueado y el orquestador lo resuelve entre vueltas.</p>
+                    <p>La pieza central es un agente que no analiza, no escribe código y no revisa. Reparte cada fase a un subagente, juzga lo que vuelve y decide si hace falta otra vuelta. Lleva la cuenta de en qué fase está la tarea y cuántas vueltas ha consumido. Es también el único que habla con la persona: si a un subagente le falta algo, no improvisa, lo devuelve como bloqueado y el orquestador lo resuelve entre vueltas.</p>
+                    <p>Tampoco arregla nada él mismo, por pequeño que sea. En cuanto el coordinador toca código, ya no queda nadie mirando el conjunto desde fuera.</p>
                     <p>Cada fase arranca con un subagente nuevo, sin el contexto de la anterior. Parece un detalle, pero es lo que hace honesta la verificación: un revisor que hereda lo que el implementador creía haber conseguido tiende a darle la razón.</p>
                 </section>
 
                 <section id="la-spec-como-contrato">
                     <h2>La spec como contrato</h2>
-                    <p>Antes de tocar código, un agente analista escribe la especificación de la tarea en disco: qué cambia y por qué, decisiones de diseño, escenarios de aceptación en formato WHEN/THEN con un identificador estable, y el contexto que necesita cada capa de cada servicio. Ahí se usa el modelo más capaz y con más razonamiento, una sola vez.</p>
+                    <p>Antes de tocar código, un agente analista hace el diseño, el análisis y la planificación, y lo deja escrito en disco: qué cambia y por qué, decisiones de diseño, escenarios de aceptación en formato WHEN/THEN con un identificador estable, el contexto que necesita cada capa de cada servicio y la lista de tareas. Es la misma estructura que proponen herramientas de spec-driven development como OpenSpec.</p>
+                    <p>Aquí se usa el modelo más capaz y con más razonamiento, una sola vez. Es donde más rinde: un error de diseño en la spec se multiplica en cada capa que la implementa y en cada revisor que la usa de referencia.</p>
                     <p>El resto de fases recibe la ruta de esa spec, nunca un resumen pegado en el prompt. Un plan parafraseado deriva en cuanto alguien lo resume entre vueltas; un fichero se lee igual en la primera vuelta y en la quinta. La spec es material de trabajo, así que no entra en el repositorio.</p>
-                    <p>Si el analista deja dudas abiertas, se resuelven con la persona antes de implementar. Una suposición que se cuela en la primera vuelta se paga en todas las siguientes.</p>
+                    <p>Si el analista deja dudas abiertas, se resuelven antes de implementar. Una suposición que se cuela en la primera vuelta se paga en todas las siguientes.</p>
                 </section>
 
                 <section id="implementar-por-capas">
                     <h2>Implementar por capas</h2>
-                    <p>En una arquitectura hexagonal, la implementación se reparte con un agente por capa y servicio: dominio, después aplicación, después infraestructura. Cada capa se apoya en el código ya compilado de la anterior, y varios servicios avanzan en paralelo.</p>
+                    <p>En una arquitectura hexagonal, la implementación se reparte con un agente por capa y servicio. El de dominio escribe entidades, reglas y eventos sin depender de nada externo. El de aplicación orquesta los casos de uso sobre los puertos que define el dominio. El de infraestructura implementa los adaptadores: endpoints REST, persistencia, listeners y publishers de mensajería. Cada capa se apoya en el código ya compilado de la anterior, y varios servicios avanzan en paralelo.</p>
                     <p>Los implementadores usan un modelo más barato y tienen prohibido investigar: leen su fichero de capa y lo que este enumera. Si falta información, el fallo está en la spec y se corrige allí. Tampoco se confía en su informe para lo mecánico: un script comprueba que ninguno ha usado git ni ha tocado ficheros fuera de su capa.</p>
+                    <p>Lo que saben de las convenciones del equipo no sale del prompt, sale de las skills: arquitectura, endpoints, mensajería, logging, testing y documentación, escritas una vez y cargadas por el agente que las necesita. Es conocimiento transversal, y los revisores leen las mismas skills que los implementadores.</p>
                 </section>
 
                 <section id="puertas-y-verificacion">
                     <h2>Puertas y verificación en paralelo</h2>
-                    <p>Antes de revisar nada, una puerta determinista compila y ejecuta los tests de cada servicio. Si está en rojo no se sigue, y el orquestador no arregla lo que falla: lo devuelve al implementador que corresponde. Con la puerta en verde se abre la PR.</p>
-                    <p>Después, la verificación sale en paralelo, cada una con su subagente: un revisor que contrasta el diff con la spec y solo reporta hallazgos que puede defender, pruebas en un entorno de desarrollo con una matriz sacada de los escenarios, una revisión de seguridad cuando el cambio toca superficie sensible, la documentación y un repaso de mantenimiento que separa lo que introduce este cambio de lo que ya estaba mal antes.</p>
+                    <p>Antes de revisar nada, una puerta determinista compila y ejecuta los tests de cada servicio. Si está en rojo no se sigue, y el orquestador no arregla lo que falla: lo devuelve al implementador que corresponde. Con la puerta en verde se abre la PR y la verificación sale en paralelo, cada tarea con su subagente:</p>
+                    <ul>
+                        <li>Revisión: contrasta el diff con la spec, escenario a escenario, y solo reporta hallazgos que puede defender.</li>
+                        <li>Pruebas: despliega en el entorno de desarrollo y ejecuta una matriz sacada de los escenarios. Usa un modelo algo más capaz que el de los implementadores, porque decidir si un fallo es del código o del test pide criterio.</li>
+                        <li>Seguridad: entra cuando el cambio toca superficie sensible, como autenticación, permisos o entradas externas.</li>
+                        <li>Mantenibilidad y escalabilidad: separa lo que introduce este cambio de lo que ya estaba mal antes, para no bloquear la tarea por deuda que no es suya.</li>
+                        <li>Documentación: deja el cambio documentado con las convenciones de su skill.</li>
+                    </ul>
                 </section>
 
                 <section id="el-triage">
                     <h2>El triage y cuándo está terminado</h2>
                     <p>Cuando algo falla, el orquestador decide a dónde vuelve, y solo hay tres destinos. Si falla el código, al implementador de esa capa. Si la spec estaba equivocada, el analista la enmienda solo en lo afectado. Si lo que fallaba era la expectativa del test, se corrige la prueba y no se toca código.</p>
                     <p>"Terminado" tiene una definición estricta: puerta en verde, sin hallazgos abiertos y cada escenario de la spec cubierto por una prueba que pasa o marcado como no probable con un motivo aceptado. Un caso que no llegó a ejecutarse por falta de un token no cuenta como aprobado. Y el bucle tiene presupuesto: si tras cinco vueltas no está limpio, se para y vuelve a la persona. Nunca se termina a mano fuera del bucle, porque eso se salta la revisión y las pruebas.</p>
-                </section>
-
-                <section id="donde-decide-el-humano" class="callout rounded-xl p-5 my-8">
-                    <h2>Dónde decide el humano</h2>
-                    <ul>
-                        <li>Al arrancar: si la tarea merece el flujo y un único visto bueno a lo que va a hacer.</li>
-                        <li>Tras el análisis: las dudas abiertas de la spec.</li>
-                        <li>Durante el bucle: los permisos y credenciales, justo cuando hacen falta.</li>
-                        <li>Al final: verificar y aceptar el desarrollo, revisar la PR y decidir cuándo se promociona a preproducción y a producción. El bucle solo despliega en el entorno de desarrollo.</li>
-                    </ul>
+                    <p>Cuando la tarea queda limpia, el orquestador cierra con un informe final: qué se ha hecho y cómo se ha verificado. Con él la persona valida y decide el siguiente paso.</p>
                 </section>
 
                 <section id="limites">
                     <h2>Límites</h2>
-                    <p>Una tarea pequeña no merece la fábrica: cambiar un nivel de log no necesita análisis, despliegue y documentación. Lo razonable es decirlo al arrancar y ofrecer el camino directo. Y cada vuelta cuesta tiempo y tokens, así que la calidad de la spec y de las skills que describen las convenciones del equipo pesa más que el número de agentes. Con una spec floja, los revisores comprobarán con rigor algo que no era lo que se pedía.</p>
+                    <p>Una tarea pequeña no merece la fábrica: cambiar un nivel de log no necesita análisis, despliegue y documentación. Lo razonable es decirlo al arrancar y ofrecer el camino directo. Y cada vuelta cuesta tiempo y tokens, así que la calidad de la spec y de las skills pesa más que el número de agentes. Con una spec floja, los revisores comprobarán con rigor algo que no era lo que se pedía.</p>
                 </section>
 
                 <section id="conclusion">
-                    <h2>Conclusión</h2>
-                    <p>Lo que convierte un asistente en una fábrica de tareas son los contratos: una spec en disco que todos leen igual, puertas que no opinan, verificadores que no heredan el sesgo del que implementó y un triage que sabe a dónde devolver cada fallo. Con eso, la persona deja de ser el único control de calidad y pasa a decidir en los cuatro puntos donde su criterio importa.</p>
+                    <h2>Conclusión: un equipo de software hecho de agentes</h2>
+                    <p>Si se quita la palabra agente, lo que queda es cómo trabaja un equipo de software. Alguien define qué se necesita, un analista diseña y planifica, varios desarrolladores implementan cada uno su parte, QA prueba, alguien revisa la seguridad y la deuda técnica, se documenta, y un responsable decide si aquello sale a producción. La fábrica de tareas reproduce ese reparto con un grupo de agentes coordinados, cada uno en un papel distinto del equipo, con el modelo, el contexto y las skills que su papel necesita.</p>
+                    <p>Funciona por lo mismo que funciona un buen equipo: una spec que todos leen igual, puertas que no opinan, revisores que no heredan el sesgo de quien implementó y un triage que sabe a dónde devolver cada fallo. La persona ocupa el sitio de quien dirige ese equipo. Deja de ser el único control de calidad y decide en los puntos donde su criterio importa.</p>
                 </section>
 
                 <section id="fuentes">
@@ -160,6 +172,7 @@
                         <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener noreferrer">Anthropic, "Building effective agents"</a>, diciembre 2024.</li>
                         <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">"Best practices for Claude Code"</a>, documentación de Claude Code.</li>
                         <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">"Agent Skills"</a>, documentación de la plataforma de Claude.</li>
+                        <li><a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener noreferrer">OpenSpec</a>, framework de spec-driven development para asistentes de código.</li>
                     </ul>
                 </section>
             </div>

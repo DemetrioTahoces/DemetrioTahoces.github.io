@@ -4,6 +4,13 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Post de flujos agénticos ampliado a 6 min (push directo a `main`, 2026-09-25)
+
+- Push directo a `main` por petición explícita del autor, verificado en producción.
+- `blog/posts/flujos-agenticos-desarrollo-ia.html`: 987 → ~1390 palabras (6 min en post y tarjeta), `dateModified` 2026-09-25. Basado en el boceto "Software factory" del autor: humano define (análisis inicial de requisitos opcional) y valida/decide despliegue al final con un informe; analista con el modelo más capaz (diseño, análisis, planificación, estructura tipo OpenSpec); implementadores por capa con modelo barato; tester con modelo algo más capaz; seguridad, mantenibilidad/escalabilidad y documentación; skills como conocimiento transversal; bucle con máximo de vueltas.
+- El callout "Dónde decide el humano" (`#donde-decide-el-humano`) se movió justo tras la escena inicial y es el único sitio con la lista de decisiones humanas. La conclusión (`#conclusion`) pasa a "un equipo de software hecho de agentes". Ids sin cambios; fuente nueva: OpenSpec (verificada).
+- Ficha del chatbot y draft de LinkedIn resincronizados. Diagrama sin cambios. Evals pendientes de que las ejecute el autor.
+
 ## Umbrales de tamaño en la skill edit-cv (push directo a `main`, 2026-09-25)
 
 - Push directo a `main` por petición explícita del autor, verificado en producción.
