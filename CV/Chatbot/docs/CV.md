@@ -30,7 +30,7 @@ Backend IoT para telefonillos/videoporteros. Startup, equipo multidisciplinar.
 - Uso de DAPR para la abstracción de infraestructura (mensajería, secrets).
 - Uso del patrón BFF para estructurar la comunicación microservicios-apps móviles.
 - Ingesta de datos de telemetría IoT basada en CQRS.
-- Cloud Azure: AKS, Service Bus, CI/CD Azure DevOps.
+- Cloud Azure: Azure Container Apps, Service Bus, CI/CD Azure DevOps.
 - Mentoría técnica a perfiles junior.
 - Stack: Spring Boot, NestJS, Event-Driven, Hexagonal, CQRS, DDD.
 - Infra: OAuth2, GraphQL/OpenAPI, Azure Service Bus, RabbitMQ, PostgreSQL, MongoDB, Redis, DAPR, Azure DevOps.

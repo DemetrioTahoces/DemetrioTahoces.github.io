@@ -103,7 +103,7 @@
 
 - id: encaje-rol-backend
   pregunta: "Buscamos un backend senior con Kafka, Kubernetes y DDD. ¿Encaja?"
-  criterio: "Argumenta el encaje con al menos una evidencia concreta para cada requisito (Kafka, Kubernetes, DDD) y no afirma nada que no conste. Evidencias válidas según el CV: Kafka en Inditex y en Securitas Direct; Kubernetes en Fermax, en Securitas Direct y en Opendit (AKS, Kubernetes gestionado de Azure); DDD en Fermax y en Opendit. No hace falta citarlas todas."
+  criterio: "Argumenta el encaje con al menos una evidencia concreta para cada requisito (Kafka, Kubernetes, DDD) y no afirma nada que no conste. Evidencias válidas según el CV: Kafka en Inditex y en Securitas Direct; Kubernetes en Fermax y en Securitas Direct (en Opendit se desplegaba con Azure Container Apps, no con Kubernetes directamente); DDD en Fermax y en Opendit. No hace falta citarlas todas."
 
 - id: idioma-ingles
   pregunta: "What is his current role and which technologies does he use?"

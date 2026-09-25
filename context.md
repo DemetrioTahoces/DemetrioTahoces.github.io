@@ -10,7 +10,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 - `references/umbrales.md` + `scripts/check_cv.py` (stdlib): límites por componente. Tarjeta normal: subtítulo ≤100, 2–4 bullets, ≤200 por bullet, ≤550 en total. Destacada (`data-featured`, máx. 1 por página): ≤130 / ≤5 / ≤220 / ≤900. Job-card en la home ≤170 (actual ≤250). Contexto 250–450 (aviso). Decisiones del autor: dos niveles, script sin CI, el doc RAG no tiene umbrales y conserva el detalle.
 - `CV/fermax.html#desarrollo-agentico` resumida de 1704 a ~900 caracteres y marcada como destacada; `#domain-events` condensada (598→541); descripción de Fermax en la home de 397 a 235. `FERMAX.md` sin cambios.
 - Segunda pasada (2026-09-25): `CV/tfg.html` pasa al componente estándar (sección `#desarrollo-del-trabajo` con tres `.detail-card`; los `id` de siempre siguen en las tarjetas y las conclusiones son la destacada). Los 11 avisos, corregidos con datos que ya estaban en los docs RAG. `check_cv.py`: 0 errores, 0 avisos.
-- Contradicción detectada, sin resolver: `opendit.html#cloud-azure` dice Azure Container Apps y `OPENDIT.md` dice AKS. Pendiente de que el autor diga cuál es la correcta.
+- Opendit desplegaba con Azure Container Apps (confirmado por el autor), no con AKS: corregido en `opendit.html`, `OPENDIT.md`, `CV.md` y el criterio de la eval de Kubernetes. Kubernetes sigue respaldado por Fermax y Securitas Direct. Evals pendientes de que las ejecute el autor.
 - Pendiente del autor: regenerar el PDF (`assets/CV-Demetrio-Tahoces.pdf`, comando en `README.md`) si quiere reflejar la nueva descripción de Fermax.
 
 ## Mejoras de la skill manage-blog y OG en PNG (push directo a `main`, 2026-09-24)

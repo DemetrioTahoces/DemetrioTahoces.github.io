@@ -31,7 +31,7 @@ Startup IoT: telefonillos y videoporteros (apertura puertas, desvío llamadas, r
 - Alto volumen sin comprometer rendimiento lectura.
 
 ### Cloud Azure {#cloud-azure}
-- AKS orquestación contenedores producción.
+- Azure Container Apps para desplegar los servicios (contenedores) en producción.
 - Azure Service Bus mensajería enterprise-grade.
 - CI/CD Azure DevOps (testing, staging, producción).
 - Scrum/Kanban con Notion, ClickUp, Miro.
@@ -44,7 +44,7 @@ Startup IoT: telefonillos y videoporteros (apertura puertas, desvío llamadas, r
 - Backend: Spring Boot (Groovy, Java 17), NestJS (TypeScript), Programación Reactiva, SOLID.
 - Arquitectura: Event-Driven, Clean/Hexagonal, CQRS, DDD, BFF.
 - APIs: GraphQL, OpenAPI/REST, OAuth2 (Keycloak + OpenID Connect).
-- Infra: AKS, DAPR, Docker, Azure DevOps (CI/CD).
+- Infra: Azure Container Apps, DAPR, Docker, Azure DevOps (CI/CD).
 - Mensajería: Azure Service Bus, RabbitMQ.
 - BBDD: PostgreSQL, MongoDB, Redis, H2DB.
 - Testing: Spock (BDD), MapStruct, Postman, DBeaver, IntelliJ IDEA.
