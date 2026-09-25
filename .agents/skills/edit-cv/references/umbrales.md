@@ -20,7 +20,7 @@ Errores = se supera un máximo; no cerrar el cambio así. Avisos = por debajo de
 | Total de bullets | ≤ 550 | ≤ 900 |
 
 - **Destacada**: atributo `data-featured` en el `div` de la tarjeta, **como mucho una por página**. Sirve para el logro más diferencial de esa experiencia (hoy, `fermax.html#desarrollo-agentico`). El atributo no cambia el estilo, solo el umbral.
-- Las tarjetas de sección con `h2` (p. ej. `CV/tfg.html`) son otro componente y no se miden.
+- Todas las páginas de detalle (experiencia y formación, `CV/tfg.html` incluido) usan este componente: sección con `h2` fuera de las tarjetas y dentro `.detail-card` con icono, `h3`, subtítulo y bullets. No crear tarjetas de sección con el `h2` dentro y listas largas; el script no las mide.
 
 ## Descripción de job-card (`index.html#experiencia`)
 

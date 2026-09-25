@@ -150,7 +150,7 @@ def main() -> int:
         page = Cards()
         page.feed(path.read_text(encoding="utf-8"))
         name = f"CV/{path.name}"
-        # Solo tarjetas de contribución (con h3). Las de sección (h2, p. ej. tfg.html) no se miden.
+        # Solo tarjetas de contribución (con h3); ver references/umbrales.md.
         details = [c for c in page.cards if c["kind"] == "detail" and c["h3"]]
         featured = [c["id"] for c in details if c["featured"]]
         if len(featured) > 1:

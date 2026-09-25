@@ -76,65 +76,117 @@
 
         <div class="section-divider mb-12 rounded-full" data-reveal="line"></div>
 
-        <section id="objetivos-principales" class="mb-12">
-            <div class="card detail-card p-8 rounded-xl mb-6" data-reveal>
-                <h2 class="text-2xl font-bold text-gray-100 mb-6 section-title">Objetivos Principales</h2>
-                <ul class="space-y-4 ml-2">
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Predicción de alimentaciones:</strong> Desarrollar una herramienta capaz de estimar el módulo y la fase de los elementos de un array partiendo de un diagrama de radiación objetivo.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Evaluación de eficiencia:</strong> Comparar el rendimiento (error cuadrático medio y tiempo de entrenamiento) entre redes neuronales simples y redes con capas ocultas (Deep Learning).</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Compresión de información:</strong> Analizar si es posible comprimir la información del array en las capas ocultas de la red.</p>
-                    </li>
-                </ul>
-            </div>
-        </section>
+        <section id="desarrollo-del-trabajo" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-100 mb-8 section-title" data-reveal>Desarrollo del Trabajo</h2>
 
-        <section id="metodologia-y-herramientas" class="mb-12">
-            <div class="card detail-card p-8 rounded-xl mb-6" data-reveal>
-                <h2 class="text-2xl font-bold text-gray-100 mb-6 section-title">Metodología y Herramientas</h2>
-                <ul class="space-y-4 ml-2">
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Software:</strong> Se utilizó Matlab y su herramienta especializada NNtoolbox.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Datos de entrenamiento:</strong> Se generaron 1.000 patrones de entrenamiento aleatorios. Cada patrón consiste en un diagrama de radiación (entrada) y sus correspondientes alimentaciones de array (salida).</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Algoritmos de entrenamiento:</strong> 
-                        <br>• <code>trainlm</code> (Levenberg-Marquardt): Método rápido que requiere más memoria.
-                        <br>• <code>trainrp</code> (Resilient backpropagation): Método más lento que utiliza menos memoria.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Funciones de activación:</strong> Se probaron las funciones sigmoide y gaussiana en la capa de entrada, y la lineal pura (Identidad) en la de salida.</p>
-                    </li>
-                </ul>
-            </div>
-        </section>
+            <div class="space-y-6" data-reveal-group>
+                <div id="objetivos-principales" class="card detail-card p-6 rounded-xl" data-reveal>
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">🎯</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Objetivos Principales</h3>
+                            <p class="text-gray-400 text-sm mb-4">Qué se quería resolver con redes neuronales aplicadas a arrays de antenas.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Predicción de alimentaciones: estimar el módulo y la fase de cada elemento del array partiendo de un diagrama de radiación objetivo.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Evaluación de eficiencia: comparar el error cuadrático medio y el tiempo de entrenamiento entre redes neuronales simples y redes con capas ocultas (Deep Learning).</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Compresión de información: analizar si es posible comprimir la información del array en las capas ocultas de la red.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
-        <section id="conclusiones-y-resultados-clave" class="mb-12">
-            <div class="card detail-card p-8 rounded-xl mb-6" data-reveal>
-                <h2 class="text-2xl font-bold text-gray-100 mb-6 section-title">Conclusiones y Resultados Clave</h2>
-                <ul class="space-y-4 ml-2">
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Configuración Óptima:</strong> La mejor combinación para este problema resultó ser el método <code>trainlm</code> con la función de activación sigmoide y un número de 30 neuronas tanto en la capa de entrada como en las ocultas.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Deep Learning vs. NN Simple:</strong> Se concluyó que el uso de Deep Learning no mejora el error en este problema específico e incluso puede empeorarlo, además de aumentar la complejidad y los tiempos de ejecución.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Tratamiento de la Fase:</strong> La red presenta dificultades para procesar fases que superan los 2π, por lo que se sugiere introducir la fase progresiva después del procesado en la red.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Flexibilidad del Array:</strong> Una red entrenada para un array de N elementos puede procesar diagramas de arrays con un número de elementos inferior, pero no superior.</p>
-                    </li>
-                    <li class="flex items-start"><span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                        <p class="text-gray-300"><strong class="text-gray-200">Compresión:</strong> Los intentos de compresión no fueron exitosos, concluyendo que los elementos del array ya forman una base fundamental para su diagrama de radiación.</p>
-                    </li>
-                </ul>
+                <div id="metodologia-y-herramientas" class="card detail-card p-6 rounded-xl" data-reveal>
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">🛠️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Metodología y Herramientas</h3>
+                            <p class="text-gray-400 text-sm mb-4">Entrenamiento y pruebas en Matlab con su herramienta especializada NNtoolbox.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Datos de entrenamiento: 1.000 patrones aleatorios, cada uno formado por un diagrama de radiación (entrada) y sus alimentaciones del array (salida).</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Algoritmos de entrenamiento: <code>trainlm</code> (Levenberg-Marquardt), rápido pero con más memoria, y <code>trainrp</code> (Resilient backpropagation), más lento y con menos memoria.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Funciones de activación: sigmoide y gaussiana en la capa de entrada, y lineal pura (identidad) en la de salida.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="conclusiones-y-resultados-clave" class="card detail-card p-6 rounded-xl" data-reveal data-featured>
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
+                            <span class="text-2xl">📊</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-100 mb-2">Conclusiones y Resultados Clave</h3>
+                            <p class="text-gray-400 text-sm mb-4">Qué configuración funcionó mejor y qué límites mostró la red.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 ml-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Configuración óptima: <code>trainlm</code> con activación sigmoide y 30 neuronas tanto en la capa de entrada como en las ocultas.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Deep Learning frente a red simple: no mejora el error en este problema, incluso puede empeorarlo, y aumenta la complejidad y los tiempos de ejecución.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Tratamiento de la fase: la red tiene dificultades con fases que superan 2π, por lo que se propone introducir la fase progresiva después del procesado.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Flexibilidad del array: una red entrenada para N elementos procesa diagramas de arrays con menos elementos, pero no con más.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
+                            <div>
+                                <p class="text-gray-300 text-sm">Compresión: los intentos no tuvieron éxito; los elementos del array ya forman una base fundamental para su diagrama de radiación.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </section>
 
