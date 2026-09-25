@@ -4,6 +4,14 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Umbrales de tamaño en la skill edit-cv (push directo a `main`, 2026-09-25)
+
+- Push directo a `main` por petición explícita del autor, verificado en producción.
+- `references/umbrales.md` + `scripts/check_cv.py` (stdlib): límites por componente. Tarjeta normal: subtítulo ≤100, 2–4 bullets, ≤200 por bullet, ≤550 en total. Destacada (`data-featured`, máx. 1 por página): ≤130 / ≤5 / ≤220 / ≤900. Job-card en la home ≤170 (actual ≤250). Contexto 250–450 (aviso). Decisiones del autor: dos niveles, script sin CI, el doc RAG no tiene umbrales y conserva el detalle.
+- `CV/fermax.html#desarrollo-agentico` resumida de 1704 a ~900 caracteres y marcada como destacada; `#domain-events` condensada (598→541); descripción de Fermax en la home de 397 a 235. `FERMAX.md` sin cambios.
+- Avisos pendientes (no bloquean): tarjetas de un solo bullet en `imagine800.html` y `opendit.html#telemetria-cqrs`, y bullets cortos en inditex/opendit.
+- Pendiente del autor: regenerar el PDF (`assets/CV-Demetrio-Tahoces.pdf`, comando en `README.md`) si quiere reflejar la nueva descripción de Fermax.
+
 ## Mejoras de la skill manage-blog y OG en PNG (push directo a `main`, 2026-09-24)
 
 - Push directo a `main` por petición explícita del autor, sin PR.

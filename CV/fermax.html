@@ -106,13 +106,13 @@
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">Promoví el uso de Domain Events para comunicar los diferentes contextos (bounded contexts), lo que ayudó a desacoplar los microservicios.</p>
+                                <p class="text-gray-300 text-sm">Promoví Domain Events para comunicar los bounded contexts, lo que ayudó a desacoplar los microservicios.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">La gestión asíncrona de eventos mejoró la escalabilidad horizontal. Así, los nuevos servicios pueden suscribirse a eventos ya existentes sin cambiar el código de los servicios que los producen.</p>
+                                <p class="text-gray-300 text-sm">La gestión asíncrona de eventos mejoró la escalabilidad horizontal: los servicios nuevos se suscriben a eventos ya existentes sin cambiar el código de quien los produce.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -162,51 +162,45 @@
                     </ul>
                 </div>
 
-                <div id="desarrollo-agentico" class="card detail-card p-6 rounded-xl" data-reveal>
+                <div id="desarrollo-agentico" class="card detail-card p-6 rounded-xl" data-reveal data-featured>
                     <div class="flex items-start gap-4 mb-4">
                         <div class="w-12 h-12 bg-blue-900/40 rounded-full flex items-center justify-center shrink-0">
                             <span class="text-2xl">🧠</span>
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-gray-100 mb-2">Liderazgo en Desarrollo Agéntico (Claude Code)</h3>
-                            <p class="text-gray-400 text-sm mb-4">Diseño e implantación, para un equipo de 10 personas, de un ciclo de desarrollo multiagente cercano al concepto de software factory, ejecutado íntegramente con agentes locales de Claude Code.</p>
+                            <p class="text-gray-400 text-sm mb-4">Ciclo de desarrollo multiagente, cercano a una software factory, con agentes locales de Claude Code para un equipo de 10 personas.</p>
                         </div>
                     </div>
                     <ul class="space-y-3 ml-4">
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">Lidero la integración de Claude Code en el desarrollo del equipo mediante workflows de 6–7 agentes especializados que cubren el ciclo completo: diseño y definición de tareas, implementación, verificación y documentación.</p>
+                                <p class="text-gray-300 text-sm">Lidero la integración de Claude Code con workflows de 6–7 agentes especializados: definición de tareas, implementación repartida entre agentes, verificación y documentación.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">La implementación se reparte entre varios agentes y pasa después por una fase de verificación con revisiones independientes de funcionalidad, seguridad y mantenibilidad, ejecución de pruebas en el entorno de desarrollo y generación de documentación.</p>
+                                <p class="text-gray-300 text-sm">Bucle implementación ↔ verificación: revisiones independientes (funcionalidad, seguridad, mantenibilidad) y pruebas en desarrollo; los hallazgos vuelven a implementación hasta superar todos los filtros.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">Todo ello orquestado en un bucle agéntico entre implementación y verificación: los hallazgos de cada revisión vuelven a los agentes de implementación y el ciclo itera hasta que el cambio supera todos los filtros.</p>
+                                <p class="text-gray-300 text-sm">10–15 skills propias con nuestras convenciones (arquitectura hexagonal, brokers de mensajería, REST, logging, testing, documentación), repartidas con agentes y workflows en plugins privados de Fermax.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">Un conjunto de 10–15 skills propias que codifican cómo trabajamos: arquitectura hexagonal y organización del código, listeners y publishers de brokers de mensajería, endpoints REST, normas de logging, estrategia de testing y documentación. Los agentes generan código coherente con nuestras convenciones en lugar de soluciones genéricas. Agentes, workflows y skills se distribuyen al equipo mediante plugins privados de Fermax para Claude Code.</p>
+                                <p class="text-gray-300 text-sm">Más del 80% de las PRs salen a la primera. Frente al desarrollo previo, ya asistido por IA, estimamos que verificación y correcciones cuestan menos de la mitad, y la definición también se aligera.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
                             <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
                             <div>
-                                <p class="text-gray-300 text-sm">Resultado: más del 80% de las PRs salen adelante a la primera. Frente a nuestro desarrollo previo, ya asistido por IA pero sin estos flujos, estimamos que el esfuerzo de verificación (revisión y tests) y el de correcciones posteriores se ha reducido a menos de la mitad, y también se ha aligerado la fase de definición y análisis.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-blue-400 mr-3 mt-1 text-lg">▸</span>
-                            <div>
-                                <p class="text-gray-300 text-sm">El diseño concreto del flujo (reparto de responsabilidades entre agentes, criterios de salida del bucle y la forma de las skills) es fruto de iterar sobre el desarrollo real del equipo; es un tema del que disfruto hablando en profundidad.</p>
+                                <p class="text-gray-300 text-sm">El diseño del flujo sale de iterar sobre el trabajo del equipo; es un tema del que disfruto hablando en profundidad.</p>
                             </div>
                         </li>
                     </ul>

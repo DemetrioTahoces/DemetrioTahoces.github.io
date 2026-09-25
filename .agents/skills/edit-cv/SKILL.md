@@ -16,14 +16,16 @@ Usar esta skill para modificar el CV del proyecto sin perder contenido previo ni
    - Resumen profesional: `references/resumen-profesional.md`.
    - Experiencia profesional: `references/experiencia-profesional.md`.
    - Formación o formación complementaria: `references/formacion.md`.
+   - Siempre que se toque texto de tarjetas: `references/umbrales.md` (límites de tamaño por componente).
 3. Revisar los archivos actuales antes de editar. No asumir que `index.html`, las páginas en `CV/` y los documentos en `CV/Chatbot/docs/` están sincronizados.
 4. Aplicar cambios de forma aditiva por defecto:
    - Conservar todo lo escrito anteriormente.
    - Ampliar, matizar o reorganizar solo lo imprescindible.
    - No eliminar, condensar agresivamente ni sustituir frases salvo petición totalmente explícita.
+   - Excepción: si una tarjeta supera los umbrales de `references/umbrales.md`, condensar la web está permitido siempre que el detalle siga en el documento RAG.
 5. Revisar si el cambio exige actualizar competencias técnicas, tecnologías, dominios, metodologías o temas relacionados. Si aplica, sincronizar `index.html#competencias` y `CV/Chatbot/docs/CV.md`.
 6. Mantener el estilo del repo: tema oscuro profesional y sobrio, Tailwind CDN para utilidades, sin build step ni nuevas dependencias front-end. Los estilos/JS compartidos viven en `assets/tokens.css`, `assets/cv.css` y `assets/cv.js` (enlazados con `?v=N`); inline solo quedan el gate `motion-ready`, favicon y metadatos. Colores siempre vía tokens (`var(--accent)`, etc.), nunca hardcodeados nuevos. Tipografía: Space Grotesk (display) + Inter (cuerpo) en una única petición a Google Fonts con preconnect.
-7. Verificar enlaces, anclas, navegación y coherencia entre la vista pública y la documentación RAG.
+7. Verificar enlaces, anclas, navegación y coherencia entre la vista pública y la documentación RAG. Ejecutar `python3 .agents/skills/edit-cv/scripts/check_cv.py` desde la raíz: sin errores de umbral no se cierra el cambio.
 8. Documentos del chatbot: conservar el frontmatter YAML de `CV/Chatbot/docs/*.md` (`type`, `title`, `route`, `summary`, `tags`, `order`) y actualizar `summary` si cambia el alcance del documento. Un documento nuevo debe incluirlo completo. Después, desde `CV/Chatbot`, ejecutar `uv run python -m core.llms_txt` y `uv run pytest`.
 
 ## Criterios Editoriales
