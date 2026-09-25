@@ -10,7 +10,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 - `blog/posts/flujos-agenticos-desarrollo-ia.html`: 987 → ~1390 palabras (6 min en post y tarjeta), `dateModified` 2026-09-25. Basado en el boceto "Software factory" del autor: humano define (análisis inicial de requisitos opcional) y valida/decide despliegue al final con un informe; analista con el modelo más capaz (diseño, análisis, planificación, estructura tipo OpenSpec); implementadores por capa con modelo barato; tester con modelo algo más capaz; seguridad, mantenibilidad/escalabilidad y documentación; skills como conocimiento transversal; bucle con máximo de vueltas.
 - El callout "Dónde decide el humano" (`#donde-decide-el-humano`) se movió justo tras la escena inicial y es el único sitio con la lista de decisiones humanas. La conclusión (`#conclusion`) pasa a "un equipo de software hecho de agentes". Ids sin cambios; fuente nueva: OpenSpec (verificada).
 - Matiz del autor en `#la-spec-como-contrato`: la spec no entra en el repo del código pero queda registrada para revisar las decisiones de diseño de la IA en cualquier momento (también en la ficha).
-- Ficha del chatbot y draft de LinkedIn resincronizados. Diagrama sin cambios. Evals pendientes de que las ejecute el autor.
+- Ficha del chatbot y draft de LinkedIn resincronizados. Diagrama sin cambios. Evals ejecutadas por el autor: en verde.
 
 ## Umbrales de tamaño en la skill edit-cv (push directo a `main`, 2026-09-25)
 
