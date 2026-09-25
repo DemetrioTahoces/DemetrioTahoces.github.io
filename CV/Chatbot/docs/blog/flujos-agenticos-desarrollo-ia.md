@@ -28,7 +28,7 @@ La persona pone el qué y el cuándo; los agentes, el cómo. Lo irreversible (su
 No analiza, no programa ni revisa: reparte fases, juzga resultados, lleva la cuenta de fase y vueltas y decide si hay otra. No arregla nada él mismo. Es el único que habla con la persona. Cada fase usa un subagente nuevo, sin heredar el contexto (ni el sesgo) de la anterior.
 
 ### Analista y spec en disco {#la-spec-como-contrato}
-Diseño, análisis y planificación con el modelo más capaz, una vez. La spec recoge cambio y motivo, diseño, escenarios WHEN/THEN con id estable, contexto por capa y servicio y lista de tareas (estructura similar a OpenSpec). Las fases la reciben por ruta, nunca resumida. No entra en el repositorio. Las dudas abiertas se resuelven con la persona antes de implementar.
+Diseño, análisis y planificación con el modelo más capaz, una vez. La spec recoge cambio y motivo, diseño, escenarios WHEN/THEN con id estable, contexto por capa y servicio y lista de tareas (estructura similar a OpenSpec). Las fases la reciben por ruta, nunca resumida. No entra en el repositorio del código, pero queda registrada para revisar en cualquier momento las decisiones de diseño que tomó la IA. Las dudas abiertas se resuelven con la persona antes de implementar.
 
 ### Implementación por capas {#implementar-por-capas}
 Un agente por capa hexagonal y servicio: dominio (entidades, reglas, eventos), aplicación (casos de uso sobre puertos) e infraestructura (REST, persistencia, listeners y publishers); servicios en paralelo. Modelo más barato, sin investigar: si falta contexto, se corrige la spec. Un script verifica que no usan git ni salen de su capa. Las convenciones del equipo vienen de skills compartidas por implementadores y revisores.
