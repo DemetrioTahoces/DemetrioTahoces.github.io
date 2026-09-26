@@ -33,6 +33,7 @@ if project_root not in sys.path:
 
 from core.agent import create_agent_graph, invoke_agent, stream_agent
 from core.config import settings
+from core.feedback_store import create_feedback_store
 from core.knowledge import get_knowledge_base, normalize_route_path
 from core.mcp_server import mcp_http_app, mcp_server
 from core.tracing import configure_tracing, run_config, send_feedback
@@ -43,6 +44,7 @@ from middleware.request_logger import log_error, log_request, log_response, setu
 logger = setup_logging()
 configure_tracing()
 abuse_guard = create_abuse_guard()
+feedback_store = create_feedback_store()
 
 
 @asynccontextmanager
@@ -142,9 +144,13 @@ def _prepare(request: Request, body: ChatRequest, endpoint: str) -> tuple[str, s
         endpoint=endpoint,
         message_chars=len(body.message),
         history_messages=len(history),
-        page_route=normalize_route_path(page_context.get("path")) if page_context else None,
+        page_route=_route(page_context),
     )
     return request_id, session_id, history, page_context
+
+
+def _route(page_context: dict | None) -> str | None:
+    return normalize_route_path(page_context.get("path")) if page_context else None
 
 
 def _internal_error(request_id: str) -> JSONResponse:
@@ -192,6 +198,7 @@ async def chat(request: Request, body: ChatRequest):
         return _internal_error(request_id)
     finally:
         await inspection
+    await feedback_store.remember_turn(request_id, body.message, result["response"], _route(page_context))
 
     duration_ms = (time.perf_counter() - start) * 1000
     log_response(logger, request_id=request_id, status_code=200, duration_ms=duration_ms, usage=result["usage"])
@@ -218,7 +225,13 @@ async def chat_stream(request: Request, body: ChatRequest):
         try:
             yield _sse_event({"type": "session", "session_id": session_id, "request_id": request_id})
             config = run_config(request_id, "/api/chat/stream")
+            answer = []
             async for event in stream_agent(_get_agent(), body.message, history, page_context, config=config):
+                if event["type"] == "token":
+                    answer.append(event["content"])
+                elif event["type"] == "done":
+                    # Before `done`: Vercel may freeze the instance once the client has it.
+                    await feedback_store.remember_turn(request_id, body.message, "".join(answer), _route(page_context))
                 yield _sse_event(event)
                 if event["type"] == "done":
                     log_response(
@@ -248,10 +261,11 @@ async def chat_stream(request: Request, body: ChatRequest):
 @app.post("/api/feedback", status_code=204)
 @limiter.limit(get_rate_limit_string())
 async def feedback(request: Request, body: FeedbackRequest):
-    """Thumbs up/down: always logged; also sent to LangSmith when tracing is on."""
+    """Thumbs up/down: logged, saved in Redis with its answer and sent to LangSmith when tracing is on."""
+    stored = await feedback_store.save(body.request_id, body.rating, body.comment)
     logger.info(
         "Feedback received",
-        extra={"request_id": body.request_id, "rating": body.rating, "has_comment": bool(body.comment)},
+        extra={"request_id": body.request_id, "rating": body.rating, "has_comment": bool(body.comment), "stored": stored},
     )
     await run_in_threadpool(send_feedback, body.request_id, 1 if body.rating == "up" else 0, body.comment)
     return Response(status_code=204)

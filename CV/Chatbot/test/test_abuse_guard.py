@@ -181,6 +181,7 @@ def test_api_normal_questions_are_never_blocked(client, api_guard):
 async def test_upstash_store_sends_pipelines_and_parses_results():
     import httpx
 
+    from core.redis_rest import UpstashRedis
     from middleware.abuse_guard import UpstashRedisStore
 
     sent = []
@@ -197,7 +198,7 @@ async def test_upstash_store_sends_pipelines_and_parses_results():
         sent.append(httpx.Response(200, content=request.content).json())
         return httpx.Response(200, json=next(replies))
 
-    store = UpstashRedisStore("https://kv.example/", "tok", transport=httpx.MockTransport(handler))
+    store = UpstashRedisStore(UpstashRedis("https://kv.example/", "tok", transport=httpx.MockTransport(handler)))
     assert await store.block_ttl("abc") == -2
     assert await store.add_strike("abc", "req1", 1000.0, 86400) == 3
     await store.block("abc", 3600)

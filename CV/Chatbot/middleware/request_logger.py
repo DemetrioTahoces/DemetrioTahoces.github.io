@@ -17,7 +17,7 @@ _EXTRA_FIELDS = (
     "request_id", "ip_hash", "endpoint", "status_code", "duration_ms",
     "message_chars", "history_messages", "page_route",
     "input_tokens", "cached_tokens", "output_tokens", "reasoning_tokens", "total_tokens",
-    "error_type", "rating", "has_comment",
+    "error_type", "rating", "has_comment", "stored",
     "abuse_category", "abuse_mode", "strikes", "blocked_seconds",
 )
 

@@ -4,6 +4,13 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Feedback del chatbot persistido en Redis (push directo a `main`, 2026-09-26)
+
+- Antes el 👍/👎 solo iba a logs de Vercel (efímeros, sin el comentario) y a LangSmith si el tracing estaba activo (por defecto no). Ahora se guarda en el Upstash Redis que ya usa `abuse_guard`.
+- `core/feedback_store.py`: cada respuesta (pregunta, respuesta, ruta, modelo; sin IP ni `session_id`) se guarda `FEEDBACK_TURN_TTL_HOURS` (24) en `cvbot:feedback:turn:<request_id>`; `POST /api/feedback` la copia con `rating`/`comment` en `cvbot:feedback:item:<request_id>` (TTL `FEEDBACK_RETENTION_DAYS`, 180) e indexa en `cvbot:feedback:index`. Fail-open. Lectura: `uv run python -m core.feedback_store --limit 20` o la consola de Upstash. Decisión del agente (el autor no la fijó): guardar la pregunta y la respuesta, porque sin ellas un 👎 no sirve; `FEEDBACK_TURN_TTL_HOURS=0` lo desactiva.
+- `core/redis_rest.py`: cliente REST de Upstash extraído de `abuse_guard` (ahora `UpstashRedisStore(redis)`). Frontend sin cambios. Tests offline: 78 en verde (`test_feedback_store.py`, `FakeRedis` en `conftest.py`). Sin cambios de prompt, modelo ni docs: no hacen falta evals.
+- Verificación en producción: desde el entorno cloud `*.vercel.app` está bloqueado (403 del proxy), así que el agente no pudo hacer el POST real. Pendiente del autor: una pregunta + 👍 en la web y comprobar con el CLI o en Upstash que aparece `cvbot:feedback:item:*` (si no, revisar que las `KV_REST_API_*` estén en el entorno Production de Vercel y el log `Feedback received` con `stored`).
+
 ## Más emojis en el blog: uno por sección (push directo a `main`, 2026-09-26)
 
 - Criterio del autor: con 1-3 por artículo quedaban demasiado discretos. Skill `manage-blog` (`references/emojis.md`, `SKILL.md`, `humanizer.md`) y `AGENTS.md`: 4-7 por artículo (lo normal, 5-6), más o menos uno por sección principal y nunca dos en la misma ni en párrafos seguidos, ni tras un párrafo que abre una lista con dos puntos. Sigue como mucho uno en el `h2` de un callout/warning; el resto de reglas (marcado, dónde no van, drafts 2-4, fichas sin emojis) sin cambios. CSS sin tocar.

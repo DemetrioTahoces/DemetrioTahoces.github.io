@@ -60,6 +60,12 @@ class Settings(BaseSettings):
         default="", validation_alias=AliasChoices("UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_TOKEN")
     )
 
+    # --- Feedback store (same Redis; see core/feedback_store.py) ---
+    # Each answer (question + answer, no IP) is kept this long so a later thumbs up/down can
+    # be saved with its context. 0 = keep nothing: feedback is saved without it.
+    feedback_turn_ttl_hours: int = 24
+    feedback_retention_days: int = 180
+
     # --- CORS: comma-separated list in ALLOWED_ORIGINS ---
     allowed_origins: Annotated[list[str], NoDecode] = DEFAULT_ALLOWED_ORIGINS
 

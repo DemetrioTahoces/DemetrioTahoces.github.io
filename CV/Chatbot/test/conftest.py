@@ -99,3 +99,57 @@ def offline_abuse_guard(monkeypatch):
                        max_strikes=3, block_seconds=3600, window_seconds=86400)
     monkeypatch.setattr(api_module, "abuse_guard", guard)
     return guard
+
+
+class FakeRedis:
+    """In-memory stand-in for core.redis_rest.UpstashRedis (only the commands in use)."""
+
+    def __init__(self, clock=lambda: 0.0):
+        self.clock = clock
+        self.values: dict[str, tuple[str, float | None]] = {}
+        self.zsets: dict[str, dict[str, float]] = {}
+        self.fail = False
+
+    def _get(self, key):
+        value, expires_at = self.values.get(key, (None, None))
+        return None if expires_at is not None and expires_at <= self.clock() else value
+
+    async def pipeline(self, *commands):
+        if self.fail:
+            raise RuntimeError("Redis down")
+        results = []
+        for name, key, *args in commands:
+            if name == "SET":
+                ttl = args[2] if len(args) > 2 and args[1] == "EX" else None
+                self.values[key] = (args[0], self.clock() + ttl if ttl else None)
+                results.append("OK")
+            elif name == "GET":
+                results.append(self._get(key))
+            elif name == "MGET":
+                results.append([self._get(k) for k in [key, *args]])
+            elif name == "ZADD":
+                self.zsets.setdefault(key, {})[args[1]] = args[0]
+                results.append(1)
+            elif name == "ZREMRANGEBYSCORE":
+                zset = self.zsets.get(key, {})
+                old = [m for m, score in zset.items() if score <= args[1]]
+                for member in old:
+                    del zset[member]
+                results.append(len(old))
+            elif name == "ZREVRANGE":
+                ranked = sorted(self.zsets.get(key, {}).items(), key=lambda item: -item[1])
+                results.append([m for m, _ in ranked][args[0]:args[1] + 1])
+            else:
+                raise NotImplementedError(name)
+        return results
+
+
+@pytest.fixture(autouse=True)
+def offline_feedback_store(monkeypatch):
+    """Tests never reach the real Redis, even with its credentials in .env."""
+    import api.index as api_module
+    from core.feedback_store import FeedbackStore
+
+    store = FeedbackStore(None, turn_ttl_seconds=3600, retention_seconds=86400)
+    monkeypatch.setattr(api_module, "feedback_store", store)
+    return store

@@ -26,6 +26,7 @@ from starlette.responses import JSONResponse
 
 from core.abuse_classifier import AbuseClassifier, AbuseVerdict
 from core.config import settings
+from core.redis_rest import UpstashRedis, create_redis
 from middleware.request_logger import hash_ip
 
 logger = logging.getLogger("cv_chatbot.abuse")
@@ -55,25 +56,10 @@ class AbuseStore(Protocol):
 
 
 class UpstashRedisStore:
-    """Upstash Redis REST API (a single HTTP call per operation, no connection pool)."""
+    """AbuseStore on Upstash Redis (see core.redis_rest)."""
 
-    def __init__(self, url: str, token: str, timeout: float = 2.0, transport=None):
-        self._url = url.rstrip("/") + "/pipeline"
-        self._headers = {"Authorization": f"Bearer {token}"}
-        self._timeout = timeout
-        self._transport = transport  # tests inject httpx.MockTransport
-
-    async def _pipeline(self, *commands: list) -> list:
-        import httpx
-
-        async with httpx.AsyncClient(timeout=self._timeout, transport=self._transport) as client:
-            response = await client.post(self._url, headers=self._headers, json=list(commands))
-        response.raise_for_status()
-        results = response.json()
-        errors = [r["error"] for r in results if r.get("error")]
-        if errors:
-            raise RuntimeError(f"Redis error: {errors[0]}")
-        return [r.get("result") for r in results]
+    def __init__(self, redis: UpstashRedis):
+        self._pipeline = redis.pipeline
 
     async def block_ttl(self, key: str) -> int:
         (ttl,) = await self._pipeline(["TTL", f"{KEY_PREFIX}:block:{key}"])
@@ -190,10 +176,9 @@ def blocked_response(retry_after: int) -> JSONResponse:
 
 
 def create_abuse_guard() -> AbuseGuard:
-    store = None
-    if settings.redis_rest_url and settings.redis_rest_token:
-        store = UpstashRedisStore(settings.redis_rest_url, settings.redis_rest_token)
-    elif settings.abuse_mode != "off":
+    redis = create_redis()
+    store = UpstashRedisStore(redis) if redis else None
+    if store is None and settings.abuse_mode != "off":
         logger.warning("Abuse store not configured: strikes are only logged, nobody is blocked")
     return AbuseGuard(
         store=store,

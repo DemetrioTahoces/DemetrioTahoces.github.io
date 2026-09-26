@@ -62,7 +62,7 @@ Las preguntas sobre el CV se resuelven en **1 llamada** al modelo; las del blog 
 | --- | --- | --- |
 | `POST` | `/api/chat/stream` | Respuesta en streaming (SSE). Lo usa el frontend |
 | `POST` | `/api/chat` | Respuesta completa en JSON (fallback) |
-| `POST` | `/api/feedback` | 👍/👎 de una respuesta (`request_id`, `rating`) |
+| `POST` | `/api/feedback` | 👍/👎 de una respuesta (`request_id`, `rating`); se guarda en Redis con la pregunta y la respuesta |
 | `GET` | `/api/health` | Estado, modelo y nº de documentos |
 | `POST` | `/api/mcp` | Servidor MCP (Streamable HTTP, stateless, sin auth) |
 
@@ -101,6 +101,8 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | `core/prompts.py` | Reglas del asistente + fecha |
 | `core/abuse_classifier.py` | Clasificador de intención maliciosa (structured output) |
 | `middleware/abuse_guard.py` | Strikes y bloqueo temporal por `HMAC(ip)` en Upstash Redis |
+| `core/redis_rest.py` | Cliente mínimo de la API REST de Upstash (compartido) |
+| `core/feedback_store.py` | Feedback persistido en Redis con la respuesta valorada; CLI para leerlo |
 | `core/tools.py` | Tool `read_blog_article` (solo blog) |
 | `core/mcp_server.py` | Servidor MCP (`list_documents`, `get_document`) |
 | `core/tracing.py` | LangSmith opcional + feedback |
@@ -146,7 +148,8 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | `ABUSE_MAX_STRIKES` / `ABUSE_STRIKE_WINDOW_HOURS` | `3` / `24` | Strikes dentro de la ventana deslizante que provocan el bloqueo |
 | `ABUSE_BLOCK_MINUTES` | `60` | Duración del bloqueo (`403` + `Retry-After`) |
 | `ABUSE_CLASSIFIER_MODEL` / `_REASONING_EFFORT` | `MODEL_NAME` / `low` | Modelo del clasificador; conviene uno pequeño |
-| `UPSTASH_REDIS_REST_URL` / `_TOKEN` | — | Store compartido (también acepta `KV_REST_API_URL` / `_TOKEN`). Sin él: fail-open, nadie se bloquea |
+| `UPSTASH_REDIS_REST_URL` / `_TOKEN` | — | Store compartido (también acepta `KV_REST_API_URL` / `_TOKEN`). Sin él: fail-open, nadie se bloquea y el feedback solo va a logs |
+| `FEEDBACK_TURN_TTL_HOURS` / `FEEDBACK_RETENTION_DAYS` | `24` / `180` | Cuánto se guarda cada pregunta/respuesta (`0` = nada) y cada feedback |
 | `ALLOWED_ORIGINS` | GitHub Pages + localhost | Separados por comas |
 | `LANGSMITH_TRACING` / `_API_KEY` / `_PROJECT` | `false` | Tracing opcional |
 
@@ -164,6 +167,21 @@ Capa disuasoria, no una barrera de seguridad: el prompt ya declina las inyeccion
 `/api/feedback` y `/api/mcp` no se bloquean: no gastan tokens del modelo. Cualquier fallo del store o del clasificador es fail-open.
 
 Puesta en marcha: crear un Upstash Redis (Vercel → Storage/Marketplace, inyecta `KV_REST_API_*`), dejar `ABUSE_MODE=log-only` unos días, revisar los `Abuse strike` en los logs para medir falsos positivos y pasar a `block`. Limitaciones: la IP se cambia fácil (VPN) y una NAT compartida (oficina, universidad) puede penalizar a usuarios legítimos. En Vercel la IP sale de `x-real-ip`/`x-forwarded-for` (los fija el edge); fuera de Vercel, de la conexión.
+
+## Feedback
+
+1. Cada respuesta de `/api/chat` y `/api/chat/stream` se guarda en Redis (`cvbot:feedback:turn:<request_id>`: pregunta, respuesta, ruta de la página y modelo) durante `FEEDBACK_TURN_TTL_HOURS`. En streaming se escribe justo antes del evento `done`.
+2. `POST /api/feedback` copia ese turno junto a `rating` y `comment` en `cvbot:feedback:item:<request_id>` (TTL `FEEDBACK_RETENTION_DAYS`) y lo indexa en el sorted set `cvbot:feedback:index` por fecha. Si el turno ya caducó, el feedback se guarda sin pregunta ni respuesta.
+3. Nada identifica al usuario: ni IP ni `session_id`. El log `Feedback received` indica `stored`. Con tracing activo también se envía a LangSmith.
+4. Fail-open: un fallo de Redis se registra (`Feedback store unavailable`) y ni el chat ni el endpoint fallan.
+
+Leer las últimas valoraciones (JSON por línea, más recientes primero; requiere las credenciales de Redis en `.env`), o desde la consola de Upstash con el prefijo `cvbot:feedback:item:`:
+
+```powershell
+uv run python -m core.feedback_store --limit 20
+```
+
+Limitaciones: `request_id` solo se valida por formato, así que cualquiera puede enviar feedback (lo frena el rate limit); y guardar el turno añade una escritura a Redis (~decenas de ms) por respuesta.
 
 ## Desarrollo
 
