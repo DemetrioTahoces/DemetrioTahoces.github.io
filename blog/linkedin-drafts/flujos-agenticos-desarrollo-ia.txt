@@ -14,6 +14,8 @@ Un implementador por capa: dominio, aplicación, infraestructura. Sin investigar
 Una puerta de build y tests, y después revisión, pruebas en desarrollo, seguridad, mantenibilidad y documentación en paralelo, cada una sin el sesgo del que implementó.
 Un triage con tres destinos: el código, la spec o el propio test. Máximo cinco vueltas.
 
+Y cada agente necesita lo mismo que una persona nueva en el equipo: contexto, conocimiento, guías y buenas prácticas, y herramientas. En Claude Code eso son skills y subagentes con sus herramientas acotadas por papel. 🛠️
+
 Si te fijas, es lo que ya hace un equipo de software: alguien define, alguien analiza, varios desarrollan, QA prueba, alguien revisa y alguien decide. Solo que aquí cada papel lo juega un agente distinto.
 
 Lo he contado aquí:

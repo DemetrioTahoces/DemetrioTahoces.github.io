@@ -3,7 +3,7 @@ type: blog_post
 title: "Flujos agénticos de desarrollo: el humano decide, el agente ejecuta"
 route: "/blog/posts/flujos-agenticos-desarrollo-ia.html"
 date: "2026-09-24"
-tags: ["IA", "Agentes", "Desarrollo de software", "Claude Code", "Spec-driven development", "Code review"]
+tags: ["IA", "Agentes", "Desarrollo de software", "Claude Code", "Spec-driven development", "Code review", "Skills"]
 summary: "Fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage, con decisiones humanas"
 ---
 
@@ -31,7 +31,10 @@ No analiza, no programa ni revisa: reparte fases, juzga resultados, lleva la cue
 Diseño, análisis y planificación con el modelo más capaz, una vez. La spec recoge cambio y motivo, diseño, escenarios WHEN/THEN con id estable, contexto por capa y servicio y lista de tareas (estructura similar a OpenSpec). Las fases la reciben por ruta, nunca resumida. No entra en el repositorio del código, pero queda registrada para revisar en cualquier momento las decisiones de diseño que tomó la IA. Las dudas abiertas se resuelven con la persona antes de implementar.
 
 ### Implementación por capas {#implementar-por-capas}
-Un agente por capa hexagonal y servicio: dominio (entidades, reglas, eventos), aplicación (casos de uso sobre puertos) e infraestructura (REST, persistencia, listeners y publishers); servicios en paralelo. Modelo más barato, sin investigar: si falta contexto, se corrige la spec. Un script verifica que no usan git ni salen de su capa. Las convenciones del equipo vienen de skills compartidas por implementadores y revisores.
+Un agente por capa hexagonal y servicio: dominio (entidades, reglas, eventos), aplicación (casos de uso sobre puertos) e infraestructura (REST, persistencia, listeners y publishers); servicios en paralelo. Modelo más barato, sin investigar: si falta contexto, se corrige la spec. Un script verifica que no usan git ni salen de su capa.
+
+### Qué necesita cada agente {#que-necesita-cada-agente}
+Cada agente necesita contexto de la tarea (la spec), conocimiento del sistema y del dominio, guías de desarrollo y buenas prácticas del equipo, y herramientas para hacer su trabajo. En Claude Code: el contexto general del proyecto en `CLAUDE.md`; conocimiento y guías en skills (carpeta con `SKILL.md`, referencias y scripts, que el agente carga solo cuando la tarea lo pide); herramientas acotadas por papel en la definición de cada subagente, junto con su modelo y las skills que precarga (el implementador edita y compila sin git, el revisor solo lee, el de pruebas accede al entorno de desarrollo, por ejemplo con un servidor MCP). Las convenciones (arquitectura, endpoints, mensajería, logging, testing, documentación) se escriben una vez como skills y revisores e implementadores cargan las mismas.
 
 ### Puertas y verificación {#puertas-y-verificacion}
 Puerta determinista (build y tests) antes de revisar; en rojo no se sigue. Después, en paralelo y cada una con su subagente: revisión contra la spec (solo hallazgos defendibles), pruebas en entorno de desarrollo con matriz de escenarios (modelo algo más capaz que el de implementación), seguridad si toca superficie sensible, mantenibilidad y escalabilidad (introducido frente a preexistente) y documentación.
@@ -48,7 +51,7 @@ Tres destinos: código → implementador de la capa; spec → el analista la enm
 
 ## Un equipo de software hecho de agentes {#conclusion}
 
-Es el reparto de un equipo de software (definición, análisis, desarrollo, QA, seguridad, deuda técnica, documentación y decisión de salida a producción) llevado a agentes coordinados, cada uno con un papel, su modelo, su contexto y sus skills. La persona ocupa el sitio de quien dirige el equipo.
+Es el reparto de un equipo de software (definición, análisis, desarrollo, QA, seguridad, deuda técnica, documentación y decisión de salida a producción) llevado a agentes coordinados, cada uno con un papel, su modelo, su contexto, sus skills y sus herramientas. La persona ocupa el sitio de quien dirige el equipo.
 
 ## Fuentes {#fuentes}
 

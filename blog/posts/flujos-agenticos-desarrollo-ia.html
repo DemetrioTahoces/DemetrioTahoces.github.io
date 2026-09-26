@@ -24,7 +24,7 @@
       "headline": "Flujos agénticos de desarrollo: el humano decide, el agente ejecuta",
       "description": "Una fábrica de tareas con agentes: spec en disco como contrato, implementación por capas, puertas deterministas, verificación en paralelo y triage.",
       "datePublished": "2026-09-24",
-      "dateModified": "2026-09-25",
+      "dateModified": "2026-09-26",
       "author": {
         "@type": "Person",
         "name": "Demetrio Tahoces"
@@ -79,7 +79,7 @@
             <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
                 <span>24 septiembre 2026</span>
                 <span class="text-gray-600">·</span>
-                <span>6 min de lectura</span>
+                <span>7 min de lectura</span>
             </div>
         </header>
 
@@ -133,7 +133,13 @@
                     <h2>Implementar por capas</h2>
                     <p>En una arquitectura hexagonal, la implementación se reparte con un agente por capa y servicio. El de dominio escribe entidades, reglas y eventos sin depender de nada externo. El de aplicación orquesta los casos de uso sobre los puertos que define el dominio. El de infraestructura implementa los adaptadores: endpoints REST, persistencia, listeners y publishers de mensajería. Cada capa se apoya en el código ya compilado de la anterior, y varios servicios avanzan en paralelo.</p>
                     <p>Los implementadores usan un modelo más barato y tienen prohibido investigar: leen su fichero de capa y lo que este enumera. Si falta información, el fallo está en la spec y se corrige allí. Tampoco se confía en su informe para lo mecánico: un script comprueba que ninguno ha usado git ni ha tocado ficheros fuera de su capa.</p>
-                    <p>Lo que saben de las convenciones del equipo no sale del prompt, sale de las skills: arquitectura, endpoints, mensajería, logging, testing y documentación, escritas una vez y cargadas por el agente que las necesita. Es conocimiento transversal, y los revisores leen las mismas skills que los implementadores.</p>
+                </section>
+
+                <section id="que-necesita-cada-agente">
+                    <h2>Qué necesita cada agente</h2>
+                    <p>Repartir papeles no basta. Un agente rinde en su papel como una persona recién llegada al equipo: según lo que le des. Cada uno necesita el contexto de la tarea, que aquí es la spec; conocimiento del sistema y del dominio; las guías de desarrollo y buenas prácticas del equipo, desde cómo se diseña un endpoint hasta qué se escribe en un log; y herramientas con las que hacer su trabajo, que un revisor sin acceso al código solo puede suponer.</p>
+                    <p>En Claude Code eso tiene piezas concretas. El contexto general del proyecto va en el <code>CLAUDE.md</code>. El conocimiento y las guías van en skills: una carpeta con un <code>SKILL.md</code> de instrucciones, más referencias y scripts, que el agente carga solo cuando la tarea lo pide, sin llenar el contexto de los demás. Las herramientas se acotan por papel en la definición de cada subagente, junto con su modelo y las skills que precarga: el implementador edita y compila pero no toca git, el revisor lee sin escribir y el de pruebas llega al entorno de desarrollo, por ejemplo a través de un servidor MCP.</p>
+                    <p>Así las convenciones del equipo no salen del prompt de cada vuelta. Arquitectura, endpoints, mensajería, logging, testing y documentación se escriben una vez como skills, y los revisores cargan las mismas que los implementadores: juzgan con el mismo criterio con el que se programó.</p>
                 </section>
 
                 <section id="puertas-y-verificacion">
@@ -162,7 +168,7 @@
 
                 <section id="conclusion">
                     <h2>Conclusión: un equipo de software hecho de agentes</h2>
-                    <p>Si se quita la palabra agente, lo que queda es cómo trabaja un equipo de software. Alguien define qué se necesita, un analista diseña y planifica, varios desarrolladores implementan cada uno su parte, QA prueba, alguien revisa la seguridad y la deuda técnica, se documenta, y un responsable decide si aquello sale a producción. La fábrica de tareas reproduce ese reparto con un grupo de agentes coordinados, cada uno en un papel distinto del equipo, con el modelo, el contexto y las skills que su papel necesita.</p>
+                    <p>Si se quita la palabra agente, lo que queda es cómo trabaja un equipo de software. Alguien define qué se necesita, un analista diseña y planifica, varios desarrolladores implementan cada uno su parte, QA prueba, alguien revisa la seguridad y la deuda técnica, se documenta, y un responsable decide si aquello sale a producción. La fábrica de tareas reproduce ese reparto con un grupo de agentes coordinados, cada uno en un papel distinto del equipo, con el modelo, el contexto, las skills y las herramientas que su papel necesita.</p>
                     <p>Funciona por lo mismo que funciona un buen equipo: una spec que todos leen igual, puertas que no opinan, revisores que no heredan el sesgo de quien implementó y un triage que sabe a dónde devolver cada fallo. La persona ocupa el sitio de quien dirige ese equipo. Deja de ser el único control de calidad y decide en los puntos donde su criterio importa.</p>
                 </section>
 
