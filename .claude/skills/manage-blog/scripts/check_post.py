@@ -247,6 +247,8 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     hidden = re.findall(r'<span[^>]*aria-hidden="true"[^>]*>([^<]*)</span>', prose_html)
     if len(EMOJI.findall("".join(hidden))) < prose_emojis:
         warnings.append('estilo: emojis de la prosa sin <span aria-hidden="true">')
+    if re.search(r'[ \t\r\n]<span[^>]*aria-hidden="true"[^>]*>[^<]*</span>\s*</p>', prose_html):
+        warnings.append("estilo: emoji al final de párrafo sin &nbsp; (puede quedar solo en una línea)")
 
     # Draft de LinkedIn copiable
     draft = txt_path.read_text(encoding="utf-8")

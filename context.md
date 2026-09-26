@@ -4,13 +4,14 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
-## Emojis discretos en los artículos del blog (push directo a `main`, 2026-09-26)
+## Emojis discretos en el blog: skill y posts publicados (push directo a `main`, 2026-09-26)
 
-- Skill `manage-blog`: los artículos llevan 2-4 emojis discretos, solo dentro de `.article-prose`: al principio del `h2` de callouts y warnings y, como mucho uno o dos, al final de un párrafo con carga personal. Nunca en títulos, metadatos, hero, `h2`/`h3` normales, código, tarjeta del índice ni ficha del chatbot. Marcado decorativo `<span aria-hidden="true">`, así que el texto tiene que entenderse sin el emoji.
-- Reglas de artículo y de LinkedIn unificadas en `references/emojis.md` (vocabulario común); `linkedin.md`, `humanizer.md`, `SKILL.md`, `edicion.md` y la plantilla (callout de ejemplo con 💡) apuntan ahí. Añadir o quitar emojis no toca `dateModified`.
-- `check_post.py`: avisos por más de 4 emojis en la prosa, emojis fuera de la prosa, sin `aria-hidden`, en la tarjeta o en la ficha; el aviso de title case ignora el emoji inicial del heading. Posts publicados sin tocar: siguen con 0 emojis y la salida de `--all` no cambia.
-- `.claude/skills/manage-blog` es una copia (no un enlace simbólico) desde `efc75d8` y se había quedado sin las reglas de emojis de LinkedIn: resincronizada. `AGENTS.md` lo explica: se edita el original y se replica en la copia en el mismo commit.
-- Pendiente del autor: decidir si se aplican los emojis a los tres posts publicados.
+- Skill `manage-blog`: 2-4 emojis por artículo (lo normal, 3; 4 solo en posts largos), colocados de forma estratégica con el texto ya cerrado (paso 9 de "Artículo nuevo" y "Cómo colocarlos" en `references/emojis.md`): al principio del `h2` de callouts y warnings y, como mucho uno o dos, al final de un párrafo clave, repartidos y nunca en bloques contiguos. Nunca en títulos, metadatos, hero, `h2`/`h3` normales, código, tarjeta del índice ni ficha del chatbot. Marcado `<span aria-hidden="true">` (el texto se entiende sin el emoji) y `&nbsp;` delante de los de final de párrafo para que no queden solos en una línea. `AGENTS.md` lo recoge en una línea.
+- `references/emojis.md` unifica las reglas del artículo y de LinkedIn (vocabulario común); `linkedin.md`, `humanizer.md`, `SKILL.md`, `edicion.md` y la plantilla (callout de ejemplo con 💡) apuntan ahí. Añadir o quitar emojis no toca `dateModified`.
+- `check_post.py`: avisos por más de 4 emojis en la prosa, emojis fuera de la prosa, sin `aria-hidden`, sin `&nbsp;` al final de párrafo, en la tarjeta o en la ficha; el aviso de title case ignora el emoji inicial del heading.
+- Posts publicados con emojis, sin tocar texto, ids, `dateModified`, fichas ni drafts: SOLID 🤔 cierre de la escena, 📌 `#como-se-refuerzan-entre-si`, 💡 `#regla-pragmatica`; domain events 💡 `#primero-el-domain-event-despues-el-broker`, ⚠️ `#el-ejemplo-usa-rabbitmq`, 📌 `#una-cola-un-consumidor-logico`, ✅ `#checklist-pragmatico`; flujos agénticos 📌 `#donde-decide-el-humano`, 💡 `#la-spec-como-contrato`, 🛠️ `#que-necesita-cada-agente`. `check_post.py --all` da los mismos avisos que antes.
+- Skills: `.claude/skills/` es una copia de `.agents/skills/` (no enlaces simbólicos) desde `efc75d8`. `manage-blog` se había quedado sin las reglas de emojis de LinkedIn y está resincronizada; `edit-cv` ya coincidía. `AGENTS.md` lo explica: se edita el original y se replica en la copia en el mismo commit.
+- Pendiente del autor: revisar los emojis en GitHub Pages (desde el entorno cloud no cargan Tailwind ni Google Fonts).
 
 ## Post de flujos agénticos: qué necesita cada agente, 7 min (push directo a `main`, 2026-09-26)
 

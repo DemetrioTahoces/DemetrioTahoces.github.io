@@ -61,7 +61,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar secciones tipo "retos y futuro" o "conclusión prometedora" si no aportan hechos.
 - No narrar cambios del repo. El artículo debe leerse como pieza independiente, no como diff.
 - Cuidar que el primer párrafo no requiera contexto previo del lector.
-- 2-4 emojis discretos: en el `h2` de un callout o al final de un párrafo con carga personal, nunca en títulos ni en los `h2`/`h3` de secciones normales (ver `references/emojis.md`).
+- 2-4 emojis discretos y colocados con estrategia: en el `h2` de un callout o al final de un párrafo clave, nunca en títulos ni en los `h2`/`h3` de secciones normales (ver `references/emojis.md`).
 
 ## Cómo humanizar drafts de LinkedIn
 

@@ -113,7 +113,7 @@
                         <li><code>UserCreated</code> es un evento.</li>
                     </ul>
                     <p>El evento debe informar, no decidir la reacción. Si el evento ya dice <code>SendEmailToUser</code>, el productor ha elegido una consecuencia. El consumidor deja de interpretar un hecho y empieza a obedecer una instrucción. Eso es acoplamiento con otro nombre.</p>
-                    <p>Por eso conviene emitir eventos en pasado, con nombres claros y cercanos al lenguaje ubicuo: <code>UserCreated</code>, <code>OrderPaid</code>, <code>InvoiceIssued</code>, <code>SubscriptionCancelled</code>. Si no se puede escribir en pasado sin sonar raro, quizá no es un evento de dominio.</p>
+                    <p>Por eso conviene emitir eventos en pasado, con nombres claros y cercanos al lenguaje ubicuo: <code>UserCreated</code>, <code>OrderPaid</code>, <code>InvoiceIssued</code>, <code>SubscriptionCancelled</code>. Si no se puede escribir en pasado sin sonar raro, quizá no es un evento de dominio.&nbsp;<span aria-hidden="true">💡</span></p>
                 </section>
 
                 <section id="la-convencion-de-nombrado">
@@ -175,7 +175,7 @@ Queue:       sync-crm-on-user-created</code></pre>
                 </section>
 
                 <section id="el-ejemplo-usa-rabbitmq" class="warning rounded-xl p-5 my-8">
-                    <h2 class="mt-0">El ejemplo usa RabbitMQ</h2>
+                    <h2 class="mt-0"><span aria-hidden="true">⚠️</span> El ejemplo usa RabbitMQ</h2>
                     <p>Esta convención está explicada con RabbitMQ porque su modelo encaja muy bien con la separación entre exchange, routing key, binding y cola. Aun así, la idea de fondo es extrapolable a Kafka, SQS, Pub/Sub u otros brokers: separar la entidad, el hecho ocurrido y la reacción que ejecuta cada consumidor.</p>
                     <p>El mapeo exacto cambia según el broker:</p>
                     <ul>
@@ -202,7 +202,7 @@ sync-crm-on-user-created
   - SendWelcomeEmailOnUserCreated
   - SyncCrmOnUserCreated
   - ProvisionTrialOnUserCreated</code></pre>
-                    <p>La segunda opción parece ahorrar colas, pero rompe propiedad operativa. ¿Qué retry aplica? ¿Qué DLQ se revisa? ¿Qué métrica representa el lag? ¿Qué handler es idempotente y cuál no? Cada reacción tiene una razón de cambio distinta. Merece su propia cola.</p>
+                    <p>La segunda opción parece ahorrar colas, pero rompe propiedad operativa. ¿Qué retry aplica? ¿Qué DLQ se revisa? ¿Qué métrica representa el lag? ¿Qué handler es idempotente y cuál no? Cada reacción tiene una razón de cambio distinta. Merece su propia cola.&nbsp;<span aria-hidden="true">📌</span></p>
                 </section>
 
                 <section id="rabbitmq-y-kafka-no-son-la-misma-cosa">
@@ -264,7 +264,7 @@ sync-crm-on-user-created
                 </section>
 
                 <section id="checklist-pragmatico" class="callout rounded-xl p-5 my-8">
-                    <h2 class="mt-0">Checklist pragmático</h2>
+                    <h2 class="mt-0"><span aria-hidden="true">✅</span> Checklist pragmático</h2>
                     <ol>
                         <li>¿El evento está en pasado y expresa un hecho de negocio?</li>
                         <li>¿El exchange o topic representa la entidad en kebab-case?</li>
