@@ -18,7 +18,7 @@ Mantener `/blog/` como blog educativo separado del CV pero visualmente coherente
 6. Ficha del chatbot `CV/Chatbot/docs/blog/<slug>.md`: `references/ficha-chatbot.md`.
 7. Draft de LinkedIn `blog/linkedin-drafts/<slug>.txt`: `references/linkedin.md`.
 8. Fuentes verificadas: `references/fuentes.md`.
-9. Emojis, con el texto ya cerrado: 4-7 en el artículo (lo normal, 5-6: más o menos uno por sección principal) y 2-4 en el draft, elegidos por lo que dice cada frase y distintos de los de otros posts, repartidos como hitos de lectura: `references/emojis.md`.
+9. Emojis, con el texto ya cerrado: 4-7 en el artículo (lo normal, 5-6: más o menos uno por sección principal) y 3-5 en el draft, elegidos por lo que dice cada frase y distintos de los de otros posts, repartidos como hitos de lectura: `references/emojis.md`.
 10. Auditoría obligatoria de `references/humanizer.md` sobre el artículo y el draft.
 11. Validar (ver abajo) y actualizar la entrada de `context.md`.
 
@@ -42,7 +42,7 @@ Mantener `/blog/` como blog educativo separado del CV pero visualmente coherente
 
 ## Validación
 
-- `python3 .agents/skills/manage-blog/scripts/check_post.py <slug>` (o `--all`) sin errores. También corre en CI (`.github/workflows/blog.yml`). Comprueba: existencia y sincronía de HTML, ficha, draft y tarjeta; canonical, OG/Twitter (PNG) y JSON-LD; frontmatter; anclas `{#id}` de la ficha y ficha sin emojis; enlaces relativos e `id` duplicados; tiempo de lectura; minutos iguales en post y tarjeta (y aviso si difieren las etiquetas); orden y contador del índice; `?v=N`; draft sin Markdown y con URL pública; em/en dash; y avisos de estilo del humanizer (vocabulario inflado, fórmulas, exceso de negritas) y de emojis (menos de 4 o más de 7 en la prosa, más de 4 en el draft, fuera de la prosa, en un heading que no sea el `h2` de un callout o en más de uno, sin `class="emoji"`/`aria-hidden`, sin `&nbsp;` al final de párrafo o en la tarjeta).
+- `python3 .agents/skills/manage-blog/scripts/check_post.py <slug>` (o `--all`) sin errores. También corre en CI (`.github/workflows/blog.yml`). Comprueba: existencia y sincronía de HTML, ficha, draft y tarjeta; canonical, OG/Twitter (PNG) y JSON-LD; frontmatter; anclas `{#id}` de la ficha y ficha sin emojis; enlaces relativos e `id` duplicados; tiempo de lectura; minutos iguales en post y tarjeta (y aviso si difieren las etiquetas); orden y contador del índice; `?v=N`; draft sin Markdown y con URL pública; em/en dash; y avisos de estilo del humanizer (vocabulario inflado, fórmulas, exceso de negritas) y de emojis (menos de 4 o más de 7 en la prosa, menos de 3 o más de 5 en el draft, fuera de la prosa, en un heading que no sea el `h2` de un callout o en más de uno, sin `class="emoji"`/`aria-hidden`, sin `&nbsp;` al final de párrafo o en la tarjeta).
 - Desde `CV/Chatbot`: `uv run python -m core.llms_txt` y `uv run pytest`.
 - Revisión visual: `node .agents/skills/manage-blog/scripts/screenshot.mjs <slug>` con un servidor estático en marcha (`python -m http.server 8000` desde la raíz). Guarda capturas de escritorio y móvil, e informa de desbordamiento horizontal y de recursos bloqueados (si Tailwind o las fuentes no cargan, la captura no es fiable).
 - Los avisos de estilo no bloquean, pero cada uno se revisa a mano con `references/humanizer.md`.

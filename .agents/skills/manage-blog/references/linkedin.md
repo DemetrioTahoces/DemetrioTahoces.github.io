@@ -5,7 +5,7 @@
 - No usar Markdown: evitar `[texto](url)`, `**negrita**`, encabezados Markdown, tablas, listas Markdown o `![imagen](url)`.
 - Usar URL visible del artículo cuando exista publicación pública, por ejemplo `https://demetriotahoces.github.io/blog/posts/<slug>.html`.
 - Estructura recomendada del borrador: gancho inicial, idea aprendida, 2-4 puntos breves en texto plano, cierre con pregunta o reflexión y hashtags moderados.
-- Emojis: entre 2 y 4, pocos y discretos, para dar un tono más personal y cercano. Dónde encajan y cuáles usar: `references/emojis.md`.
+- Emojis: entre 3 y 5 (lo normal, 4), repartidos, para dar un tono más personal y cercano. Dónde encajan y cuáles usar: `references/emojis.md`.
 - Si hay imagen sugerida para LinkedIn, no mezclar notas editoriales dentro del `.txt`; el archivo debe seguir siendo copiable completo.
 - La imagen sugerida para LinkedIn es `blog/assets/<slug>.png` (la misma que `og:image`); no duplicarla en `blog/linkedin-drafts/`.
 - No generar automatizaciones ni publicar en LinkedIn.

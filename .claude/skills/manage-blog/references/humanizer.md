@@ -42,7 +42,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar exceso de negritas. La negrita mecánica es señal de texto generado.
 - Evitar listas con encabezados inline en negrita tipo `**Rendimiento:** ...` salvo que aporten mucha claridad.
 - Evitar title case en headings. En castellano, usar mayúscula inicial normal.
-- Emojis: variados y repartidos (4-7 en el artículo, más o menos uno por sección; 2-4 en el draft de LinkedIn), para dar cercanía u orientar la lectura, nunca para decorar; reglas en `references/emojis.md`.
+- Emojis: variados y repartidos (4-7 en el artículo, más o menos uno por sección; 3-5 en el draft de LinkedIn), para dar cercanía u orientar la lectura, nunca para decorar; reglas en `references/emojis.md`.
 - Evitar comillas rizadas si se puede controlar el texto. Usar comillas rectas en ejemplos y citas.
 - No dejar artefactos conversacionales: "Espero que te ayude", "claro", "por supuesto", "si quieres", "aquí tienes".
 - No incluir disclaimers de conocimiento o falta de datos. Si algo no está documentado, se omite o se dice de forma concreta.
@@ -72,7 +72,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar Markdown, notas editoriales y texto entre corchetes.
 - Cerrar con una reflexión o pregunta natural, no con una llamada a la acción de marketing.
 - Hashtags moderados y relevantes.
-- 2-4 emojis discretos, elegidos por lo que dice el texto, que den un tono personal sin muletillas de marketing (ver `references/emojis.md`).
+- 3-5 emojis (lo normal, 4), elegidos por lo que dice el texto, que den un tono personal sin muletillas de marketing (ver `references/emojis.md`).
 - El draft debe invitar a abrir el artículo sin vender humo.
 
 ## Falsos positivos que no deben forzar reescritura

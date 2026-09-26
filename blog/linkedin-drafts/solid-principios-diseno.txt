@@ -1,4 +1,4 @@
-Cuando hablamos de código, una clase empieza siendo inocente.
+Cuando hablamos de código, una clase empieza siendo inocente. 🌱
 
 Hace una cosa, se entiende rápido y nadie se preocupa demasiado.
 
@@ -15,7 +15,7 @@ Tampoco como una excusa para meter capas por todas partes.
 
 Para mí, SOLID va de una pregunta bastante simple:
 
-Si esto cambia, ¿qué más arrastra?
+Si esto cambia, ¿qué más arrastra? 🧲
 
 SRP ayuda a separar motivos de cambio.
 OCP da un sitio natural a las variantes que aparecen a menudo.
@@ -24,9 +24,9 @@ ISP evita que un consumidor cargue con métodos que no usa.
 DIP hace que las reglas importantes no dependan directamente de detalles técnicos.
 
 Bien aplicado, SOLID no hace el código más "académico".
-Lo hace menos frágil cuando llega el siguiente cambio.
+Lo hace menos frágil cuando llega el siguiente cambio. 🛡️
 
-He resumido los cinco principios con ejemplos cotidianos de backend y una lectura bastante pragmática:
+He resumido los cinco principios con ejemplos cotidianos de backend y una lectura bastante pragmática: 👇
 
 https://demetriotahoces.github.io/blog/posts/solid-principios-diseno.html
 

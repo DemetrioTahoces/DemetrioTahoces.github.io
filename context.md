@@ -9,6 +9,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 - Criterio del autor: con 1-3 por artículo quedaban demasiado discretos. Skill `manage-blog` (`references/emojis.md`, `SKILL.md`, `humanizer.md`) y `AGENTS.md`: 4-7 por artículo (lo normal, 5-6), más o menos uno por sección principal y nunca dos en la misma ni en párrafos seguidos, ni tras un párrafo que abre una lista con dos puntos. Sigue como mucho uno en el `h2` de un callout/warning; el resto de reglas (marcado, dónde no van, drafts 2-4, fichas sin emojis) sin cambios. CSS sin tocar.
 - `check_post.py`: avisa por debajo de 4 (`MIN_POST_EMOJIS`) y por encima de 7; el regex `EMOJI` ahora incluye U+231A-23FF (antes no detectaba ⏳ ni ⌛).
 - Posts publicados (solo emojis; sin `dateModified`, fichas, drafts ni ids): domain events 6 (🌙 📣 🐇 en el h2 del warning 📬 📦 🕸️), flujos agénticos 6 (🔑 👀 📜 🧰 🏁 ⏳), SOLID 6 (⛓️ 🐧 ☕ 🔌 💧 🧭). `check_post.py --all` en OK (solo los avisos previos de etiquetas); `uv run pytest`: 71 en verde.
+- Drafts de LinkedIn: de 2-4 a 3-5 emojis (lo normal, 4); `check_post.py` avisa por debajo de 3 (`MIN_DRAFT_EMOJIS`) y por encima de 5. Drafts publicados: domain events 🏷️ 🧯 🧩 👇, flujos agénticos 🤝 🛠️ 👥 👇, SOLID 🌱 🧲 🛡️ 👇 (👇 junto a la URL).
 - `.claude/skills/` sincronizada con `.agents/skills/` (copia, no symlink).
 
 ## Emojis discretos y variados en el blog: skill y posts publicados (push directo a `main`, 2026-09-26)

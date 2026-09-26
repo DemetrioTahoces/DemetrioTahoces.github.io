@@ -37,6 +37,6 @@ Al montar el artículo, los emojis van al final, con el texto ya cerrado: su sit
 
 ## Draft de LinkedIn (`blog/linkedin-drafts/<slug>.txt`)
 
-- Entre 2 y 4 en todo el post (`check_post.py` avisa por encima de 4).
-- Dónde encajan: al final del gancho o de una frase con carga personal, como marcador de los 2-4 puntos breves (en lugar de guiones) o junto a la URL del artículo (👇).
+- Entre 3 y 5 en todo el post (lo normal, 4), sin dos en líneas seguidas. `check_post.py` avisa por debajo de 3 y por encima de 5.
+- Dónde encajan: al final del gancho o de una frase con carga personal, como marcador de los puntos breves (en lugar de guiones; cuentan todos para el total) o junto a la URL del artículo (👇).
 - Texto plano, sin marcado, y nunca en los hashtags.

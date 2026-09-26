@@ -1,4 +1,4 @@
-Una cola llamada users no dice casi nada cuando algo falla.
+Una cola llamada users no dice casi nada cuando algo falla. 🏷️
 
 En sistemas event-driven, los nombres de los topics / colas deberían sugerir al menos 3 cosas:
 
@@ -13,11 +13,11 @@ El exchange o topic usa la entidad en kebab-case: user.
 La routing key describe lo que se ha hecho sobre esa entidad: created.
 La cola dice la reacción sobre el hecho: send-email-on-user-created.
 
-Esa última parte parece un detalle menor, pero ayuda mucho en operación. Una DLQ llamada send-email-on-user-created.dlq es bastante más clara que notification-worker.dlq.
+Esa última parte parece un detalle menor, pero ayuda mucho en operación. Una DLQ llamada send-email-on-user-created.dlq es bastante más clara que notification-worker.dlq. 🧯
 
-El ejemplo está planteado con RabbitMQ, pero la idea se puede llevar a otros brokers. En Kafka, por ejemplo, user puede ser el topic, created puede viajar como eventType o header, y send-email-on-user-created puede ser el consumer group.
+El ejemplo está planteado con RabbitMQ, pero la idea se puede llevar a otros brokers. En Kafka, por ejemplo, user puede ser el topic, created puede viajar como eventType o header, y send-email-on-user-created puede ser el consumer group. 🧩
 
-He adaptado la idea con ejemplos de RabbitMQ, Kafka, consumer groups, colas por consumidor lógico y errores habituales:
+He adaptado la idea con ejemplos de RabbitMQ, Kafka, consumer groups, colas por consumidor lógico y errores habituales: 👇
 
 https://demetriotahoces.github.io/blog/posts/domain-events-brokers-mensajeria.html
 

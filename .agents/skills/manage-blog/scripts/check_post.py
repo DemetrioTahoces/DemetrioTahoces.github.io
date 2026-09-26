@@ -28,7 +28,8 @@ DASHES = re.compile("[—–]")
 EMOJI = re.compile("[🌀-🫿☀-➿⌚-⏿⭐✅]\ufe0f?")
 MIN_POST_EMOJIS = 4
 MAX_POST_EMOJIS = 7
-MAX_DRAFT_EMOJIS = 4
+MIN_DRAFT_EMOJIS = 3
+MAX_DRAFT_EMOJIS = 5
 # Patrones de references/humanizer.md detectables sin contexto.
 STYLE_PATTERNS = [
     r"\bcrucial", r"\bpivotal", r"\btestament", r"\btransformador", r"\brevolucionari",
@@ -266,6 +267,8 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     if re.search(r"\*\*|\]\(|^#{1,6} |^\s*[-*] ", draft, re.M):
         errors.append("draft de LinkedIn con sintaxis Markdown")
     emojis = len(EMOJI.findall(draft))
+    if emojis < MIN_DRAFT_EMOJIS:
+        warnings.append(f"estilo: {emojis} emojis en el draft de LinkedIn (mínimo orientativo {MIN_DRAFT_EMOJIS})")
     if emojis > MAX_DRAFT_EMOJIS:
         warnings.append(f"estilo: {emojis} emojis en el draft de LinkedIn (máximo orientativo {MAX_DRAFT_EMOJIS})")
 
