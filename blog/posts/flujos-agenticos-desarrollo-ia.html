@@ -39,7 +39,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/tokens.css?v=2">
     <link rel="stylesheet" href="../../assets/cv.css?v=3">
-    <link rel="stylesheet" href="../../assets/blog.css?v=2">
+    <link rel="stylesheet" href="../../assets/blog.css?v=3">
     <script>
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.documentElement.classList.add('motion-ready');
@@ -104,7 +104,7 @@
                 </section>
 
                 <section id="donde-decide-el-humano" class="callout rounded-xl p-5 my-8">
-                    <h2><span aria-hidden="true">📌</span> Dónde decide el humano</h2>
+                    <h2><span class="emoji" aria-hidden="true">🔑</span> Dónde decide el humano</h2>
                     <p>La regla separa juicio y trabajo. La persona pone el qué y el cuándo; los agentes, el cómo. Entre medias el bucle corre solo, y lo que no se puede deshacer, como subir a producción, queda fuera de su alcance.</p>
                     <ul>
                         <li>Al arrancar: define la tarea, con un análisis inicial de requisitos si ya lo tiene, decide si merece el flujo y da un único visto bueno a lo que se va a hacer.</li>
@@ -126,7 +126,7 @@
                     <p>Antes de tocar código, un agente analista hace el diseño, el análisis y la planificación, y lo deja escrito en disco: qué cambia y por qué, decisiones de diseño, escenarios de aceptación en formato WHEN/THEN con un identificador estable, el contexto que necesita cada capa de cada servicio y la lista de tareas. Es la misma estructura que proponen herramientas de spec-driven development como OpenSpec.</p>
                     <p>Aquí se usa el modelo más capaz y con más razonamiento, una sola vez. Es donde más rinde: un error de diseño en la spec se multiplica en cada capa que la implementa y en cada revisor que la usa de referencia.</p>
                     <p>El resto de fases recibe la ruta de esa spec, nunca un resumen pegado en el prompt. Un plan parafraseado deriva en cuanto alguien lo resume entre vueltas; un fichero se lee igual en la primera vuelta y en la quinta. La spec no entra en el repositorio del código, pero queda registrada: si en cualquier momento hay que revisar una decisión de diseño que tomó la IA, el contrato sigue ahí, con su motivo.</p>
-                    <p>Si el analista deja dudas abiertas, se resuelven antes de implementar. Una suposición que se cuela en la primera vuelta se paga en todas las siguientes.&nbsp;<span aria-hidden="true">💡</span></p>
+                    <p>Si el analista deja dudas abiertas, se resuelven antes de implementar. Una suposición que se cuela en la primera vuelta se paga en todas las siguientes.</p>
                 </section>
 
                 <section id="implementar-por-capas">
@@ -138,7 +138,7 @@
                 <section id="que-necesita-cada-agente">
                     <h2>Qué necesita cada agente</h2>
                     <p>Repartir papeles no basta. Un agente rinde en su papel como una persona recién llegada al equipo: según lo que le des. Cada uno necesita el contexto de la tarea, que aquí es la spec; conocimiento del sistema y del dominio; las guías de desarrollo y buenas prácticas del equipo, desde cómo se diseña un endpoint hasta qué se escribe en un log; y herramientas con las que hacer su trabajo, que un revisor sin acceso al código solo puede suponer.</p>
-                    <p>En Claude Code eso tiene piezas concretas. El contexto general del proyecto va en el <code>CLAUDE.md</code>. El conocimiento y las guías van en skills: una carpeta con un <code>SKILL.md</code> de instrucciones, más referencias y scripts, que el agente carga solo cuando la tarea lo pide, sin llenar el contexto de los demás. Las herramientas se acotan por papel en la definición de cada subagente, junto con su modelo y las skills que precarga: el implementador edita y compila pero no toca git, el revisor lee sin escribir y el de pruebas llega al entorno de desarrollo, por ejemplo a través de un servidor MCP.&nbsp;<span aria-hidden="true">🛠️</span></p>
+                    <p>En Claude Code eso tiene piezas concretas. El contexto general del proyecto va en el <code>CLAUDE.md</code>. El conocimiento y las guías van en skills: una carpeta con un <code>SKILL.md</code> de instrucciones, más referencias y scripts, que el agente carga solo cuando la tarea lo pide, sin llenar el contexto de los demás. Las herramientas se acotan por papel en la definición de cada subagente, junto con su modelo y las skills que precarga: el implementador edita y compila pero no toca git, el revisor lee sin escribir y el de pruebas llega al entorno de desarrollo, por ejemplo a través de un servidor MCP.&nbsp;<span class="emoji" aria-hidden="true">🧰</span></p>
                     <p>Así las convenciones del equipo no salen del prompt de cada vuelta. Arquitectura, endpoints, mensajería, logging, testing y documentación se escriben una vez como skills, y los revisores cargan las mismas que los implementadores: juzgan con el mismo criterio con el que se programó.</p>
                 </section>
 

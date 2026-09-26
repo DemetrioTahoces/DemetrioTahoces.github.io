@@ -24,9 +24,10 @@ WORDS_PER_MINUTE = 220
 MONTHS = {m: i for i, m in enumerate(
     "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split(), 1)}
 DASHES = re.compile("[—–]")
-# Emojis del artículo y del draft de LinkedIn: pocos y discretos (references/emojis.md).
+# Emojis del artículo y del draft de LinkedIn: pocos, discretos y variados (references/emojis.md).
 EMOJI = re.compile("[🌀-🫿☀-➿⭐✅]\ufe0f?")
-MAX_EMOJIS = 4
+MAX_POST_EMOJIS = 3
+MAX_DRAFT_EMOJIS = 4
 # Patrones de references/humanizer.md detectables sin contexto.
 STYLE_PATTERNS = [
     r"\bcrucial", r"\bpivotal", r"\btestament", r"\btransformador", r"\brevolucionari",
@@ -232,21 +233,26 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     bold = len(re.findall(r"<(?:strong|b)>", prose_html))
     if bold > MAX_BOLD:
         warnings.append(f"estilo: {bold} negritas en la prosa (máximo orientativo {MAX_BOLD})")
-    for heading in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", prose_html, re.S):
+    headings = re.findall(r"<h[23][^>]*>(.*?)</h[23]>", prose_html, re.S)
+    for heading in headings:
         words = EMOJI.sub("", re.sub(r"<[^>]+>", "", heading)).split()[1:]
         capitalized = [w for w in words if len(w) > 3 and w[0].isupper() and not w.isupper()]
         if len(capitalized) >= 2:
             warnings.append(f"estilo: heading en title case: {heading.strip()!r}")
 
-    # Emojis del artículo: pocos, solo en la prosa y ocultos a lectores de pantalla
+    # Emojis del artículo: pocos, solo en la prosa, como acento discreto y ocultos a lectores de pantalla
     prose_emojis = len(EMOJI.findall(prose_text))
-    if prose_emojis > MAX_EMOJIS:
-        warnings.append(f"estilo: {prose_emojis} emojis en la prosa del artículo (máximo orientativo {MAX_EMOJIS})")
+    if prose_emojis > MAX_POST_EMOJIS:
+        warnings.append(f"estilo: {prose_emojis} emojis en la prosa del artículo (máximo orientativo {MAX_POST_EMOJIS})")
     if len(EMOJI.findall(html_text)) > prose_emojis:
         warnings.append("estilo: emojis fuera de la prosa (título, metadatos, hero o figura)")
-    hidden = re.findall(r'<span[^>]*aria-hidden="true"[^>]*>([^<]*)</span>', prose_html)
-    if len(EMOJI.findall("".join(hidden))) < prose_emojis:
-        warnings.append('estilo: emojis de la prosa sin <span aria-hidden="true">')
+    marked = re.findall(r'<span class="emoji" aria-hidden="true">([^<]*)</span>', prose_html)
+    if len(EMOJI.findall("".join(marked))) < prose_emojis:
+        warnings.append('estilo: emojis de la prosa sin <span class="emoji" aria-hidden="true">')
+    callout_h2 = re.findall(r'<section[^>]*class="[^"]*\b(?:callout|warning)\b[^"]*"[^>]*>\s*<h2[^>]*>(.*?)</h2>', prose_html, re.S)
+    emoji_headings = [h for h in headings if EMOJI.search(h)]
+    if len(emoji_headings) > 1 or any(h not in callout_h2 for h in emoji_headings):
+        warnings.append("estilo: emojis en headings: como mucho uno, y solo en el h2 de un callout o warning")
     if re.search(r'[ \t\r\n]<span[^>]*aria-hidden="true"[^>]*>[^<]*</span>\s*</p>', prose_html):
         warnings.append("estilo: emoji al final de párrafo sin &nbsp; (puede quedar solo en una línea)")
 
@@ -257,8 +263,8 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     if re.search(r"\*\*|\]\(|^#{1,6} |^\s*[-*] ", draft, re.M):
         errors.append("draft de LinkedIn con sintaxis Markdown")
     emojis = len(EMOJI.findall(draft))
-    if emojis > MAX_EMOJIS:
-        warnings.append(f"estilo: {emojis} emojis en el draft de LinkedIn (máximo orientativo {MAX_EMOJIS})")
+    if emojis > MAX_DRAFT_EMOJIS:
+        warnings.append(f"estilo: {emojis} emojis en el draft de LinkedIn (máximo orientativo {MAX_DRAFT_EMOJIS})")
 
     # Tarjeta del índice
     index = (ROOT / "blog/index.html").read_text(encoding="utf-8")

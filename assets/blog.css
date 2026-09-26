@@ -97,6 +97,10 @@ body { --shell-max: 64rem; }
 
 .article-prose pre code { background: transparent; border: 0; padding: 0; color: inherit; }
 
+/* Emojis decorativos (skill manage-blog): un acento discreto, no un icono. */
+.article-prose .emoji { font-size: 0.85em; filter: saturate(0.7); }
+.article-prose h2 .emoji { font-size: 0.7em; vertical-align: 0.12em; }
+
 /* ---------- Bloques destacados ---------- */
 
 .callout {
