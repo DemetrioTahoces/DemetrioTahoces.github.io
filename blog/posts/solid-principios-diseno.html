@@ -101,7 +101,7 @@
                 <section id="la-escena-tipica">
                     <h2>La escena típica</h2>
                     <p>Cuando hablamos de código, la deuda técnica empieza igual en muchas ocasiones: una clase pequeña dentro de un servicio backend. Hace una cosa, se entiende rápido y nadie se queja. Dos meses después calcula precios, guarda datos, manda emails, publica eventos y tiene un <code>if</code> nuevo por cada caso raro que aparece. Aún funciona, pero ya da pereza tocarla.</p>
-                    <p>Ahí es donde SOLID empieza a tener sentido. No como una religión de interfaces, sino como una forma de preguntar: si mañana cambia esta regla, ¿cuánto código arrastra detrás?</p>
+                    <p>Ahí es donde SOLID empieza a tener sentido. No como una religión de interfaces, sino como una forma de preguntar: si mañana cambia esta regla, ¿cuánto código arrastra detrás?&nbsp;<span class="emoji" aria-hidden="true">⛓️</span></p>
                 </section>
 
                 <section id="el-problema-real-cambiar-sin-romper-medio-sistema">
@@ -147,7 +147,7 @@
                     <h2>L: Liskov Substitution Principle</h2>
                     <p>LSP no va de que el compilador acepte una subclase. Va de no sorprender al código que la usa.</p>
                     <p>Si una función recibe un <code>PaymentMethod</code>, debería poder trabajar con tarjeta, transferencia o wallet sin preguntar por el tipo concreto. Si una implementación devuelve <code>null</code> donde el contrato promete una lista vacía, o lanza una excepción que nadie esperaba, el contrato está roto aunque todo compile.</p>
-                    <p>El ejemplo del pingüino y el método <code>fly()</code> sigue siendo útil por eso: el problema no es biológico, es contractual. Si no todos los pájaros vuelan, el tipo base no debe prometer vuelo.</p>
+                    <p>El ejemplo del pingüino y el método <code>fly()</code> sigue siendo útil por eso: el problema no es biológico, es contractual. Si no todos los pájaros vuelan, el tipo base no debe prometer vuelo.&nbsp;<span class="emoji" aria-hidden="true">🐧</span></p>
                     <h3 id="checklist">Checklist</h3>
                     <ul>
                         <li>no fortalecer precondiciones en el subtipo;</li>
@@ -160,7 +160,7 @@
 
                 <section id="i-interface-segregation-principle">
                     <h2>I: Interface Segregation Principle</h2>
-                    <p>ISP es el principio del menú corto. Si solo quieres un café, no deberían obligarte a cargar con toda la carta del restaurante.</p>
+                    <p>ISP es el principio del menú corto. Si solo quieres un café, no deberían obligarte a cargar con toda la carta del restaurante.&nbsp;<span class="emoji" aria-hidden="true">☕</span></p>
                     <p>En código pasa con interfaces que mezclan creación, borrado, exportación, email y scoring. Un caso de uso que solo crea usuarios acaba acoplado a operaciones que no necesita. Eso contamina tests, permisos e implementaciones.</p>
                     <p>La separación buena no es una interfaz por método. Es una interfaz por cliente o caso de uso. Si dos operaciones se consumen siempre juntas y forman un contrato estable, pueden vivir juntas sin problema.</p>
                 </section>
@@ -176,7 +176,7 @@
                         <li>los adaptadores implementan detalles;</li>
                         <li>la composición decide qué implementación concreta se enchufa.</li>
                     </ul>
-                    <p>La idea encaja muy bien con arquitectura hexagonal: el centro define puertos y los adaptadores técnicos se enchufan fuera.</p>
+                    <p>La idea encaja muy bien con arquitectura hexagonal: el centro define puertos y los adaptadores técnicos se enchufan fuera.&nbsp;<span class="emoji" aria-hidden="true">🔌</span></p>
                 </section>
 
                 <section id="como-se-refuerzan-entre-si">

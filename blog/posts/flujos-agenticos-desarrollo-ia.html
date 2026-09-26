@@ -117,7 +117,7 @@
                 <section id="un-orquestador-que-no-programa">
                     <h2>Un orquestador que no programa</h2>
                     <p>La pieza central es un agente que no analiza, no escribe código y no revisa. Reparte cada fase a un subagente, juzga lo que vuelve y decide si hace falta otra vuelta. Lleva la cuenta de en qué fase está la tarea y cuántas vueltas ha consumido. Es también el único que habla con la persona: si a un subagente le falta algo, no improvisa, lo devuelve como bloqueado y el orquestador lo resuelve entre vueltas.</p>
-                    <p>Tampoco arregla nada él mismo, por pequeño que sea. En cuanto el coordinador toca código, ya no queda nadie mirando el conjunto desde fuera.</p>
+                    <p>Tampoco arregla nada él mismo, por pequeño que sea. En cuanto el coordinador toca código, ya no queda nadie mirando el conjunto desde fuera.&nbsp;<span class="emoji" aria-hidden="true">👀</span></p>
                     <p>Cada fase arranca con un subagente nuevo, sin el contexto de la anterior. Parece un detalle, pero es lo que hace honesta la verificación: un revisor que hereda lo que el implementador creía haber conseguido tiende a darle la razón.</p>
                 </section>
 
@@ -125,7 +125,7 @@
                     <h2>La spec como contrato</h2>
                     <p>Antes de tocar código, un agente analista hace el diseño, el análisis y la planificación, y lo deja escrito en disco: qué cambia y por qué, decisiones de diseño, escenarios de aceptación en formato WHEN/THEN con un identificador estable, el contexto que necesita cada capa de cada servicio y la lista de tareas. Es la misma estructura que proponen herramientas de spec-driven development como OpenSpec.</p>
                     <p>Aquí se usa el modelo más capaz y con más razonamiento, una sola vez. Es donde más rinde: un error de diseño en la spec se multiplica en cada capa que la implementa y en cada revisor que la usa de referencia.</p>
-                    <p>El resto de fases recibe la ruta de esa spec, nunca un resumen pegado en el prompt. Un plan parafraseado deriva en cuanto alguien lo resume entre vueltas; un fichero se lee igual en la primera vuelta y en la quinta. La spec no entra en el repositorio del código, pero queda registrada: si en cualquier momento hay que revisar una decisión de diseño que tomó la IA, el contrato sigue ahí, con su motivo.</p>
+                    <p>El resto de fases recibe la ruta de esa spec, nunca un resumen pegado en el prompt. Un plan parafraseado deriva en cuanto alguien lo resume entre vueltas; un fichero se lee igual en la primera vuelta y en la quinta. La spec no entra en el repositorio del código, pero queda registrada: si en cualquier momento hay que revisar una decisión de diseño que tomó la IA, el contrato sigue ahí, con su motivo.&nbsp;<span class="emoji" aria-hidden="true">📜</span></p>
                     <p>Si el analista deja dudas abiertas, se resuelven antes de implementar. Una suposición que se cuela en la primera vuelta se paga en todas las siguientes.</p>
                 </section>
 
@@ -158,12 +158,12 @@
                     <h2>El triage y cuándo está terminado</h2>
                     <p>Cuando algo falla, el orquestador decide a dónde vuelve, y solo hay tres destinos. Si falla el código, al implementador de esa capa. Si la spec estaba equivocada, el analista la enmienda solo en lo afectado. Si lo que fallaba era la expectativa del test, se corrige la prueba y no se toca código.</p>
                     <p>"Terminado" tiene una definición estricta: puerta en verde, sin hallazgos abiertos y cada escenario de la spec cubierto por una prueba que pasa o marcado como no probable con un motivo aceptado. Un caso que no llegó a ejecutarse por falta de un token no cuenta como aprobado. Y el bucle tiene presupuesto: si tras cinco vueltas no está limpio, se para y vuelve a la persona. Nunca se termina a mano fuera del bucle, porque eso se salta la revisión y las pruebas.</p>
-                    <p>Cuando la tarea queda limpia, el orquestador cierra con un informe final: qué se ha hecho y cómo se ha verificado. Con él la persona valida y decide el siguiente paso.</p>
+                    <p>Cuando la tarea queda limpia, el orquestador cierra con un informe final: qué se ha hecho y cómo se ha verificado. Con él la persona valida y decide el siguiente paso.&nbsp;<span class="emoji" aria-hidden="true">🏁</span></p>
                 </section>
 
                 <section id="limites">
                     <h2>Límites</h2>
-                    <p>Una tarea pequeña no merece la fábrica: cambiar un nivel de log no necesita análisis, despliegue y documentación. Lo razonable es decirlo al arrancar y ofrecer el camino directo. Y cada vuelta cuesta tiempo y tokens, así que la calidad de la spec y de las skills pesa más que el número de agentes. Con una spec floja, los revisores comprobarán con rigor algo que no era lo que se pedía.</p>
+                    <p>Una tarea pequeña no merece la fábrica: cambiar un nivel de log no necesita análisis, despliegue y documentación. Lo razonable es decirlo al arrancar y ofrecer el camino directo. Y cada vuelta cuesta tiempo y tokens, así que la calidad de la spec y de las skills pesa más que el número de agentes. Con una spec floja, los revisores comprobarán con rigor algo que no era lo que se pedía.&nbsp;<span class="emoji" aria-hidden="true">⏳</span></p>
                 </section>
 
                 <section id="conclusion">

@@ -4,6 +4,13 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Más emojis en el blog: uno por sección (push directo a `main`, 2026-09-26)
+
+- Criterio del autor: con 1-3 por artículo quedaban demasiado discretos. Skill `manage-blog` (`references/emojis.md`, `SKILL.md`, `humanizer.md`) y `AGENTS.md`: 4-7 por artículo (lo normal, 5-6), más o menos uno por sección principal y nunca dos en la misma ni en párrafos seguidos, ni tras un párrafo que abre una lista con dos puntos. Sigue como mucho uno en el `h2` de un callout/warning; el resto de reglas (marcado, dónde no van, drafts 2-4, fichas sin emojis) sin cambios. CSS sin tocar.
+- `check_post.py`: avisa por debajo de 4 (`MIN_POST_EMOJIS`) y por encima de 7; el regex `EMOJI` ahora incluye U+231A-23FF (antes no detectaba ⏳ ni ⌛).
+- Posts publicados (solo emojis; sin `dateModified`, fichas, drafts ni ids): domain events 6 (🌙 📣 🐇 en el h2 del warning 📬 📦 🕸️), flujos agénticos 6 (🔑 👀 📜 🧰 🏁 ⏳), SOLID 6 (⛓️ 🐧 ☕ 🔌 💧 🧭). `check_post.py --all` en OK (solo los avisos previos de etiquetas); `uv run pytest`: 71 en verde.
+- `.claude/skills/` sincronizada con `.agents/skills/` (copia, no symlink).
+
 ## Emojis discretos y variados en el blog: skill y posts publicados (push directo a `main`, 2026-09-26)
 
 - Criterio del autor: pocos, discretos y distintos según lo que se escribe, colocados de forma estratégica. Skill `manage-blog` (`references/emojis.md`, paso 9 de "Artículo nuevo"): 1-3 por artículo (lo normal, 2), con el texto ya cerrado, al final de párrafos clave y como mucho uno en el `h2` de un callout o warning; elegidos por lo que dice la frase (no de una lista fija) y sin repetir los de otros posts; los genéricos (💡 ⚠️ ✅ 📌 🤔) solo como último recurso. Nunca en títulos, metadatos, hero, `h2`/`h3` normales, código, tarjeta ni ficha del chatbot. Drafts de LinkedIn: 2-4, sin cambios.

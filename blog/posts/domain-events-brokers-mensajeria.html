@@ -112,7 +112,7 @@
                         <li><code>SendWelcomeEmail</code> es una acción.</li>
                         <li><code>UserCreated</code> es un evento.</li>
                     </ul>
-                    <p>El evento debe informar, no decidir la reacción. Si el evento ya dice <code>SendEmailToUser</code>, el productor ha elegido una consecuencia. El consumidor deja de interpretar un hecho y empieza a obedecer una instrucción. Eso es acoplamiento con otro nombre.</p>
+                    <p>El evento debe informar, no decidir la reacción. Si el evento ya dice <code>SendEmailToUser</code>, el productor ha elegido una consecuencia. El consumidor deja de interpretar un hecho y empieza a obedecer una instrucción. Eso es acoplamiento con otro nombre.&nbsp;<span class="emoji" aria-hidden="true">📣</span></p>
                     <p>Por eso conviene emitir eventos en pasado, con nombres claros y cercanos al lenguaje ubicuo: <code>UserCreated</code>, <code>OrderPaid</code>, <code>InvoiceIssued</code>, <code>SubscriptionCancelled</code>. Si no se puede escribir en pasado sin sonar raro, quizá no es un evento de dominio.</p>
                 </section>
 
@@ -175,7 +175,7 @@ Queue:       sync-crm-on-user-created</code></pre>
                 </section>
 
                 <section id="el-ejemplo-usa-rabbitmq" class="warning rounded-xl p-5 my-8">
-                    <h2 class="mt-0">El ejemplo usa RabbitMQ</h2>
+                    <h2 class="mt-0"><span class="emoji" aria-hidden="true">🐇</span> El ejemplo usa RabbitMQ</h2>
                     <p>Esta convención está explicada con RabbitMQ porque su modelo encaja muy bien con la separación entre exchange, routing key, binding y cola. Aun así, la idea de fondo es extrapolable a Kafka, SQS, Pub/Sub u otros brokers: separar la entidad, el hecho ocurrido y la reacción que ejecuta cada consumidor.</p>
                     <p>El mapeo exacto cambia según el broker:</p>
                     <ul>
@@ -229,7 +229,7 @@ sync-crm-on-user-created
                         <li><code>schemaVersion</code>, porque el contrato cambiará;</li>
                         <li><code>correlationId</code> y <code>causationId</code>, para seguir una operación completa.</li>
                     </ul>
-                    <p>El payload debe contener lo necesario para interpretar el hecho, no una copia entera del estado interno. Si el consumidor necesita todos los datos del usuario para mandar un email, puede que el evento deba incluir una proyección mínima. Si necesita media base de datos, probablemente el límite entre contextos o la reacción está mal diseñada.</p>
+                    <p>El payload debe contener lo necesario para interpretar el hecho, no una copia entera del estado interno. Si el consumidor necesita todos los datos del usuario para mandar un email, puede que el evento deba incluir una proyección mínima. Si necesita media base de datos, probablemente el límite entre contextos o la reacción está mal diseñada.&nbsp;<span class="emoji" aria-hidden="true">📦</span></p>
                 </section>
 
                 <section id="domain-event-e-integration-event">
@@ -275,7 +275,7 @@ sync-crm-on-user-created
                         <li>¿La DLQ, los retries y las métricas quedan separados por reacción?</li>
                         <li>¿El evento incluye identificadores, fecha de ocurrencia, versión y correlación?</li>
                     </ol>
-                    <p>Si una respuesta es "no", el problema no es cosmético. Probablemente la topología está ocultando acoplamiento.</p>
+                    <p>Si una respuesta es "no", el problema no es cosmético. Probablemente la topología está ocultando acoplamiento.&nbsp;<span class="emoji" aria-hidden="true">🕸️</span></p>
                 </section>
 
                 <section id="conclusion">

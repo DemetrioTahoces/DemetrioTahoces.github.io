@@ -24,9 +24,10 @@ WORDS_PER_MINUTE = 220
 MONTHS = {m: i for i, m in enumerate(
     "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split(), 1)}
 DASHES = re.compile("[—–]")
-# Emojis del artículo y del draft de LinkedIn: pocos, discretos y variados (references/emojis.md).
-EMOJI = re.compile("[🌀-🫿☀-➿⭐✅]\ufe0f?")
-MAX_POST_EMOJIS = 3
+# Emojis del artículo y del draft de LinkedIn: uno por sección como mucho, variados y sin racimos (references/emojis.md).
+EMOJI = re.compile("[🌀-🫿☀-➿⌚-⏿⭐✅]\ufe0f?")
+MIN_POST_EMOJIS = 4
+MAX_POST_EMOJIS = 7
 MAX_DRAFT_EMOJIS = 4
 # Patrones de references/humanizer.md detectables sin contexto.
 STYLE_PATTERNS = [
@@ -240,8 +241,10 @@ def check(slug: str) -> tuple[list[str], list[str]]:
         if len(capitalized) >= 2:
             warnings.append(f"estilo: heading en title case: {heading.strip()!r}")
 
-    # Emojis del artículo: pocos, solo en la prosa, como acento discreto y ocultos a lectores de pantalla
+    # Emojis del artículo: solo en la prosa, como acento y ocultos a lectores de pantalla
     prose_emojis = len(EMOJI.findall(prose_text))
+    if prose_emojis < MIN_POST_EMOJIS:
+        warnings.append(f"estilo: {prose_emojis} emojis en la prosa del artículo (mínimo orientativo {MIN_POST_EMOJIS})")
     if prose_emojis > MAX_POST_EMOJIS:
         warnings.append(f"estilo: {prose_emojis} emojis en la prosa del artículo (máximo orientativo {MAX_POST_EMOJIS})")
     if len(EMOJI.findall(html_text)) > prose_emojis:
