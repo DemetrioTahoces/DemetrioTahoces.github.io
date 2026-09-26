@@ -4,6 +4,13 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## AGENTS.md como guía única (push directo a `main`, 2026-09-26)
+
+- `CLAUDE.md` queda como redirección a `AGENTS.md` (enlace + `@AGENTS.md`). Toda instrucción nueva va en `AGENTS.md`.
+- El flujo de despliegue del chatbot en Vercel, que solo estaba en `CLAUDE.md`, pasa a `AGENTS.md` ("Despliegue" > "Flujo de cambios del chatbot en Vercel").
+- "Instrucciones adicionales (solo Cowork)" pasa a "Reglas operativas para agentes", que aplican a cualquier agente: git solo con petición explícita, `.env` intocable, skills locales, exclusiones de exploración.
+- Push directo a `main` por petición explícita del autor.
+
 ## Post de flujos agénticos ampliado a 6 min (push directo a `main`, 2026-09-25)
 
 - Push directo a `main` por petición explícita del autor, verificado en producción.

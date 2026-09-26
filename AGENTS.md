@@ -1,6 +1,8 @@
 # AGENTS.md
 
-Instrucciones de trabajo para agentes que modifiquen este repositorio.
+Guía única para agentes y asistentes de coding (Claude Code, Codex, Cowork, etc.) que trabajen en este repositorio. `CLAUDE.md` solo redirige aquí: cualquier instrucción nueva va en este fichero.
+
+Al empezar una tarea, lee también `context.md` para continuar el trabajo de sesiones anteriores (ver "Contexto entre sesiones").
 
 ## Perfil del usuario
 
@@ -121,10 +123,16 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 ## Despliegue
 
 - Frontend: push a `main` publica en GitHub Pages.
-- Backend: desplegado en Vercel desde `CV/Chatbot/`.
+- Backend: desplegado en Vercel desde `CV/Chatbot/`. Cada PR genera un preview de la rama.
 - No hay build del frontend.
 - CI del chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions.
 - CI del blog: `.github/workflows/blog.yml` ejecuta `python3 .agents/skills/manage-blog/scripts/check_post.py --all` (solo stdlib) en PRs y pushes a `main` que tocan el blog, sus fichas o la skill. El resto del frontend no tiene CI ni build.
+
+### Flujo de cambios del chatbot en Vercel
+
+- Los cambios van vía PR: se prueban en el preview de la rama y se sigue pusheando a la PR hasta que funcione. No se pushea a `main` salvo petición explícita.
+- Los previews son públicos (Vercel Authentication desactivada). `GET /api/health` se prueba con `web_fetch_vercel_url`; para `POST /api/chat` y `POST /api/chat/stream` usa un Vercel Sandbox temporal con la red limitada al dominio del preview y páralo al terminar.
+- Desde el entorno cloud de Claude Code, `*.vercel.app` está bloqueado por el proxy (más notas de entorno en `context.md`).
 
 ## Contexto entre sesiones
 
@@ -144,13 +152,14 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - No introduzcas dependencias nuevas para cambios de contenido o presentación simple.
 - Antes de cerrar una tarea, revisa que los enlaces/rutas afectadas sigan teniendo sentido.
 
-## Instrucciones adicionales
+## Reglas operativas para agentes
 
-Lo siguiente aplica solo al modo Cowork y no está cubierto por AGENTS.md.
-
-- Ignora `.venv`, `CV/Chatbot/.venv`, `node_modules` y `__pycache__` en exploraciones, búsquedas o auditorías: son dependencias empaquetadas, no código propio del proyecto. Incluirlas satura resultados y contexto sin aportar nada.
-- No ejecutes `git commit` ni `git push` salvo petición explícita. El usuario gestiona el historial y decide cuándo publicar.
-- Antes de crear contenido nuevo, comprueba si ya existe una skill local aplicable en `.agents/skills/`: `edit-cv` para cambios de contenido curricular (con umbrales de tamaño por tarjeta y `scripts/check_cv.py`), `manage-blog` para artículos y assets de blog (incluye conversión SVG→PNG para OG y LinkedIn). Úsalas en vez de reinventar el flujo.
-- Edita los archivos finales directamente en su ruta real del repo (el HTML, el Markdown, los assets). El paso intermedio por la carpeta de outputs es solo para género de imágenes o borradores exploratorios que aún no tienen destino claro.
-- Nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` — contiene la API key del proveedor LLM.
-- `python -m http.server` y `uvicorn ... --reload` son solo para verificación manual puntual; no hay build. No los lances por defecto, solo si la tarea concreta lo requiere.
+- Git: no ejecutes `git commit`, `git push` ni abras PRs salvo petición explícita; el usuario gestiona el historial y decide cuándo publicar. Cuando la tarea sí incluye PR, sigue el flujo de "Despliegue".
+- Secretos: nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` (contiene la API key del proveedor LLM). Tampoco los metas en `context.md`, commits ni PRs.
+- Evals: nunca las ejecutes ni lances su workflow (ver "Desarrollo local").
+- Skills locales: antes de crear contenido nuevo, comprueba si hay una skill aplicable en `.agents/skills/` y úsala en vez de reinventar el flujo:
+  - `edit-cv`: cambios de contenido curricular, con umbrales de tamaño por tarjeta y `scripts/check_cv.py`.
+  - `manage-blog`: artículos y assets del blog, incluida la conversión SVG→PNG para OG y LinkedIn.
+- Exploración: ignora `.venv`, `CV/Chatbot/.venv`, `node_modules` y `__pycache__` en búsquedas y auditorías; son dependencias, no código del proyecto.
+- Edita los ficheros finales en su ruta real del repo. Las carpetas temporales o de outputs son solo para imágenes o borradores exploratorios sin destino claro.
+- Servidores locales (`python -m http.server`, `uvicorn --reload`): solo para verificación puntual cuando la tarea lo requiera; no los lances por defecto.
