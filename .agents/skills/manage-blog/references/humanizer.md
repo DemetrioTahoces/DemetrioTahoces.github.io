@@ -42,7 +42,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar exceso de negritas. La negrita mecánica es señal de texto generado.
 - Evitar listas con encabezados inline en negrita tipo `**Rendimiento:** ...` salvo que aporten mucha claridad.
 - Evitar title case en headings. En castellano, usar mayúscula inicial normal.
-- No usar emojis decorativos en artículos ni borradores técnicos.
+- No usar emojis en artículos. En el draft de LinkedIn sí, pocos y discretos (2-4) para darle cercanía; reglas en `references/linkedin.md`.
 - Evitar comillas rizadas si se puede controlar el texto. Usar comillas rectas en ejemplos y citas.
 - No dejar artefactos conversacionales: "Espero que te ayude", "claro", "por supuesto", "si quieres", "aquí tienes".
 - No incluir disclaimers de conocimiento o falta de datos. Si algo no está documentado, se omite o se dice de forma concreta.
@@ -71,6 +71,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar Markdown, notas editoriales y texto entre corchetes.
 - Cerrar con una reflexión o pregunta natural, no con una llamada a la acción de marketing.
 - Hashtags moderados y relevantes.
+- 2-4 emojis discretos que den un tono personal, sin muletillas de marketing (ver `references/linkedin.md`).
 - El draft debe invitar a abrir el artículo sin vender humo.
 
 ## Falsos positivos que no deben forzar reescritura
@@ -93,5 +94,6 @@ Antes de terminar, comprobar:
 - ¿El ejemplo ayuda o solo decora?
 - ¿El texto tiene ritmo al leerlo en voz alta?
 - ¿El draft de LinkedIn invita a abrir el artículo sin vender humo?
+- ¿Los emojis del draft son pocos, discretos y suman cercanía en vez de decorar?
 
 Si alguna respuesta falla, reescribir antes de entregar.

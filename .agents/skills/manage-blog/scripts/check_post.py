@@ -24,6 +24,9 @@ WORDS_PER_MINUTE = 220
 MONTHS = {m: i for i, m in enumerate(
     "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split(), 1)}
 DASHES = re.compile("[—–]")
+# Emojis del draft de LinkedIn: pocos y discretos (references/linkedin.md).
+EMOJI = re.compile("[🌀-🫿☀-➿⭐✅]")
+MAX_EMOJIS = 4
 # Patrones de references/humanizer.md detectables sin contexto.
 STYLE_PATTERNS = [
     r"\bcrucial", r"\bpivotal", r"\btestament", r"\btransformador", r"\brevolucionari",
@@ -239,6 +242,9 @@ def check(slug: str) -> tuple[list[str], list[str]]:
         errors.append(f"draft de LinkedIn sin la URL pública {url}")
     if re.search(r"\*\*|\]\(|^#{1,6} |^\s*[-*] ", draft, re.M):
         errors.append("draft de LinkedIn con sintaxis Markdown")
+    emojis = len(EMOJI.findall(draft))
+    if emojis > MAX_EMOJIS:
+        warnings.append(f"estilo: {emojis} emojis en el draft de LinkedIn (máximo orientativo {MAX_EMOJIS})")
 
     # Tarjeta del índice
     index = (ROOT / "blog/index.html").read_text(encoding="utf-8")

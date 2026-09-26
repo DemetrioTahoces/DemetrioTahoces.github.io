@@ -4,6 +4,11 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Emojis en los drafts de LinkedIn y push directo a `main` como norma (push directo a `main`, 2026-09-26)
+
+- Skill `manage-blog`: los drafts de LinkedIn llevan 2-4 emojis discretos para un tono más personal (`references/linkedin.md`, con lista de emojis sobrios y los que evitar); `humanizer.md` deja de vetarlos en LinkedIn (siguen fuera de los artículos). `check_post.py` avisa si un draft pasa de 4 emojis. Drafts existentes sin tocar.
+- `AGENTS.md`: cada tarea terminada se commitea y pushea directamente a `main` y se prueba en producción; PR solo si el autor la pide. El flujo del chatbot en Vercel se alinea con esa norma.
+
 ## AGENTS.md como guía única (push directo a `main`, 2026-09-26)
 
 - `CLAUDE.md` queda como redirección a `AGENTS.md` (enlace + `@AGENTS.md`). Toda instrucción nueva va en `AGENTS.md`.

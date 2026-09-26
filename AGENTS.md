@@ -118,7 +118,7 @@ uv run pytest            # tests offline, sin API key
 uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un humano (ver abajo)
 ```
 
-**Evals: solo las ejecuta un humano, a mano.** Consumen tokens de pago en cada ejecución. Ningún agente (Claude Code incluido), pipeline de CI, hook, Routine ni automatización puede ejecutar `pytest -m evals` ni lanzar el workflow `chatbot-evals.yml`, tampoco para "verificar" un cambio. Si cambias el prompt, el modelo o los documentos, pide al humano que ejecute las evals y lo indicas en la PR. Sí puedes añadir o editar casos en `evals/dataset.yaml` (uno por cada fallo real detectado).
+**Evals: solo las ejecuta un humano, a mano.** Consumen tokens de pago en cada ejecución. Ningún agente (Claude Code incluido), pipeline de CI, hook, Routine ni automatización puede ejecutar `pytest -m evals` ni lanzar el workflow `chatbot-evals.yml`, tampoco para "verificar" un cambio. Si cambias el prompt, el modelo o los documentos, pide al humano que ejecute las evals y lo indicas en el commit y en `context.md`. Sí puedes añadir o editar casos en `evals/dataset.yaml` (uno por cada fallo real detectado).
 
 ## Despliegue
 
@@ -130,7 +130,7 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 
 ### Flujo de cambios del chatbot en Vercel
 
-- Los cambios van vía PR: se prueban en el preview de la rama y se sigue pusheando a la PR hasta que funcione. No se pushea a `main` salvo petición explícita.
+- Como el resto del proyecto, los cambios van con commit y push directo a `main` y se prueban directamente en producción (ver "Reglas operativas para agentes"). El preview de rama solo se usa si el usuario pide expresamente una PR.
 - Los previews son públicos (Vercel Authentication desactivada). `GET /api/health` se prueba con `web_fetch_vercel_url`; para `POST /api/chat` y `POST /api/chat/stream` usa un Vercel Sandbox temporal con la red limitada al dominio del preview y páralo al terminar.
 - Desde el entorno cloud de Claude Code, `*.vercel.app` está bloqueado por el proxy (más notas de entorno en `context.md`).
 
@@ -154,7 +154,7 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 
 ## Reglas operativas para agentes
 
-- Git: no ejecutes `git commit`, `git push` ni abras PRs salvo petición explícita; el usuario gestiona el historial y decide cuándo publicar. Cuando la tarea sí incluye PR, sigue el flujo de "Despliegue".
+- Git: en este proyecto cada tarea terminada se commitea y se pushea directamente a `main` al acabarla, sin PR ni rama intermedia, y se prueba directamente en producción (GitHub Pages / Vercel). Solo se abre PR si el usuario lo pide expresamente.
 - Secretos: nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` (contiene la API key del proveedor LLM). Tampoco los metas en `context.md`, commits ni PRs.
 - Evals: nunca las ejecutes ni lances su workflow (ver "Desarrollo local").
 - Skills locales: antes de crear contenido nuevo, comprueba si hay una skill aplicable en `.agents/skills/` y úsala en vez de reinventar el flujo:
