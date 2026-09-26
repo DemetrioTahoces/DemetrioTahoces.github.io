@@ -127,6 +127,8 @@ Cada encabezado declara el `id` de la sección HTML que respalda: `## Contexto {
 
 Si cambias o añades una sección en el HTML o en el Markdown, mantén ambos sincronizados: `test_citations.py` falla si un ancla declarada no existe como `id` en su página o si una sección queda sin ancla.
 
+Los documentos van sin emojis, aunque la página que resumen los lleve (los artículos del blog sí usan alguno): en el contexto del modelo solo son ruido. `test_knowledge.py` falla si aparece alguno en `docs/` o en `llms.txt`.
+
 Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run pytest`.
 
 ## Configuración
@@ -174,7 +176,7 @@ uv run pytest -m evals                                # evals (gasta tokens; sol
 
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
-| `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces | 0 |
+| `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces, docs sin emojis | 0 |
 | `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `gpt-6-luna` | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
 | Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |

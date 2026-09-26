@@ -1,5 +1,7 @@
+import re
 from datetime import date
 
+from core.config import PROJECT_ROOT, settings
 from core.knowledge import BLOG_TYPE, get_knowledge_base
 from core.prompts import build_static_prompt, build_system_prompt
 from core.tools import read_blog_article
@@ -57,3 +59,14 @@ def test_llms_txt_is_up_to_date():
     assert LLMS_TXT_PATH.read_text(encoding="utf-8") == render_llms_txt(), (
         "llms.txt desactualizado: ejecuta `uv run python -m core.llms_txt`"
     )
+
+
+def test_documents_and_llms_txt_have_no_emojis():
+    # Emojis belong to the blog pages; in the model's context they are noise.
+    # Same ranges as check_post.py in the manage-blog skill.
+    from core.llms_txt import LLMS_TXT_PATH
+
+    emoji = re.compile("[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B50\u2705]")
+    for path in [*sorted((PROJECT_ROOT / settings.docs_path).rglob("*.md")), LLMS_TXT_PATH]:
+        found = emoji.findall(path.read_text(encoding="utf-8"))
+        assert not found, f"{path.name}: los docs del chatbot y llms.txt van sin emojis ({''.join(found)})"

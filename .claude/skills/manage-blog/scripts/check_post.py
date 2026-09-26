@@ -187,7 +187,7 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     if "## Fuentes" not in md_text:
         warnings.append("ficha: sin sección final '## Fuentes'")
     if EMOJI.search(md_text):
-        warnings.append("estilo: emojis en la ficha del chatbot (solo van en el artículo y el draft)")
+        errors.append("ficha: con emojis (los Markdown del chatbot van sin emojis)")
     for anchor in re.findall(r"^#{2,3} .*\{#([\w-]+)\}\s*$", md_text, re.M):
         if anchor not in page.ids:
             errors.append(f"ficha: el ancla {{#{anchor}}} no existe en el HTML")

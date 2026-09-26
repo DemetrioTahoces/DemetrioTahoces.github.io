@@ -15,5 +15,6 @@
 
   Después: título H1, idea central, puntos clave, errores habituales y fuentes principales (sección final de "Fuentes"). Evitar ejemplos largos, bloques de código extensos, texto narrativo y secciones completas del HTML.
 - Cada `##`/`###` de la ficha declara el `id` de la sección HTML que lo respalda: `## Idea central {#id-de-la-seccion}`. El chatbot cita cada párrafo con esa URL y `uv run pytest` falla si el ancla no existe en el HTML.
+- Sin emojis, aunque el artículo los lleve: la ficha es contexto del chatbot. `check_post.py` y `uv run pytest` fallan si aparece alguno.
 - Tras crear o editar la ficha, desde `CV/Chatbot` ejecutar `uv run python -m core.llms_txt` (regenera `/llms.txt`) y `uv run pytest`.
 - Si el cambio afecta a lo que el chatbot responde, recordar en la PR que las evals (`uv run pytest -m evals`) solo las ejecuta un humano a mano. Ningún agente las lanza.

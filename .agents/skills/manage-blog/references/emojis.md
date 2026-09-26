@@ -17,7 +17,8 @@ Pocos, discretos y distintos en cada texto. Dan un tono más personal y ayudan a
   - Al final de un párrafo clave, tras el punto: el que cierra la escena inicial, el que concentra la regla de una sección, la parte práctica o el cierre de la conclusión.
   - Al principio del `h2` de un callout o warning, anticipando su contenido. Como mucho uno por artículo: en un título pesa más que en un párrafo.
 - En el resto de la prosa, ninguno: ni en los `h2`/`h3` de secciones normales (el esqueleto del artículo queda limpio), ni como viñetas (la lista HTML ya las tiene), ni en código, tablas, enlaces o fuentes.
-- Fuera de la prosa, tampoco: `<title>`, metadatos, JSON-LD, hero, grids de resumen, `alt` y diagrama (SVG/PNG), tarjeta de `blog/index.html` y ficha del chatbot. Los metadatos salen en buscadores y previsualizaciones, la tarjeta repite el título del post y en la ficha solo meten ruido en el contexto del chatbot.
+- Fuera de la prosa, tampoco: `<title>`, metadatos, JSON-LD, hero, grids de resumen, `alt` y diagrama (SVG/PNG) y tarjeta de `blog/index.html`. Los metadatos salen en buscadores y previsualizaciones, y la tarjeta repite el título del post.
+- Nunca en los Markdown del chatbot (`CV/Chatbot/docs/`, incluida la ficha del post) ni en `llms.txt`: son contexto del modelo y ahí solo meten ruido. `check_post.py` y `uv run pytest` fallan si aparece alguno.
 - Marcado: `<span class="emoji" aria-hidden="true">`. La clase los reduce y les baja la saturación (`assets/blog.css`) para que se lean como un acento y no como un icono. `aria-hidden` los oculta a lectores de pantalla, así que el texto debe bastar sin ellos. En un `h2` va seguido de un espacio; al final de un párrafo, unido a la última palabra con `&nbsp;` para que nunca quede solo en una línea.
 
   ```html
