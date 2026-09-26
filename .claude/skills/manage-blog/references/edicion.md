@@ -10,4 +10,4 @@ Aplica cuando se cambia contenido de un post que ya está en `main` (no a correc
 6. Pasar el humanizer sobre el texto nuevo, `check_post.py <slug>`, y desde `CV/Chatbot` `uv run python -m core.llms_txt` + `uv run pytest`.
 7. Actualizar la entrada de `context.md`.
 
-Metadatos técnicos sin cambio de contenido (una ruta de imagen, una versión `?v=N`) no tocan `dateModified`.
+Metadatos técnicos sin cambio de contenido (una ruta de imagen, una versión `?v=N`) no tocan `dateModified`. Añadir o quitar emojis (`emojis.md`) tampoco, ni la ficha, que no los lleva.

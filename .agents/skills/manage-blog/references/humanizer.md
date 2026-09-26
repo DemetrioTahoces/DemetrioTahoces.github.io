@@ -42,7 +42,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar exceso de negritas. La negrita mecánica es señal de texto generado.
 - Evitar listas con encabezados inline en negrita tipo `**Rendimiento:** ...` salvo que aporten mucha claridad.
 - Evitar title case en headings. En castellano, usar mayúscula inicial normal.
-- No usar emojis en artículos. En el draft de LinkedIn sí, pocos y discretos (2-4) para darle cercanía; reglas en `references/linkedin.md`.
+- Emojis: pocos y discretos (2-4) en el artículo y en el draft de LinkedIn, para dar cercanía u orientar la lectura, nunca para decorar; reglas en `references/emojis.md`.
 - Evitar comillas rizadas si se puede controlar el texto. Usar comillas rectas en ejemplos y citas.
 - No dejar artefactos conversacionales: "Espero que te ayude", "claro", "por supuesto", "si quieres", "aquí tienes".
 - No incluir disclaimers de conocimiento o falta de datos. Si algo no está documentado, se omite o se dice de forma concreta.
@@ -61,6 +61,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar secciones tipo "retos y futuro" o "conclusión prometedora" si no aportan hechos.
 - No narrar cambios del repo. El artículo debe leerse como pieza independiente, no como diff.
 - Cuidar que el primer párrafo no requiera contexto previo del lector.
+- 2-4 emojis discretos: en el `h2` de un callout o al final de un párrafo con carga personal, nunca en títulos ni en los `h2`/`h3` de secciones normales (ver `references/emojis.md`).
 
 ## Cómo humanizar drafts de LinkedIn
 
@@ -71,7 +72,7 @@ Hacer que el texto suene escrito por una persona con criterio técnico, no por u
 - Evitar Markdown, notas editoriales y texto entre corchetes.
 - Cerrar con una reflexión o pregunta natural, no con una llamada a la acción de marketing.
 - Hashtags moderados y relevantes.
-- 2-4 emojis discretos que den un tono personal, sin muletillas de marketing (ver `references/linkedin.md`).
+- 2-4 emojis discretos que den un tono personal, sin muletillas de marketing (ver `references/emojis.md`).
 - El draft debe invitar a abrir el artículo sin vender humo.
 
 ## Falsos positivos que no deben forzar reescritura
@@ -94,6 +95,6 @@ Antes de terminar, comprobar:
 - ¿El ejemplo ayuda o solo decora?
 - ¿El texto tiene ritmo al leerlo en voz alta?
 - ¿El draft de LinkedIn invita a abrir el artículo sin vender humo?
-- ¿Los emojis del draft son pocos, discretos y suman cercanía en vez de decorar?
+- ¿Los emojis del artículo y del draft son pocos, discretos y suman cercanía o guían la lectura en vez de decorar? ¿El texto se entiende igual sin ellos?
 
 Si alguna respuesta falla, reescribir antes de entregar.

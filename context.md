@@ -4,6 +4,14 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Emojis discretos en los artículos del blog (push directo a `main`, 2026-09-26)
+
+- Skill `manage-blog`: los artículos llevan 2-4 emojis discretos, solo dentro de `.article-prose`: al principio del `h2` de callouts y warnings y, como mucho uno o dos, al final de un párrafo con carga personal. Nunca en títulos, metadatos, hero, `h2`/`h3` normales, código, tarjeta del índice ni ficha del chatbot. Marcado decorativo `<span aria-hidden="true">`, así que el texto tiene que entenderse sin el emoji.
+- Reglas de artículo y de LinkedIn unificadas en `references/emojis.md` (vocabulario común); `linkedin.md`, `humanizer.md`, `SKILL.md`, `edicion.md` y la plantilla (callout de ejemplo con 💡) apuntan ahí. Añadir o quitar emojis no toca `dateModified`.
+- `check_post.py`: avisos por más de 4 emojis en la prosa, emojis fuera de la prosa, sin `aria-hidden`, en la tarjeta o en la ficha; el aviso de title case ignora el emoji inicial del heading. Posts publicados sin tocar: siguen con 0 emojis y la salida de `--all` no cambia.
+- `.claude/skills/manage-blog` es una copia (no un enlace simbólico) desde `efc75d8` y se había quedado sin las reglas de emojis de LinkedIn: resincronizada. `AGENTS.md` lo explica: se edita el original y se replica en la copia en el mismo commit.
+- Pendiente del autor: decidir si se aplican los emojis a los tres posts publicados.
+
 ## Post de flujos agénticos: qué necesita cada agente, 7 min (push directo a `main`, 2026-09-26)
 
 - `blog/posts/flujos-agenticos-desarrollo-ia.html`: sección nueva `#que-necesita-cada-agente` tras `#implementar-por-capas` (contexto, conocimiento, guías/buenas prácticas y herramientas por agente; en Claude Code: `CLAUDE.md`, skills y subagentes con herramientas, modelo y skills acotados por papel, MCP como ejemplo). El párrafo de skills de `#implementar-por-capas` se movió ahí. ~1600 palabras, 7 min en post y tarjeta, `dateModified` 2026-09-26.

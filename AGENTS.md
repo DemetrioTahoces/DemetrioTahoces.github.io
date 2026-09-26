@@ -93,7 +93,7 @@ Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `f
 
 - El blog está en `blog/`.
 - El blog consume los assets compartidos (`tokens.css` + `cv.css` + `blog.css` + `cv.js`, rutas `../assets/` desde `blog/` y `../../assets/` desde `blog/posts/`). Los estilos de prosa de artículo viven en `assets/blog.css`, no inline.
-- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` se exponen a Claude Code mediante enlaces simbólicos en `.claude/skills/`; edita siempre el original.
+- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` tienen una copia en `.claude/skills/` (no son enlaces simbólicos), que es la que carga Claude Code: edita el original y replica el cambio en la copia en el mismo commit (`diff -r` entre ambas sin diferencias).
 - Si se añaden artículos que el chatbot deba conocer, añade o sincroniza también el contenido Markdown correspondiente bajo `CV/Chatbot/docs/`, normalmente en una subcarpeta si el patrón existente lo permite.
 
 ## Desarrollo local

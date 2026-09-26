@@ -24,6 +24,9 @@ WORDS_PER_MINUTE = 220
 MONTHS = {m: i for i, m in enumerate(
     "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split(), 1)}
 DASHES = re.compile("[—–]")
+# Emojis del artículo y del draft de LinkedIn: pocos y discretos (references/emojis.md).
+EMOJI = re.compile("[🌀-🫿☀-➿⭐✅]\ufe0f?")
+MAX_EMOJIS = 4
 # Patrones de references/humanizer.md detectables sin contexto.
 STYLE_PATTERNS = [
     r"\bcrucial", r"\bpivotal", r"\btestament", r"\btransformador", r"\brevolucionari",
@@ -182,6 +185,8 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     md_text = md_path.read_text(encoding="utf-8")
     if "## Fuentes" not in md_text:
         warnings.append("ficha: sin sección final '## Fuentes'")
+    if EMOJI.search(md_text):
+        warnings.append("estilo: emojis en la ficha del chatbot (solo van en el artículo y el draft)")
     for anchor in re.findall(r"^#{2,3} .*\{#([\w-]+)\}\s*$", md_text, re.M):
         if anchor not in page.ids:
             errors.append(f"ficha: el ancla {{#{anchor}}} no existe en el HTML")
@@ -228,10 +233,20 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     if bold > MAX_BOLD:
         warnings.append(f"estilo: {bold} negritas en la prosa (máximo orientativo {MAX_BOLD})")
     for heading in re.findall(r"<h[23][^>]*>(.*?)</h[23]>", prose_html, re.S):
-        words = re.sub(r"<[^>]+>", "", heading).split()[1:]
+        words = EMOJI.sub("", re.sub(r"<[^>]+>", "", heading)).split()[1:]
         capitalized = [w for w in words if len(w) > 3 and w[0].isupper() and not w.isupper()]
         if len(capitalized) >= 2:
             warnings.append(f"estilo: heading en title case: {heading.strip()!r}")
+
+    # Emojis del artículo: pocos, solo en la prosa y ocultos a lectores de pantalla
+    prose_emojis = len(EMOJI.findall(prose_text))
+    if prose_emojis > MAX_EMOJIS:
+        warnings.append(f"estilo: {prose_emojis} emojis en la prosa del artículo (máximo orientativo {MAX_EMOJIS})")
+    if len(EMOJI.findall(html_text)) > prose_emojis:
+        warnings.append("estilo: emojis fuera de la prosa (título, metadatos, hero o figura)")
+    hidden = re.findall(r'<span[^>]*aria-hidden="true"[^>]*>([^<]*)</span>', prose_html)
+    if len(EMOJI.findall("".join(hidden))) < prose_emojis:
+        warnings.append('estilo: emojis de la prosa sin <span aria-hidden="true">')
 
     # Draft de LinkedIn copiable
     draft = txt_path.read_text(encoding="utf-8")
@@ -239,6 +254,9 @@ def check(slug: str) -> tuple[list[str], list[str]]:
         errors.append(f"draft de LinkedIn sin la URL pública {url}")
     if re.search(r"\*\*|\]\(|^#{1,6} |^\s*[-*] ", draft, re.M):
         errors.append("draft de LinkedIn con sintaxis Markdown")
+    emojis = len(EMOJI.findall(draft))
+    if emojis > MAX_EMOJIS:
+        warnings.append(f"estilo: {emojis} emojis en el draft de LinkedIn (máximo orientativo {MAX_EMOJIS})")
 
     # Tarjeta del índice
     index = (ROOT / "blog/index.html").read_text(encoding="utf-8")
@@ -249,6 +267,8 @@ def check(slug: str) -> tuple[list[str], list[str]]:
     else:
         if spanish_date(card) != fm.get("date"):
             errors.append(f"fecha de la tarjeta ({spanish_date(card)}) != ficha ({fm.get('date')})")
+        if EMOJI.search(card):
+            warnings.append("estilo: emojis en la tarjeta del índice")
         header = html_text[html_text.find("<header"):html_text.find("</header>")]
         badges = lambda text: re.findall(r'<span class="badge[^"]*">([^<]+)</span>', text)
         if badges(header) != badges(card):
