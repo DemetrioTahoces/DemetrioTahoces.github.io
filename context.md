@@ -7,7 +7,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 ## Post de flujos agénticos: qué necesita cada agente, 7 min (push directo a `main`, 2026-09-26)
 
 - `blog/posts/flujos-agenticos-desarrollo-ia.html`: sección nueva `#que-necesita-cada-agente` tras `#implementar-por-capas` (contexto, conocimiento, guías/buenas prácticas y herramientas por agente; en Claude Code: `CLAUDE.md`, skills y subagentes con herramientas, modelo y skills acotados por papel, MCP como ejemplo). El párrafo de skills de `#implementar-por-capas` se movió ahí. ~1600 palabras, 7 min en post y tarjeta, `dateModified` 2026-09-26.
-- Ficha del chatbot (nueva ancla, tag `Skills`), `llms.txt` y draft de LinkedIn (un párrafo breve con el detalle) resincronizados. Evals pendientes de que las ejecute el autor.
+- Ficha del chatbot (nueva ancla, tag `Skills`), `llms.txt` y draft de LinkedIn (un párrafo breve con el detalle) resincronizados. Evals ejecutadas por el autor: en verde.
 
 ## Emojis en los drafts de LinkedIn y push directo a `main` como norma (push directo a `main`, 2026-09-26)
 
