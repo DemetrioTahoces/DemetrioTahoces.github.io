@@ -25,6 +25,14 @@ mcp_server = MCPServer(
     version="2.0.0",
 )
 
+# The SDK always serves `subscriptions/listen` (2026-07-28): its response is a
+# stream left open for list-changed events. The tools are static and the
+# in-memory bus does not span serverless instances, so no event ever arrives
+# and on Vercel each listen hangs until the 300 s timeout, then the client
+# re-listens. Without the handler the server stops advertising listChanged and
+# clients do not open it. There is no public API to unregister a handler.
+mcp_server._lowlevel_server._request_handlers.pop("subscriptions/listen", None)
+
 
 @mcp_server.tool(annotations=READ_ONLY)
 def list_documents() -> list[dict]:

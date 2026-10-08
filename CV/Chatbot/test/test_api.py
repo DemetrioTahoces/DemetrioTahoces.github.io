@@ -104,6 +104,29 @@ def test_mcp_server_lists_and_reads_documents(client):
     assert "Fermax" in doc["content"][0]["text"]
 
 
+def test_mcp_server_does_not_offer_listen_streams(client):
+    # A listen stream never gets an event here and hangs until Vercel's timeout.
+    meta = {
+        "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+        "io.modelcontextprotocol/clientCapabilities": {},
+    }
+
+    def rpc(method, params, rid):
+        headers = {"Accept": "application/json, text/event-stream", "Content-Type": "application/json",
+                   "MCP-Protocol-Version": "2026-07-28", "Mcp-Method": method}
+        response = client.post("/api/mcp", headers=headers,
+                               json={"jsonrpc": "2.0", "id": rid, "method": method, "params": {"_meta": meta, **params}})
+        assert response.status_code == 200, response.text
+        return response.json()
+
+    capabilities = rpc("server/discover", {}, 1)["result"]["capabilities"]
+    assert not capabilities["tools"].get("listChanged")
+    assert not capabilities["resources"].get("subscribe")
+
+    tools = rpc("tools/list", {}, 2)["result"]["tools"]
+    assert {t["name"] for t in tools} == {"list_documents", "get_document"}
+
+
 def test_feedback_is_accepted_for_a_request_id(client, use_model):
     use_model(ai("Respuesta."))
     request_id = client.post("/api/chat", json={"message": "hola"}).json()["request_id"]

@@ -64,7 +64,7 @@ Las preguntas sobre el CV se resuelven en **1 llamada** al modelo; las del blog 
 | `POST` | `/api/chat` | Respuesta completa en JSON (fallback) |
 | `POST` | `/api/feedback` | 👍/👎 de una respuesta (`request_id`, `rating`); se guarda en Redis con la pregunta y la respuesta |
 | `GET` | `/api/health` | Estado, modelo y nº de documentos |
-| `POST` | `/api/mcp` | Servidor MCP (Streamable HTTP, stateless, sin auth) |
+| `POST` | `/api/mcp` | Servidor MCP (Streamable HTTP, stateless, sin auth ni `subscriptions/listen`) |
 
 Cuerpo de `/api/chat*`:
 
