@@ -4,6 +4,11 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## PR #20 (mergeada): post de normas para desarrollar con IA (2026-10-08)
+
+Post `normas-desarrollo-ia-equipo` (6 min): el agente resuelve el ahora; el equipo pone el antes (normas escritas en AGENTS.md/skills y comprobadas en CI) y el después (visión de futuro, sobre todo en datos), con el ejemplo propio de NIF/VAT (formato común VIES verificado en backend, normalización por país en frontend). Incluye diagrama, tarjeta, ficha del chatbot, `llms.txt` y draft de LinkedIn. Emojis del post: 🪟 📐 🔭 🧾 ✍️ 🗺️; del draft: 🪟 🧾 ✍️ 👇.
+Pendiente del autor: ejecutar las evals (ficha nueva), revisar en Pages (móvil) y, si quiere, añadir el enlace oficial de VIES a las fuentes (las webs de la UE dan 403 desde el proxy y no se pudieron verificar).
+
 ## Feedback del chatbot persistido en Redis (push directo a `main`, 2026-09-26)
 
 - Antes el 👍/👎 solo iba a logs de Vercel (efímeros, sin el comentario) y a LangSmith si el tracing estaba activo (por defecto no). Ahora se guarda en el Upstash Redis que ya usa `abuse_guard`.

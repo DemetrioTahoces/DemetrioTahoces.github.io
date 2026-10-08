@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">El agente resuelve el ahora; el antes y el después los pone el equipo</title>
+  <desc id="desc">Tres columnas en el tiempo. Antes: el equipo aporta normas escritas (convenciones, estructura de datos, arquitectura y obligaciones de testing) en AGENTS.md, skills y CI. Ahora: el agente resuelve la tarea con lo que cabe en su ventana de contexto (la tarea, lo que lee y lo que le das) y elige la solución local. Después: el desarrollador aporta la visión de futuro en los puntos críticos. Cada decisión de futuro se escribe como norma en el momento. Ejemplo con identificadores fiscales: el frontend normaliza según el país, el formato común es el número de IVA intracomunitario de VIES (prefijo de país y número) y el backend verifica un único formato.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#94a3b8" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#a7b4c8"/>
+    </marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#22c55e"/>
+    </marker>
+    <marker id="arrow-time" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#7f8ea3"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="#07111f"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <g font-family="Inter, system-ui, sans-serif">
+    <text x="40" y="66" fill="#e5edf7" font-size="32" font-weight="700">El agente resuelve el ahora</text>
+    <text x="40" y="100" fill="#a7b4c8" font-size="18">El antes y el después los pone el equipo, por escrito</text>
+
+    <g font-size="13" font-weight="600">
+      <rect x="846" y="48" width="14" height="14" rx="3" fill="#22c55e" fill-opacity="0.25" stroke="#22c55e"/>
+      <text x="868" y="60" fill="#a7b4c8">Equipo y desarrollador</text>
+      <rect x="1062" y="48" width="14" height="14" rx="3" fill="#60a5fa" fill-opacity="0.2" stroke="#60a5fa"/>
+      <text x="1084" y="60" fill="#a7b4c8">Agente</text>
+    </g>
+
+    <!-- Eje temporal -->
+    <path d="M40 140H1156" stroke="#7f8ea3" stroke-opacity="0.6" stroke-width="1.5" fill="none" marker-end="url(#arrow-time)"/>
+    <text x="1160" y="130" fill="#7f8ea3" font-size="12" font-weight="600" text-anchor="end">tiempo</text>
+
+    <!-- Columnas -->
+    <g text-anchor="middle">
+      <rect x="40" y="160" width="320" height="230" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+      <text x="200" y="190" fill="#22c55e" font-size="14" font-weight="700">ANTES · EL EQUIPO</text>
+      <text x="200" y="222" fill="#e5edf7" font-size="21" font-weight="700">Normas escritas</text>
+      <g font-size="14" font-weight="600">
+        <rect x="70" y="238" width="260" height="24" rx="12" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="200" y="255" fill="#e5edf7">convenciones</text>
+        <rect x="70" y="268" width="260" height="24" rx="12" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="200" y="285" fill="#e5edf7">estructura de datos</text>
+        <rect x="70" y="298" width="260" height="24" rx="12" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="200" y="315" fill="#e5edf7">arquitectura</text>
+        <rect x="70" y="328" width="260" height="24" rx="12" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="200" y="345" fill="#e5edf7">obligaciones de testing</text>
+      </g>
+      <text x="200" y="376" fill="#a7b4c8" font-size="14">AGENTS.md · skills · CI</text>
+
+      <rect x="440" y="160" width="320" height="230" rx="14" fill="#60a5fa" fill-opacity="0.08" stroke="#60a5fa" stroke-width="2"/>
+      <text x="600" y="190" fill="#60a5fa" font-size="14" font-weight="700">AHORA · EL AGENTE</text>
+      <text x="600" y="222" fill="#e5edf7" font-size="21" font-weight="700">La tarea</text>
+      <rect x="470" y="236" width="260" height="118" rx="10" fill="none" stroke="#60a5fa" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <text x="600" y="256" fill="#60a5fa" font-size="13" font-weight="600">ventana de contexto</text>
+      <g font-size="14" font-weight="600">
+        <rect x="500" y="266" width="200" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="600" y="282" fill="#e5edf7">la tarea</text>
+        <rect x="500" y="294" width="200" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="600" y="310" fill="#e5edf7">lo que lee</text>
+        <rect x="500" y="322" width="200" height="22" rx="11" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.3"/>
+        <text x="600" y="338" fill="#e5edf7">lo que le das</text>
+      </g>
+      <text x="600" y="376" fill="#a7b4c8" font-size="14">elige la solución local</text>
+
+      <rect x="840" y="160" width="320" height="230" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+      <text x="1000" y="190" fill="#22c55e" font-size="14" font-weight="700">DESPUÉS · EL DESARROLLADOR</text>
+      <text x="1000" y="222" fill="#e5edf7" font-size="21" font-weight="700">Visión de futuro</text>
+      <g font-size="15" fill="#e5edf7">
+        <text x="1000" y="268">¿escala con más países?</text>
+        <text x="1000" y="302">¿qué capa transforma el dato?</text>
+        <text x="1000" y="336">¿cuánto costará migrarlo?</text>
+      </g>
+      <text x="1000" y="376" fill="#a7b4c8" font-size="14">decide en los puntos críticos</text>
+    </g>
+
+    <!-- Flechas hacia la tarea -->
+    <g stroke="#a7b4c8" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+      <path d="M362 290H434"/>
+      <path d="M838 290H766"/>
+    </g>
+    <g fill="#a7b4c8" font-size="13" font-weight="600" text-anchor="middle">
+      <text x="400" y="278">contexto</text>
+      <text x="800" y="278">decisiones</text>
+    </g>
+
+    <!-- Bucle: la decisión se convierte en norma -->
+    <path d="M1000 392V426H200V398" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-dasharray="7 6" marker-end="url(#arrow-ok)"/>
+    <text x="600" y="416" fill="#22c55e" font-size="14" font-weight="700" text-anchor="middle">cada decisión de futuro se escribe como norma, en el momento</text>
+
+    <!-- Ejemplo -->
+    <text x="40" y="468" fill="#e5edf7" font-size="14" font-weight="700">EJEMPLO · IDENTIFICADORES FISCALES</text>
+    <g text-anchor="middle">
+      <rect x="40" y="482" width="320" height="108" rx="14" fill="#0f172a" stroke="#e5edf7" stroke-opacity="0.55" stroke-width="2"/>
+      <text x="200" y="508" fill="#a7b4c8" font-size="13" font-weight="700">FRONTEND</text>
+      <text x="200" y="536" fill="#e5edf7" font-size="18" font-weight="700">Normaliza según el país</text>
+      <text x="200" y="568" fill="#a7b4c8" font-size="16" font-family="'JetBrains Mono', ui-monospace, monospace">12.345.678-z · España</text>
+
+      <rect x="440" y="482" width="320" height="108" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+      <text x="600" y="508" fill="#22c55e" font-size="13" font-weight="700">FORMATO COMÚN (VIES)</text>
+      <text x="600" y="536" fill="#e5edf7" font-size="18" font-weight="700">Prefijo de país + número</text>
+      <text x="600" y="570" fill="#22c55e" font-size="20" font-weight="700" font-family="'JetBrains Mono', ui-monospace, monospace">ES12345678Z</text>
+
+      <rect x="840" y="482" width="320" height="108" rx="14" fill="#0f172a" stroke="#e5edf7" stroke-opacity="0.55" stroke-width="2"/>
+      <text x="1000" y="508" fill="#a7b4c8" font-size="13" font-weight="700">BACKEND</text>
+      <text x="1000" y="536" fill="#e5edf7" font-size="18" font-weight="700">Verifica un solo formato</text>
+      <text x="1000" y="566" fill="#a7b4c8" font-size="14">rechaza el resto, no normaliza</text>
+    </g>
+    <g stroke="#a7b4c8" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+      <path d="M362 536H434"/>
+      <path d="M762 536H834"/>
+    </g>
+  </g>
+</svg>
