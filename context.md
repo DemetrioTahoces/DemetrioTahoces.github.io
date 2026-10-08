@@ -4,7 +4,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
-## Post de normas para desarrollar con IA (rama `claude/blog-ai-development-standards-p2i72k`, PR, 2026-10-08)
+## Post de normas para desarrollar con IA (PR #20, rama `claude/blog-ai-development-standards-p2i72k`, 2026-10-08)
 
 - La sesión cloud venía configurada con esta rama, así que el cambio va por PR en vez del push directo a `main` de `AGENTS.md`. Mergear la PR publica el post.
 - `blog/posts/normas-desarrollo-ia-equipo.html` (~1420 palabras, 6 min; IA, Agentes, Deuda técnica). Tesis del autor: el agente resuelve el ahora con su ventana de contexto; el equipo pone el antes (convenciones, estructuración de datos, arquitectura y testing, escritos en AGENTS.md/skills y comprobados en CI) y el después (visión de futuro en los puntos críticos, sobre todo en los datos, responsabilidad del desarrollador). Ejemplo propio del autor, sin empresa: identificadores fiscales NIF/VAT; el agente normalizaba y verificaba por país en los value objects del backend (lo que decían sus skills); el equipo decidió un formato común (IVA intracomunitario de VIES) que verifica el backend y normalización por país en el frontend; la decisión se escribe en el momento y sustituye a la regla anterior.
