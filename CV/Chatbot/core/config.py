@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # Claude effort: low | medium | high | xhigh | max. Empty = model default (medium on Haiku 5.5).
     reasoning_effort: str | None = "medium"
     # Cap per model call; it includes thinking tokens.
-    max_output_tokens: int = 2000
+    max_output_tokens: int = 4000
     request_timeout: float = 30.0
 
     # --- Agent guardrails (per request) ---

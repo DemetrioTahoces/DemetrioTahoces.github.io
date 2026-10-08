@@ -83,7 +83,7 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | Riesgo | Control |
 | --- | --- |
 | Bucles de herramientas | `ModelCallLimitMiddleware` (3) · `ToolCallLimitMiddleware` (2) |
-| Coste por llamada | `max_output_tokens=2000`, `timeout=30s`, límite de gasto en la consola de Anthropic |
+| Coste por llamada | `max_output_tokens=4000`, `timeout=30s`, límite de gasto en la consola de Anthropic |
 | Abuso | Rate limit por IP (5/min, 20/h) · CORS solo para el dominio del CV · bloqueo temporal por consultas malintencionadas reiteradas (ver abajo) |
 | Prompt injection | Reglas fijas en el prompt · historial solo texto user/assistant · `page_context` solo por ruta conocida |
 | Invención | Solo responde con la base de conocimiento; evals de «no inventar» |
@@ -140,7 +140,7 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | `API_KEY` | — | Obligatoria (Anthropic) |
 | `MODEL_NAME` | `claude-haiku-5-5` | |
 | `REASONING_EFFORT` | `medium` | `effort` de Claude: `low`, `medium`, `high`, `xhigh` o `max`. El thinking cuenta dentro de `MAX_OUTPUT_TOKENS`. Haiku 5.5 no admite `temperature` |
-| `MAX_OUTPUT_TOKENS` | `2000` | Incluye tokens de razonamiento |
+| `MAX_OUTPUT_TOKENS` | `4000` | Incluye tokens de razonamiento (con 2000 una respuesta real llegó a 1555, 914 de thinking) |
 | `MAX_MODEL_CALLS` / `MAX_TOOL_CALLS` | `3` / `2` | Por petición |
 | `MAX_HISTORY_MESSAGES` | `10` | Mensajes previos aceptados |
 | `RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `5` / `20` | Por IP y por instancia |
