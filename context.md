@@ -4,14 +4,10 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
-## Post de normas para desarrollar con IA (PR #20, rama `claude/blog-ai-development-standards-p2i72k`, 2026-10-08)
+## PR #20 (mergeada): post de normas para desarrollar con IA (2026-10-08)
 
-- La sesión cloud venía configurada con esta rama, así que el cambio va por PR en vez del push directo a `main` de `AGENTS.md`. Mergear la PR publica el post.
-- `blog/posts/normas-desarrollo-ia-equipo.html` (~1420 palabras, 6 min; IA, Agentes, Deuda técnica). Tesis del autor: el agente resuelve el ahora con su ventana de contexto; el equipo pone el antes (convenciones, estructuración de datos, arquitectura y testing, escritos en AGENTS.md/skills y comprobados en CI) y el después (visión de futuro en los puntos críticos, sobre todo en los datos, responsabilidad del desarrollador). Ejemplo propio del autor, sin empresa: identificadores fiscales NIF/VAT; el agente normalizaba y verificaba por país en los value objects del backend (lo que decían sus skills); el equipo decidió un formato común (IVA intracomunitario de VIES) que verifica el backend y normalización por país en el frontend; la decisión se escribe en el momento y sustituye a la regla anterior.
-- Ids: `#la-tarea-funciona`, `#lo-que-cabe-en-la-ventana`, `#el-presente-normas-del-equipo`, `#el-futuro-no-esta-en-la-tarea`, `#ejemplo-identificadores-fiscales`, `#escribir-la-decision` (callout), `#conclusion`, `#fuentes`. Emojis: 🪟 📐 🔭 🧾 ✍️ (h2 del callout) 🗺️; draft: 🪟 🧾 ✍️ 👇.
-- Diagrama `blog/assets/normas-desarrollo-ia-equipo.{svg,png}` (antes/ahora/después + ejemplo frontend → formato VIES → backend). Tarjeta en primera posición (4 publicados), ficha del chatbot, `llms.txt` y draft de LinkedIn. `check_post.py --all` sin errores (el post nuevo sin avisos); `uv run pytest`: 78 en verde.
-- Fuentes verificadas: doc de memoria de Claude Code, "Effective context engineering for AI agents" de Anthropic, repo de AGENTS.md y doc de Agent Skills. Las páginas oficiales de la UE (VIES, Directiva 2006/112/CE art. 215) dan 403 desde el proxy: no se citan; VIES aparece como parte de la experiencia del autor.
-- Pendiente del autor: ejecutar las evals (ficha nueva del blog), revisar el post en Pages (sobre todo móvil) y, si quiere, añadir el enlace oficial de VIES a las fuentes.
+Post `normas-desarrollo-ia-equipo` (6 min): el agente resuelve el ahora; el equipo pone el antes (normas escritas en AGENTS.md/skills y comprobadas en CI) y el después (visión de futuro, sobre todo en datos), con el ejemplo propio de NIF/VAT (formato común VIES verificado en backend, normalización por país en frontend). Incluye diagrama, tarjeta, ficha del chatbot, `llms.txt` y draft de LinkedIn. Emojis del post: 🪟 📐 🔭 🧾 ✍️ 🗺️; del draft: 🪟 🧾 ✍️ 👇.
+Pendiente del autor: ejecutar las evals (ficha nueva), revisar en Pages (móvil) y, si quiere, añadir el enlace oficial de VIES a las fuentes (las webs de la UE dan 403 desde el proxy y no se pudieron verificar).
 
 ## Feedback del chatbot persistido en Redis (push directo a `main`, 2026-09-26)
 
