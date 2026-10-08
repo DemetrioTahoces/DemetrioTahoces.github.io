@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normas para desarrollar con IA: el agente resuelve el ahora, el equipo decide el futuro - Demetrio Tahoces</title>
+    <meta name="description" content="Un agente de código necesita por escrito las normas del equipo, y la visión de futuro, sobre todo en los datos, sigue siendo trabajo del desarrollador.">
+    <meta property="og:title" content="Normas para desarrollar con IA: el agente resuelve el ahora, el equipo decide el futuro">
+    <meta property="og:description" content="Un agente cumple la tarea con lo que cabe en su contexto. Las normas del equipo y las decisiones de futuro tienen que estar escritas para no generar deuda técnica.">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/normas-desarrollo-ia-equipo.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/normas-desarrollo-ia-equipo.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/normas-desarrollo-ia-equipo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Normas para desarrollar con IA: el agente resuelve el ahora, el equipo decide el futuro">
+    <meta name="twitter:description" content="Un agente cumple la tarea con lo que cabe en su contexto. Las normas del equipo y las decisiones de futuro tienen que estar escritas para no generar deuda técnica.">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/normas-desarrollo-ia-equipo.png">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Normas para desarrollar con IA: el agente resuelve el ahora, el equipo decide el futuro",
+      "description": "Un agente cumple la tarea con lo que cabe en su contexto. Las normas del equipo y las decisiones de futuro tienen que estar escritas para no generar deuda técnica.",
+      "datePublished": "2026-10-08",
+      "dateModified": "2026-10-08",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/normas-desarrollo-ia-equipo.png",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/normas-desarrollo-ia-equipo.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/tokens.css?v=2">
+    <link rel="stylesheet" href="../../assets/cv.css?v=3">
+    <link rel="stylesheet" href="../../assets/blog.css?v=3">
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5 hero-stage" style="--stage-delay: 0.05s">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">IA</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Agentes</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Deuda técnica</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3 hero-stage" style="--stage-delay: 0.13s">Desarrollo con agentes</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight hero-stage" style="--stage-delay: 0.21s">Normas para desarrollar con IA: el agente resuelve el ahora, el equipo decide el futuro</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.29s">
+                Un agente de código cumple la tarea con lo que cabe en su ventana de contexto. Las convenciones del equipo, la forma de los datos y las decisiones que evitan deuda técnica mañana tienen que estar escritas, y la visión de futuro sigue siendo trabajo del desarrollador.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
+                <span>8 octubre 2026</span>
+                <span class="text-gray-600">·</span>
+                <span>6 min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
+            <figure class="mb-8" data-reveal>
+                <img src="../assets/normas-desarrollo-ia-equipo.svg" alt="El agente resuelve el ahora: la tarea con lo que cabe en su ventana de contexto. Antes, el equipo aporta normas escritas (convenciones, estructura de datos, arquitectura y testing) en AGENTS.md, skills y CI. Después, el desarrollador aporta la visión de futuro en los puntos críticos y cada decisión se escribe como norma en el momento. Ejemplo: el frontend normaliza el identificador fiscal según el país al formato común de VIES y el backend verifica un único formato." class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <div class="principle-grid mb-8" data-reveal>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Convenciones</strong><span class="text-sm">Nombres y formatos</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Datos</strong><span class="text-sm">Formato canónico</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Arquitectura</strong><span class="text-sm">Capas y límites</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Testing</strong><span class="text-sm">Lo obligatorio</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Futuro</strong><span class="text-sm">Lo decide el equipo</span></div>
+            </div>
+
+            <div class="article-prose">
+                <section id="la-tarea-funciona">
+                    <h2>La tarea funciona, ¿y lo demás?</h2>
+                    <p>Le pides a un agente de código un endpoint nuevo en un servicio backend. Lee unos cuantos ficheros, escribe el código, añade un par de tests y te dice que está hecho. Compila, los tests pasan y el endpoint hace lo que pedía la historia de usuario.</p>
+                    <p>Luego lo revisas con los ojos del equipo. Los nombres no siguen la convención del resto de endpoints. La validación está en el controlador, cuando el equipo la pone en el dominio. Las fechas se guardan como texto porque así venían en el ejemplo. Y los tests cubren el caso feliz, aunque la norma pide al menos uno por cada error del contrato.</p>
+                    <p>Nada de eso es un fallo del agente en sentido estricto. Ha resuelto la tarea que le diste con la información que tenía. El problema es todo lo que no tenía.</p>
+                </section>
+
+                <section id="lo-que-cabe-en-la-ventana">
+                    <h2>Lo que cabe en una ventana de contexto</h2>
+                    <p>Un agente trabaja con lo que tiene en su ventana de contexto: la tarea, los ficheros que ha leído y las instrucciones que le hayas dado. Cientos de miles de tokens parecen mucho hasta que los comparas con lo que sabe una persona que lleva un año en el equipo: por qué se descartó aquella librería, qué cliente entra el trimestre que viene o qué tabla nadie quiere volver a migrar.</p>
+                    <p>Además, cada sesión empieza de cero. La documentación de Claude Code lo dice tal cual: cada sesión arranca con una ventana de contexto nueva, y lo que pasa de una a otra es lo que está escrito en ficheros como <code>CLAUDE.md</code> o <code>AGENTS.md</code>. Lo que el equipo acordó en una reunión, en una revisión de código o en el café no existe para el agente.</p>
+                    <p>Llenar la ventana tampoco lo arregla. Anthropic describe el contexto como un recurso finito con rendimientos decrecientes: a medida que crece, al modelo le cuesta más recordar con precisión lo que hay dentro. Con poco contexto relevante, el agente hace lo razonable: elige la solución que mejor encaja en su tarea. Una solución local, pensada para el ahora.&nbsp;<span class="emoji" aria-hidden="true">🪟</span></p>
+                </section>
+
+                <section id="el-presente-normas-del-equipo">
+                    <h2>El presente: las normas del equipo</h2>
+                    <p>La primera mitad del problema es el contexto actual del equipo, lo que ya está decidido. Si no se le da, el agente lo resolverá a su manera, y su manera puede cambiar de una sesión a otra. Cualquier equipo con cierto recorrido tiene estas normas, escritas o no:</p>
+                    <ul>
+                        <li>Convenciones: nombres de clases, endpoints, eventos y colas, estructura de paquetes, formato de los logs y de los commits.</li>
+                        <li>Estructuración de datos: tipos y formatos canónicos para fechas, importes e identificadores, qué se normaliza y dónde, qué se guarda y qué se calcula.</li>
+                        <li>Arquitectura: capas, dirección de las dependencias, dónde vive la validación, qué se comunica por eventos y qué por llamada síncrona.</li>
+                        <li>Testing: qué tests son obligatorios en cada capa, qué se mockea y qué no, qué tiene que pasar antes de abrir una PR.</li>
+                    </ul>
+                    <p>Todo eso tiene que estar escrito donde el agente lo lea. Las reglas generales van en un <code>AGENTS.md</code> o un <code>CLAUDE.md</code> en la raíz del repositorio, cortas y verificables: "la validación de formato vive en los value objects del dominio" sirve; "mantén el código limpio", no. El conocimiento más específico va en skills, que el agente carga cuando la tarea lo pide y que no ocupan contexto el resto del tiempo. Es la base de cualquier <a href="flujos-agenticos-desarrollo-ia.html">flujo agéntico de desarrollo</a>.</p>
+                    <p>Eso tiene un límite: el agente trata esas instrucciones como contexto, no como configuración obligatoria. Las sigue mejor cuanto más concretas y breves son, pero sin garantías. Lo que pueda comprobar una herramienta (formato, dependencias entre capas, tests mínimos) debe comprobarse en CI. El texto queda para lo que pide criterio.&nbsp;<span class="emoji" aria-hidden="true">📐</span></p>
+                </section>
+
+                <section id="el-futuro-no-esta-en-la-tarea">
+                    <h2>El futuro no está en la tarea</h2>
+                    <p>La segunda mitad es más difícil, porque todavía no está escrita en ningún sitio. Una tarea describe lo que hay que hacer ahora y casi nunca dice cómo va a crecer: cuántos países más entrarán, qué otros servicios consumirán el dato o qué pasará el día que haya que migrarlo. El agente no se lo pregunta, y es lógico: no conoce el roadmap ni el negocio, y su objetivo es cerrar la tarea.</p>
+                    <p>Ver ese futuro es trabajo del desarrollador, y se concentra en unos pocos puntos críticos de cada tarea: dónde se decide la forma de un dato, qué capa asume una responsabilidad que va a crecer, qué contrato van a consumir otros. Ahí una solución correcta hoy se convierte en deuda técnica mañana.&nbsp;<span class="emoji" aria-hidden="true">🔭</span></p>
+                    <p>Los datos son lo más delicado. El código se refactoriza en una tarde; un formato que ya está guardado en millones de filas y repartido por varios servicios pide una migración, y a veces nadie se atreve a hacerla.</p>
+                </section>
+
+                <section id="ejemplo-identificadores-fiscales">
+                    <h2>Un ejemplo: identificadores fiscales</h2>
+                    <p>Hace poco me pasó con el almacenamiento de identificadores fiscales: el NIF en España y el número de IVA (VAT) en Europa. Las especificaciones del producto pedían normalizarlos y verificarlos para ciertos países, con un formato muy concreto.&nbsp;<span class="emoji" aria-hidden="true">🧾</span></p>
+                    <p>Mi agente lo hizo bien. Siguiendo lo que tenía en sus skills, puso la normalización y la verificación en los value objects del dominio del backend, y las resolvió correctamente para cada país. Tests en verde y código coherente con la arquitectura: con el contexto que tenía, era lo correcto.</p>
+                    <p>El problema apareció al mirar hacia delante. ¿Eso escala? Cada país nuevo obligaría a meter en el backend sus reglas de normalización para todos los formatos en que alguien puede escribir su identificador. El dominio acabaría lleno de casuística de entrada de usuario, que poco tiene que ver con las reglas de negocio.</p>
+                    <p>La decisión fue otra: fijar un formato común, el del número de IVA intracomunitario que valida VIES, con el prefijo del país y el número sin separadores. El backend verifica ese formato y rechaza todo lo demás, venga de donde venga. El frontend, que conoce el país que ha elegido el usuario, normaliza la entrada para que llegue así: un NIF escrito como 12.345.678-z sale del formulario como ES12345678Z.</p>
+                    <p>Es una decisión discutible. Hay equipos que prefieren un frontend lo más tonto posible y toda la lógica en el backend, y tienen argumentos: la regla vive en un solo sitio y los clientes son más simples. En mi equipo pesó más mantener el dominio con un formato estable y dejar la casuística de entrada donde está el usuario. Pero ningún agente iba a tomar esa decisión por su cuenta: hacía falta saber que vendrán más países y cómo quiere crecer el producto.</p>
+                </section>
+
+                <section id="escribir-la-decision" class="callout rounded-xl p-5 my-8">
+                    <h2 class="mt-0"><span class="emoji" aria-hidden="true">✍️</span> Escribir la decisión en el momento</h2>
+                    <p>Tomar la decisión no basta. Si se queda en la cabeza del desarrollador o en un hilo de la PR, la próxima sesión del agente volverá a normalizar en el backend, porque eso es lo que dice su skill. La decisión se escribe en ese mismo momento, en la skill o en el <code>AGENTS.md</code>, con su motivo:</p>
+                    <pre><code>## Identificadores fiscales
+- Formato común: número de IVA intracomunitario (VIES),
+  prefijo de país + número, sin separadores.
+- El frontend normaliza la entrada según el país.
+- El backend verifica el formato común y rechaza el resto;
+  no normaliza formatos de entrada por país.
+- Motivo: añadir un país no debe tocar el dominio.</code></pre>
+                    <p>Y la regla nueva sustituye a la anterior, no se añade al lado. Si dos instrucciones se contradicen, el agente puede quedarse con cualquiera de las dos.</p>
+                </section>
+
+                <section id="conclusion">
+                    <h2>Conclusión</h2>
+                    <p>Un agente de código resuelve bien el ahora: la tarea que tiene delante, con lo que cabe en su ventana. El antes y el después los pone el equipo. El antes son las normas que ya existen, escritas donde el agente las lea y comprobadas por herramientas cuando se pueda. El después es la visión de futuro, y esa no se delega: el desarrollador decide en los puntos críticos, sobre todo en los datos, cómo tiene que crecer la tarea para no generar deuda técnica.</p>
+                    <p>Para no acumular deuda con IA, cada una de esas decisiones tiene que acabar escrita. Así la siguiente tarea, con un agente que vuelve a empezar de cero, ya trabaja hacia el producto que el equipo tiene en la cabeza.&nbsp;<span class="emoji" aria-hidden="true">🗺️</span></p>
+                </section>
+
+                <section id="fuentes">
+                    <h2>Fuentes</h2>
+                    <ul>
+                        <li><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">"How Claude remembers your project"</a>, documentación de Claude Code.</li>
+                        <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic, "Effective context engineering for AI agents"</a>, septiembre 2025.</li>
+                        <li><a href="https://github.com/agentsmd/agents.md" target="_blank" rel="noopener noreferrer">AGENTS.md</a>, formato abierto para dar instrucciones a agentes de código.</li>
+                        <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">"Agent Skills"</a>, documentación de la plataforma de Claude.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer" data-reveal="fade">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script src="../../assets/cv.js?v=2" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+</body>
+
+</html>

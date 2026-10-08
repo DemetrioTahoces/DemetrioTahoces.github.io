@@ -1,0 +1,25 @@
+Le das una tarea a un agente de código y la resuelve. Compila, los tests pasan, funciona.
+
+Pero ¿respeta las convenciones del equipo? ¿La forma en que estructuráis los datos? ¿La arquitectura? ¿Los tests que son obligatorios?
+
+Si no se lo das por escrito, lo hará a su manera o como mejor cuadre en su tarea. Trabaja con lo que cabe en su ventana de contexto, y eso es muy poco comparado con lo que sabe alguien que lleva tiempo en el equipo. 🪟
+
+Y hay una parte que ni siquiera está escrita en ningún sitio: el futuro.
+
+Hace poco me pasó con identificadores fiscales, el NIF en España y el VAT en Europa. Mi agente normalizó y verificó los datos en los value objects del dominio del backend, como decían sus skills. Lo hizo bien. 🧾
+
+El problema era otro: ¿eso escala? ¿Vamos a meter en el backend las reglas de normalización de cada país nuevo, en todos sus formatos?
+
+Decidimos otra cosa. Un formato común, el del VAT intracomunitario que valida VIES, que el backend verifica. Y un frontend que normaliza la entrada según el país para cumplirlo. Es discutible, hay quien prefiere un frontend lo más tonto posible, pero en mi equipo lo vimos así.
+
+Esa decisión no la iba a tomar el agente. Y si no la escribes en ese momento en tus skills o en el AGENTS.md, la próxima sesión volverá a hacerlo como antes. ✍️
+
+El agente resuelve el ahora. El antes y el después los pone el equipo.
+
+Lo cuento aquí: 👇
+
+https://demetriotahoces.github.io/blog/posts/normas-desarrollo-ia-equipo.html
+
+¿Qué norma de tu equipo le ha costado más aprender a tu agente?
+
+#IA #DesarrolloDeSoftware #AgentesIA #DeudaTecnica #ArquitecturaDeSoftware
