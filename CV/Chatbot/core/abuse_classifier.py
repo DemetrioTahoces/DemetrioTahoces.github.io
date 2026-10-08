@@ -6,7 +6,7 @@ assistant's cached system prompt untouched. It only sees the current message:
 the history is re-sent on every request and would count the same turn again.
 """
 
-from typing import Any, Literal
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -37,28 +37,17 @@ class AbuseVerdict(BaseModel):
 
 def create_classifier_model():
     """Structured-output model. Separate settings so a smaller model can be used."""
-    if not settings.api_key:
-        raise ValueError("API_KEY is not set: the abuse classifier needs the real model.")
+    from core.agent import create_anthropic_model
 
-    from langchain_openai import ChatOpenAI
-
-    kwargs: dict[str, Any] = {}
-    effort = settings.abuse_classifier_reasoning_effort
-    if effort:
-        kwargs["reasoning_effort"] = effort
-    if effort in (None, "none"):
-        kwargs["temperature"] = 0
-    model = ChatOpenAI(
-        model=settings.abuse_classifier_model or settings.model_name,
-        api_key=settings.api_key,
-        use_responses_api=True,
-        store=False,
+    model = create_anthropic_model(
+        settings.abuse_classifier_model or settings.model_name,
+        settings.abuse_classifier_reasoning_effort,
+        # Room for thinking plus the one-field verdict.
         max_tokens=1000,
-        timeout=settings.request_timeout,
         max_retries=1,
-        **kwargs,
     )
-    return model.with_structured_output(AbuseVerdict)
+    # Native structured outputs instead of a forced tool call (which skips thinking).
+    return model.with_structured_output(AbuseVerdict, method="json_schema")
 
 
 class AbuseClassifier:

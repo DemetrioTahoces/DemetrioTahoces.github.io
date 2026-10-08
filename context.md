@@ -4,6 +4,13 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Chatbot de gpt-6-luna a Claude Haiku 5.5 (push directo a `main`, 2026-10-09)
+
+- Petición del autor: cambiar el modelo a Haiku 5.5. `langchain-openai` sale y entra `langchain-anthropic` (1.7.5, `uv.lock` regenerado). `core/agent.py`: `create_anthropic_model()` (`ChatAnthropic`, `output_config.effort`, thinking adaptativo por defecto con el texto omitido, sin `temperature` porque Haiku 5.5 da 400) compartida por el agente, el clasificador de abuso y el juez de evals. Caché: `AnthropicPromptCachingMiddleware` (tools + system + cola de mensajes); en OpenAI era automática. Clasificador y juez con `with_structured_output(method="json_schema")` en vez de tool forzada.
+- Por defecto `MODEL_NAME=claude-haiku-5-5`, `REASONING_EFFORT=medium` (`none` ya no vale: `low`-`max`), juez `claude-haiku-5-5`. `API_KEY` sigue siendo el nombre de la variable, pero ahora es la key de Anthropic. El HMAC de IP usa `API_KEY`: al cambiarla cambian los hashes de logs y los strikes de `abuse_guard` empiezan de cero.
+- Tests offline en verde. Prueba real mínima en local (no son evals): 2 preguntas en 3,0 s y 4,8 s, la segunda leyó 18.799 de 18.896 tokens de caché; thinking de 227 y 579 tokens; el clasificador marcó la extracción del system prompt como `prompt_injection` (maliciosa igualmente) y una pregunta normal como `none`.
+- El autor configuró `API_KEY` (Anthropic) y `MODEL_NAME=claude-haiku-5-5` en Vercel y en su `.env` antes del push. Pendiente del autor: el secreto `CHATBOT_API_KEY` de Actions. Ejecutar las evals (cambia el modelo) y revisar latencia con thinking y `MAX_OUTPUT_TOKENS=2000`.
+
 ## Botón para conectar el servidor MCP desde el chat (push directo a `main`, 2026-10-08)
 
 - Antes la URL del MCP solo estaba en `llms.txt` (sin enlazar desde ninguna página) y en los README. Petición del autor: un botón en el chat para copiarla, respetuoso con la UI pero bien visible (opción 1: solo `CV/chatbot.html`; `index.html` sin tocar).

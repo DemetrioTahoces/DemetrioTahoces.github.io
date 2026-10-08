@@ -26,12 +26,12 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # --- Model (OpenAI Responses API) ---
+    # --- Model (Anthropic Messages API) ---
     api_key: str = ""
-    model_name: str = "gpt-6-luna"
-    # none | low | medium | high ... Empty = provider default.
+    model_name: str = "claude-haiku-5-5"
+    # Claude effort: low | medium | high | xhigh | max. Empty = model default (medium on Haiku 5.5).
     reasoning_effort: str | None = "medium"
-    # Cap per model call; on reasoning models it includes reasoning tokens.
+    # Cap per model call; it includes thinking tokens.
     max_output_tokens: int = 2000
     request_timeout: float = 30.0
 

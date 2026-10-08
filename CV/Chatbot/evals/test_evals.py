@@ -2,7 +2,7 @@
 Evaluations against the real model (consume tokens; excluded from the default run).
 
     uv run pytest -m evals                       # modelo de MODEL_NAME
-    MODEL_NAME=gpt-5.6-luna uv run pytest -m evals
+    MODEL_NAME=claude-sonnet-5-5 uv run pytest -m evals
 
 Run only by a human, by hand: never from CI, agents or automations.
 Each case runs the real agent and is checked with deterministic assertions
@@ -28,7 +28,7 @@ from pydantic import BaseModel, Field
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from core.abuse_classifier import AbuseClassifier  # noqa: E402
-from core.agent import create_agent_graph, stream_agent  # noqa: E402
+from core.agent import create_agent_graph, create_anthropic_model, stream_agent  # noqa: E402
 from core.citations import _is_site_url, sanitize_links  # noqa: E402
 from core.config import settings  # noqa: E402
 from core.knowledge import get_knowledge_base  # noqa: E402
@@ -44,7 +44,7 @@ CASES = [
 ]
 AGENT_CASES = [c for c in CASES if not c.get("solo_clasificador")]
 ABUSE_CASES = [c for c in CASES if "maliciosa" in c and "#" not in c["id"]]
-JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "gpt-6-luna")
+JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "claude-haiku-5-5")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
 # The agent's prompt only carries the blog index; when it reads an article the
 # judge needs the full text to check the answer.
@@ -107,7 +107,7 @@ def _fold(text: str) -> str:
 
 @pytest.fixture(scope="module")
 def loop():
-    # langchain-openai caches its async HTTP client per process, so every case
+    # The model client caches its async HTTP client per process, so every case
     # must run on the same event loop (as in production).
     event_loop = asyncio.new_event_loop()
     yield event_loop
@@ -123,10 +123,8 @@ def graph():
 
 @pytest.fixture(scope="module")
 def judge():
-    from langchain_openai import ChatOpenAI
-
-    model = ChatOpenAI(model=JUDGE_MODEL, api_key=settings.api_key, use_responses_api=True, reasoning_effort="low")
-    return model.with_structured_output(Verdict)
+    model = create_anthropic_model(JUDGE_MODEL, "low", max_tokens=4000)
+    return model.with_structured_output(Verdict, method="json_schema")
 
 
 @pytest.mark.parametrize("case", AGENT_CASES, ids=[c["id"] for c in AGENT_CASES])

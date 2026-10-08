@@ -64,7 +64,7 @@ Al empezar una tarea, lee también `context.md` para continuar el trabajo de ses
 
 - Haz cambios backend dentro de `CV/Chatbot/`.
 - Dependencias en `CV/Chatbot/pyproject.toml` con versiones fijadas en `uv.lock` (Python 3.14, `.python-version`). Tras cambiar dependencias ejecuta `uv lock` y commitea el lock.
-- La configuración se lee desde variables de entorno o `CV/Chatbot/.env` mediante `CV/Chatbot/core/config.py`. Variables y valores por defecto: tabla en `CV/Chatbot/README.md` y plantilla en `.env.example` (modelo por defecto `gpt-6-luna`).
+- La configuración se lee desde variables de entorno o `CV/Chatbot/.env` mediante `CV/Chatbot/core/config.py`. Variables y valores por defecto: tabla en `CV/Chatbot/README.md` y plantilla en `.env.example` (modelo por defecto `claude-haiku-5-5`, vía `langchain-anthropic`; `API_KEY` es la key de Anthropic).
 - Endpoints: `POST /api/chat/stream`, `POST /api/chat`, `POST /api/feedback`, `GET /api/health` y el servidor MCP de solo lectura en `POST /api/mcp`.
 - El backend es stateless: el frontend envía los últimos mensajes en `history`. No reintroduzcas memoria en servidor (`MemorySaver`).
 - El CV completo va en el system prompt (cacheado); los artículos del blog se leen con la tool `read_blog_article` (solo blog). Mantén el prompt estable y la fecha al final para no romper la caché.

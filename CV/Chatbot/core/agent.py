@@ -16,6 +16,7 @@ from langchain.agents.middleware import (
     ToolCallLimitMiddleware,
     dynamic_prompt,
 )
+from langchain_anthropic.middleware import AnthropicPromptCachingMiddleware
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 
@@ -34,34 +35,33 @@ EMPTY_ANSWER = "Lo siento, no he podido generar una respuesta para esta consulta
 LIMIT_ANSWER = "No he podido completar la respuesta dentro de los límites de esta consulta. ¿Puedes concretar un poco más la pregunta?"
 
 
-def create_chat_model() -> BaseChatModel:
-    """OpenAI model via the Responses API (required for gpt-5.x tools + reasoning)."""
+def create_anthropic_model(
+    model: str, effort: str | None, max_tokens: int, max_retries: int = 2
+) -> BaseChatModel:
+    """Claude model. Thinking is left at the model default (adaptive, text omitted) and
+    tuned with effort; Haiku 5.5 rejects non-default temperature, so none is sent."""
     if not settings.api_key:
         raise ValueError("API_KEY is not set. Set it as an environment variable or in CV/Chatbot/.env.")
 
-    from langchain_openai import ChatOpenAI
+    from langchain_anthropic import ChatAnthropic
 
     kwargs: dict[str, Any] = {}
-    if settings.reasoning_effort:
-        kwargs["reasoning_effort"] = settings.reasoning_effort
-    # Reasoning models reject temperature unless reasoning is disabled.
-    if settings.reasoning_effort in (None, "none"):
-        kwargs["temperature"] = 0.3
-
-    return ChatOpenAI(
-        model=settings.model_name,
+    if effort:
+        kwargs["output_config"] = {"effort": effort}
+    return ChatAnthropic(
+        model=model,
         api_key=settings.api_key,
-        use_responses_api=True,
-        # Visitors' conversations are not retained by OpenAI (default is 30 days).
-        # Encrypted reasoning keeps reasoning items replayable within a tool loop.
-        store=False,
-        include=["reasoning.encrypted_content"],
         stream_usage=True,
-        max_tokens=settings.max_output_tokens,
+        # Thinking counts toward max_tokens.
+        max_tokens=max_tokens,
         timeout=settings.request_timeout,
-        max_retries=2,
+        max_retries=max_retries,
         **kwargs,
     )
+
+
+def create_chat_model() -> BaseChatModel:
+    return create_anthropic_model(settings.model_name, settings.reasoning_effort, settings.max_output_tokens)
 
 
 @dynamic_prompt
@@ -76,6 +76,10 @@ def create_agent_graph(model: BaseChatModel | None = None):
         tools=get_tools(),
         middleware=[
             _system_prompt,
+            # Breakpoints on the tools, the system prompt and the conversation tail, so the
+            # CV in the system prompt is read from cache (and the tool loop reuses the prefix).
+            # No-op with the fake models of the offline tests.
+            AnthropicPromptCachingMiddleware(unsupported_model_behavior="ignore"),
             ModelCallLimitMiddleware(run_limit=settings.max_model_calls, exit_behavior="end"),
             ToolCallLimitMiddleware(run_limit=settings.max_tool_calls, exit_behavior="continue"),
         ],

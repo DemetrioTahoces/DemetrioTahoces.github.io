@@ -6,7 +6,7 @@ Chatbot que responde sobre el CV y el blog de Demetrio Tahoces. Backend FastAPI 
 
 | | |
 | --- | --- |
-| Modelo | OpenAI `gpt-6-luna` (Responses API, `reasoning_effort=medium`) |
+| Modelo | Anthropic `claude-haiku-5-5` (Messages API, thinking adaptativo, `effort=medium`) |
 | Conocimiento | CV completo en el system prompt, dividido en secciones con su URL (~9,5k tokens, con caché) + artículos del blog bajo demanda |
 | Citas | Cada párrafo enlaza a la sección de la web que lo respalda (`[↗ Sección](url#ancla)`); el backend valida cada enlace |
 | Agente | `langchain.agents.create_agent` + middleware de límites |
@@ -30,7 +30,7 @@ flowchart LR
     KB --> MCP
     SP --> AG
     T <--> AG
-    AG <-->|Responses API| O[OpenAI<br/>gpt-6-luna]
+    AG <-->|Messages API| O[Anthropic<br/>claude-haiku-5-5]
 ```
 
 ## Flujo de una pregunta
@@ -83,12 +83,12 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | Riesgo | Control |
 | --- | --- |
 | Bucles de herramientas | `ModelCallLimitMiddleware` (3) · `ToolCallLimitMiddleware` (2) |
-| Coste por llamada | `max_output_tokens=2000`, `timeout=30s`, límite de gasto en OpenAI |
+| Coste por llamada | `max_output_tokens=2000`, `timeout=30s`, límite de gasto en la consola de Anthropic |
 | Abuso | Rate limit por IP (5/min, 20/h) · CORS solo para el dominio del CV · bloqueo temporal por consultas malintencionadas reiteradas (ver abajo) |
 | Prompt injection | Reglas fijas en el prompt · historial solo texto user/assistant · `page_context` solo por ruta conocida |
 | Invención | Solo responde con la base de conocimiento; evals de «no inventar» |
 | Enlaces inventados | `core/citations.py` reescribe todo enlace al sitio a su URL canónica: ancla desconocida → página; página desconocida → sin enlace. También en streaming |
-| Privacidad | Sin texto del usuario en logs · IP como HMAC · `store=False` en OpenAI |
+| Privacidad | Sin texto del usuario en logs · IP como HMAC · sin memoria en servidor (la API de Anthropic no guarda estado entre peticiones) |
 
 ## Estructura
 
@@ -137,9 +137,9 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 
 | Variable | Defecto | Nota |
 | --- | --- | --- |
-| `API_KEY` | — | Obligatoria (OpenAI) |
-| `MODEL_NAME` | `gpt-6-luna` | |
-| `REASONING_EFFORT` | `medium` | `low` es ~0,6 s más rápido pero atribuye peor; `none` envía `temperature=0.3` |
+| `API_KEY` | — | Obligatoria (Anthropic) |
+| `MODEL_NAME` | `claude-haiku-5-5` | |
+| `REASONING_EFFORT` | `medium` | `effort` de Claude: `low`, `medium`, `high`, `xhigh` o `max`. El thinking cuenta dentro de `MAX_OUTPUT_TOKENS`. Haiku 5.5 no admite `temperature` |
 | `MAX_OUTPUT_TOKENS` | `2000` | Incluye tokens de razonamiento |
 | `MAX_MODEL_CALLS` / `MAX_TOOL_CALLS` | `3` / `2` | Por petición |
 | `MAX_HISTORY_MESSAGES` | `10` | Mensajes previos aceptados |
@@ -195,7 +195,7 @@ uv run pytest -m evals                                # evals (gasta tokens; sol
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces, docs sin emojis | 0 |
-| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `gpt-6-luna` | Céntimos |
+| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `claude-haiku-5-5` (`EVAL_JUDGE_MODEL`) | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
 | Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |
 
