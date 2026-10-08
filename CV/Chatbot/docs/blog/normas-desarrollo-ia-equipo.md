@@ -50,3 +50,4 @@ El agente resuelve el ahora; el equipo aporta el antes (normas escritas y compro
 - Anthropic, "Effective context engineering for AI agents" (septiembre 2025): el contexto como recurso finito.
 - AGENTS.md, formato abierto de instrucciones para agentes de código.
 - "Agent Skills", documentación de la plataforma de Claude.
+- Comisión Europea, "VIES on-the-Web": validación de números de IVA intracomunitario.
