@@ -9,7 +9,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 - Síntoma: Vercel registraba "Task timed out after 300 seconds" en `POST /api/mcp`, encadenados cada 5 minutos (en los logs de la última hora: 21:05, 21:10, 21:15). El chat no estaba afectado.
 - Causa: `mcp` 2.2.0 (`MCPServer`) sirve siempre `subscriptions/listen` (spec 2026-07-28, SEP-2575) y por eso anuncia `listChanged`/`subscribe`. Un cliente moderno abre ese POST cuya respuesta es un stream de eventos; aquí nunca llega ninguno (herramientas estáticas, bus en memoria por instancia), así que Vercel lo corta a los 300 s y el cliente vuelve a escuchar. Reproducido en local: ack y stream abierto indefinidamente.
 - Arreglo en `core/mcp_server.py`: se quita el handler (`_lowlevel_server._request_handlers`, no hay API pública). El servidor deja de anunciar `listChanged` y `subscriptions/listen` responde `-32601` al momento. Test `test_mcp_server_does_not_offer_listen_streams` (falla sin el arreglo); 79 tests en verde. Riesgo: usa un atributo privado del SDK; si un upgrade lo cambia, el import o el test fallan de forma visible.
-- Sin cambios de prompt, modelo ni docs: no hacen falta evals. Verificación en producción: que no aparezcan timeouts nuevos en `/api/mcp` tras el despliegue.
+- Sin cambios de prompt, modelo ni docs: no hacen falta evals. Verificado en producción: desde el despliegue de `c0b7497` (21:34 UTC) ningún timeout en 15 minutos, frente a uno cada ~5 minutos antes; el MCP sigue respondiendo (`get_document` OK).
 
 ## PR #20 (mergeada): post de normas para desarrollar con IA (2026-10-08)
 
