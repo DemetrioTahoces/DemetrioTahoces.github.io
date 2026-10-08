@@ -4,6 +4,15 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Botón para conectar el servidor MCP desde el chat (push directo a `main`, 2026-10-08)
+
+- Antes la URL del MCP solo estaba en `llms.txt` (sin enlazar desde ninguna página) y en los README. Petición del autor: un botón en el chat para copiarla, respetuoso con la UI pero bien visible (opción 1: solo `CV/chatbot.html`; `index.html` sin tocar).
+- `CV/chatbot.html`: píldora «MCP» en la cabecera (entre reiniciar y el estado) y una línea discreta al final del mensaje de bienvenida («¿Prefieres tu propio agente...? Conéctalo al CV por MCP»). Las dos abren un modal (`role="dialog"`, foco atrapado, Escape y clic fuera cierran, el foco vuelve al botón) con la URL (`MCP_URL = API_URL + "/api/mcp"`) y `claude mcp add --transport http demetrio-tahoces-cv <url>`, cada uno con «Copiar» (`navigator.clipboard`; si falla, selecciona el texto y prueba `execCommand`). La URL se muestra entera, con salto de línea, no truncada. Colores de tokens; icono `ph-plug`.
+- Cabecera en móvil: por debajo de 400px se ocultan el icono del robot del título y el de la píldora para que «Asistente Virtual» quepa en una línea desde 360px; el botón volver ya no se encoge (`flex-shrink-0`). A 320px el título pasa a dos líneas (aceptado).
+- Verificado con Playwright en local (Tailwind/Phosphor servidos desde npm porque el proxy bloquea los CDN): 1280, 390, 360 y el widget (iframe de 420x580); copia real al portapapeles, también dentro del iframe. `uv run pytest`: 79 en verde. Sin cambios de prompt, modelo ni docs: no hacen falta evals.
+- Hueco conocido: el chatbot no sabe responder cómo conectarse al MCP (sus docs no mencionan la URL). Si el autor lo quiere, va en `CV/Chatbot/docs/` y requiere evals.
+- Pendiente del autor: revisarlo en Pages (móvil y widget).
+
 ## Timeouts de 300 s en `/api/mcp`: sin `subscriptions/listen` (push directo a `main`, 2026-10-08)
 
 - Síntoma: Vercel registraba "Task timed out after 300 seconds" en `POST /api/mcp`, encadenados cada 5 minutos (en los logs de la última hora: 21:05, 21:10, 21:15). El chat no estaba afectado.

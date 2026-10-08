@@ -24,7 +24,7 @@ El proyecto combina dos superficies independientes:
 
 La parte pública no tiene proceso de build. Los HTML usan estilos y scripts compartidos en `assets/`, con dependencias cargadas desde CDN, principalmente Tailwind CSS, Google Fonts, Chart.js, Phosphor Icons, marked.js y DOMPurify.
 
-El chatbot usa FastAPI y LangChain (`create_agent`) con `gpt-6-luna`. El CV completo va en el system prompt (con caché) y los artículos del blog se leen bajo demanda con una herramienta. También expone un servidor MCP de solo lectura en `/api/mcp`.
+El chatbot usa FastAPI y LangChain (`create_agent`) con `gpt-6-luna`. El CV completo va en el system prompt (con caché) y los artículos del blog se leen bajo demanda con una herramienta. También expone un servidor MCP de solo lectura en `/api/mcp`; el botón «MCP» de `CV/chatbot.html` abre un modal con la URL y el comando de Claude Code para copiarlos.
 
 ## Desarrollo local del frontend
 

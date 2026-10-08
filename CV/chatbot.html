@@ -155,6 +155,45 @@
         .markdown-body a.cite-chip:hover,
         .markdown-body a.cite-chip:focus-visible { color: var(--accent-strong); border-color: var(--accent-strong); }
 
+        /* Acceso al servidor MCP: píldora en la cabecera, aviso en la bienvenida y modal con la URL */
+        .mcp-pill {
+            color: var(--accent);
+            border: 1px solid var(--border-strong);
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .mcp-pill:hover {
+            color: var(--accent-strong);
+            border-color: var(--accent-strong);
+            background: rgba(96, 165, 250, 0.1);
+        }
+        .mcp-hint {
+            margin-top: 0.75em;
+            padding-top: 0.75em;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8125rem;
+        }
+        .mcp-link {
+            color: var(--accent);
+            text-decoration: underline;
+            text-decoration-color: var(--border-strong);
+            text-underline-offset: 3px;
+            transition: color 0.2s ease, text-decoration-color 0.2s ease;
+        }
+        .mcp-link:hover { color: var(--accent-strong); text-decoration-color: var(--accent-strong); }
+        .mcp-field {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            overflow-wrap: anywhere;
+            user-select: all;
+        }
+        .copy-btn {
+            color: var(--accent);
+            border: 1px solid var(--border-strong);
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .copy-btn:hover { color: var(--accent-strong); border-color: var(--accent-strong); background: rgba(96, 165, 250, 0.1); }
+        .copy-btn.is-copied { color: var(--accent-warm); border-color: var(--accent-warm); }
+
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -229,24 +268,29 @@
 
         <!-- Header -->
         <header class="chat-header flex items-center justify-between p-4">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                 <a href="../index.html" id="back-btn"
-                    class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors"
+                    class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors"
                     title="Volver al CV" aria-label="Volver al CV">
                     <i class="ph ph-arrow-left text-xl"></i>
                 </a>
                 <div>
                     <h1 class="chat-title text-lg font-semibold text-slate-100 flex items-center gap-2">
-                        <i class="ph ph-robot text-blue-500"></i> Asistente Virtual
+                        <i class="ph ph-robot text-blue-500 hidden min-[400px]:inline"></i> Asistente Virtual
                     </h1>
                     <p class="text-xs text-slate-400">Pregúntame sobre la experiencia de Demetrio</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-shrink-0 items-center gap-2">
                 <button id="reset-btn"
                     class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-slate-800 text-slate-400 hover:text-red-400 transition-colors"
                     title="Reiniciar conversación" aria-label="Reiniciar conversación">
                     <i class="ph ph-trash text-lg"></i>
+                </button>
+                <button type="button" data-mcp-open
+                    class="mcp-pill flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+                    title="Conecta tu agente al CV por MCP" aria-haspopup="dialog">
+                    <i class="ph ph-plug text-sm hidden min-[400px]:inline"></i> MCP
                 </button>
                 <div id="status-container"
                     class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 transition-colors duration-300">
@@ -283,6 +327,10 @@
                         <p>¡Hola! Soy el asistente de IA del portfolio de Demetrio. Estoy conectado a la información de
                             su CV.</p>
                         <p>¿En qué te puedo ayudar hoy?</p>
+                        <p class="mcp-hint">
+                            <i class="ph ph-plug"></i> ¿Prefieres tu propio agente (Claude, ChatGPT...)?
+                            <button type="button" data-mcp-open class="mcp-link" aria-haspopup="dialog">Conéctalo al CV por MCP</button>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -341,6 +389,51 @@
                     class="px-4 py-2 rounded-xl text-sm font-medium text-white transition-colors hover:opacity-90"
                     style="background: #ef4444;">Reiniciar</button>
             </div>
+        </div>
+    </div>
+
+    <div id="mcp-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"
+        style="background: rgba(2, 6, 23, 0.6); backdrop-filter: blur(4px);">
+        <div class="card rounded-2xl p-5 sm:p-6 w-full max-w-md max-h-full overflow-y-auto animate-fade-in" role="dialog" aria-modal="true"
+            aria-labelledby="mcp-modal-title" aria-describedby="mcp-modal-desc" style="border-color: var(--border-strong);">
+            <div class="flex items-start justify-between gap-3 mb-2">
+                <h2 id="mcp-modal-title" class="chat-title text-lg font-semibold text-slate-100 flex items-center gap-2">
+                    <i class="ph ph-plug text-blue-400"></i> Conecta tu agente al CV
+                </h2>
+                <button type="button" id="mcp-close"
+                    class="flex-shrink-0 flex items-center justify-center w-8 h-8 -mt-1 -mr-1 rounded-full hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
+                    aria-label="Cerrar">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+            <p id="mcp-modal-desc" class="text-sm text-slate-400 mb-5">
+                Servidor MCP de solo lectura con el CV, la experiencia y el blog. En Claude, ChatGPT u otro cliente MCP,
+                añádelo como conector personalizado con esta URL.
+            </p>
+
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span id="mcp-url-label" class="text-xs font-medium text-slate-300">URL del servidor</span>
+                <button type="button" class="copy-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
+                    data-copy-target="mcp-url" aria-describedby="mcp-url-label">
+                    <i class="ph ph-copy"></i> <span>Copiar</span>
+                </button>
+            </div>
+            <code id="mcp-url" class="mcp-field glass-input block rounded-xl px-3 py-2 mb-4 text-xs"></code>
+
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span id="mcp-cli-label" class="text-xs font-medium text-slate-300">Claude Code</span>
+                <button type="button" class="copy-btn flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium"
+                    data-copy-target="mcp-cli" aria-describedby="mcp-cli-label">
+                    <i class="ph ph-copy"></i> <span>Copiar</span>
+                </button>
+            </div>
+            <code id="mcp-cli" class="mcp-field glass-input block rounded-xl px-3 py-2 mb-4 text-xs"></code>
+
+            <p class="text-[11px] text-slate-500">
+                Streamable HTTP, sin autenticación. Herramientas: <code class="text-slate-400">list_documents</code> y
+                <code class="text-slate-400">get_document</code>. Devuelve los documentos tal cual: el razonamiento lo pone tu agente.
+            </p>
+            <span id="mcp-copy-status" class="sr-only" aria-live="polite"></span>
         </div>
     </div>
 
@@ -451,6 +544,7 @@
         const CHAT_STREAM_URL = API_URL + "/api/chat/stream";
         const HEALTH_URL = API_URL + "/api/health";
         const FEEDBACK_URL = API_URL + "/api/feedback";
+        const MCP_URL = API_URL + "/api/mcp";
         // El backend es stateless: cada petición lleva los últimos turnos de la conversación
         const MAX_HISTORY_MESSAGES = 10;
         // Bloqueo temporal (403) por consultas malintencionadas reiteradas: se recuerda para no llamar al backend
@@ -571,9 +665,94 @@
             }
         });
 
+        // Modal de conexión al servidor MCP
+        const mcpModal = document.getElementById('mcp-modal');
+        const mcpClose = document.getElementById('mcp-close');
+        const mcpCopyStatus = document.getElementById('mcp-copy-status');
+        let mcpOpener = null;
+
+        document.getElementById('mcp-url').textContent = MCP_URL;
+        document.getElementById('mcp-cli').textContent = `claude mcp add --transport http demetrio-tahoces-cv ${MCP_URL}`;
+
+        function openMcpModal(opener) {
+            mcpOpener = opener;
+            mcpModal.classList.remove('hidden');
+            mcpClose.focus();
+        }
+
+        function closeMcpModal() {
+            mcpModal.classList.add('hidden');
+            if (mcpOpener) mcpOpener.focus();
+        }
+
+        // Delegado: lo abren la píldora de la cabecera y el aviso del mensaje de bienvenida
+        document.addEventListener('click', (e) => {
+            const opener = e.target.closest('[data-mcp-open]');
+            if (opener) openMcpModal(opener);
+        });
+        mcpClose.addEventListener('click', closeMcpModal);
+        mcpModal.addEventListener('click', (e) => {
+            if (e.target === mcpModal) closeMcpModal();
+        });
+        mcpModal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                e.stopPropagation();
+                closeMcpModal();
+                return;
+            }
+            if (e.key === 'Tab') {
+                const focusables = [...mcpModal.querySelectorAll('button')];
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+
+        // Copia al portapapeles; si la API no está disponible (file://, permisos del iframe), selecciona el texto
+        async function copyText(field) {
+            try {
+                await navigator.clipboard.writeText(field.textContent);
+                return true;
+            } catch (e) {
+                const range = document.createRange();
+                range.selectNodeContents(field);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                try {
+                    return document.execCommand('copy');
+                } catch (err) {
+                    return false;
+                }
+            }
+        }
+
+        mcpModal.addEventListener('click', async (e) => {
+            const button = e.target.closest('[data-copy-target]');
+            if (!button) return;
+            const copied = await copyText(document.getElementById(button.dataset.copyTarget));
+            const label = button.querySelector('span');
+            const icon = button.querySelector('i');
+            label.textContent = copied ? 'Copiado' : 'Seleccionado';
+            icon.className = copied ? 'ph ph-check' : 'ph ph-copy';
+            button.classList.toggle('is-copied', copied);
+            mcpCopyStatus.textContent = copied ? 'Copiado al portapapeles' : 'No se ha podido copiar: el texto queda seleccionado para copiarlo a mano';
+            window.clearTimeout(button.resetTimer);
+            button.resetTimer = window.setTimeout(() => {
+                label.textContent = 'Copiar';
+                icon.className = 'ph ph-copy';
+                button.classList.remove('is-copied');
+            }, 2000);
+        });
+
         // Escape en modo embebido: minimiza el panel del widget
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && isEmbedded && confirmModal.classList.contains('hidden')) {
+            if (e.key === 'Escape' && isEmbedded && confirmModal.classList.contains('hidden') && mcpModal.classList.contains('hidden')) {
                 window.parent.postMessage({ type: 'minimize' }, '*');
             }
         });
