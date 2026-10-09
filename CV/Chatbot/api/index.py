@@ -38,7 +38,13 @@ from core.knowledge import get_knowledge_base, normalize_route_path
 from core.mcp_server import mcp_http_app, mcp_server
 from core.tracing import configure_tracing, run_config, send_feedback
 from middleware.abuse_guard import blocked_response, client_ip, create_abuse_guard
-from middleware.rate_limiter import get_rate_limit_string, limiter, rate_limit_exceeded_handler
+from middleware.rate_limiter import (
+    MountedAppRateLimit,
+    get_mcp_rate_limit_string,
+    get_rate_limit_string,
+    limiter,
+    rate_limit_exceeded_handler,
+)
 from middleware.request_logger import log_error, log_request, log_response, setup_logging
 
 logger = setup_logging()
@@ -276,4 +282,5 @@ def _sse_event(data: dict) -> str:
 
 
 # Read-only MCP server at /api/mcp. Mounted last so the API routes above win.
-app.mount("/api", mcp_http_app)
+mcp_app = MountedAppRateLimit(mcp_http_app, get_mcp_rate_limit_string(), "mcp")
+app.mount("/api", mcp_app)

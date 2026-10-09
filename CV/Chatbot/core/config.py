@@ -29,8 +29,9 @@ class Settings(BaseSettings):
     # --- Model (Anthropic Messages API) ---
     api_key: str = ""
     model_name: str = "claude-haiku-5-5"
-    # Claude effort: low | medium | high | xhigh | max. Empty = model default (medium on Haiku 5.5).
-    reasoning_effort: str | None = "medium"
+    # Claude effort: low | medium | high | xhigh | max. Empty = model default (medium on Haiku 5.5). low: Anthropic's recommendation for chat.
+    # low: chat answers over a cached CV; medium spent most of the output on thinking.
+    reasoning_effort: str | None = "low"
     # Cap per model call; it includes thinking tokens.
     max_output_tokens: int = 4000
     request_timeout: float = 30.0
@@ -43,6 +44,9 @@ class Settings(BaseSettings):
     # --- Rate limiting (per IP, per instance) ---
     rate_limit_per_minute: int = 5
     rate_limit_per_hour: int = 20
+    # The MCP server spends no model tokens, but an agent makes several calls per question.
+    mcp_rate_limit_per_minute: int = 60
+    mcp_rate_limit_per_hour: int = 600
 
     # --- Temporary block for repeated malicious questions (see middleware/abuse_guard.py) ---
     # off: no classifier · log-only: classify and log strikes, never block · block: enforce.

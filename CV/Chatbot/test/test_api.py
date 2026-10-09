@@ -20,6 +20,7 @@ def use_model(monkeypatch):
 @pytest.fixture(autouse=True)
 def reset_rate_limits():
     api_module.limiter.reset()
+    api_module.mcp_app.reset()
 
 
 def _sse(text: str) -> list[dict]:
@@ -98,7 +99,7 @@ def test_mcp_server_lists_and_reads_documents(client):
     assert init["result"]["serverInfo"]["name"] == "demetrio-tahoces-cv"
 
     tools = rpc("tools/list", {}, 2)["result"]["tools"]
-    assert {t["name"] for t in tools} == {"list_documents", "get_document"}
+    assert {t["name"] for t in tools} == {"search", "list_documents", "get_document"}
 
     doc = rpc("tools/call", {"name": "get_document", "arguments": {"name": "FERMAX"}}, 3)["result"]
     assert "Fermax" in doc["content"][0]["text"]
@@ -124,7 +125,73 @@ def test_mcp_server_does_not_offer_listen_streams(client):
     assert not capabilities["resources"].get("subscribe")
 
     tools = rpc("tools/list", {}, 2)["result"]["tools"]
-    assert {t["name"] for t in tools} == {"list_documents", "get_document"}
+    assert {t["name"] for t in tools} == {"search", "list_documents", "get_document"}
+
+
+MODERN_META = {
+    "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+    "io.modelcontextprotocol/clientCapabilities": {},
+}
+
+
+def _modern_rpc(client, method, params, rid=1, name=None):
+    headers = {"Accept": "application/json, text/event-stream", "Content-Type": "application/json",
+               "MCP-Protocol-Version": "2026-07-28", "Mcp-Method": method}
+    if name:
+        headers["Mcp-Name"] = name
+    return client.post("/api/mcp", headers=headers, json={
+        "jsonrpc": "2.0", "id": rid, "method": method, "params": {"_meta": MODERN_META, **params}})
+
+
+def _call(client, tool, arguments):
+    response = _modern_rpc(client, "tools/call", {"name": tool, "arguments": arguments}, name=tool)
+    assert response.status_code == 200, response.text
+    return response.json()["result"]
+
+
+def test_mcp_search_returns_sections_with_citable_urls(client):
+    result = _call(client, "search", {"query": "Kafka", "limit": 3})
+    hits = result["structuredContent"]["result"]
+    assert 0 < len(hits) <= 3
+    assert all(h["url"].startswith("https://demetriotahoces.github.io/") for h in hits)
+    assert any("kafka" in h["snippet"].lower() for h in hits)
+    assert _call(client, "search", {"query": "zzzz-no-existe"})["structuredContent"]["result"] == []
+
+
+def test_mcp_get_document_can_return_one_section(client):
+    full = _call(client, "get_document", {"name": "FERMAX"})["content"][0]["text"]
+    section = _call(client, "get_document", {"name": "FERMAX", "section": "contexto"})["content"][0]["text"]
+    assert section.startswith("# ") and "#contexto" in section.splitlines()[1]
+    assert len(section) < len(full)
+    missing = _call(client, "get_document", {"name": "FERMAX", "section": "no-existe"})
+    assert missing["isError"] and "Secciones:" in missing["content"][0]["text"]
+    unknown = _call(client, "get_document", {"name": "NO_EXISTE"})
+    assert unknown["isError"] and "list_documents" in unknown["content"][0]["text"]
+
+
+def test_mcp_exposes_documents_as_resources_and_prompts(client):
+    listed = _modern_rpc(client, "resources/list", {}).json()["result"]
+    uris = {r["uri"] for r in listed["resources"]}
+    assert "cv://documents/FERMAX" in uris and any(u.startswith("cv://documents/blog/") for u in uris)
+    # Static content: clients may cache the lists for an hour.
+    assert listed["ttlMs"] == 3_600_000 and listed["cacheScope"] == "public"
+
+    read = _modern_rpc(client, "resources/read", {"uri": "cv://documents/FERMAX"}, name="cv://documents/FERMAX")
+    assert "Fermax" in read.json()["result"]["contents"][0]["text"]
+
+    prompts = _modern_rpc(client, "prompts/list", {}).json()["result"]["prompts"]
+    assert {p["name"] for p in prompts} == {"evaluar_encaje", "presentar_perfil"}
+    got = _modern_rpc(client, "prompts/get", {"name": "evaluar_encaje", "arguments": {"oferta": "Backend Java"}},
+                      name="evaluar_encaje").json()["result"]
+    assert "Backend Java" in got["messages"][0]["content"]["text"]
+
+
+def test_mcp_is_rate_limited(client, monkeypatch):
+    from middleware.rate_limiter import MountedAppRateLimit
+
+    monkeypatch.setattr(api_module.mcp_app, "items", MountedAppRateLimit(None, "3/minute", "t").items)
+    codes = [_modern_rpc(client, "tools/list", {}, rid=i).status_code for i in range(4)]
+    assert codes == [200, 200, 200, 429]
 
 
 def test_feedback_is_accepted_for_a_request_id(client, use_model):

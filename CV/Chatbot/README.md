@@ -6,8 +6,8 @@ Chatbot que responde sobre el CV y el blog de Demetrio Tahoces. Backend FastAPI 
 
 | | |
 | --- | --- |
-| Modelo | Anthropic `claude-haiku-5-5` (Messages API, thinking adaptativo, `effort=medium`) |
-| Conocimiento | CV completo en el system prompt, dividido en secciones con su URL (~9,5k tokens, con caché) + artículos del blog bajo demanda |
+| Modelo | Anthropic `claude-haiku-5-5` (Messages API, thinking adaptativo, `effort=low`) |
+| Conocimiento | CV completo en el system prompt, dividido en secciones con su URL (~9,5k tokens, con caché de 1 h) + artículos del blog bajo demanda |
 | Citas | Cada párrafo enlaza a la sección de la web que lo respalda (`[↗ Sección](url#ancla)`); el backend valida cada enlace |
 | Agente | `langchain.agents.create_agent` + middleware de límites |
 | Estado | Ninguno en servidor: el cliente envía los últimos 10 mensajes |
@@ -64,7 +64,7 @@ Las preguntas sobre el CV se resuelven en **1 llamada** al modelo; las del blog 
 | `POST` | `/api/chat` | Respuesta completa en JSON (fallback) |
 | `POST` | `/api/feedback` | 👍/👎 de una respuesta (`request_id`, `rating`); se guarda en Redis con la pregunta y la respuesta |
 | `GET` | `/api/health` | Estado, modelo y nº de documentos |
-| `POST` | `/api/mcp` | Servidor MCP (Streamable HTTP, stateless, sin auth ni `subscriptions/listen`) |
+| `POST` | `/api/mcp` | Servidor MCP (Streamable HTTP, stateless, sin auth ni `subscriptions/listen`; rate limit propio) |
 
 Cuerpo de `/api/chat*`:
 
@@ -104,7 +104,8 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | `core/redis_rest.py` | Cliente mínimo de la API REST de Upstash (compartido) |
 | `core/feedback_store.py` | Feedback persistido en Redis con la respuesta valorada; CLI para leerlo |
 | `core/tools.py` | Tool `read_blog_article` (solo blog) |
-| `core/mcp_server.py` | Servidor MCP (`list_documents`, `get_document`) |
+| `core/mcp_server.py` | Servidor MCP: tools `search`, `list_documents` y `get_document` (con `section` opcional), cada documento como resource `cv://documents/<name>`, prompts `evaluar_encaje` y `presentar_perfil`, icono y pistas de caché de 1 h (`ttlMs`/`cacheScope`) |
+| `core/search.py` | Búsqueda BM25 por secciones (sin dependencias) para la tool `search` del MCP |
 | `core/tracing.py` | LangSmith opcional + feedback |
 | `core/llms_txt.py` | Genera `/llms.txt` del sitio |
 | `docs/` | Base de conocimiento (Markdown) |
@@ -139,11 +140,12 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | --- | --- | --- |
 | `API_KEY` | — | Obligatoria (Anthropic) |
 | `MODEL_NAME` | `claude-haiku-5-5` | |
-| `REASONING_EFFORT` | `medium` | `effort` de Claude: `low`, `medium`, `high`, `xhigh` o `max`. El thinking cuenta dentro de `MAX_OUTPUT_TOKENS`. Haiku 5.5 no admite `temperature` |
+| `REASONING_EFFORT` | `low` | `effort` de Claude: `low`, `medium`, `high`, `xhigh` o `max`. El thinking cuenta dentro de `MAX_OUTPUT_TOKENS`. Haiku 5.5 no admite `temperature` |
 | `MAX_OUTPUT_TOKENS` | `4000` | Incluye tokens de razonamiento (con 2000 una respuesta real llegó a 1555, 914 de thinking) |
 | `MAX_MODEL_CALLS` / `MAX_TOOL_CALLS` | `3` / `2` | Por petición |
 | `MAX_HISTORY_MESSAGES` | `10` | Mensajes previos aceptados |
 | `RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `5` / `20` | Por IP y por instancia |
+| `MCP_RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `60` / `600` | Lo mismo para `POST /api/mcp` (no gasta tokens, pero un agente hace varias llamadas por pregunta) |
 | `ABUSE_MODE` | `log-only` | `off` (sin clasificador) · `log-only` (registra strikes, no bloquea) · `block` |
 | `ABUSE_MAX_STRIKES` / `ABUSE_STRIKE_WINDOW_HOURS` | `3` / `24` | Strikes dentro de la ventana deslizante que provocan el bloqueo |
 | `ABUSE_BLOCK_MINUTES` | `60` | Duración del bloqueo (`403` + `Retry-After`) |
@@ -164,7 +166,7 @@ Capa disuasoria, no una barrera de seguridad: el prompt ya declina las inyeccion
 3. Cada mensaje malicioso suma un strike en un sorted set de Redis (ventana deslizante de `ABUSE_STRIKE_WINDOW_HOURS`). Al llegar a `ABUSE_MAX_STRIKES` se crea la clave de bloqueo con TTL `ABUSE_BLOCK_MINUTES` y se limpian los strikes.
 4. Logs: `Abuse strike` / `Abuse block` con `ip_hash`, `abuse_category` y `strikes`; nunca el texto.
 
-`/api/feedback` y `/api/mcp` no se bloquean: no gastan tokens del modelo. Cualquier fallo del store o del clasificador es fail-open.
+`/api/feedback` y `/api/mcp` no se bloquean (solo tienen rate limit): no gastan tokens del modelo. Cualquier fallo del store o del clasificador es fail-open.
 
 Puesta en marcha: crear un Upstash Redis (Vercel → Storage/Marketplace, inyecta `KV_REST_API_*`), dejar `ABUSE_MODE=log-only` unos días, revisar los `Abuse strike` en los logs para medir falsos positivos y pasar a `block`. Limitaciones: la IP se cambia fácil (VPN) y una NAT compartida (oficina, universidad) puede penalizar a usuarios legítimos. En Vercel la IP sale de `x-real-ip`/`x-forwarded-for` (los fija el edge); fuera de Vercel, de la conexión.
 
@@ -179,7 +181,10 @@ Leer las últimas valoraciones (JSON por línea, más recientes primero; requier
 
 ```powershell
 uv run python -m core.feedback_store --limit 20
+uv run python -m core.feedback_store --limit 50 --eval-drafts   # los 👎 como borradores de casos para evals/dataset.yaml
 ```
+
+Con `--eval-drafts` cada 👎 sale como caso YAML (`id`, `pregunta`, `pagina`) con el `criterio` en `TODO` y, en comentarios, el comentario del usuario y la respuesta valorada: se revisa, se completa el criterio y se pega en `evals/dataset.yaml`.
 
 Limitaciones: `request_id` solo se valida por formato, así que cualquiera puede enviar feedback (lo frena el rate limit); y guardar el turno añade una escritura a Redis (~decenas de ms) por respuesta.
 
@@ -195,7 +200,7 @@ uv run pytest -m evals                                # evals (gasta tokens; sol
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces, docs sin emojis | 0 |
-| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `claude-haiku-5-5` (`EVAL_JUDGE_MODEL`) | Céntimos |
+| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `claude-sonnet-5-5` a effort `medium` (`EVAL_JUDGE_MODEL` y `EVAL_JUDGE_EFFORT`), con las reglas y la base de conocimiento cacheadas | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
 | Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |
 
@@ -214,6 +219,10 @@ Las evals nunca se ejecutan de forma automática: solo las lanza un humano, en l
 | Validación de enlaces token a token (se retiene solo el enlace en curso) | Validar al final | El streaming sigue fluyendo y nunca llega un enlace sin validar |
 | Clasificador aparte en paralelo | Flag en la salida del agente | No altera el prompt cacheado ni el streaming y no añade latencia; se puede usar un modelo pequeño |
 | Citas en la ventana principal (`target=_top`); enlaces externos en otra pestaña | Abrir las citas en otra pestaña o dentro del iframe | La cita lleva a la sección citada sin salir de la web; el widget restaura abierto el chat y su historial (localStorage) tras navegar |
+
+## Registro MCP
+
+`server.json` describe el servidor para el [registro oficial de MCP](https://registry.modelcontextprotocol.io) (solo `remotes`, sin paquete). Se publica a mano con `mcp-publisher` (`login github` y `publish` desde esta carpeta); sube `version` en cada publicación.
 
 ## Despliegue
 

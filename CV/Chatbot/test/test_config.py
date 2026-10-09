@@ -12,7 +12,7 @@ def test_defaults_without_env(monkeypatch):
         monkeypatch.delenv(var, raising=False)
     settings = Settings(_env_file=None)
     assert settings.allowed_origins == DEFAULT_ALLOWED_ORIGINS
-    assert settings.reasoning_effort == "medium"
+    assert settings.reasoning_effort == "low"
 
 
 def test_reasoning_effort_is_normalized(monkeypatch):

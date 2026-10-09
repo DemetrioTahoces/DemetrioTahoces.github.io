@@ -124,3 +124,22 @@ async def test_without_redis_nothing_is_saved():
     await store.remember_turn("a" * 32, "q", "a", None)
     assert await store.save("a" * 32, "up", None) is False
     assert await store.recent() == []
+
+
+def test_thumbs_down_become_eval_case_drafts():
+    import yaml
+
+    from core.feedback_store import eval_case_drafts
+
+    records = [
+        {"request_id": "a" * 32, "rating": "down", "comment": "Se inventa\nun dato", "question": "¿Sabe Rust?",
+         "answer": "Sí, 5 años.", "route": "/cv/fermax.html", "model": "claude-haiku-5-5"},
+        {"request_id": "b" * 32, "rating": "up", "question": "¿Dónde trabaja?", "answer": "En Fermax."},
+        {"request_id": "c" * 32, "rating": "down", "question": None},
+    ]
+    drafts = eval_case_drafts(records)
+    cases = yaml.safe_load(drafts)
+    assert cases == [{"id": "feedback-aaaaaaaa", "pregunta": "¿Sabe Rust?", "pagina": "/cv/fermax.html",
+                      "criterio": "TODO: qué debe responder (y qué no)."}]
+    assert "# Comentario: Se inventa un dato" in drafts and "# Respuesta: Sí, 5 años." in drafts
+    assert eval_case_drafts(records[1:]) == ""

@@ -4,6 +4,19 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Mejoras del MCP y del RAG del chatbot (push directo a `main`, 2026-10-09)
+
+- Petición del autor: investigar mejoras del RAG y del MCP con fuentes de Anthropic y de la spec MCP 2026-07-28, y aplicar todo lo que no rompa nada. Informe y decisiones en la conversación; el autor eligió también las que requieren evals (sección MCP en docs, blog en contexto, effort `low`, citas nativas con bloques `search_result`).
+- Hecho en este push (sin cambios de prompt ni docs):
+  - MCP: tool `search` (BM25 por secciones en `core/search.py`, sin dependencias), `get_document` con `section` opcional, cada documento como resource `cv://documents/<name>`, prompts `evaluar_encaje` y `presentar_perfil`, icono «DT», pistas de caché `ttlMs` 1 h / `public` (SEP-2549). Los errores de tool pasan a `ToolError`: antes el SDK ocultaba el mensaje («Documento no encontrado...») tras un error genérico.
+  - Rate limit de `POST /api/mcp` (`MountedAppRateLimit`, 60/min y 600/h por IP; `MCP_RATE_LIMIT_*`): el MCP montado con `app.mount` quedaba fuera de slowapi y no tenía límite.
+  - Caché del prompt con TTL de 1 h (`AnthropicPromptCachingMiddleware(ttl="1h")`): las visitas suelen llegar con más de 5 min de separación.
+  - `REASONING_EFFORT` por defecto `low` (el autor ya lo había puesto en Vercel).
+  - `uv run python -m core.feedback_store --eval-drafts`: los 👎 como borradores de casos para `evals/dataset.yaml`.
+  - `CV/Chatbot/server.json` para el registro oficial de MCP (`io.github.DemetrioTahoces/cv`); lo publica el autor con `mcp-publisher`.
+- Pendiente (siguiente push de esta tarea): citas nativas (`search_result`), blog en contexto y sección del MCP en `docs/`. Esperan a que la sesión que ajusta el prompt (recordatorio de idioma en `core/prompts.py`, orden del juez en `evals/test_evals.py`, sin commitear al hacer este push) haga commit, porque reescriben el mismo prompt. Requieren evals del autor.
+- Tests offline en verde.
+
 ## Chatbot de gpt-6-luna a Claude Haiku 5.5 (push directo a `main`, 2026-10-09)
 
 - Petición del autor: cambiar el modelo a Haiku 5.5. `langchain-openai` sale y entra `langchain-anthropic` (1.7.5, `uv.lock` regenerado). `core/agent.py`: `create_anthropic_model()` (`ChatAnthropic`, `output_config.effort`, thinking adaptativo por defecto con el texto omitido, sin `temperature` porque Haiku 5.5 da 400) compartida por el agente, el clasificador de abuso y el juez de evals. Caché: `AnthropicPromptCachingMiddleware` (tools + system + cola de mensajes); en OpenAI era automática. Clasificador y juez con `with_structured_output(method="json_schema")` en vez de tool forzada.

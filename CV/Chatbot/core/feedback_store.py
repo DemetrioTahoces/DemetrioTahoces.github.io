@@ -124,15 +124,43 @@ def create_feedback_store() -> FeedbackStore:
     )
 
 
+def eval_case_drafts(records: list[dict]) -> str:
+    """Thumbs-down feedback as draft cases for evals/dataset.yaml (criterio left for a human to write)."""
+    import yaml
+
+    drafts = []
+    for record in records:
+        if record.get("rating") != "down" or not record.get("question"):
+            continue
+        case = {"id": f"feedback-{record['request_id'][:8]}", "pregunta": record["question"]}
+        if record.get("route"):
+            case["pagina"] = record["route"]
+        case["criterio"] = "TODO: qué debe responder (y qué no)."
+        notes = [f"# 👎 {record.get('model') or ''}".rstrip()]
+        if record.get("comment"):
+            notes.append(f"# Comentario: {' '.join(record['comment'].split())}")
+        if record.get("answer"):
+            notes.append(f"# Respuesta: {' '.join(record['answer'].split())[:400]}")
+        dumped = yaml.safe_dump([case], allow_unicode=True, sort_keys=False, width=1000)
+        drafts.append("\n".join(notes) + "\n" + dumped)
+    return "\n".join(drafts)
+
+
 if __name__ == "__main__":
     import argparse
     import asyncio
 
     parser = argparse.ArgumentParser(description="Latest chatbot feedback, newest first (JSON lines).")
     parser.add_argument("--limit", type=int, default=20)
+    parser.add_argument("--eval-drafts", action="store_true",
+                        help="Print the thumbs-down as draft cases for evals/dataset.yaml instead of JSON lines.")
     args = parser.parse_args()
     store = create_feedback_store()
     if store.redis is None:
         raise SystemExit("Redis not configured (UPSTASH_REDIS_REST_* or KV_REST_API_*).")
-    for record in asyncio.run(store.recent(args.limit)):
-        print(json.dumps(record, ensure_ascii=False))
+    records = asyncio.run(store.recent(args.limit))
+    if args.eval_drafts:
+        print(eval_case_drafts(records) or "# Sin 👎 con pregunta guardada.")
+    else:
+        for record in records:
+            print(json.dumps(record, ensure_ascii=False))

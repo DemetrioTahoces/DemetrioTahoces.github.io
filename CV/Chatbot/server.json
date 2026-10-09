@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.DemetrioTahoces/cv",
+  "title": "CV de Demetrio Tahoces",
+  "description": "Read-only CV, experience, education and tech blog of Demetrio Tahoces (Spanish content).",
+  "websiteUrl": "https://demetriotahoces.github.io/",
+  "version": "2.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://demetrio-tahoces-cv-chatbot.vercel.app/api/mcp"
+    }
+  ]
+}

@@ -78,8 +78,10 @@ def create_agent_graph(model: BaseChatModel | None = None):
             _system_prompt,
             # Breakpoints on the tools, the system prompt and the conversation tail, so the
             # CV in the system prompt is read from cache (and the tool loop reuses the prefix).
+            # 1 h TTL: visits are usually more than 5 minutes apart, so a 5-minute entry would
+            # mostly be cold; the 2x write is negligible at Haiku prices and saves latency.
             # No-op with the fake models of the offline tests.
-            AnthropicPromptCachingMiddleware(unsupported_model_behavior="ignore"),
+            AnthropicPromptCachingMiddleware(ttl="1h", unsupported_model_behavior="ignore"),
             ModelCallLimitMiddleware(run_limit=settings.max_model_calls, exit_behavior="end"),
             ToolCallLimitMiddleware(run_limit=settings.max_tool_calls, exit_behavior="continue"),
         ],
