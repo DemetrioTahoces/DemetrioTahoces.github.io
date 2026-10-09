@@ -4,6 +4,13 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Citas nativas, blog en contexto y sección MCP en docs (push directo a `main`, 2026-10-09)
+
+- Cierra el pendiente de la entrada siguiente: citas nativas (`search_result` por sección en `core/knowledge.py` y `core/citations.py`), artículos del blog en el primer mensaje mientras quepan en `BLOG_IN_PROMPT_MAX_CHARS` (si no, índice + tool `read_blog_article`), y `CV/Chatbot/docs/ASISTENTE_MCP.md` (`type: sitio`, con ancla `#como-funciona` en la cabecera de `CV/chatbot.html`).
+- `core/prompts.py`: el system prompt contiene solo reglas (antes incluía también el CV completo, duplicado con el primer mensaje). `build_knowledge_blocks()` lo expone a `core/agent.py`. La regla de brevedad para «¿conoce X?» llegó en `c3d6ac9`, ya en `main`.
+- Tests offline: 94 en verde. Ajustes de tests: `test_api` usa `blog_tool_mode` (con el blog en contexto no hay tool); `test_knowledge` agrupa bloques por URL porque las dos experiencias de Alisys comparten `#exp-alisys`; `test_citations` marca el test async con `anyio`.
+- Pendiente del autor: ejecutar las evals (`uv run pytest -m evals`) porque cambian el prompt, la forma de entregar el conocimiento y los documentos. Las evals de `c3d6ac9` se hicieron sobre `a7da5a5`, antes de estos cambios. Revisar también en producción una pregunta sobre el blog y una sobre experiencia, para confirmar que las citas llevan a la sección correcta.
+
 ## Evals de Haiku 5.5 a effort low: juez fiable, sin casos de idioma (push directo a `main`, 2026-10-09)
 
 - El autor autorizó expresamente en esta tarea que el agente ejecutara las evals hasta que pasaran (excepción puntual: la norma de `AGENTS.md` no cambia). Primera pasada (a `medium`, el `.env` local): 3 fallos.

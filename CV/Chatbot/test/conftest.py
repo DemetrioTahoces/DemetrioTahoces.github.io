@@ -31,6 +31,14 @@ def read_call(article: str, call_id: str = "call_1") -> dict:
 
 
 @pytest.fixture
+def blog_tool_mode(monkeypatch):
+    """Blog too big for the context: only its index is sent and articles are read with the tool."""
+    from core.config import settings
+
+    monkeypatch.setattr(settings, "blog_in_prompt_max_chars", 0)
+
+
+@pytest.fixture
 def scripted_graph():
     """Build an agent graph whose model replies with the given messages, in order."""
     from core.agent import create_agent_graph

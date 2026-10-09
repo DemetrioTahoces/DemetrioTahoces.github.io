@@ -75,6 +75,9 @@ class Settings(BaseSettings):
 
     # --- Knowledge base ---
     docs_path: str = "docs"
+    # Blog articles go whole in the context while their bodies add up to this many characters
+    # (~4 per token); past it, only an index plus the read_blog_article tool.
+    blog_in_prompt_max_chars: int = 60000
     public_site_url: str = "https://demetriotahoces.github.io"
 
     log_level: str = "INFO"

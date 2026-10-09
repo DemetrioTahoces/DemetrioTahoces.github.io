@@ -27,7 +27,7 @@ Al empezar una tarea, lee también `context.md` para continuar el trabajo de ses
 - `CV/chatbot.html`: interfaz web del asistente del CV.
 - `CV/chatbot-widget.js`: widget del chatbot.
 - `CV/Chatbot/api/index.py`: entrada FastAPI serverless.
-- `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, tool `read_blog_article`, servidor MCP, tracing y generador de `llms.txt`.
+- `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, citas (`citations.py`), tool `read_blog_article`, servidor MCP y su búsqueda (`search.py`), tracing y generador de `llms.txt`.
 - `CV/Chatbot/middleware/`: logging, rate limiting y bloqueo temporal por abuso (`abuse_guard.py`, store Upstash Redis, fail-open).
 - `CV/Chatbot/docs/*.md`: documentos que alimentan el chatbot (frontmatter obligatorio).
 - `CV/Chatbot/test/`: tests offline con pytest (modelo falso, sin API key).
@@ -67,7 +67,7 @@ Al empezar una tarea, lee también `context.md` para continuar el trabajo de ses
 - La configuración se lee desde variables de entorno o `CV/Chatbot/.env` mediante `CV/Chatbot/core/config.py`. Variables y valores por defecto: tabla en `CV/Chatbot/README.md` y plantilla en `.env.example` (modelo por defecto `claude-haiku-5-5`, vía `langchain-anthropic`; `API_KEY` es la key de Anthropic).
 - Endpoints: `POST /api/chat/stream`, `POST /api/chat`, `POST /api/feedback`, `GET /api/health` y el servidor MCP de solo lectura en `POST /api/mcp`.
 - El backend es stateless: el frontend envía los últimos mensajes en `history`. No reintroduzcas memoria en servidor (`MemorySaver`).
-- El CV completo va en el system prompt (cacheado); los artículos del blog se leen con la tool `read_blog_article` (solo blog). Mantén el prompt estable y la fecha al final para no romper la caché.
+- La base de conocimiento (CV completo y, mientras quepa en `BLOG_IN_PROMPT_MAX_CHARS`, los artículos del blog) va en el primer mensaje como bloques `search_result` de Claude, uno por sección con su URL, y cacheada; si el blog no cabe, va su índice y los artículos se leen con la tool `read_blog_article`. Las citas son nativas: el modelo no escribe URLs y `core/citations.py` las convierte en `[↗ sección](url)`. Mantén estables el system prompt (reglas, con la fecha al final) y el mensaje de conocimiento para no romper la caché.
 - CORS se configura solo en FastAPI (`ALLOWED_ORIGINS`); no hay `vercel.json`. Vercel usa el preset FastAPI (entrypoint `api/index.py`). No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
 
 ## Contenido curricular y RAG
@@ -89,7 +89,7 @@ Los Markdown de `CV/Chatbot/docs/` (y `llms.txt`) van sin emojis, aunque la pág
 
 Trazabilidad de las respuestas: cada encabezado `##`/`###` de `CV/Chatbot/docs/*.md` declara el `id` de la sección HTML que lo respalda (`## Contexto {#contexto}`) y el chatbot cita cada párrafo con esa URL. Si renombras, añades o quitas una sección en `index.html`, `CV/*.html` o `blog/posts/*.html`, actualiza el `id` y el ancla del Markdown a la vez; los `id` son estables (no los cambies aunque cambie el título). `uv run pytest` valida que cada ancla exista en su página.
 
-Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `formacion` o `blog_post`), `title`, `route` (ruta pública), `summary`, `tags` y `order` (CV/formación) o `date` (blog). Tras añadir o cambiar documentos, regenera `llms.txt` con `uv run python -m core.llms_txt` y ejecuta `uv run pytest` desde `CV/Chatbot` (un test valida el frontmatter y que `llms.txt` esté al día).
+Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `formacion`, `sitio` para contenido sobre la propia web como el asistente y su MCP, o `blog_post`), `title`, `route` (ruta pública), `summary`, `tags` y `order` (CV/formación) o `date` (blog). Tras añadir o cambiar documentos, regenera `llms.txt` con `uv run python -m core.llms_txt` y ejecuta `uv run pytest` desde `CV/Chatbot` (un test valida el frontmatter y que `llms.txt` esté al día).
 
 ## Blog
 

@@ -1,11 +1,17 @@
 """
-Validation of the links the model writes to the public site.
+Citations and links in the answers.
 
-The model is told to cite sections with URLs copied from its context, but it
-can still invent an anchor, a path or a domain. Before reaching the user, every
-link that points to the site (or looks like it) is rewritten to its canonical
-URL: known page + known anchor, known page without the invented anchor, or no
-link at all. External links (LinkedIn, universities, email) are left untouched.
+Claude cites the knowledge base natively (search_result blocks): each cited
+text block carries the source URL and title of the section it relies on.
+CitationRenderer turns those citations into [↗ label](url) chips at the end of
+each paragraph or list item, so the URLs come from our own data, never from the
+model's text.
+
+The model can still write a link by hand (or copy one from the history). Before
+reaching the user, every link that points to the site (or looks like it) is
+rewritten to its canonical URL: known page + known anchor, known page without
+the invented anchor, or no link at all. External links (LinkedIn, universities,
+email) are left untouched.
 """
 
 from __future__ import annotations
@@ -157,3 +163,87 @@ class StreamingLinkSanitizer:
             if close == -1 or close + 1 == len(rest) or rest[close + 1] == "(":
                 return start  # link still open, or ']' just arrived and '(' may follow
         return cut
+
+
+_CHIP_RE = re.compile(r"[ \t]?\[" + CITATION_MARK + r"[^\]\n]*\]\([^)\s]*\)")
+
+
+def strip_citation_chips(text: str) -> str:
+    """Remove [↗ ...](url) chips (e.g. from assistant turns in the history the client sends back)."""
+    return _CHIP_RE.sub("", text)
+
+
+class CitationRenderer:
+    """
+    Renders Claude's native citations as chips at the end of each paragraph or list item.
+
+    Fed with message content in order: streamed chunks (one block each, with an
+    `index`) or a full message (a list of blocks). A text block's citations
+    arrive before its text, so they wait until the block ends and are then
+    written before the next line break, or at flush().
+    """
+
+    def __init__(self):
+        self.index: object = None
+        self.block_chips: list[str] = []
+        self.pending: list[str] = []
+
+    def feed(self, content) -> str:
+        if isinstance(content, str):
+            return self._text(content)
+        out = []
+        for block in content or []:
+            if isinstance(block, str):
+                out.append(self._text(block))
+                continue
+            if not isinstance(block, dict) or block.get("type") != "text":
+                continue
+            # Blocks of a full message have no index: each one is its own text block.
+            index = block.get("index", object())
+            if index != self.index:
+                self._close_block()
+                self.index = index
+            for citation in block.get("citations") or []:
+                chip = _chip(citation)
+                if chip and chip not in self.block_chips:
+                    self.block_chips.append(chip)
+            if block.get("text"):
+                out.append(self._text(block["text"]))
+        return "".join(out)
+
+    def flush(self) -> str:
+        """Chips still waiting (end of the answer, or before a tool call)."""
+        self._close_block()
+        self.index = None
+        return self._chips() if self.pending else ""
+
+    def _close_block(self) -> None:
+        self.pending += [chip for chip in self.block_chips if chip not in self.pending]
+        self.block_chips = []
+
+    def _chips(self) -> str:
+        chips, self.pending = " ".join(self.pending), []
+        return f" {chips}"
+
+    def _text(self, text: str) -> str:
+        lines = text.split("\n")
+        out = lines[0]
+        for line in lines[1:]:
+            if self.pending:
+                out = out.rstrip(" \t") + self._chips()
+            out += "\n" + line
+        return out
+
+
+def _chip(citation: dict) -> str | None:
+    url = citation.get("source") or citation.get("url")
+    if not isinstance(url, str) or not url:
+        return None
+    label = " ".join(str(citation.get("title") or "").replace("[", "(").replace("]", ")").split()) or "fuente"
+    return f"[{CITATION_MARK} {label}]({url})"
+
+
+def render_content(content) -> str:
+    """Text of a full message with its citations as chips."""
+    renderer = CitationRenderer()
+    return renderer.feed(content) + renderer.flush()

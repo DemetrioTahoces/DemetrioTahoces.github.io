@@ -7,8 +7,8 @@ Chatbot que responde sobre el CV y el blog de Demetrio Tahoces. Backend FastAPI 
 | | |
 | --- | --- |
 | Modelo | Anthropic `claude-haiku-5-5` (Messages API, thinking adaptativo, `effort=low`) |
-| Conocimiento | CV completo en el system prompt, dividido en secciones con su URL (~9,5k tokens, con caché de 1 h) + artículos del blog bajo demanda |
-| Citas | Cada párrafo enlaza a la sección de la web que lo respalda (`[↗ Sección](url#ancla)`); el backend valida cada enlace |
+| Conocimiento | CV completo y artículos del blog en el primer mensaje, como un bloque `search_result` por sección con su URL (~24k tokens, con caché de 1 h). Si el blog supera `BLOG_IN_PROMPT_MAX_CHARS`, va su índice y los artículos se leen con una tool |
+| Citas | Nativas de Claude sobre los `search_result`: el backend las pinta al final de cada párrafo como `[↗ Sección](url#ancla)` con la URL de la sección citada (el modelo no escribe URLs) y valida cualquier otro enlace al sitio |
 | Agente | `langchain.agents.create_agent` + middleware de límites |
 | Estado | Ninguno en servidor: el cliente envía los últimos 10 mensajes |
 | Extras | Servidor MCP de solo lectura, feedback 👍/👎, tracing opcional (LangSmith) |
@@ -25,11 +25,9 @@ flowchart LR
         MCP[Servidor MCP<br/>solo lectura]
     end
 
-    KB[(docs/*.md<br/>frontmatter)] -->|CV completo| SP[System prompt<br/>cacheado]
-    KB -->|artículos| T[tool read_blog_article]
+    KB[(docs/*.md<br/>frontmatter)] -->|secciones| SR[search_result<br/>cacheados]
     KB --> MCP
-    SP --> AG
-    T <--> AG
+    SR --> AG
     AG <-->|Messages API| O[Anthropic<br/>claude-haiku-5-5]
 ```
 
@@ -43,18 +41,13 @@ sequenceDiagram
     B->>F: message + history + page_context
     F->>F: rate limit · validación · pista de página
     F-->>B: SSE session (request_id)
-    F->>M: system prompt (CV) + historial + pregunta
-    alt Pregunta sobre un artículo del blog
-        M->>F: tool_call read_blog_article
-        F-->>B: SSE tool_call / tool_result
-        F->>M: contenido del artículo
-    end
-    M-->>F: tokens
-    F->>F: validación de enlaces al sitio (lista blanca)
+    F->>M: reglas + base de conocimiento (search_result) + historial + pregunta
+    M-->>F: texto + citas nativas
+    F->>F: citas → [↗ sección](url) por párrafo · validación de enlaces
     F-->>B: SSE token … done (usage)
 ```
 
-Las preguntas sobre el CV se resuelven en **1 llamada** al modelo; las del blog en **2**.
+Todas las preguntas se resuelven en **1 llamada** al modelo. Solo si el blog deja de caber en el contexto, las preguntas sobre un artículo pasan a 2 (tool `read_blog_article`).
 
 ## Endpoints
 
@@ -96,14 +89,14 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | --- | --- |
 | `api/index.py` | App FastAPI: endpoints, CORS, rate limit, bloqueo por abuso, montaje MCP |
 | `core/agent.py` | Modelo, agente, middleware, streaming |
-| `core/knowledge.py` | Carga de `docs/`, frontmatter, secciones con ancla, lista blanca de URLs, render del prompt, pista de página |
-| `core/citations.py` | Validación de enlaces al sitio (respuesta completa y streaming) |
+| `core/knowledge.py` | Carga de `docs/`, frontmatter, secciones con ancla, lista blanca de URLs, bloques `search_result` del mensaje de conocimiento, pista de página |
+| `core/citations.py` | Citas nativas → chips `[↗ …](url)` por párrafo y validación de enlaces al sitio (respuesta completa y streaming) |
 | `core/prompts.py` | Reglas del asistente + fecha |
 | `core/abuse_classifier.py` | Clasificador de intención maliciosa (structured output) |
 | `middleware/abuse_guard.py` | Strikes y bloqueo temporal por `HMAC(ip)` en Upstash Redis |
 | `core/redis_rest.py` | Cliente mínimo de la API REST de Upstash (compartido) |
 | `core/feedback_store.py` | Feedback persistido en Redis con la respuesta valorada; CLI para leerlo |
-| `core/tools.py` | Tool `read_blog_article` (solo blog) |
+| `core/tools.py` | Tool `read_blog_article` (solo si el blog no cabe en el contexto) |
 | `core/mcp_server.py` | Servidor MCP: tools `search`, `list_documents` y `get_document` (con `section` opcional), cada documento como resource `cv://documents/<name>`, prompts `evaluar_encaje` y `presentar_perfil`, icono y pistas de caché de 1 h (`ttlMs`/`cacheScope`) |
 | `core/search.py` | Búsqueda BM25 por secciones (sin dependencias) para la tool `search` del MCP |
 | `core/tracing.py` | LangSmith opcional + feedback |
@@ -118,7 +111,7 @@ Cada `docs/**/*.md` lleva frontmatter:
 
 | Campo | Ejemplo | Para qué |
 | --- | --- | --- |
-| `type` | `cv` · `formacion` · `blog_post` | CV/formación van enteros al prompt; `blog_post` va al índice |
+| `type` | `cv` · `formacion` · `sitio` · `blog_post` | Todos van enteros al contexto (el blog, mientras quepa en `BLOG_IN_PROMPT_MAX_CHARS`); `sitio` es contenido sobre la web (asistente, MCP), fuera del CV de `llms.txt` |
 | `title` | `Software Engineer en Fermax` | Título en prompt, MCP y `llms.txt` |
 | `route` | `/CV/fermax.html` | URL pública para citar y pista de página |
 | `summary` | `Experiencia actual (...)` | Índice del blog, MCP y `llms.txt` |
@@ -126,7 +119,7 @@ Cada `docs/**/*.md` lleva frontmatter:
 | `date` | `"2026-07-05"` | Solo blog |
 | `tags` | `["cv", "fermax"]` | Metadatos |
 
-Cada encabezado declara el `id` de la sección HTML que respalda: `## Contexto {#contexto}`. Los `###` sin ancla heredan la de su `##`; un encabezado sin texto propio (p. ej. `## Contribuciones`) se agrupa con la sección siguiente. En el prompt cada sección va como `<seccion url="https://…/CV/fermax.html#contexto">`, y esas URLs (más las páginas) forman la lista blanca de enlaces.
+Cada encabezado declara el `id` de la sección HTML que respalda: `## Contexto {#contexto}`. Los `###` sin ancla heredan la de su `##`; un encabezado sin texto propio (p. ej. `## Contribuciones`) se agrupa con la sección siguiente. Al modelo cada sección le llega como un bloque `search_result` con `source` = `https://…/CV/fermax.html#contexto` y un título corto (`Fermax · Contexto`), que es el texto de la cita; esas URLs (más las páginas) forman la lista blanca de enlaces.
 
 Si cambias o añades una sección en el HTML o en el Markdown, mantén ambos sincronizados: `test_citations.py` falla si un ancla declarada no existe como `id` en su página o si una sección queda sin ancla.
 
@@ -210,7 +203,8 @@ Las evals nunca se ejecutan de forma automática: solo las lanza un humano, en l
 
 | Decisión | Alternativa descartada | Por qué |
 | --- | --- | --- |
-| CV entero en el prompt (CAG) + tool para el blog | RAG por búsqueda de palabras clave | El corpus cabe (~7,6k tokens); 1 llamada en vez de 3-4 y sin fallos de recuperación |
+| CV y blog enteros en contexto (CAG) | RAG por embeddings o palabras clave | El corpus cabe (~24k tokens, con caché); 1 llamada y sin fallos de recuperación. Anthropic recomienda no recuperar por debajo de ~200k tokens |
+| Citas nativas (`search_result`) | URLs copiadas por el modelo y validadas | La URL de cada cita sale de nuestros datos: no se puede inventar. La validación de enlaces queda como red de seguridad |
 | Historial enviado por el cliente | `MemorySaver` / Redis | Serverless sin estado ni fugas de memoria |
 | `create_agent` + middleware | `create_react_agent` | Deprecado; se elimina en LangGraph 2.0 |
 | MCP stateless en la misma app | Servicio aparte | Spec MCP 2026-07-28 sin sesión; coste cero en tokens |

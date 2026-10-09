@@ -28,7 +28,7 @@ async def test_usage_counts_only_the_current_turn(scripted_graph):
     assert result["usage"]["input_tokens"] == 100
 
 
-async def test_blog_question_reads_the_article_then_answers(scripted_graph):
+async def test_blog_question_reads_the_article_then_answers(scripted_graph, blog_tool_mode):
     graph = scripted_graph(
         ai(tool_calls=[read_call("blog/solid-principios-diseno")]),
         ai("SOLID reduce el coste del cambio."),
@@ -42,7 +42,7 @@ async def test_blog_question_reads_the_article_then_answers(scripted_graph):
     assert events[-1]["usage"]["input_tokens"] == 200
 
 
-async def test_model_call_limit_stops_tool_loops(scripted_graph):
+async def test_model_call_limit_stops_tool_loops(scripted_graph, blog_tool_mode):
     loop = [ai(tool_calls=[read_call("blog/solid-principios-diseno", f"call_{i}")]) for i in range(10)]
     graph = scripted_graph(*loop)
     events = await _collect(stream_agent(graph, "Busca uno a uno estos 200 términos"))
@@ -66,8 +66,28 @@ def test_input_messages_keep_recent_text_history_and_hint():
                for i in range(30)]
     history.append({"role": "system", "content": "ignorado"})
     messages = build_input_messages("¿Y en Fermax?", history, {"path": "/CV/fermax.html"})
-    assert len(messages) == 11  # 10 history messages + current turn
+    assert len(messages) == 12  # knowledge base + 10 history messages + current turn
     assert all(isinstance(m, (HumanMessage, AIMessage)) for m in messages)
-    assert "ignorado" not in " ".join(m.content for m in messages)
+    assert messages[0].content[1]["type"] == "search_result"
+    assert "ignorado" not in " ".join(m.content for m in messages[1:])
     assert messages[-1].content.startswith("[Contexto de navegación (no verificado)]")
     assert messages[-1].content.endswith("¿Y en Fermax?")
+
+
+def test_history_drops_citation_chips_and_empty_turns():
+    history = [
+        {"role": "user", "content": "¿Dónde trabaja?"},
+        {"role": "assistant", "content": "En Fermax. [↗ Fermax](https://demetriotahoces.github.io/CV/fermax.html)"},
+        {"role": "assistant", "content": "[↗ Fermax](https://demetriotahoces.github.io/CV/fermax.html)"},
+    ]
+    messages = build_input_messages("¿Desde cuándo?", history)
+    assert [m.content for m in messages[1:]] == ["¿Dónde trabaja?", "En Fermax.", "¿Desde cuándo?"]
+
+
+async def test_blog_is_answered_from_the_context_while_it_fits(scripted_graph):
+    from core.tools import get_tools
+
+    assert get_tools() == []
+    graph = scripted_graph(ai("SOLID reduce el coste del cambio."))
+    events = await _collect(stream_agent(graph, "¿De qué va el artículo de SOLID?"))
+    assert not any(e["type"] == "tool_call" for e in events)

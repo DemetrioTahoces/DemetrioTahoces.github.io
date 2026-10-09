@@ -1,9 +1,12 @@
 """
 Knowledge base built from the Markdown documents in docs/.
 
-The CV corpus is small (~7k tokens), so it is injected whole into the system
-prompt (and cached by the provider). Blog articles are only listed in the
-prompt; their content is loaded on demand through the read_blog_article tool.
+The corpus is small (~24k tokens), so it is sent whole with every request (and
+cached by the provider) as Claude `search_result` blocks, one per section of the
+public site: Claude then cites them natively and the citations carry the exact
+section URL. While the blog fits under BLOG_IN_PROMPT_MAX_CHARS its articles go
+in too; past that, only an index is sent and articles are loaded on demand
+through the read_blog_article tool.
 
 Headings may declare the anchor of the matching HTML section, e.g.
 `## Contexto {#contexto}`. Documents are split into sections so every claim can
@@ -23,6 +26,9 @@ import yaml
 from core.config import PROJECT_ROOT, settings
 
 BLOG_TYPE = "blog_post"
+# About the site itself (the assistant, its MCP server): in the knowledge base, but not part
+# of the CV in llms.txt nor a navigation hint (its route is the chat page itself).
+SITE_TYPE = "sitio"
 PAGE_CONTEXT_MAX_LENGTH = 220
 # Public pages that exist but have no document behind them (valid link targets).
 EXTRA_PAGES = ("/blog/", "/CV/chatbot.html", "/FundamentosIA/", "/llms.txt")
@@ -106,6 +112,33 @@ class Document:
 
     def section_url(self, section: Section) -> str:
         return f"{self.page_url}#{section.anchor}" if section.anchor and self.url else self.url
+
+    @property
+    def short_title(self) -> str:
+        """'Software Engineer en Fermax' -> 'Fermax'; 'SOLID: principios...' -> 'SOLID'."""
+        short = self.title.split(":", 1)[0].strip()
+        if self.type == "cv" and " en " in short:
+            short = short.rsplit(" en ", 1)[1]
+        return short
+
+    def citation_label(self, section: Section) -> str:
+        """Label of the citation chip: the section, with its page when the title alone is ambiguous."""
+        if section is self.sections[0] or self.short_title.lower() in section.title.lower():
+            return section.title
+        return f"{self.short_title} · {section.title}"
+
+    def search_results(self) -> list[dict]:
+        """One Claude search_result block per section, so answers cite the exact section URL."""
+        return [
+            {
+                "type": "search_result",
+                "source": self.section_url(s),
+                "title": self.citation_label(s),
+                "content": [{"type": "text", "text": s.content}],
+                "citations": {"enabled": True},
+            }
+            for s in self.sections
+        ]
 
     def render_sections(self) -> str:
         """Body as <seccion> blocks, each with the URL that supports it."""
@@ -221,6 +254,8 @@ class KnowledgeBase:
         if not normalized:
             return None
         for doc in self.documents.values():
+            if doc.type == SITE_TYPE:
+                continue
             if doc.route and "#" not in doc.route and normalize_route_path(doc.route) == normalized:
                 return doc
         return None
@@ -250,20 +285,45 @@ class KnowledgeBase:
             f"{url}#{anchor}" for url, anchors in self.link_targets.values() for anchor in anchors
         }
 
+    @property
+    def blog_inline(self) -> bool:
+        """Whether the blog articles fit in the knowledge message (otherwise: index + tool)."""
+        return sum(len(d.body) for d in self.blog_documents) <= settings.blog_in_prompt_max_chars
+
+    def blog_index(self) -> str:
+        lines = [f"- {d.name} | {d.title} | {d.date} | {d.url} | {d.summary}" for d in self.blog_documents]
+        return "\n".join(lines) or "(todavía no hay artículos publicados)"
+
+    def knowledge_blocks(self, closing: str = "") -> list[dict]:
+        """
+        Content of the first user message: every section as a search_result block
+        (CV, then blog articles or the blog index) and `closing` last. Identical
+        across requests; the cache breakpoint on its last block keeps it cached
+        even when the conversation that follows changes.
+        """
+        blog_inline = self.blog_inline
+        blocks: list[dict] = [{
+            "type": "text",
+            "text": "<base_de_conocimiento>\nCV completo de Demetrio"
+            + (" y artículos de su blog" if blog_inline else "")
+            + ": cada resultado es una sección de su web, con su URL como fuente.",
+        }]
+        for doc in self.cv_documents + (self.blog_documents if blog_inline else []):
+            blocks.extend(doc.search_results())
+        if not blog_inline:
+            blocks.append({"type": "text", "text": f"<indice_blog>\n{self.blog_index()}\n</indice_blog>"})
+        blocks.append({"type": "text", "text": "</base_de_conocimiento>" + (f"\n\n{closing}" if closing else "")})
+        blocks[-1]["cache_control"] = {"type": "ephemeral", "ttl": "1h"}
+        return blocks
+
     def render_for_prompt(self) -> str:
-        """Stable text block with the full CV corpus and the blog index."""
+        """Plain-text corpus (CV sections + blog index), for the evals judge."""
         parts = ["<documentos_cv>"]
         for doc in self.cv_documents:
             parts.append(f'<documento nombre="{doc.name}" titulo="{doc.title}" url="{doc.url}">\n{doc.render_sections()}\n</documento>')
         parts.append("</documentos_cv>")
 
-        parts.append("<articulos_blog>")
-        if self.blog_documents:
-            for doc in self.blog_documents:
-                parts.append(f"- {doc.name} | {doc.title} | {doc.date} | {doc.url} | {doc.summary}")
-        else:
-            parts.append("(todavía no hay artículos publicados)")
-        parts.append("</articulos_blog>")
+        parts.append(f"<articulos_blog>\n{self.blog_index()}\n</articulos_blog>")
         return "\n".join(parts)
 
 

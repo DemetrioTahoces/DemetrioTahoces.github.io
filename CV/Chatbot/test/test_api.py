@@ -45,7 +45,7 @@ def test_chat_json_accepts_history(client, use_model):
     assert body["session_id"]
 
 
-def test_stream_emits_session_tool_and_done_events(client, use_model):
+def test_stream_emits_session_tool_and_done_events(client, use_model, blog_tool_mode):
     use_model(ai(tool_calls=[read_call("blog/solid-principios-diseno")]), ai("Resumen del artículo."))
     response = client.post("/api/chat/stream", json={"message": "¿Qué dice su artículo de SOLID?"})
     assert response.status_code == 200

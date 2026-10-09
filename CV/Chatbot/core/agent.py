@@ -20,10 +20,16 @@ from langchain_anthropic.middleware import AnthropicPromptCachingMiddleware
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 
-from core.citations import StreamingLinkSanitizer, sanitize_links
+from core.citations import (
+    CitationRenderer,
+    StreamingLinkSanitizer,
+    render_content,
+    sanitize_links,
+    strip_citation_chips,
+)
 from core.config import settings
 from core.knowledge import build_page_context_hint, get_knowledge_base
-from core.prompts import build_system_prompt
+from core.prompts import build_knowledge_blocks, build_system_prompt
 from core.tools import get_tools
 
 logger = logging.getLogger("cv_chatbot.agent")
@@ -76,8 +82,8 @@ def create_agent_graph(model: BaseChatModel | None = None):
         tools=get_tools(),
         middleware=[
             _system_prompt,
-            # Breakpoints on the tools, the system prompt and the conversation tail, so the
-            # CV in the system prompt is read from cache (and the tool loop reuses the prefix).
+            # Breakpoints on the tools, the system prompt and the conversation tail (the
+            # knowledge message carries its own), so the knowledge base is read from cache.
             # 1 h TTL: visits are usually more than 5 minutes apart, so a 5-minute entry would
             # mostly be cold; the 2x write is negligible at Haiku prices and saves latency.
             # No-op with the fake models of the offline tests.
@@ -99,10 +105,14 @@ def build_input_messages(
     history: Sequence[dict] | None = None,
     page_context: dict | None = None,
 ) -> list[AnyMessage]:
-    """Recent history (user/assistant text only) + the current user turn."""
+    """Knowledge base + recent history (user/assistant text only) + the current user turn."""
     messages: list[AnyMessage] = []
     for turn in history or []:
         content = str(turn.get("content") or "").strip()
+        if turn.get("role") == "assistant":
+            # The chips are rendered from native citations; as text they would only invite
+            # the model to write links by hand.
+            content = strip_citation_chips(content).strip()
         if not content:
             continue
         if turn.get("role") == "user":
@@ -113,8 +123,7 @@ def build_input_messages(
 
     hint = build_page_context_hint(page_context)
     current = f"{hint}\n\nPregunta:\n{message}" if hint else message
-    messages.append(HumanMessage(content=current))
-    return messages
+    return [HumanMessage(content=build_knowledge_blocks()), *messages, HumanMessage(content=current)]
 
 
 def _usage_of(messages: Sequence[AnyMessage]) -> dict[str, int]:
@@ -133,7 +142,7 @@ def _final_text(messages: Sequence[AnyMessage]) -> str:
     for m in reversed(messages):
         if isinstance(m, AIMessage) and not m.tool_calls and m.text.strip():
             # Messages injected by middleware (call limit reached) carry no usage.
-            return m.text if m.usage_metadata else LIMIT_ANSWER
+            return render_content(m.content) if m.usage_metadata else LIMIT_ANSWER
     return ""
 
 
@@ -158,14 +167,17 @@ async def stream_agent(
         {"type": "token", "content": str}
         {"type": "done", "usage": {...}}
 
-    Links to the public site are validated on the fly (see core.citations), so
+    Native citations become [↗ label](url) chips at the end of each paragraph
+    (see core.citations). Links to the public site are validated on the fly, so
     a token may be held back until the link it belongs to is complete.
-    validate_links=False streams the raw model text (evals measure it).
+    validate_links=False streams the text and chips without that validation
+    (evals measure it).
     """
     inputs = build_input_messages(message, history, page_context)
     ai_messages: list[AIMessage] = []
     streamed_text = False
     fallback_text = ""
+    citations = CitationRenderer()
     links = StreamingLinkSanitizer(enabled=validate_links)
 
     async for mode, chunk in graph.astream({"messages": inputs}, config=config, stream_mode=["messages", "updates"]):
@@ -173,7 +185,7 @@ async def stream_agent(
             message_chunk, metadata = chunk
             # Streaming models emit AIMessageChunk; non-streaming ones, the full AIMessage.
             if metadata.get("langgraph_node") == MODEL_NODE and isinstance(message_chunk, AIMessage):
-                text = message_chunk.text
+                text = citations.feed(message_chunk.content)
                 if text:
                     streamed_text = True
                     safe = links.feed(text)
@@ -189,20 +201,20 @@ async def stream_agent(
                 if isinstance(m, AIMessage):
                     if node == MODEL_NODE:
                         ai_messages.append(m)
-                        pending = links.flush() if m.tool_calls else ""
+                        pending = links.feed(citations.flush()) + links.flush() if m.tool_calls else ""
                         if pending:
                             yield {"type": "token", "content": pending}
                         for call in m.tool_calls:
                             yield {"type": "tool_call", "tool": call["name"], "doc": call["args"].get("article")}
                         if not m.tool_calls and m.text.strip():
-                            fallback_text = m.text
+                            fallback_text = render_content(m.content)
                     elif not m.tool_calls and m.text.strip():
                         # Answer injected by middleware: the model call limit was reached.
                         fallback_text = LIMIT_ANSWER
                 elif isinstance(m, ToolMessage) and node == TOOLS_NODE:
                     yield {"type": "tool_result", "tool": m.name}
 
-    pending = links.flush()
+    pending = links.feed(citations.flush()) + links.flush()
     if pending:
         yield {"type": "token", "content": pending}
     if not streamed_text:
