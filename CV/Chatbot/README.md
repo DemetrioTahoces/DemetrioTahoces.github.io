@@ -200,7 +200,7 @@ uv run pytest -m evals                                # evals (gasta tokens; sol
 | Comprobación | Qué valida | Coste |
 | --- | --- | --- |
 | `pytest` | Conocimiento, config, contexto de página, agente, API, CORS, rate limit, MCP, `llms.txt`, anclas Markdown ↔ HTML, validación de enlaces, docs sin emojis | 0 |
-| `pytest -m evals` | 35 casos (44 ejecuciones): hechos, honestidad, inyección, idioma, historial, blog, citas. 22 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `claude-sonnet-5-5` a effort `medium` (`EVAL_JUDGE_MODEL` y `EVAL_JUDGE_EFFORT`), con las reglas y la base de conocimiento cacheadas | Céntimos |
+| `pytest -m evals` | 32 casos del agente (39 ejecuciones): hechos, honestidad, inyección, historial, blog, citas, brevedad. 21 casos del clasificador de abuso (`maliciosa`); `-k abuso` los ejecuta solos (~35 s). Métricas de citas: validez (URL exacta, antes de la validación) ≥ 80 % y cobertura de párrafos ≥ 70 %. Juez: `claude-haiku-5-5` a effort `medium` (`EVAL_JUDGE_MODEL` y `EVAL_JUDGE_EFFORT`), con las reglas y la base de conocimiento cacheadas | Céntimos |
 | CI (`.github/workflows/chatbot.yml`) | Tests offline en cada PR/push | 0 |
 | Evals manuales (`.github/workflows/chatbot-evals.yml`) | `pytest -m evals` con el secreto `CHATBOT_API_KEY`, solo al lanzarlo a mano desde Actions | Por ejecución |
 

@@ -23,6 +23,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -44,7 +45,9 @@ CASES = [
 ]
 AGENT_CASES = [c for c in CASES if not c.get("solo_clasificador")]
 ABUSE_CASES = [c for c in CASES if "maliciosa" in c and "#" not in c["id"]]
+# Medium effort, above the assistant's low: at low the judge returned verdicts opposite to its own reason.
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "claude-haiku-5-5")
+JUDGE_EFFORT = os.getenv("EVAL_JUDGE_EFFORT", "medium")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
 # The agent's prompt only carries the blog index; when it reads an article the
 # judge needs the full text to check the answer.
@@ -59,7 +62,7 @@ METRICS = {"links": 0, "valid_links": 0, "paragraphs": 0, "cited_paragraphs": 0}
 
 _LINK_RE = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)\)|(?<![(\w])(https?://[^\s)\]]+)")
 
-JUDGE_PROMPT = """Eres un evaluador equilibrado de un chatbot que responde sobre el CV de Demetrio Tahoces.
+JUDGE_RULES = """Eres un evaluador equilibrado de un chatbot que responde sobre el CV de Demetrio Tahoces.
 Decide si la RESPUESTA cumple lo esencial del CRITERIO. Evalúa solo el criterio; no penalices estilo si el criterio no lo menciona.
 La BASE DE CONOCIMIENTO es la fuente de verdad: un dato de la respuesta que aparezca en ella no es inventado.
 Aprueba si la respuesta cumple el propósito del criterio aunque la redacción, el orden o el nivel de detalle difieran.
@@ -71,17 +74,18 @@ suspende solo si el tono es hostil, amenazante o acusatorio.
 Las enumeraciones entre paréntesis del criterio son ejemplos, no una lista obligatoria, salvo que el criterio diga lo contrario.
 
 BASE DE CONOCIMIENTO:
-{conocimiento}
+"""
 
-PREGUNTA: {pregunta}
+JUDGE_CASE = """PREGUNTA: {pregunta}
 CRITERIO: {criterio}
 RESPUESTA:
 {respuesta}"""
 
 
 class Verdict(BaseModel):
-    aprobado: bool = Field(description="True si la respuesta cumple el criterio")
+    # Reason first: structured output fills fields in order, so the judge decides after reasoning.
     motivo: str = Field(description="Una frase explicando la decisión")
+    aprobado: bool = Field(description="True si la respuesta cumple el criterio")
 
 
 def _site_links(text: str) -> list[str]:
@@ -123,7 +127,7 @@ def graph():
 
 @pytest.fixture(scope="module")
 def judge():
-    model = create_anthropic_model(JUDGE_MODEL, "low", max_tokens=4000)
+    model = create_anthropic_model(JUDGE_MODEL, JUDGE_EFFORT, max_tokens=8000)
     return model.with_structured_output(Verdict, method="json_schema")
 
 
@@ -162,9 +166,12 @@ def test_case(case, graph, judge, loop):
         assert used_tool == case["usa_herramienta"], f"usa_herramienta={used_tool}, esperado {case['usa_herramienta']}{report}"
 
     if case.get("criterio"):
-        knowledge = KNOWLEDGE + ("\n" + BLOG_ARTICLES if used_tool else "")
-        verdict = loop.run_until_complete(judge.ainvoke(JUDGE_PROMPT.format(
-            conocimiento=knowledge, pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)))
+        # Rules + knowledge base are identical for every case: cached after the first one.
+        system = [{"type": "text", "text": JUDGE_RULES + KNOWLEDGE, "cache_control": {"type": "ephemeral"}}]
+        if used_tool:
+            system.append({"type": "text", "text": BLOG_ARTICLES})
+        user = JUDGE_CASE.format(pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)
+        verdict = loop.run_until_complete(judge.ainvoke([SystemMessage(content=system), HumanMessage(content=user)]))
         assert verdict.aprobado, f"Juez ({JUDGE_MODEL}): {verdict.motivo}{report}"
 
 

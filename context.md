@@ -4,6 +4,14 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 
 ---
 
+## Evals de Haiku 5.5 a effort low: juez fiable, sin casos de idioma (push directo a `main`, 2026-10-09)
+
+- El autor autorizó expresamente en esta tarea que el agente ejecutara las evals hasta que pasaran (excepción puntual: la norma de `AGENTS.md` no cambia). Primera pasada (a `medium`, el `.env` local): 3 fallos.
+- Juez (`evals/test_evals.py`): sigue en `claude-haiku-5-5` (decisión del autor), ahora a effort `medium` (`EVAL_JUDGE_EFFORT`) y con `motivo` antes que `aprobado` en `Verdict`: a `low` y decidiendo primero daba veredictos contrarios a su propio motivo y vio en inglés una respuesta en castellano. Reglas + base de conocimiento como system cacheado (bloque aparte para los artículos si se usó la tool).
+- Idioma: la web es solo en castellano y al autor no le preocupa; fuera `idioma-ingles`, `fuera-de-ambito-ingles` y `enlace-en-ingles`. Se mantienen los casos del clasificador de abuso escritos en inglés (miden intención maliciosa, no idioma). La regla de idioma del prompt sigue como estaba.
+- Prompt: una regla de brevedad en "Formato" (si preguntan si conoce o ha usado algo, 2-3 frases con el contexto más relevante, sin enumerar cada sitio); fallaba `brevedad`.
+- Resultado a `REASONING_EFFORT=low` y `MAX_OUTPUT_TOKENS=4000` (como producción), en un worktree limpio sobre `a7da5a5` (otra sesión tenía cambios a medias en el árbol): dos pasadas completas en verde, 61/61; citas: validez 100 % (107/107 y 115/115), cobertura 93 % y 100 %.
+
 ## Mejoras del MCP y del RAG del chatbot (push directo a `main`, 2026-10-09)
 
 - Petición del autor: investigar mejoras del RAG y del MCP con fuentes de Anthropic y de la spec MCP 2026-07-28, y aplicar todo lo que no rompa nada. Informe y decisiones en la conversación; el autor eligió también las que requieren evals (sección MCP en docs, blog en contexto, effort `low`, citas nativas con bloques `search_result`).
