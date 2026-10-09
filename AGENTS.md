@@ -2,8 +2,6 @@
 
 Guía única para agentes y asistentes de coding (Claude Code, Codex, Cowork, etc.) que trabajen en este repositorio. `CLAUDE.md` solo redirige aquí: cualquier instrucción nueva va en este fichero.
 
-Al empezar una tarea, lee también `context.md` para continuar el trabajo de sesiones anteriores (ver "Contexto entre sesiones").
-
 ## Perfil del usuario
 
 - El usuario prefiere respuestas en castellano.
@@ -20,32 +18,6 @@ Al empezar una tarea, lee también `context.md` para continuar el trabajo de ses
 - Backend: FastAPI + LangChain (`create_agent`) en `CV/Chatbot/`, desplegado en Vercel. Documentación completa en `CV/Chatbot/README.md`.
 - Base de conocimiento: documentos Markdown con frontmatter en `CV/Chatbot/docs/`.
 
-## Estructura relevante
-
-- `index.html`: página principal del CV.
-- `CV/*.html`: páginas detalladas de experiencia, formación y proyectos.
-- `CV/chatbot.html`: interfaz web del asistente del CV.
-- `CV/chatbot-widget.js`: widget del chatbot.
-- `CV/Chatbot/api/index.py`: entrada FastAPI serverless.
-- `CV/Chatbot/core/`: configuración, conocimiento (`knowledge.py`), agente, prompts, citas (`citations.py`), tool `read_blog_article`, servidor MCP y su búsqueda (`search.py`), tracing y generador de `llms.txt`.
-- `CV/Chatbot/middleware/`: logging, rate limiting y bloqueo temporal por abuso (`abuse_guard.py`, store Upstash Redis, fail-open).
-- `CV/Chatbot/docs/*.md`: documentos que alimentan el chatbot (frontmatter obligatorio).
-- `CV/Chatbot/test/`: tests offline con pytest (modelo falso, sin API key).
-- `CV/Chatbot/evals/`: dataset y evals contra el modelo real.
-- `llms.txt`: índice del sitio para LLMs, generado desde `CV/Chatbot/docs/`.
-- `.github/workflows/chatbot.yml`: CI del chatbot (solo tests offline).
-- `.github/workflows/blog.yml`: CI del blog (`check_post.py --all` de la skill `manage-blog`).
-- `.github/workflows/chatbot-evals.yml`: evals, solo con lanzamiento manual por un humano.
-- `blog/`: blog técnico estático.
-- `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
-- `assets/tokens.css`: design tokens (`:root`) de todo el sitio — colores, radios, sombras, `--font-body`/`--font-display`, `--shell-max`.
-- `assets/cv.css`: estilos compartidos de `index.html` y `CV/*.html` (también los consume el blog): base, nav, cards, heroes, timeline de experiencia y el sistema de animación `data-reveal`.
-- `assets/blog.css`: estilos específicos del blog (prosa de artículo, callout/warning, tablas, post-cards; fija `--shell-max: 64rem`).
-- `assets/cv.js`: reveals con stagger sobre `[data-reveal]`/`[data-reveal-group]`, scroll-spy del nav, jump-nav (`[data-section-nav]`) y estado `.is-scrolled`.
-- `assets/og-card.svg`: imagen Open Graph compartida.
-- `README.md`: documentación operativa para humanos.
-- `context.md`: traspaso de contexto entre sesiones de agentes, una entrada por PR o cambio.
-
 ## Frontend
 
 - Edita los HTML directamente.
@@ -54,7 +26,6 @@ Al empezar una tarea, lee también `context.md` para continuar el trabajo de ses
 - Los colores salen SIEMPRE de los tokens (`var(--accent)`, etc.); no introduzcas colores nuevos hardcodeados.
 - Tipografía: Space Grotesk (display: h1, h2, `.section-title`, `.site-brand`, h3 de cards) + Inter 300–800 (cuerpo), en una única petición a Google Fonts con `preconnect`.
 - No introduzcas bundlers, `package.json`, frameworks frontend ni pasos de compilación salvo petición explícita.
-- Las dependencias frontend se cargan por CDN, principalmente Tailwind CSS, Google Fonts (Inter y Space Grotesk), Chart.js, Phosphor Icons, marked.js y DOMPurify (sanitiza el markdown de la IA en el chatbot).
 - Mantén el tono visual existente: tema oscuro, profesional, técnico y sobrio.
 - Sistema de animación: marca elementos con `data-reveal` (variantes `fade`/`scale`/`line`; por defecto desliza 18px) y agrupa con `data-reveal-group` para stagger. `assets/cv.js` los revela con IntersectionObserver bajo el gate `html.motion-ready`; sin JS o con `prefers-reduced-motion` todo queda visible. Los efectos ligados al scroll (línea de trayectoria del timeline, parallax del hero) van solo bajo `@supports (animation-timeline: view())` con estado final estático como fallback.
 - En animaciones de entrada por scroll, evita dejar contenido invisible hasta que esté demasiado dentro del viewport. El contenido debe empezar a revelarse prácticamente al entrar en pantalla, especialmente en móvil; prioriza continuidad visual sobre efectos de aparición llamativos.
@@ -65,7 +36,6 @@ Al empezar una tarea, lee también `context.md` para continuar el trabajo de ses
 - Haz cambios backend dentro de `CV/Chatbot/`.
 - Dependencias en `CV/Chatbot/pyproject.toml` con versiones fijadas en `uv.lock` (Python 3.14, `.python-version`). Tras cambiar dependencias ejecuta `uv lock` y commitea el lock.
 - La configuración se lee desde variables de entorno o `CV/Chatbot/.env` mediante `CV/Chatbot/core/config.py`. Variables y valores por defecto: tabla en `CV/Chatbot/README.md` y plantilla en `.env.example` (modelo por defecto `claude-haiku-5-5`, vía `langchain-anthropic`; `API_KEY` es la key de Anthropic).
-- Endpoints: `POST /api/chat/stream`, `POST /api/chat`, `POST /api/feedback`, `GET /api/health` y el servidor MCP de solo lectura en `POST /api/mcp`.
 - El backend es stateless: el frontend envía los últimos mensajes en `history`. No reintroduzcas memoria en servidor (`MemorySaver`).
 - La base de conocimiento (CV completo y, mientras quepa en `BLOG_IN_PROMPT_MAX_CHARS`, los artículos del blog) va en el primer mensaje como bloques `search_result` de Claude, uno por sección con su URL, y cacheada; si el blog no cabe, va su índice y los artículos se leen con la tool `read_blog_article`. Las citas son nativas: el modelo no escribe URLs y `core/citations.py` las convierte en `[↗ sección](url)`. Mantén estables el system prompt (reglas, con la fecha al final) y el mensaje de conocimiento para no romper la caché.
 - CORS se configura solo en FastAPI (`ALLOWED_ORIGINS`); no hay `vercel.json`. Vercel usa el preset FastAPI (entrypoint `api/index.py`). No añadas rewrites hacia `api/index.py`: FastAPI recibiría la ruta reescrita y respondería 404.
@@ -101,19 +71,6 @@ Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `f
 
 ## Desarrollo local
 
-Frontend desde la raíz:
-
-```powershell
-python -m http.server 8000
-```
-
-Backend desde `CV/Chatbot` (requiere `uv`):
-
-```powershell
-uv sync
-uv run uvicorn api.index:app --reload --host 0.0.0.0 --port 3000
-```
-
 Comprobaciones backend desde `CV/Chatbot`:
 
 ```powershell
@@ -121,7 +78,7 @@ uv run pytest            # tests offline, sin API key
 uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un humano (ver abajo)
 ```
 
-**Evals: solo las ejecuta un humano, a mano.** Consumen tokens de pago en cada ejecución. Ningún agente (Claude Code incluido), pipeline de CI, hook, Routine ni automatización puede ejecutar `pytest -m evals` ni lanzar el workflow `chatbot-evals.yml`, tampoco para "verificar" un cambio. Si cambias el prompt, el modelo o los documentos, pide al humano que ejecute las evals y lo indicas en el commit y en `context.md`. Sí puedes añadir o editar casos en `evals/dataset.yaml` (uno por cada fallo real detectado).
+**Evals: solo las ejecuta un humano, a mano.** Consumen tokens de pago en cada ejecución. Ningún agente (Claude Code incluido), pipeline de CI, hook, Routine ni automatización puede ejecutar `pytest -m evals` ni lanzar el workflow `chatbot-evals.yml`, tampoco para "verificar" un cambio. Si cambias el prompt, el modelo o los documentos, pide al humano que ejecute las evals y lo indicas en el commit. Sí puedes añadir o editar casos en `evals/dataset.yaml` (uno por cada fallo real detectado).
 
 ## Despliegue
 
@@ -135,30 +92,19 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 
 - Como el resto del proyecto, los cambios van con commit y push directo a `main` y se prueban directamente en producción (ver "Reglas operativas para agentes"). El preview de rama solo se usa si el usuario pide expresamente una PR.
 - Los previews son públicos (Vercel Authentication desactivada). `GET /api/health` se prueba con `web_fetch_vercel_url`; para `POST /api/chat` y `POST /api/chat/stream` usa un Vercel Sandbox temporal con la red limitada al dominio del preview y páralo al terminar.
-- Desde el entorno cloud de Claude Code, `*.vercel.app` está bloqueado por el proxy (más notas de entorno en `context.md`).
-
-## Contexto entre sesiones
-
-- `context.md` (raíz) guarda el contexto que necesita la siguiente sesión para continuar un trabajo: qué se ha hecho, decisiones ya tomadas con el usuario (no volver a preguntarlas), pendientes, restricciones y notas de entorno.
-- Norma: cada cambio o PR actualiza su entrada de `context.md` en el mismo commit o PR. Si no existe, se crea. Entradas de la más reciente a la más antigua, con número de PR, rama y fecha.
-- Al empezar una tarea, lee `context.md` y continúa desde la entrada correspondiente.
-- Cuando una PR se mergea o se cierra, su entrada se reduce a un resumen de dos o tres líneas.
-- Nada de secretos, contenido de `.env`, datos personales de terceros ni URLs internas.
+- Desde el entorno cloud de Claude Code, `*.vercel.app` está bloqueado por el proxy.
 
 ## Convenciones de edición
 
-- Mantén los cambios acotados a la petición.
 - No reestructures el proyecto salvo petición explícita.
 - No elimines contenido curricular existente salvo instrucción clara.
-- Usa rutas y nombres ya presentes en el repositorio.
-- Añade comentarios solo cuando aclaren lógica no obvia.
 - No introduzcas dependencias nuevas para cambios de contenido o presentación simple.
 - Antes de cerrar una tarea, revisa que los enlaces/rutas afectadas sigan teniendo sentido.
 
 ## Reglas operativas para agentes
 
 - Git: en este proyecto cada tarea terminada se commitea y se pushea directamente a `main` al acabarla, sin PR ni rama intermedia, y se prueba directamente en producción (GitHub Pages / Vercel). Solo se abre PR si el usuario lo pide expresamente.
-- Secretos: nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` (contiene la API key del proveedor LLM). Tampoco los metas en `context.md`, commits ni PRs.
+- Secretos: nunca leas, muestres ni copies el contenido de `CV/Chatbot/.env` (contiene la API key del proveedor LLM). Tampoco los metas en commits ni PRs.
 - Evals: nunca las ejecutes ni lances su workflow (ver "Desarrollo local").
 - Skills locales: antes de crear contenido nuevo, comprueba si hay una skill aplicable en `.agents/skills/` y úsala en vez de reinventar el flujo:
   - `edit-cv`: cambios de contenido curricular, con umbrales de tamaño por tarjeta y `scripts/check_cv.py`.

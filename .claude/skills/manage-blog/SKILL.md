@@ -20,7 +20,7 @@ Mantener `/blog/` como blog educativo separado del CV pero visualmente coherente
 8. Fuentes verificadas: `references/fuentes.md`.
 9. Emojis, con el texto ya cerrado: 4-7 en el artículo (lo normal, 5-6: más o menos uno por sección principal) y 3-5 en el draft, elegidos por lo que dice cada frase y distintos de los de otros posts, repartidos como hitos de lectura: `references/emojis.md`.
 10. Auditoría obligatoria de `references/humanizer.md` sobre el artículo y el draft.
-11. Validar (ver abajo) y actualizar la entrada de `context.md`.
+11. Validar (ver abajo).
 
 ## Editar un post publicado
 
