@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <!-- Fuente del CV resumido de una página: assets/CV-Demetrio-Tahoces-Profesional.pdf (comando en README.md). -->
+    <title>CV profesional · Demetrio Tahoces</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/tokens.css">
+    <style>
+        @page { size: A4; margin: 0; }
+        :root { color-scheme: light; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { background: var(--print-bg); }
+        body {
+            font-family: var(--font-body);
+            color: var(--print-text);
+            font-size: 8.5pt;
+            line-height: 1.32;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 10mm 13mm 9mm;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        header { border-bottom: 2px solid var(--print-accent); padding-bottom: 3.2mm; }
+        h1 {
+            font-family: var(--font-display);
+            font-size: 21pt;
+            line-height: 1.1;
+            color: var(--print-heading);
+            letter-spacing: -0.01em;
+        }
+        .role {
+            font-family: var(--font-display);
+            font-size: 11pt;
+            font-weight: 600;
+            color: var(--print-accent);
+            margin-top: 0.8mm;
+        }
+        .contact { margin-top: 1.4mm; font-size: 8.2pt; color: var(--print-text); }
+        .contact span + span::before { content: "·"; margin: 0 1.8mm; color: var(--print-border-strong); }
+
+        section { margin-top: 2.8mm; }
+        h2 {
+            font-family: var(--font-display);
+            font-size: 9.6pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--print-accent);
+            border-bottom: 1px solid var(--print-border);
+            padding-bottom: 0.8mm;
+            margin-bottom: 1.8mm;
+        }
+        .summary { text-align: justify; }
+        strong { color: var(--print-heading); font-weight: 600; }
+
+        .job { margin-bottom: 1.8mm; }
+        .job:last-child { margin-bottom: 0; }
+        .job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+        .job-title { font-weight: 700; color: var(--print-heading); font-size: 9.3pt; }
+        .job-title .org { font-weight: 600; color: var(--print-accent); }
+        .dates { font-size: 8.2pt; color: var(--print-text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .job-ctx { font-size: 8.3pt; font-style: italic; color: var(--print-text); opacity: 0.85; margin-top: 0.2mm; }
+        ul { padding-left: 4mm; margin-top: 0.8mm; }
+        li { margin-bottom: 0.3mm; }
+        li::marker { color: var(--print-accent); }
+        .stack { font-size: 8.1pt; margin-top: 0.5mm; opacity: 0.9; }
+        .stack b { font-weight: 600; color: var(--print-heading); }
+
+        .skills { display: grid; grid-template-columns: 31mm 1fr; row-gap: 0.9mm; column-gap: 3mm; }
+        .skills dt { font-weight: 600; color: var(--print-heading); }
+
+        .edu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; margin-bottom: 1mm; }
+        .edu-item .detail { font-size: 8.3pt; opacity: 0.9; }
+        .inline-list { margin-top: 1.2mm; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header>
+        <h1>Demetrio Antonio Tahoces Sánchez</h1>
+        <p class="role">Software Engineer · Backend, sistemas distribuidos e IA agéntica</p>
+        <p class="contact">
+            <span><a href="mailto:tonitahoces@gmail.com">tonitahoces@gmail.com</a></span>
+            <span><a href="https://www.linkedin.com/in/demetrio-antonio-tahoces-s%C3%A1nchez-17905a181">LinkedIn</a></span>
+            <span><a href="https://demetriotahoces.github.io/">demetriotahoces.github.io</a></span>
+            <span><a href="https://github.com/DemetrioTahoces">github.com/DemetrioTahoces</a></span>
+        </p>
+    </header>
+
+    <section>
+        <h2>Perfil</h2>
+        <p class="summary">
+            Ingeniero de Telecomunicación y Software Engineer con <strong>más de 7 años</strong> en backend, IoT y datos en tiempo real.
+            Especializado en <strong>microservicios con DDD, arquitectura hexagonal, CQRS y Event-Driven</strong> (Spring Boot, NestJS,
+            Kubernetes, Azure). En Fermax lidero el <strong>desarrollo agéntico con Claude Code</strong> de un equipo de 10 personas y, por mi
+            cuenta, construyo agentes con RAG y LangGraph. Busco llevar agentes de IA a producción sin renunciar a la solidez del backend.
+        </p>
+    </section>
+
+    <section>
+        <h2>Experiencia profesional</h2>
+
+        <div class="job">
+            <div class="job-head">
+                <p class="job-title">Software Engineer · <span class="org">Fermax</span></p>
+                <p class="dates">01/2025 – Actualidad</p>
+            </div>
+            <p class="job-ctx">Fabricante de videoporteros y control de accesos. Ecosistema IoT y apps móviles (subrogación del equipo de Opendit).</p>
+            <ul>
+                <li><strong>Lidero el desarrollo agéntico con Claude Code</strong> (equipo de 10): workflows de 6–7 agentes en bucle implementación ↔ verificación (funcionalidad, seguridad, mantenibilidad, pruebas, documentación) y 10–15 skills propias distribuidas como plugins privados. <strong>Más del 80% de las PRs, exitosas a la primera</strong>; el equipo estima que el esfuerzo de verificación y correcciones ha bajado a menos de la mitad.</li>
+                <li><strong>Domain Events</strong> entre bounded contexts: nuevos servicios se suscriben sin tocar a los productores.</li>
+                <li>Migración de la plataforma de Opendit a Fermax sin downtime (servicios, MongoDB, PostgreSQL); microservicios en Kubernetes con despliegues blue-green.</li>
+            </ul>
+            <p class="stack"><b>Stack:</b> Spring Boot, NestJS, DDD, Hexagonal, Kubernetes, RabbitMQ, MongoDB, PostgreSQL, Redis, GitHub Actions, OpenAPI.</p>
+        </div>
+
+        <div class="job">
+            <div class="job-head">
+                <p class="job-title">Backend Engineer · <span class="org">Opendit</span></p>
+                <p class="dates">09/2022 – 12/2024</p>
+            </div>
+            <p class="job-ctx">Startup IoT de videoporteros; presente en todas las fases del producto.</p>
+            <ul>
+                <li>Microservicios sobre <strong>DAPR</strong> (mensajería, secrets, service discovery) para reducir el vendor lock-in, y <strong>BFF</strong> para iOS, Android y web con seguridad centralizada (OAuth2, Keycloak).</li>
+                <li>Ingesta de telemetría IoT con <strong>CQRS</strong> sobre Azure (Container Apps, Service Bus, DevOps); mentoría a juniors.</li>
+            </ul>
+            <p class="stack"><b>Stack:</b> Spring Boot (Java 17/Groovy), NestJS, GraphQL, OpenAPI, Azure, RabbitMQ, PostgreSQL, MongoDB, Redis, Spock.</p>
+        </div>
+
+        <div class="job">
+            <div class="job-head">
+                <p class="job-title">Ingeniero de Datos · <span class="org">Inditex</span> <span style="font-weight:400">(vía Nunegal Consulting)</span></p>
+                <p class="dates">11/2021 – 09/2022</p>
+            </div>
+            <ul>
+                <li>Pipelines de alta disponibilidad con <strong>Kafka Streams</strong> (exactly-once) y Spring Boot para la calidad de datos logísticos en tiempo real; monitorización en Grafana y analítica en Snowflake sobre OpenShift.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-head">
+                <p class="job-title">Desarrollador de Software · <span class="org">Securitas Direct</span> <span style="font-weight:400">(vía Vector ITC)</span></p>
+                <p class="dates">03/2021 – 11/2021</p>
+            </div>
+            <ul>
+                <li>Operadores automáticos que interpretan en tiempo real señales de dispositivos de seguridad (Kafka Streams, KSQL) para reducir falsos positivos; CI/CD con Jenkins y Kubernetes (Helm).</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-head">
+                <p class="job-title">Especialista en Robótica e IA · Ingeniero de Software · <span class="org">Alisys</span></p>
+                <p class="dates">09/2019 – 03/2021</p>
+            </div>
+            <ul>
+                <li>API REST en Java que orquesta robots (Pepper, NAO, Temi) con reconocimiento facial, speech-to-text y NLU (Dialogflow, Rasa); apps Android con VoIP/WebRTC.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-head">
+                <p class="job-title">Desarrollador Android · <span class="org">Imagine800</span></p>
+                <p class="dates">02/2019 – 09/2019</p>
+            </div>
+            <ul>
+                <li>Apps Android de VoIP (SIP/RTP) con transcripción de voz y Asterisk en Docker (también mi TFM).</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Proyecto destacado</h2>
+        <p>
+            <strong>Asistente RAG del CV y servidor MCP</strong> (<a href="https://demetriotahoces.github.io/CV/chatbot.html">demetriotahoces.github.io/CV/chatbot.html</a>):
+            agente en producción (Python, FastAPI, LangChain/LangGraph, Claude, Vercel) que responde solo con lo publicado, cita cada dato
+            con su URL, expone un servidor MCP público y se valida con evals.
+        </p>
+    </section>
+
+    <section>
+        <h2>Competencias técnicas</h2>
+        <dl class="skills">
+            <dt>Backend</dt><dd>Java (Spring Boot), TypeScript (NestJS), Python (FastAPI), APIs REST/OpenAPI, GraphQL, OAuth2</dd>
+            <dt>Arquitectura</dt><dd>DDD, arquitectura hexagonal, CQRS, Event-Driven, Domain Events, BFF, microservicios</dd>
+            <dt>Datos y mensajería</dt><dd>Kafka (Streams, Connect, KSQL), RabbitMQ, Azure Service Bus, PostgreSQL, MongoDB, Redis, Snowflake</dd>
+            <dt>Cloud y DevOps</dt><dd>Kubernetes, Docker, DAPR, Azure, OpenShift, GitHub Actions, Azure DevOps, Jenkins, Grafana</dd>
+            <dt>IA</dt><dd>Claude Code (multiagente, skills, plugins), RAG, LangChain/LangGraph, MCP, evaluación de LLMs</dd>
+        </dl>
+    </section>
+
+    <section>
+        <h2>Formación</h2>
+        <div class="edu-item">
+            <p><strong>Máster en IA Aplicada y Optimización de Procesos</strong> · UTAMED <span class="detail">— agentes, RAG e IA en la empresa (en curso)</span></p>
+            <p class="dates">2025 – 2026</p>
+        </div>
+        <div class="edu-item">
+            <p><strong>Máster en Ingeniería de Telecomunicación</strong> · Universidad de Oviedo</p>
+            <p class="dates">2017 – 2019</p>
+        </div>
+        <div class="edu-item">
+            <p><strong>Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación</strong> · Universidad de Oviedo</p>
+            <p class="dates">2012 – 2017</p>
+        </div>
+        <p class="inline-list"><strong>Idiomas:</strong> español (nativo), inglés B2 (Cambridge First Certificate).</p>
+    </section>
+</div>
+</body>
+</html>
