@@ -49,8 +49,8 @@ ABUSE_CASES = [c for c in CASES if "maliciosa" in c and "#" not in c["id"]]
 JUDGE_MODEL = os.getenv("EVAL_JUDGE_MODEL", "claude-haiku-5-5")
 JUDGE_EFFORT = os.getenv("EVAL_JUDGE_EFFORT", "medium")
 KNOWLEDGE = get_knowledge_base().render_for_prompt()
-# The agent's prompt only carries the blog index; when it reads an article the
-# judge needs the full text to check the answer.
+# The agent has the articles in its context (or reads them with the tool when they
+# don't fit), so the judge always needs their full text to check the answer.
 BLOG_ARTICLES = "\n".join(
     f'<articulo nombre="{doc.name}" titulo="{doc.title}">\n{doc.body}\n</articulo>'
     for doc in get_knowledge_base().blog_documents
@@ -168,8 +168,7 @@ def test_case(case, graph, judge, loop):
     if case.get("criterio"):
         # Rules + knowledge base are identical for every case: cached after the first one.
         system = [{"type": "text", "text": JUDGE_RULES + KNOWLEDGE, "cache_control": {"type": "ephemeral"}}]
-        if used_tool:
-            system.append({"type": "text", "text": BLOG_ARTICLES})
+        system.append({"type": "text", "text": BLOG_ARTICLES, "cache_control": {"type": "ephemeral"}})
         user = JUDGE_CASE.format(pregunta=case["pregunta"], criterio=case["criterio"], respuesta=answer)
         verdict = loop.run_until_complete(judge.ainvoke([SystemMessage(content=system), HumanMessage(content=user)]))
         assert verdict.aprobado, f"Juez ({JUDGE_MODEL}): {verdict.motivo}{report}"
