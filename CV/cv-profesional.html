@@ -32,7 +32,13 @@
         }
         a { color: inherit; text-decoration: none; }
 
-        header { border-bottom: 2px solid var(--print-accent); padding-bottom: 3.2mm; }
+        header { display: flex; align-items: center; gap: 5mm; border-bottom: 2px solid var(--print-accent); padding-bottom: 3.2mm; }
+        .photo { width: 24mm; height: 24mm; border-radius: 50%; object-fit: cover; flex: none; border: 0.6mm solid var(--print-border); }
+        .head-text { min-width: 0; }
+        h2 a, .job-title a, .edu-item a { color: inherit; }
+        .web-link { font-size: 7.4pt; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--print-text); opacity: 0.75; margin-left: 2mm; }
+        .web-link::after { content: " ↗"; }
+        .job-title a .org::after { content: " ↗"; font-size: 7.4pt; font-weight: 500; opacity: 0.7; }
         h1 {
             font-family: var(--font-display);
             font-size: 21pt;
@@ -84,11 +90,14 @@
         .edu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; margin-bottom: 1mm; }
         .edu-item .detail { font-size: 8.3pt; opacity: 0.9; }
         .inline-list { margin-top: 1.2mm; }
+        .via { font-weight: 400; }
     </style>
 </head>
 <body>
 <div class="page">
     <header>
+        <a href="https://demetriotahoces.github.io/"><img class="photo" src="../assets/foto-demetrio.jpg" alt="Demetrio Tahoces"></a>
+        <div class="head-text">
         <h1>Demetrio Antonio Tahoces Sánchez</h1>
         <p class="role">Software Engineer · Backend, sistemas distribuidos e IA agéntica</p>
         <p class="contact">
@@ -97,10 +106,11 @@
             <span><a href="https://demetriotahoces.github.io/">demetriotahoces.github.io</a></span>
             <span><a href="https://github.com/DemetrioTahoces">github.com/DemetrioTahoces</a></span>
         </p>
+        </div>
     </header>
 
     <section>
-        <h2>Perfil</h2>
+        <h2>Perfil <a class="web-link" href="https://demetriotahoces.github.io/CV/resumen-profesional.html">resumen profesional completo</a></h2>
         <p class="summary">
             Ingeniero de Telecomunicación y Software Engineer con <strong>más de 7 años</strong> en backend, IoT y datos en tiempo real.
             Especializado en <strong>microservicios con DDD, arquitectura hexagonal, CQRS y Event-Driven</strong> (Spring Boot, NestJS,
@@ -110,11 +120,11 @@
     </section>
 
     <section>
-        <h2>Experiencia profesional</h2>
+        <h2>Experiencia profesional <a class="web-link" href="https://demetriotahoces.github.io/#experiencia">detalle de cada puesto en la web</a></h2>
 
         <div class="job">
             <div class="job-head">
-                <p class="job-title">Software Engineer · <span class="org">Fermax</span></p>
+                <p class="job-title">Software Engineer · <a href="https://demetriotahoces.github.io/CV/fermax.html"><span class="org">Fermax</span></a></p>
                 <p class="dates">01/2025 – Actualidad</p>
             </div>
             <p class="job-ctx">Fabricante de videoporteros y control de accesos. Ecosistema IoT y apps móviles (subrogación del equipo de Opendit).</p>
@@ -128,7 +138,7 @@
 
         <div class="job">
             <div class="job-head">
-                <p class="job-title">Backend Engineer · <span class="org">Opendit</span></p>
+                <p class="job-title">Backend Engineer · <a href="https://demetriotahoces.github.io/CV/opendit.html"><span class="org">Opendit</span></a></p>
                 <p class="dates">09/2022 – 12/2024</p>
             </div>
             <p class="job-ctx">Startup IoT de videoporteros; presente en todas las fases del producto.</p>
@@ -141,7 +151,7 @@
 
         <div class="job">
             <div class="job-head">
-                <p class="job-title">Ingeniero de Datos · <span class="org">Inditex</span> <span style="font-weight:400">(vía Nunegal Consulting)</span></p>
+                <p class="job-title">Ingeniero de Datos · <a href="https://demetriotahoces.github.io/CV/inditex.html"><span class="org">Inditex</span></a> <span class="via">(vía Nunegal Consulting)</span></p>
                 <p class="dates">11/2021 – 09/2022</p>
             </div>
             <ul>
@@ -151,7 +161,7 @@
 
         <div class="job">
             <div class="job-head">
-                <p class="job-title">Desarrollador de Software · <span class="org">Securitas Direct</span> <span style="font-weight:400">(vía Vector ITC)</span></p>
+                <p class="job-title">Desarrollador de Software · <a href="https://demetriotahoces.github.io/CV/securitas-direct.html"><span class="org">Securitas Direct</span></a> <span class="via">(vía Vector ITC)</span></p>
                 <p class="dates">03/2021 – 11/2021</p>
             </div>
             <ul>
@@ -161,7 +171,7 @@
 
         <div class="job">
             <div class="job-head">
-                <p class="job-title">Especialista en Robótica e IA · Ingeniero de Software · <span class="org">Alisys</span></p>
+                <p class="job-title">Especialista en Robótica e IA · Ingeniero de Software · <a href="https://demetriotahoces.github.io/CV/alisys.html"><span class="org">Alisys</span></a></p>
                 <p class="dates">09/2019 – 03/2021</p>
             </div>
             <ul>
@@ -171,17 +181,17 @@
 
         <div class="job">
             <div class="job-head">
-                <p class="job-title">Desarrollador Android · <span class="org">Imagine800</span></p>
+                <p class="job-title">Desarrollador Android · <a href="https://demetriotahoces.github.io/CV/imagine800.html"><span class="org">Imagine800</span></a></p>
                 <p class="dates">02/2019 – 09/2019</p>
             </div>
             <ul>
-                <li>Apps Android de VoIP (SIP/RTP) con transcripción de voz y Asterisk en Docker (también mi TFM).</li>
+                <li>Apps Android de VoIP (SIP/RTP) con transcripción de voz y Asterisk en Docker (también mi <a href="https://demetriotahoces.github.io/CV/imagine800.html#trabajo-de-fin-de-master-tfm">TFM</a>).</li>
             </ul>
         </div>
     </section>
 
     <section>
-        <h2>Proyecto destacado</h2>
+        <h2>Proyecto destacado <a class="web-link" href="https://demetriotahoces.github.io/CV/chatbot.html">pruébalo en la web</a></h2>
         <p>
             <strong>Asistente RAG del CV y servidor MCP</strong> (<a href="https://demetriotahoces.github.io/CV/chatbot.html">demetriotahoces.github.io/CV/chatbot.html</a>):
             agente en producción (Python, FastAPI, LangChain/LangGraph, Claude, Vercel) que responde solo con lo publicado, cita cada dato
@@ -190,7 +200,7 @@
     </section>
 
     <section>
-        <h2>Competencias técnicas</h2>
+        <h2>Competencias técnicas <a class="web-link" href="https://demetriotahoces.github.io/#competencias">en la web</a></h2>
         <dl class="skills">
             <dt>Backend</dt><dd>Java (Spring Boot), TypeScript (NestJS), Python (FastAPI), APIs REST/OpenAPI, GraphQL, OAuth2</dd>
             <dt>Arquitectura</dt><dd>DDD, arquitectura hexagonal, CQRS, Event-Driven, Domain Events, BFF, microservicios</dd>
@@ -201,17 +211,17 @@
     </section>
 
     <section>
-        <h2>Formación</h2>
+        <h2>Formación <a class="web-link" href="https://demetriotahoces.github.io/#formacion">en la web</a></h2>
         <div class="edu-item">
-            <p><strong>Máster en IA Aplicada y Optimización de Procesos</strong> · UTAMED <span class="detail">— agentes, RAG e IA en la empresa (en curso)</span></p>
+            <p><a href="https://demetriotahoces.github.io/#master-ia-aplicada"><strong>Máster en IA Aplicada y Optimización de Procesos</strong></a> · UTAMED <span class="detail">— agentes, RAG e IA en la empresa (en curso)</span></p>
             <p class="dates">2025 – 2026</p>
         </div>
         <div class="edu-item">
-            <p><strong>Máster en Ingeniería de Telecomunicación</strong> · Universidad de Oviedo</p>
+            <p><a href="https://demetriotahoces.github.io/#master-telecomunicacion"><strong>Máster en Ingeniería de Telecomunicación</strong></a> · Universidad de Oviedo</p>
             <p class="dates">2017 – 2019</p>
         </div>
         <div class="edu-item">
-            <p><strong>Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación</strong> · Universidad de Oviedo</p>
+            <p><a href="https://demetriotahoces.github.io/#grado-telecomunicacion"><strong>Grado en Ingeniería de Tecnologías y Servicios de Telecomunicación</strong></a> · Universidad de Oviedo</p>
             <p class="dates">2012 – 2017</p>
         </div>
         <p class="inline-list"><strong>Idiomas:</strong> español (nativo), inglés B2 (Cambridge First Certificate).</p>
