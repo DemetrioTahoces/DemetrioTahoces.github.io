@@ -9,7 +9,8 @@
 #   no_contiene       subcadenas prohibidas
 #   usa_herramienta   true/false: si debe (o no) llamar a read_blog_article. En casos de citas del CV
 #                     no se exige false: una lectura de más del blog no cambia la respuesta y
-#                     hacía intermitentes las evals; lo cubren casos dedicados (empleo-actual, blog-listado...)
+#                     hacía intermitentes las evals; lo cubren casos dedicados (empleo-actual, blog-listado...).
+#                     Con el blog en el primer mensaje los casos de contenido del blog no exigen la tool
 #   criterio          regla que valida un LLM juez (hechos, tono, honestidad)
 #   repeticiones      nº de ejecuciones (por defecto 1) para comportamientos intermitentes
 #   citas             true: la respuesta debe citar por párrafo secciones de la web (cuenta para la cobertura)
@@ -158,12 +159,10 @@
 
 - id: blog-contenido
   pregunta: "¿Qué defiende en su artículo sobre SOLID?"
-  usa_herramienta: true
   criterio: "Resume la tesis del artículo (SOLID como criterios para reducir el coste del cambio, no receta para crear más clases) y enlaza al artículo."
 
 - id: blog-concepto
   pregunta: "¿Qué es una routing key según su artículo de mensajería?"
-  usa_herramienta: true
   criterio: "Explica el concepto apoyándose en el artículo del blog sobre domain events y brokers, citándolo."
 
 - id: enlace-fuente
@@ -194,7 +193,6 @@
 - id: cita-blog-seccion
   pregunta: "¿Qué dice su artículo de SOLID sobre el principio Open/Closed?"
   citas: true
-  usa_herramienta: true
   contiene: ["solid-principios-diseno.html#o-open-closed-principle"]
   criterio: "Explica el principio Open/Closed según el artículo (extender sin modificar; útil con variaciones previsibles, peligroso si se abstrae antes de tiempo) y cita la sección del artículo sobre OCP."
 
