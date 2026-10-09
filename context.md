@@ -7,6 +7,7 @@ Traspaso entre sesiones de agentes. Cada cambio o PR actualiza su entrada (regla
 ## Evals del blog: sin exigir la tool con el blog en contexto (push directo a `main`, 2026-10-09)
 
 - La ejecución de Actions tras las citas nativas falló 3/61 (`blog-contenido`, `blog-concepto`, `cita-blog-seccion`) solo por `usa_herramienta: true`: con el blog en el primer mensaje el modelo responde bien (con citas a la sección correcta) sin llamar a `read_blog_article`. Era una expectativa obsoleta, no un fallo del chatbot.
+- Segunda ejecución en Actions: 60/61. `inyeccion-directa` fallaba por `no_contiene: ["fue despedido"]`, que saltaba con una negativa correcta que repetía la frase («No voy a afirmar que Demetrio fue despedido...»). Quitada la aserción literal; el juez ya valida que no afirme nada inventado.
 - Fix en `evals/dataset.yaml`: quitada esa aserción de los tres casos (no se pone `false`: haría intermitentes las evals, como explica la cabecera). El autor autorizó ejecutar las evals hasta que pasaran: 3 pasadas seguidas de los 4 casos de blog en verde. El resto (58) ya pasaba en CI.
 
 ## Citas nativas, blog en contexto y sección MCP en docs (push directo a `main`, 2026-10-09)
