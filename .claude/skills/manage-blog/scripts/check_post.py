@@ -2,8 +2,12 @@
 """Valida que un post del blog está completo y sincronizado en todas sus superficies.
 
 Uso (desde la raíz del repo, solo stdlib):
-    python3 .agents/skills/manage-blog/scripts/check_post.py <slug>
+    python3 .agents/skills/manage-blog/scripts/check_post.py <slug> [--minutes N] [--forbid TERM ...]
     python3 .agents/skills/manage-blog/scripts/check_post.py --all
+
+--minutes N: minutos de lectura que pidió el usuario; avisa si el estimado no coincide.
+--forbid TERM: término que no puede aparecer (empresa, producto...) en HTML, ficha, draft ni SVG.
+Los términos también se leen de scripts/forbidden-terms.local.txt (uno por línea, ignorado por git).
 
 Errores (exit 1) = el post no se puede cerrar. Avisos = revisar a mano.
 Los avisos de estilo (humanizer) no bloquean: se revisan a mano con
@@ -12,6 +16,7 @@ references/humanizer.md.
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -41,6 +46,15 @@ STYLE_PATTERNS = [
     r"espero que (te|os) (ayude|sirva)", r"los expertos (dicen|coinciden)", r"seamos sinceros",
 ]
 MAX_BOLD = 3
+HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
+PLACEHOLDER = re.compile(r"\{\{[^}]*\}\}")
+FORBIDDEN_FILE = Path(__file__).resolve().parent / "forbidden-terms.local.txt"
+
+
+def local_forbidden() -> list[str]:
+    if not FORBIDDEN_FILE.is_file():
+        return []
+    return [line.strip() for line in FORBIDDEN_FILE.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 class Page(HTMLParser):
@@ -127,7 +141,7 @@ def spanish_date(text: str) -> str | None:
     return f"{year}-{MONTHS[month]:02d}-{int(day):02d}"
 
 
-def check(slug: str) -> tuple[list[str], list[str]]:
+def check(slug: str, forbid: list[str], wanted: int | None) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
     html_path = ROOT / "blog/posts" / f"{slug}.html"
@@ -143,6 +157,32 @@ def check(slug: str) -> tuple[list[str], list[str]]:
 
     page = parse(html_path)
     fm = frontmatter(md_path)
+
+    # Marcadores sin sustituir (new_post.py)
+    for path in (html_path, md_path, txt_path):
+        left = PLACEHOLDER.findall(path.read_text(encoding="utf-8"))
+        if left:
+            errors.append(f"marcadores sin sustituir en {path.relative_to(ROOT)}: {left[:3]}")
+
+    # Términos prohibidos por el usuario (empresa, producto...), también en el SVG
+    svg_path = ROOT / "blog/assets" / f"{slug}.svg"
+    for path in (html_path, md_path, txt_path, svg_path):
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for term in forbid:
+            if re.search(re.escape(term), text, re.I):
+                errors.append(f"término prohibido '{term}' en {path.relative_to(ROOT)}")
+
+    # Paleta del diagrama: solo colores de los tokens o de otros diagramas
+    if svg_path.is_file():
+        known = {c.lower() for c in HEX.findall((ROOT / "assets/tokens.css").read_text(encoding="utf-8"))}
+        for other in (ROOT / "blog/assets").glob("*.svg"):
+            if other != svg_path:
+                known |= {c.lower() for c in HEX.findall(other.read_text(encoding="utf-8"))}
+        unknown = sorted({c.lower() for c in HEX.findall(svg_path.read_text(encoding="utf-8"))} - known)
+        if unknown:
+            warnings.append(f"diagrama con colores que no usa ningún token ni otro diagrama: {unknown}")
 
     # Metadatos SEO / OG / Twitter
     for key in ("description", "og:title", "og:description", "og:image", "twitter:card",
@@ -217,6 +257,10 @@ def check(slug: str) -> tuple[list[str], list[str]]:
         warnings.append(f"lectura declarada {declared.group(1)} min, estimada {minutes} min ({words} palabras)")
     if not 3 <= minutes <= 8:
         warnings.append(f"lectura estimada {minutes} min fuera del rango 3-8")
+    if wanted is not None and minutes != wanted:
+        warnings.append(f"lectura pedida {wanted} min, estimada {minutes} min ({words} palabras; objetivo ~{wanted * WORDS_PER_MINUTE})")
+    if wanted is not None and declared and int(declared.group(1)) != wanted:
+        warnings.append(f"lectura declarada {declared.group(1)} min, pedida {wanted} min")
 
     # Em/en dash (auditoría humanizer)
     for path, text in ((html_path, " ".join(page.text)), (txt_path, txt_path.read_text(encoding="utf-8"))):
@@ -307,13 +351,19 @@ def check(slug: str) -> tuple[list[str], list[str]]:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 1:
-        print(__doc__)
-        return 2
-    slugs = sorted(p.stem for p in (ROOT / "blog/posts").glob("*.html")) if argv[0] == "--all" else argv
+    parser = argparse.ArgumentParser(description="Valida un post del blog en todas sus superficies.")
+    parser.add_argument("slugs", nargs="*", help="slug(s) del post, o --all")
+    parser.add_argument("--all", action="store_true", help="valida todos los posts")
+    parser.add_argument("--minutes", type=int, help="minutos de lectura pedidos por el usuario")
+    parser.add_argument("--forbid", action="append", default=[], metavar="TERM", help="término prohibido (repetible)")
+    args = parser.parse_args(argv)
+    if not args.all and not args.slugs:
+        parser.error("indica un slug o --all")
+    slugs = sorted(p.stem for p in (ROOT / "blog/posts").glob("*.html")) if args.all else args.slugs
+    forbid = args.forbid + local_forbidden()
     failed = False
     for slug in slugs:
-        errors, warnings = check(slug)
+        errors, warnings = check(slug, forbid, args.minutes)
         status = "ERROR" if errors else "OK"
         print(f"[{status}] {slug}")
         for msg in errors:

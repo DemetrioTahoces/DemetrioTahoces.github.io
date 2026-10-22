@@ -28,8 +28,8 @@
     <marker id="arr-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
       <path d="M0 1L8 5L0 9Z" fill="#60a5fa"/>
     </marker>
-    <marker id="arr-amber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0 1L8 5L0 9Z" fill="#fbbf24"/>
+    <marker id="arr-cyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 1L8 5L0 9Z" fill="#22d3ee"/>
     </marker>
   </defs>
 
@@ -47,10 +47,10 @@
     <text x="80" y="153" fill="#94a3b8" font-size="15">Las colas se separan por cluster. La base de datos es una sola y debe entender a las dos versiones.</text>
 
     <!-- Rutas hacia la base de datos (detrás de las cajas) -->
-    <path d="M335 215 V184 H1005 V195" fill="none" stroke="#fbbf24" stroke-opacity="0.75" stroke-width="2.5" marker-end="url(#arr-amber)"/>
-    <path d="M335 495 V532 H1005 V502" fill="none" stroke="#fbbf24" stroke-opacity="0.75" stroke-width="2.5" marker-end="url(#arr-amber)"/>
-    <text x="670" y="176" fill="#fbbf24" fill-opacity="0.9" font-size="12" font-weight="600" text-anchor="middle">lee y escribe la release N</text>
-    <text x="670" y="552" fill="#fbbf24" fill-opacity="0.9" font-size="12" font-weight="600" text-anchor="middle">lee y escribe la release N+1</text>
+    <path d="M335 215 V184 H1005 V195" fill="none" stroke="#22d3ee" stroke-opacity="0.75" stroke-width="2.5" marker-end="url(#arr-cyan)"/>
+    <path d="M335 495 V532 H1005 V502" fill="none" stroke="#22d3ee" stroke-opacity="0.75" stroke-width="2.5" marker-end="url(#arr-cyan)"/>
+    <text x="670" y="176" fill="#22d3ee" fill-opacity="0.9" font-size="12" font-weight="600" text-anchor="middle">lee y escribe la release N</text>
+    <text x="670" y="552" fill="#22d3ee" fill-opacity="0.9" font-size="12" font-weight="600" text-anchor="middle">lee y escribe la release N+1</text>
 
     <!-- Tráfico -->
     <rect x="80" y="330" width="100" height="60" rx="12" fill="url(#panel-grad)" stroke="#94a3b8" stroke-opacity="0.45" stroke-width="1.5"/>
@@ -62,7 +62,7 @@
     <!-- Cluster par (activo) -->
     <rect x="230" y="215" width="210" height="110" rx="14" fill="url(#active-grad)" stroke="#4ade80" stroke-opacity="0.6" stroke-width="2"/>
     <rect x="248" y="231" width="62" height="18" rx="4" fill="#4ade80" fill-opacity="0.15"/>
-    <text x="256" y="244" fill="#86efac" font-size="10" font-weight="800" letter-spacing="0.8">ACTIVO</text>
+    <text x="256" y="244" fill="#4ade80" font-size="10" font-weight="800" letter-spacing="0.8">ACTIVO</text>
     <text x="248" y="284" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Cluster par</text>
     <text x="248" y="306" fill="#94a3b8" font-size="13" font-weight="500">release N</text>
 
@@ -89,16 +89,16 @@
     <path d="M440 440 H556" fill="none" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#arr-blue)"/>
 
     <!-- Base de datos -->
-    <rect x="900" y="195" width="210" height="305" rx="16" fill="url(#panel-grad)" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2"/>
-    <rect x="918" y="213" width="86" height="18" rx="4" fill="#fbbf24" fill-opacity="0.15"/>
-    <text x="926" y="226" fill="#fcd34d" font-size="10" font-weight="800" letter-spacing="0.8">COMPARTIDA</text>
+    <rect x="900" y="195" width="210" height="305" rx="16" fill="url(#panel-grad)" stroke="#22d3ee" stroke-opacity="0.55" stroke-width="2"/>
+    <rect x="918" y="213" width="86" height="18" rx="4" fill="#22d3ee" fill-opacity="0.15"/>
+    <text x="926" y="226" fill="#22d3ee" font-size="10" font-weight="800" letter-spacing="0.8">COMPARTIDA</text>
     <text x="918" y="272" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Base de datos</text>
     <text x="918" y="296" fill="#94a3b8" font-size="13">Una para los dos clusters</text>
-    <line x1="918" y1="322" x2="1092" y2="322" stroke="#fbbf24" stroke-opacity="0.25" stroke-width="1.5"/>
+    <line x1="918" y1="322" x2="1092" y2="322" stroke="#22d3ee" stroke-opacity="0.25" stroke-width="1.5"/>
     <text x="918" y="352" fill="#e2e8f0" font-size="13" font-weight="600">Compatible con la release</text>
     <text x="918" y="372" fill="#e2e8f0" font-size="13" font-weight="600">actual y la anterior</text>
-    <rect x="918" y="404" width="174" height="34" rx="8" fill="#fbbf24" fill-opacity="0.12" stroke="#fbbf24" stroke-opacity="0.35"/>
-    <text x="1005" y="426" fill="#fcd34d" font-size="13" font-weight="700" text-anchor="middle">expand / contract</text>
+    <rect x="918" y="404" width="174" height="34" rx="8" fill="#22d3ee" fill-opacity="0.12" stroke="#22d3ee" stroke-opacity="0.35"/>
+    <text x="1005" y="426" fill="#22d3ee" font-size="13" font-weight="700" text-anchor="middle">expand / contract</text>
     <text x="918" y="470" fill="#94a3b8" font-size="12">El contract espera al rollback</text>
   </g>
 </svg>

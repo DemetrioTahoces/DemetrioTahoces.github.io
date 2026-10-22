@@ -66,7 +66,7 @@ Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `f
 
 - El blog está en `blog/`.
 - El blog consume los assets compartidos (`tokens.css` + `cv.css` + `blog.css` + `cv.js`, rutas `../assets/` desde `blog/` y `../../assets/` desde `blog/posts/`). Los estilos de prosa de artículo viven en `assets/blog.css`, no inline.
-- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` tienen una copia en `.claude/skills/` (no son enlaces simbólicos), que es la que carga Claude Code: edita el original y replica el cambio en la copia en el mismo commit (`diff -r` entre ambas sin diferencias).
+- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` tienen una copia en `.claude/skills/` (no son enlaces simbólicos), que es la que carga Claude Code: edita el original y replica el cambio en la copia en el mismo commit (`diff -r -x node_modules` entre ambas sin diferencias).
 - Emojis en los artículos: 4-7 (lo normal, 5-6, más o menos uno por sección principal y nunca dos en la misma), elegidos por lo que dice cada texto para que no se repitan entre posts, y colocados con el texto ya cerrado; dónde van y dónde no, en `references/emojis.md` de la skill `manage-blog`.
 - Si se añaden artículos que el chatbot deba conocer, añade o sincroniza también el contenido Markdown correspondiente bajo `CV/Chatbot/docs/`, normalmente en una subcarpeta si el patrón existente lo permite.
 
@@ -109,7 +109,7 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - Evals: nunca las ejecutes ni lances su workflow (ver "Desarrollo local").
 - Skills locales: antes de crear contenido nuevo, comprueba si hay una skill aplicable en `.agents/skills/` y úsala en vez de reinventar el flujo:
   - `edit-cv`: cambios de contenido curricular, con umbrales de tamaño por tarjeta y `scripts/check_cv.py`.
-  - `manage-blog`: artículos y assets del blog, incluida la conversión SVG→PNG para OG y LinkedIn.
+  - `manage-blog`: artículos y assets del blog, incluida la conversión SVG→PNG para OG y LinkedIn. Antes de escribir pregunta siempre los minutos de lectura y qué se puede contar, y si el usuario no tiene idea definida le encuesta con propuestas basadas en su CV y en los posts (`references/briefing.md`); `scripts/new_post.py` crea el esqueleto.
 - Exploración: ignora `.venv`, `CV/Chatbot/.venv`, `node_modules` y `__pycache__` en búsquedas y auditorías; son dependencias, no código del proyecto.
 - Edita los ficheros finales en su ruta real del repo. Las carpetas temporales o de outputs son solo para imágenes o borradores exploratorios sin destino claro.
 - Servidores locales (`python -m http.server`, `uvicorn --reload`): solo para verificación puntual cuando la tarea lo requiera; no los lances por defecto.

@@ -1,2 +1,6 @@
 opencode.json
 .venv/
+.agents/skills/manage-blog/scripts/forbidden-terms.local.txt
+.claude/skills/manage-blog/scripts/forbidden-terms.local.txt
+.agents/skills/manage-blog/scripts/node_modules/
+.claude/skills/manage-blog/scripts/node_modules/

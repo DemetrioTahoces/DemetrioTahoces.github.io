@@ -19,11 +19,11 @@ El RabbitMQ es el mismo para los dos clusters, pero exchanges y colas llevan un 
 
 ## La base de datos no se duplica {#la-base-de-datos-no-se-duplica}
 
-La base de datos es lo único que los dos clusters comparten de verdad. Una por cluster obligaría a sincronizarlas y se perderían transacciones (lo advierte Martin Fowler). Regla: cada cambio de esquema debe funcionar con la versión en producción y con la siguiente. El patrón es expand/contract (parallel change): ampliar el esquema para soportar lo viejo y lo nuevo, migrar el código poco a poco y retirar lo viejo al final.
+La base de datos es lo único que los dos clusters comparten de verdad. Una por cluster obligaría a sincronizarlas y se perderían transacciones (lo advierte Martin Fowler). Regla: cada cambio de esquema debe funcionar con la versión en producción y con la siguiente, y en las dos direcciones: la nueva entiende lo que dejó la anterior y la anterior entiende lo que escribe la nueva, porque en un rollback será ella la que lea. El patrón es expand/contract (parallel change): ampliar el esquema para soportar lo viejo y lo nuevo, migrar el código poco a poco y retirar lo viejo al final.
 
 ## Ejemplo: renombrar una columna {#ejemplo-renombrar-columna}
 
-Ejemplo ilustrativo de renombrar phone a contact_phone en cuatro releases: expand (añadir la columna nullable, escribir en las dos, leer la vieja, backfill); migrate (leer la nueva, seguir escribiendo en las dos); dejar de usar la vieja; contract (eliminarla con una migración). Hacerlo en una sola release rompería a la versión anterior.
+Ejemplo ilustrativo de renombrar phone a contact_phone en cuatro releases: expand (añadir la columna nullable, escribir en las dos, leer la vieja, backfill); migrate (leer la nueva, seguir escribiendo en las dos); dejar de usar la vieja; contract (eliminarla con una migración). Los pasos 3 y 4 van separados porque el cluster activo, en la release del paso 2, todavía escribe la columna vieja: se borra una release después, cuando ninguna versión desplegada la toca. Hacerlo en una sola release rompería a la versión anterior.
 
 ## El contract espera {#el-contract-espera}
 
@@ -31,7 +31,7 @@ Lo destructivo (borrar una columna, endurecer una restricción) solo se ejecuta 
 
 ## Lo que cuesta y lo que da {#lo-que-cuesta}
 
-Coste: un cambio de esquema pasa de una release a varias, la infraestructura se duplica y cada PR que toca la base de datos debe responder si funciona con la versión anterior; cambiar el significado de un valor sin cambiar su tipo no lo detecta ninguna migración, solo la revisión. Beneficio: la release nueva se prueba con infraestructura real antes de recibir usuarios y el rollback es el mismo interruptor de tráfico en sentido contrario.
+Coste: un cambio de esquema pasa de una release a varias (un backfill grande se planifica aparte), la infraestructura se duplica y cada PR que toca la base de datos debe responder si funciona con la versión anterior; cambiar el significado de un valor sin cambiar su tipo no lo detecta ninguna migración, solo la revisión. Beneficio: la release nueva se prueba con infraestructura real antes de recibir usuarios y el rollback es el mismo interruptor de tráfico en sentido contrario.
 
 ## Conclusión {#conclusion}
 

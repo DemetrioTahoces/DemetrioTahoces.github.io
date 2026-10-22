@@ -80,7 +80,7 @@
             <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
                 <span>22 octubre 2026</span>
                 <span class="text-gray-600">·</span>
-                <span>4 min de lectura</span>
+                <span>5 min de lectura</span>
             </div>
         </header>
 
@@ -105,14 +105,14 @@
 
                 <section id="la-mensajeria-se-aisla">
                     <h2>La mensajería se aísla</h2>
-                    <p>Lo que más asusta es la mensajería. La versión nueva publica un evento con otro formato y el consumidor de la versión anterior tiene que entenderlo, o al revés. Se puede resolver con eventos versionados, consumidores tolerantes a campos desconocidos y despliegues ordenados entre servicios. Funciona, pero exige disciplina en cada cambio de contrato.</p>
+                    <p>Lo que más asusta es la mensajería. La versión nueva publica un evento con otro formato y el consumidor de la versión anterior tiene que entenderlo, o al revés. Se puede resolver con eventos versionados, consumidores tolerantes a campos desconocidos y despliegues ordenados entre servicios. Funciona, pero exige disciplina en cada cambio de contrato. Y el fallo es traicionero: el consumidor antiguo recibe un mensaje que no sabe leer, lo rechaza o lo descarta, y el problema aparece en producción y no en las pruebas.</p>
                     <p>Nosotros lo evitamos con la topología. El RabbitMQ es el mismo para los dos clusters, pero los exchanges y las colas llevan un prefijo con el entorno y el cluster, por ejemplo <code>prod-par.*</code> y <code>prod-impar.*</code>. Cada cluster publica en sus exchanges y consume de sus colas, así que un mensaje producido por la versión N solo lo consume la versión N. Los contratos de los eventos no cruzan la frontera entre versiones.&nbsp;<span class="emoji" aria-hidden="true">🏷️</span></p>
                     <p>El cambio de tráfico queda limpio. Cuando el cluster nuevo pasa a ser el activo, el saliente mantiene sus consumidores hasta drenar sus colas y solo entonces se apaga. Y como conserva sus propias colas, volver a él tampoco mezcla versiones. El precio es duplicar la topología: dos juegos de exchanges y colas por servicio.</p>
                 </section>
 
                 <section id="la-base-de-datos-no-se-duplica">
                     <h2>La base de datos no se duplica</h2>
-                    <p>Con la mensajería aislada queda una pieza que los dos clusters comparten de verdad: la base de datos. Tener una por cluster obligaría a mantenerlas sincronizadas, y Fowler advierte de las transacciones que se pierden si no se hace. Así que hay una sola, con dos versiones del código vivas durante la ventana de cambio y de rollback.&nbsp;<span class="emoji" aria-hidden="true">🗄️</span></p>
+                    <p>Con la mensajería aislada queda una pieza que los dos clusters comparten de verdad: la base de datos. Tener una por cluster obligaría a mantenerlas sincronizadas, y Fowler advierte de las transacciones que se pierden si no se hace. Así que hay una sola, con dos versiones del código vivas durante la ventana de cambio y de rollback. Y la compatibilidad tiene que ir en las dos direcciones: la versión nueva debe entender los datos que dejó la anterior y la anterior debe entender lo que escribe la nueva, porque si hay que volver atrás será ella la que lea.&nbsp;<span class="emoji" aria-hidden="true">🗄️</span></p>
                     <p>La consecuencia es una regla: cada cambio de esquema tiene que funcionar con la versión que está en producción y con la que viene detrás. Fowler lo plantea separando el despliegue de los cambios de esquema del de la aplicación. El patrón que lo hace posible se llama expand/contract, o parallel change: ampliar el esquema para soportar lo viejo y lo nuevo, migrar el código poco a poco y, al final, retirar lo viejo.</p>
 
                     <h3 id="ejemplo-renombrar-columna">Ejemplo: renombrar una columna</h3>
@@ -123,6 +123,7 @@
                         <li>El código deja de leer y escribir <code>phone</code>.</li>
                         <li>Contract: una migración elimina <code>phone</code>.</li>
                     </ol>
+                    <p>Los pasos 3 y 4 van separados a propósito. Con el cluster activo en la release del paso 2, que todavía escribe <code>phone</code>, eliminar la columna junto con el cambio de código la dejaría sin su dato y sin poder escribir. La columna solo se borra una release después, cuando ninguna versión desplegada la toca.</p>
                 </section>
 
                 <section id="el-contract-espera" class="callout rounded-xl p-5 my-8">
@@ -132,7 +133,7 @@
 
                 <section id="lo-que-cuesta">
                     <h2>Lo que cuesta y lo que da</h2>
-                    <p>Nada de esto es gratis. Un cambio de esquema que antes era una release pasa a ser varias, el cluster en preparación duplica infraestructura y cada PR que toca la base de datos lleva una pregunta obligatoria: ¿funciona con la versión anterior? Esa regla se puede aplicar a las migraciones, pero hay cambios que ninguna migración delata: cambiar lo que significa un valor sin cambiar su tipo solo lo detecta quien revisa.</p>
+                    <p>Nada de esto es gratis. Un cambio de esquema que antes era una release pasa a ser varias, el cluster en preparación duplica infraestructura y cada PR que toca la base de datos lleva una pregunta obligatoria: ¿funciona con la versión anterior? Esa regla se puede aplicar a las migraciones, pero hay cambios que ninguna migración delata: cambiar lo que significa un valor sin cambiar su tipo solo lo detecta quien revisa. Y un backfill grande sobre una tabla en uso se planifica aparte de la release.</p>
                     <p>A cambio, la release nueva se prueba con la infraestructura real antes de recibir un solo usuario, el cambio de tráfico es un interruptor y el rollback es ese mismo interruptor en sentido contrario.&nbsp;<span class="emoji" aria-hidden="true">🧪</span></p>
                 </section>
 
