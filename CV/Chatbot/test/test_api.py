@@ -155,7 +155,7 @@ def test_mcp_search_returns_sections_with_citable_urls(client):
     assert 0 < len(hits) <= 3
     assert all(h["url"].startswith("https://demetriotahoces.github.io/") for h in hits)
     assert any("kafka" in h["snippet"].lower() for h in hits)
-    assert _call(client, "search", {"query": "zzzz-no-existe"})["structuredContent"]["result"] == []
+    assert _call(client, "search", {"query": "zzzzqqqxxx"})["structuredContent"]["result"] == []
 
 
 def test_mcp_get_document_can_return_one_section(client):

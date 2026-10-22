@@ -79,6 +79,8 @@ def main(argv: list[str]) -> int:
     html = re.sub(r"assets/(\w+\.(?:css|js))\?v=\{\{N\}\}", lambda m: f"assets/{m.group(1)}?v={versions[m.group(1)]}", html)
     html = html.replace("{{N}} min de lectura", f"{args.minutes} min de lectura")
     html = html.replace("{{DESCRIPCION_SEO_150_160_CARACTERES}}", args.description)
+    if args.description != "{{DESCRIPCION_SEO_150_160_CARACTERES}}":
+        html = html.replace("{{DESCRIPCION_CORTA}}", args.description)
     for i in range(3):
         html = html.replace(f"{{{{ETIQUETA_{i + 1}}}}}", tags[i] if i < len(tags) else "")
     for key, value in {

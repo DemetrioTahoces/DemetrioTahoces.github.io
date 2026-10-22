@@ -338,6 +338,8 @@ def check(slug: str, forbid: list[str], wanted: int | None, check_urls: bool = F
         warnings.append(f"lectura declarada {declared.group(1)} min, estimada {minutes} min ({words} palabras)")
     if not 3 <= minutes <= 8:
         warnings.append(f"lectura estimada {minutes} min fuera del rango 3-8")
+    if wanted is not None and abs(words - wanted * WORDS_PER_MINUTE) > wanted * WORDS_PER_MINUTE * 0.1:
+        warnings.append(f"presupuesto: {words} palabras, objetivo {wanted * WORDS_PER_MINUTE} ±10 % ({round(wanted * WORDS_PER_MINUTE * 0.9)}-{round(wanted * WORDS_PER_MINUTE * 1.1)})")
     if wanted is not None and minutes != wanted:
         warnings.append(f"lectura pedida {wanted} min, estimada {minutes} min ({words} palabras; objetivo ~{wanted * WORDS_PER_MINUTE})")
     if wanted is not None and declared and int(declared.group(1)) != wanted:
