@@ -87,7 +87,7 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - Backend: desplegado en Vercel desde `CV/Chatbot/`. Cada PR genera un preview de la rama.
 - No hay build del frontend.
 - CI del chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions.
-- CI del blog: `.github/workflows/blog.yml` ejecuta `python3 .agents/skills/manage-blog/scripts/check_post.py --all` (solo stdlib) en PRs y pushes a `main` que tocan el blog, sus fichas o la skill. El resto del frontend no tiene CI ni build.
+- CI del blog: `.github/workflows/blog.yml` ejecuta `python3 .agents/skills/manage-blog/scripts/check_post.py --all` (solo stdlib) y `sync_skills.py --check` en PRs y pushes a `main` que tocan el blog, sus fichas o las skills. Además, `.claude/settings.json` instala un hook de Claude Code que bloquea `git push` si esas comprobaciones fallan (`scripts/pre_push_gate.py`). El resto del frontend no tiene CI ni build.
 
 ### Flujo de cambios del chatbot en Vercel
 

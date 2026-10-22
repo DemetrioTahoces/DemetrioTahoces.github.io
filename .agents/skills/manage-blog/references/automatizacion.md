@@ -17,8 +17,13 @@ Todos desde la raíz del repo, solo stdlib salvo `svg-to-png.mjs` (puppeteer-cor
 
 `check_post.py --all` y `sync_skills.py --check` en PRs y pushes a `main` que tocan el blog, las fichas o las skills. Es la puerta que vale para cualquier agente (Claude Code, Codex, Cowork); los hooks solo cubren Claude Code.
 
-## Hooks recomendados (no instalados)
+## Hook instalado (`.claude/settings.json`, versionado)
 
-1. **PreToolUse sobre `git push` (Bash):** ejecuta `check_post.py --all` y `sync_skills.py --check`, y bloquea el push si hay errores. Aquí se publica directo a `main` y GitHub Pages sirve al instante, así que CI avisa tarde. Es el único que compensa.
-2. **PostToolUse sobre ediciones en `.agents/skills/**`:** ejecuta `sync_skills.py`. Comodidad, no necesidad: CI ya lo exige.
-3. **No recomendados:** validar en cada edición del post (un borrador a medias falla por diseño, y solo ensucia) y cualquiera que lance las evals (prohibido).
+`scripts/pre_push_gate.py` es un hook PreToolUse sobre Bash: si la orden contiene `git push`, ejecuta `check_post.py --all` y `sync_skills.py --check` y bloquea el push (exit 2) si hay errores. Aquí se publica directo a `main` y GitHub Pages sirve al instante, así que CI avisaría tarde. Cualquier otra orden pasa sin coste.
+
+- Va en el repo, así que vale en local y en sesiones cloud, pero solo en Claude Code. CI sigue siendo la puerta para Codex o Cowork.
+- Usa `python` (como `.claude/launch.json`) y es stdlib, sin depender de bash.
+- Detecta `git push` en cualquier parte de la orden, también dentro de un mensaje de commit: ejecuta antes lo que haga falta (por ejemplo `sync_skills.py`) en una orden aparte.
+- Para desactivarlo en tu máquina sin tocar el repo: `"disableAllHooks": true` en `.claude/settings.local.json` (no se versiona), o quita el bloque de `settings.json`.
+
+No se valida en cada edición (un borrador a medias falla por diseño) ni hay hooks que lancen evals (prohibido).

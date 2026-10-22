@@ -20,7 +20,7 @@ Todo lo que se pueda expresar como regla va a un script y no se repite aquí com
 | Enlaces de Fuentes vivos (`--check-urls`) | Que cada fuente diga lo que se le atribuye |
 | SVG a PNG (`build_png.sh`), `llms.txt`, tests, skills sincronizadas (`validate.sh`, `sync_skills.py`) | Diseño del diagrama y revisión visual del PNG |
 
-Detalle de cada script, CI y hooks recomendados: `references/automatizacion.md`.
+Detalle de cada script, CI y el hook de push: `references/automatizacion.md`.
 
 ## Artículo nuevo
 
