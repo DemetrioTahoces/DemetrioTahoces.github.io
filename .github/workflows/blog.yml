@@ -10,6 +10,9 @@ on:
       - "CV/Chatbot/docs/blog/**"
       - ".agents/skills/**"
       - ".claude/skills/**"
+      - ".agents/agents/**"
+      - ".claude/agents/**"
+      - ".codex/agents/**"
       - ".github/workflows/blog.yml"
   push:
     branches: [main]
@@ -18,6 +21,9 @@ on:
       - "CV/Chatbot/docs/blog/**"
       - ".agents/skills/**"
       - ".claude/skills/**"
+      - ".agents/agents/**"
+      - ".claude/agents/**"
+      - ".codex/agents/**"
 
 concurrency:
   group: blog-${{ github.ref }}

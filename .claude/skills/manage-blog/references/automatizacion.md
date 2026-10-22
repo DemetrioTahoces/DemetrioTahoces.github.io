@@ -10,7 +10,7 @@ Todos desde la raíz del repo, solo stdlib salvo `svg-to-png.mjs` (puppeteer-cor
 | `check_post.py` | Validador. Errores bloquean; avisos se revisan. `--minutes N` (objetivo del usuario), `--forbid TERM` (empresa o producto que no puede aparecer, también desde `forbidden-terms.local.txt`, ignorado por git), `--fix` (minutos y etiquetas de la tarjeta), `--check-urls` (Fuentes por red; 403 es aviso, 404/410 error). |
 | `build_png.py <slug>` | Instala dependencias si faltan, localiza Chrome y convierte el SVG en PNG 1200x630. |
 | `validate.py <slug> ...` | `check_post.py` con los mismos argumentos, skills sincronizadas, `llms.txt` regenerado y tests offline. No lanza evals. |
-| `sync_skills.py [--check]` | Copia `.agents/skills` a `.claude/skills`. Con `--check` solo informa. |
+| `sync_skills.py [--check]` | Copia `.agents/skills` a `.claude/skills` y genera `.claude/agents/*.md` y `.codex/agents/*.toml` desde `.agents/agents/*.md`. Con `--check` solo informa. |
 | `screenshot.mjs <slug>` | Capturas de escritorio y móvil con servidor estático en marcha. |
 
 ## CI (`.github/workflows/blog.yml`)

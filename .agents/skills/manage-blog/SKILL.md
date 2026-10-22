@@ -27,19 +27,17 @@ Detalle de cada script, CI y el hook de push: `references/automatizacion.md`.
 0. **Briefing:** `references/briefing.md`. Sin idea definida, brainstorm con propuestas basadas en el CV y los posts, y encuesta para elegir. Siempre se pregunta cuántos minutos de lectura quiere y qué se puede contar públicamente. Todo en encuesta cerrada (máximo 4 preguntas por ronda), nunca listas abiertas por chat. No inventar experiencias, métricas ni anécdotas.
 1. Leer `blog/index.html` y, si el tema toca experiencia profesional, la ficha de `CV/Chatbot/docs/` para respetar lo que es público.
 2. Proponer título, slug, índice de secciones (con sus `id`), idea del diagrama, minutos objetivo con su presupuesto de palabras y los huecos de ejemplos. Ajustar antes de redactar.
-3. Esqueleto: `python3 .agents/skills/manage-blog/scripts/new_post.py <slug> --title ... --tags A,B,C --minutes N`. Slug en minúsculas, ASCII y con guiones. Los `id` de sección son estables.
-4. Redactar sustituyendo los marcadores `{{...}}` del post, la tarjeta, la ficha y el draft. Reglas de diseño y contenido: `references/diseno.md`.
-5. Diagrama `blog/assets/<slug>.svg`: `references/diagrama.md`. PNG con `scripts/build_png.py <slug>` y revisarlo mirándolo.
-6. Ficha del chatbot: `references/ficha-chatbot.md`. Draft de LinkedIn: `references/linkedin.md`.
-7. Fuentes verificadas: `references/fuentes.md`.
-8. Emojis, con el texto ya cerrado: `references/emojis.md`. Auditoría obligatoria de `references/humanizer.md` sobre el artículo y el draft.
-9. Validar: `python3 .agents/skills/manage-blog/scripts/validate.py <slug> --minutes N [--forbid TERM ...] --check-urls --fix`. Sin errores; cada aviso se revisa a mano. Revisión visual opcional con `scripts/screenshot.mjs <slug>`.
-10. Publicar: commit `feature(blog): ...` y push directo a `main` (AGENTS.md). Cerrar con el resumen de `references/briefing.md`: enlace, ejemplos hipotéticos, afirmaciones solo del briefing, minutos reales frente a los pedidos y evals pendientes (las ejecuta un humano).
+3. **Delegar en el agente `blog-writer`** (`.agents/agents/blog-writer.md`; siempre, nunca redactar en la sesión principal). Pasarle el esquema aprobado, slug, etiquetas, minutos, términos prohibidos, hechos permitidos del briefing y ejemplos reales, o el cambio pedido si es edición. El agente hace esqueleto (`new_post.py`), redacción (`references/diseno.md`), diagrama SVG y PNG (`references/diagrama.md`, `build_png.py`), ficha del chatbot, draft de LinkedIn, fuentes, emojis, humanizer y `validate.py`, y devuelve un informe. No puede preguntar al usuario: si devuelve preguntas, se resuelven con encuesta y se le relanza.
+   - Claude Code: subagente `blog-writer` (Opus, effort medium) vía Agent.
+   - Codex: subagente `blog-writer` de `.codex/agents/blog-writer.toml`.
+   - Antigravity u otro sin subagentes nativos: abrir una tarea o sesión aparte que lea `.agents/agents/blog-writer.md` y siga ese rol (Gemini Argon medium, o Flash medium).
+4. Revisar el informe y el resultado: abrir el PNG, repasar las afirmaciones basadas solo en el briefing y relanzar `validate.py` (`python3 .agents/skills/manage-blog/scripts/validate.py <slug> --minutes N [--forbid TERM ...] --check-urls --fix`). Sin errores; cada aviso se revisa a mano. Revisión visual opcional con `scripts/screenshot.mjs <slug>`.
+5. Publicar: commit `feature(blog): ...` y push directo a `main` (AGENTS.md). Cerrar con el resumen de `references/briefing.md`: enlace, ejemplos hipotéticos, afirmaciones solo del briefing, minutos reales frente a los pedidos y evals pendientes (las ejecuta un humano).
 
 ## Editar un post publicado
 
-`references/edicion.md`: ids estables, `dateModified`, qué resincronizar.
+`references/edicion.md`: ids estables, `dateModified`, qué resincronizar. También se delega en `blog-writer`.
 
-## Skills duplicadas
+## Skills y agentes duplicados
 
-El original está en `.agents/skills/` y `.claude/skills/` es copia. Tras editar el original, `python3 .agents/skills/manage-blog/scripts/sync_skills.py`; CI falla si difieren.
+El original está en `.agents/skills/` y `.agents/agents/`; `.claude/skills/` es copia y `.claude/agents/*.md` y `.codex/agents/*.toml` se generan del agente. Tras editar el original, `python3 .agents/skills/manage-blog/scripts/sync_skills.py`; CI falla si difieren.
