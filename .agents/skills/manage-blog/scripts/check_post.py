@@ -6,6 +6,8 @@ Uso (desde la raíz del repo, solo stdlib):
     python3 .agents/skills/manage-blog/scripts/check_post.py --all
 
 --minutes N: minutos de lectura que pidió el usuario; avisa si el estimado no coincide.
+--fix: sincroniza lo mecánico: minutos del post y la tarjeta con el estimado, y etiquetas de la tarjeta con las del hero.
+--check-urls: abre cada enlace de "Fuentes" (red); 404/410 es error, lo no alcanzable es aviso.
 --forbid TERM: término que no puede aparecer (empresa, producto...) en HTML, ficha, draft ni SVG.
 Los términos también se leen de scripts/forbidden-terms.local.txt (uno por línea, ignorado por git).
 
@@ -20,6 +22,8 @@ import argparse
 import json
 import re
 import sys
+import urllib.error
+import urllib.request
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -141,7 +145,60 @@ def spanish_date(text: str) -> str | None:
     return f"{year}-{MONTHS[month]:02d}-{int(day):02d}"
 
 
-def check(slug: str, forbid: list[str], wanted: int | None) -> tuple[list[str], list[str]]:
+def post_emojis(text: str) -> set[str]:
+    return {e.replace("\ufe0f", "") for e in re.findall(r'<span class="emoji" aria-hidden="true">([^<]*)</span>', text)}
+
+
+def hero_badges(html: str) -> list[str]:
+    header = html[html.find("<header"):html.find("</header>")]
+    return re.findall(r'<span class="badge[^"]*">([^<]+)</span>', header)
+
+
+def apply_fixes(slug: str) -> list[str]:
+    """Sincroniza lo mecánico: minutos (post y tarjeta) y etiquetas de la tarjeta."""
+    done: list[str] = []
+    html_path = ROOT / "blog/posts" / f"{slug}.html"
+    index_path = ROOT / "blog/index.html"
+    if not html_path.is_file():
+        return done
+    page = parse(html_path)
+    minutes = max(1, round(len(" ".join(page.prose).split()) / WORDS_PER_MINUTE))
+    html = html_path.read_text(encoding="utf-8")
+    new_html = re.sub(r"\d+ min de lectura", f"{minutes} min de lectura", html, count=1)
+    if new_html != html:
+        html_path.write_text(new_html, encoding="utf-8")
+        done.append(f"minutos del post -> {minutes}")
+    index = index_path.read_text(encoding="utf-8")
+    cards = re.findall(r'<article class="card post-card.*?</article>', index, re.S)
+    card = next((c for c in cards if f'href="posts/{slug}.html"' in c), None)
+    if card:
+        block = "\n".join(f'                        <span class="badge rounded-full px-3 py-1">{b}</span>' for b in hero_badges(new_html))
+        fixed = re.sub(r"· \d+ min", f"· {minutes} min", card, count=1)
+        fixed = re.sub(r'(<div class="px-6 pb-6[^>]*>\n)(.*?)(\n\s*</div>)',
+                       lambda m: m.group(1) + block + m.group(3), fixed, count=1, flags=re.S)
+        if fixed != card:
+            index_path.write_text(index.replace(card, fixed, 1), encoding="utf-8")
+            done.append("minutos y etiquetas de la tarjeta sincronizados")
+    return done
+
+
+def check_source_urls(html: str) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    section = re.search(r'id="fuentes"(.*?)</section>', html, re.S)
+    for url in re.findall(r'href="(https?://[^"]+)"', section.group(1) if section else ""):
+        request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 check_post"})
+        try:
+            with urllib.request.urlopen(request, timeout=15):
+                pass
+        except urllib.error.HTTPError as exc:
+            (errors if exc.code in (404, 410) else warnings).append(f"fuente {url}: HTTP {exc.code}")
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            warnings.append(f"fuente {url}: no verificable ({exc})")
+    return errors, warnings
+
+
+def check(slug: str, forbid: list[str], wanted: int | None, check_urls: bool = False, fix: bool = False) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
     html_path = ROOT / "blog/posts" / f"{slug}.html"
@@ -155,6 +212,9 @@ def check(slug: str, forbid: list[str], wanted: int | None) -> tuple[list[str], 
     if errors:
         return errors, warnings
 
+    if fix:
+        for done in apply_fixes(slug):
+            warnings.append(f"corregido: {done}")
     page = parse(html_path)
     fm = frontmatter(md_path)
 
@@ -225,6 +285,27 @@ def check(slug: str, forbid: list[str], wanted: int | None) -> tuple[list[str], 
     for key in ("title", "date", "tags", "summary"):
         if not fm.get(key):
             errors.append(f"ficha: falta {key}")
+    full_html = html_path.read_text(encoding="utf-8")
+    h1 = re.search(r"<h1[^>]*>(.*?)</h1>", full_html, re.S)
+    if h1 and fm.get("title") != re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", h1.group(1))).strip():
+        errors.append("ficha: title distinto del h1 del post")
+    header_text = re.sub(r"<[^>]+>", " ", full_html[full_html.find("<header"):full_html.find("</header>")])
+    if spanish_date(header_text) != fm.get("date"):
+        errors.append(f"ficha: date ({fm.get('date')}) distinta de la fecha visible del post ({spanish_date(header_text)})")
+    missing_tags = [b for b in hero_badges(full_html) if b not in re.findall(r'"([^"]+)"', fm.get("tags", ""))]
+    if missing_tags:
+        errors.append(f"ficha: faltan las etiquetas del hero {missing_tags}")
+    others = set()
+    for other in (ROOT / "blog/posts").glob("*.html"):
+        if other != html_path:
+            others |= post_emojis(other.read_text(encoding="utf-8"))
+    repeated = sorted(post_emojis(full_html) & others)
+    if repeated:
+        warnings.append(f"emojis repetidos de otros posts: {repeated}")
+    if check_urls:
+        url_errors, url_warnings = check_source_urls(full_html)
+        errors += url_errors
+        warnings += url_warnings
     md_text = md_path.read_text(encoding="utf-8")
     if "## Fuentes" not in md_text:
         warnings.append("ficha: sin sección final '## Fuentes'")
@@ -355,6 +436,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("slugs", nargs="*", help="slug(s) del post, o --all")
     parser.add_argument("--all", action="store_true", help="valida todos los posts")
     parser.add_argument("--minutes", type=int, help="minutos de lectura pedidos por el usuario")
+    parser.add_argument("--fix", action="store_true", help="sincroniza minutos y etiquetas de la tarjeta")
+    parser.add_argument("--check-urls", action="store_true", help="comprueba por red los enlaces de Fuentes")
     parser.add_argument("--forbid", action="append", default=[], metavar="TERM", help="término prohibido (repetible)")
     args = parser.parse_args(argv)
     if not args.all and not args.slugs:
@@ -363,7 +446,7 @@ def main(argv: list[str]) -> int:
     forbid = args.forbid + local_forbidden()
     failed = False
     for slug in slugs:
-        errors, warnings = check(slug, forbid, args.minutes)
+        errors, warnings = check(slug, forbid, args.minutes, args.check_urls, args.fix)
         status = "ERROR" if errors else "OK"
         print(f"[{status}] {slug}")
         for msg in errors:

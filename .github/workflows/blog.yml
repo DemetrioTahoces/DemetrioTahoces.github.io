@@ -8,14 +8,16 @@ on:
     paths:
       - "blog/**"
       - "CV/Chatbot/docs/blog/**"
-      - ".agents/skills/manage-blog/**"
+      - ".agents/skills/**"
+      - ".claude/skills/**"
       - ".github/workflows/blog.yml"
   push:
     branches: [main]
     paths:
       - "blog/**"
       - "CV/Chatbot/docs/blog/**"
-      - ".agents/skills/manage-blog/**"
+      - ".agents/skills/**"
+      - ".claude/skills/**"
 
 concurrency:
   group: blog-${{ github.ref }}
@@ -28,3 +30,4 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: python3 .agents/skills/manage-blog/scripts/check_post.py --all
+      - run: python3 .agents/skills/manage-blog/scripts/sync_skills.py --check

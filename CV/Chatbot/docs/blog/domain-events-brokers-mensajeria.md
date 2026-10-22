@@ -1,13 +1,13 @@
 ---
 type: blog_post
-title: "Domain events y brokers de mensajería"
+title: "Domain events y brokers de mensajería: nombrar colas para entender el sistema"
 route: "/blog/posts/domain-events-brokers-mensajeria.html"
 date: "2026-07-06"
-tags: ["DDD", "Domain Events", "Event-driven Architecture", "RabbitMQ", "Kafka", "Backend", "Mensajería"]
+tags: ["DDD", "Domain Events", "Event-driven architecture", "RabbitMQ", "Kafka", "Backend", "Mensajería"]
 summary: "Domain events, exchanges, routing keys, colas y consumidores en brokers de mensajería"
 ---
 
-# Domain events y brokers de mensajería
+# Domain events y brokers de mensajería: nombrar colas para entender el sistema
 
 ## Idea central {#primero-el-domain-event-despues-el-broker}
 
