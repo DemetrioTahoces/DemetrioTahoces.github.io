@@ -1,0 +1,21 @@
+Desplegar con dos clusters de producción suena a que el rollback sale gratis. Hasta que miras qué comparten.
+
+Uno atiende a los usuarios y en el otro se despliega y se prueba la release nueva antes de mover el tráfico. Pero los dos usan el mismo RabbitMQ y la misma base de datos.
+
+Lo que hemos aprendido:
+
+🏷️ La mensajería se aísla. Exchanges y colas con prefijo de entorno y cluster: cada versión consume solo sus mensajes y los contratos de los eventos no tienen que convivir.
+
+🗄️ La base de datos no se puede aislar. Es una sola con dos versiones del código vivas, así que todo cambio de esquema va por fases con expand/contract.
+
+🧹 Lo destructivo espera. No se borra una columna mientras algún cluster pueda volver a recibir tráfico.
+
+El precio es real: renombrar una columna pasa de una release a cuatro. A cambio, volver atrás es mover el tráfico.
+
+Lo cuento aquí: 👇
+
+https://demetriotahoces.github.io/blog/posts/blue-green-con-estado.html
+
+¿Qué os ha dado más guerra con dos versiones vivas, los mensajes o la base de datos?
+
+#Backend #DevOps #ArquitecturaDeSoftware #RabbitMQ #BasesDeDatos

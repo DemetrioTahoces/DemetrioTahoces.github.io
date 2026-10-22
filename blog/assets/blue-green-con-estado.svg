@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Blue-green con estado: colas aisladas y base de datos compartida</title>
+  <desc id="desc">El tr&#225;fico llega al cluster par, activo con la release N, mientras el cluster impar, en preparaci&#243;n, tiene la release N+1. Cada cluster usa sus propias colas en el mismo RabbitMQ, con prefijos prod-par y prod-impar. Los dos clusters comparten una &#250;nica base de datos compatible con ambas versiones.</desc>
+  <defs>
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0e1d35"/>
+      <stop offset="60%" stop-color="#08101e"/>
+      <stop offset="100%" stop-color="#040812"/>
+    </radialGradient>
+    <linearGradient id="active-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c2e24"/>
+      <stop offset="100%" stop-color="#061a14"/>
+    </linearGradient>
+    <linearGradient id="prep-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f2b48"/>
+      <stop offset="100%" stop-color="#08182b"/>
+    </linearGradient>
+    <linearGradient id="panel-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111e36"/>
+      <stop offset="100%" stop-color="#0b1323"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.04"/>
+    </pattern>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 1L8 5L0 9Z" fill="#4ade80"/>
+    </marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 1L8 5L0 9Z" fill="#60a5fa"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 1L8 5L0 9Z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-grad)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <g font-family="Inter, system-ui, -apple-system, sans-serif">
+    <rect x="50" y="50" width="1100" height="530" rx="24" fill="#080f1d" fill-opacity="0.6" stroke="#38bdf8" stroke-opacity="0.12" stroke-width="1.5"/>
+
+    <!-- Cabecera -->
+    <rect x="80" y="76" width="118" height="22" rx="11" fill="#38bdf8" fill-opacity="0.1" stroke="#38bdf8" stroke-opacity="0.25"/>
+    <circle cx="92" cy="87" r="4" fill="#38bdf8"/>
+    <text x="104" y="91" fill="#38bdf8" font-size="10" font-weight="700" letter-spacing="1">DESPLIEGUES</text>
+    <text x="80" y="128" fill="#f8fafc" font-size="28" font-weight="800" letter-spacing="-0.5">Aislar lo que puedas, disciplinar lo que compartes</text>
+    <text x="80" y="153" fill="#94a3b8" font-size="15">Las colas se separan por cluster. La base de datos es una sola y debe entender a las dos versiones.</text>
+
+    <!-- Rutas hacia la base de datos (detrás de las cajas) -->
+    <path d="M335 215 V184 H1005 V195" fill="none" stroke="#fbbf24" stroke-opacity="0.75" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+    <path d="M335 495 V532 H1005 V502" fill="none" stroke="#fbbf24" stroke-opacity="0.75" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+    <text x="670" y="176" fill="#fbbf24" fill-opacity="0.9" font-size="12" font-weight="600" text-anchor="middle">lee y escribe la release N</text>
+    <text x="670" y="552" fill="#fbbf24" fill-opacity="0.9" font-size="12" font-weight="600" text-anchor="middle">lee y escribe la release N+1</text>
+
+    <!-- Tráfico -->
+    <rect x="80" y="330" width="100" height="60" rx="12" fill="url(#panel-grad)" stroke="#94a3b8" stroke-opacity="0.45" stroke-width="1.5"/>
+    <text x="130" y="366" fill="#f8fafc" font-size="16" font-weight="700" text-anchor="middle">Tr&#225;fico</text>
+    <path d="M180 348 C206 348 206 270 230 270" fill="none" stroke="#4ade80" stroke-width="3" marker-end="url(#arr-green)"/>
+    <path d="M180 372 C206 372 206 440 230 440" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arr-blue)"/>
+    <text x="130" y="414" fill="#60a5fa" font-size="11" font-weight="600" text-anchor="middle">tras el cambio</text>
+
+    <!-- Cluster par (activo) -->
+    <rect x="230" y="215" width="210" height="110" rx="14" fill="url(#active-grad)" stroke="#4ade80" stroke-opacity="0.6" stroke-width="2"/>
+    <rect x="248" y="231" width="62" height="18" rx="4" fill="#4ade80" fill-opacity="0.15"/>
+    <text x="256" y="244" fill="#86efac" font-size="10" font-weight="800" letter-spacing="0.8">ACTIVO</text>
+    <text x="248" y="284" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Cluster par</text>
+    <text x="248" y="306" fill="#94a3b8" font-size="13" font-weight="500">release N</text>
+
+    <!-- Cluster impar (en preparación) -->
+    <rect x="230" y="385" width="210" height="110" rx="14" fill="url(#prep-grad)" stroke="#60a5fa" stroke-opacity="0.6" stroke-width="2"/>
+    <rect x="248" y="401" width="118" height="18" rx="4" fill="#60a5fa" fill-opacity="0.15"/>
+    <text x="256" y="414" fill="#93c5fd" font-size="10" font-weight="800" letter-spacing="0.8">EN PREPARACI&#211;N</text>
+    <text x="248" y="454" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Cluster impar</text>
+    <text x="248" y="476" fill="#94a3b8" font-size="13" font-weight="500">release N+1</text>
+
+    <!-- RabbitMQ -->
+    <rect x="540" y="195" width="250" height="305" rx="16" fill="#0b1323" fill-opacity="0.7" stroke="#38bdf8" stroke-opacity="0.25" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <text x="665" y="219" fill="#cbd5e1" font-size="12" font-weight="700" letter-spacing="0.8" text-anchor="middle">UN SOLO RABBITMQ</text>
+
+    <rect x="560" y="235" width="210" height="70" rx="12" fill="url(#active-grad)" stroke="#4ade80" stroke-opacity="0.5" stroke-width="1.5"/>
+    <text x="580" y="266" fill="#ffffff" font-size="18" font-weight="700" font-family="JetBrains Mono, ui-monospace, monospace">prod-par.*</text>
+    <text x="580" y="288" fill="#94a3b8" font-size="12">exchanges y colas propios</text>
+
+    <rect x="560" y="405" width="210" height="70" rx="12" fill="url(#prep-grad)" stroke="#60a5fa" stroke-opacity="0.5" stroke-width="1.5"/>
+    <text x="580" y="436" fill="#ffffff" font-size="18" font-weight="700" font-family="JetBrains Mono, ui-monospace, monospace">prod-impar.*</text>
+    <text x="580" y="458" fill="#94a3b8" font-size="12">exchanges y colas propios</text>
+
+    <path d="M440 270 H556" fill="none" stroke="#4ade80" stroke-width="2.5" marker-end="url(#arr-green)"/>
+    <path d="M440 440 H556" fill="none" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+
+    <!-- Base de datos -->
+    <rect x="900" y="195" width="210" height="305" rx="16" fill="url(#panel-grad)" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="2"/>
+    <rect x="918" y="213" width="86" height="18" rx="4" fill="#fbbf24" fill-opacity="0.15"/>
+    <text x="926" y="226" fill="#fcd34d" font-size="10" font-weight="800" letter-spacing="0.8">COMPARTIDA</text>
+    <text x="918" y="272" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Base de datos</text>
+    <text x="918" y="296" fill="#94a3b8" font-size="13">Una para los dos clusters</text>
+    <line x1="918" y1="322" x2="1092" y2="322" stroke="#fbbf24" stroke-opacity="0.25" stroke-width="1.5"/>
+    <text x="918" y="352" fill="#e2e8f0" font-size="13" font-weight="600">Compatible con la release</text>
+    <text x="918" y="372" fill="#e2e8f0" font-size="13" font-weight="600">actual y la anterior</text>
+    <rect x="918" y="404" width="174" height="34" rx="8" fill="#fbbf24" fill-opacity="0.12" stroke="#fbbf24" stroke-opacity="0.35"/>
+    <text x="1005" y="426" fill="#fcd34d" font-size="13" font-weight="700" text-anchor="middle">expand / contract</text>
+    <text x="918" y="470" fill="#94a3b8" font-size="12">El contract espera al rollback</text>
+  </g>
+</svg>
