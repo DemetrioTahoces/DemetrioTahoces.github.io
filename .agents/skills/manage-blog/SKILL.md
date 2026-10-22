@@ -18,7 +18,7 @@ Todo lo que se pueda expresar como regla va a un script y no se repite aquí com
 | Metadatos, JSON-LD, anclas, enlaces, ids, orden del índice, ficha frente al post | Título, descripción SEO, resumen de la ficha |
 | Marcadores sin sustituir, términos prohibidos, dashes, paleta del SVG, emojis (cuenta, marcado, repetición) | Qué emoji y dónde, tono, auditoría del humanizer |
 | Enlaces de Fuentes vivos (`--check-urls`) | Que cada fuente diga lo que se le atribuye |
-| SVG a PNG (`build_png.sh`), `llms.txt`, tests, skills sincronizadas (`validate.sh`, `sync_skills.py`) | Diseño del diagrama y revisión visual del PNG |
+| SVG a PNG (`build_png.py`), `llms.txt`, tests, skills sincronizadas (`validate.py`, `sync_skills.py`) | Diseño del diagrama y revisión visual del PNG |
 
 Detalle de cada script, CI y el hook de push: `references/automatizacion.md`.
 
@@ -29,11 +29,11 @@ Detalle de cada script, CI y el hook de push: `references/automatizacion.md`.
 2. Proponer título, slug, índice de secciones (con sus `id`), idea del diagrama, minutos objetivo con su presupuesto de palabras y los huecos de ejemplos. Ajustar antes de redactar.
 3. Esqueleto: `python3 .agents/skills/manage-blog/scripts/new_post.py <slug> --title ... --tags A,B,C --minutes N`. Slug en minúsculas, ASCII y con guiones. Los `id` de sección son estables.
 4. Redactar sustituyendo los marcadores `{{...}}` del post, la tarjeta, la ficha y el draft. Reglas de diseño y contenido: `references/diseno.md`.
-5. Diagrama `blog/assets/<slug>.svg`: `references/diagrama.md`. PNG con `scripts/build_png.sh <slug>` y revisarlo mirándolo.
+5. Diagrama `blog/assets/<slug>.svg`: `references/diagrama.md`. PNG con `scripts/build_png.py <slug>` y revisarlo mirándolo.
 6. Ficha del chatbot: `references/ficha-chatbot.md`. Draft de LinkedIn: `references/linkedin.md`.
 7. Fuentes verificadas: `references/fuentes.md`.
 8. Emojis, con el texto ya cerrado: `references/emojis.md`. Auditoría obligatoria de `references/humanizer.md` sobre el artículo y el draft.
-9. Validar: `.agents/skills/manage-blog/scripts/validate.sh <slug> --minutes N [--forbid TERM ...] --check-urls --fix`. Sin errores; cada aviso se revisa a mano. Revisión visual opcional con `scripts/screenshot.mjs <slug>`.
+9. Validar: `python3 .agents/skills/manage-blog/scripts/validate.py <slug> --minutes N [--forbid TERM ...] --check-urls --fix`. Sin errores; cada aviso se revisa a mano. Revisión visual opcional con `scripts/screenshot.mjs <slug>`.
 10. Publicar: commit `feature(blog): ...` y push directo a `main` (AGENTS.md). Cerrar con el resumen de `references/briefing.md`: enlace, ejemplos hipotéticos, afirmaciones solo del briefing, minutos reales frente a los pedidos y evals pendientes (las ejecuta un humano).
 
 ## Editar un post publicado
