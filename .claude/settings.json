@@ -1,12 +1,22 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/install_hooks.py\""
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.agents/skills/manage-blog/scripts/pre_push_gate.py\""
+            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/pre_push_gate.py\""
           }
         ]
       }

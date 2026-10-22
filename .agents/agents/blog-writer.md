@@ -58,4 +58,4 @@ Un informe corto con: ficheros creados o modificados; enlace público esperado (
 | Codex | `.codex/agents/blog-writer.toml` (generado) | Modelo de mayor capacidad disponible, `model_reasoning_effort = "medium"`. `codex_model` vacío = hereda el de la sesión; rellénalo en el frontmatter con el ID exacto si quieres fijarlo |
 | Antigravity | Este fichero (`.agents/agents/blog-writer.md`), sin copia | Gemini Argon (4) en medium si está disponible; si no, Gemini Flash en medium. Se elige en el selector de modelo de la tarea: no hay clave de fichero verificada para fijarlo |
 
-El original es este fichero. Tras editarlo: `python3 .agents/skills/manage-blog/scripts/sync_skills.py`.
+El original es este fichero. Tras editarlo: `python3 scripts/sync_skills.py`.

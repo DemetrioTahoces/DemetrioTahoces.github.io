@@ -9,10 +9,12 @@ on:
       - "blog/**"
       - "CV/Chatbot/docs/blog/**"
       - ".agents/skills/**"
+      - "scripts/**"
       - ".claude/skills/**"
       - ".agents/agents/**"
       - ".claude/agents/**"
       - ".codex/agents/**"
+      - ".githooks/**"
       - ".github/workflows/blog.yml"
   push:
     branches: [main]
@@ -20,10 +22,12 @@ on:
       - "blog/**"
       - "CV/Chatbot/docs/blog/**"
       - ".agents/skills/**"
+      - "scripts/**"
       - ".claude/skills/**"
       - ".agents/agents/**"
       - ".claude/agents/**"
       - ".codex/agents/**"
+      - ".githooks/**"
 
 concurrency:
   group: blog-${{ github.ref }}
@@ -35,5 +39,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: python3 .agents/skills/manage-blog/scripts/check_post.py --all
-      - run: python3 .agents/skills/manage-blog/scripts/sync_skills.py --check
+      - run: python3 scripts/check_all.py

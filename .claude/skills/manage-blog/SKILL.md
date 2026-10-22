@@ -40,4 +40,4 @@ Detalle de cada script, CI y el hook de push: `references/automatizacion.md`.
 
 ## Skills y agentes duplicados
 
-El original está en `.agents/skills/` y `.agents/agents/`; `.claude/skills/` es copia y `.claude/agents/*.md` y `.codex/agents/*.toml` se generan del agente. Tras editar el original, `python3 .agents/skills/manage-blog/scripts/sync_skills.py`; CI falla si difieren.
+El original está en `.agents/skills/` y `.agents/agents/`; `.claude/skills/` es copia y `.claude/agents/*.md` y `.codex/agents/*.toml` se generan del agente. Tras editar el original, `python3 scripts/sync_skills.py`; CI falla si difieren.

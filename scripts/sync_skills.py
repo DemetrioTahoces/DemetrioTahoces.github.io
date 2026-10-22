@@ -5,8 +5,8 @@ generan como .claude/agents/*.md (Claude Code) y .codex/agents/*.toml (Codex).
 Antigravity lee .agents/agents directamente.
 
 Uso (desde la raíz del repo, solo stdlib):
-    python3 .agents/skills/manage-blog/scripts/sync_skills.py          # copia .agents -> .claude
-    python3 .agents/skills/manage-blog/scripts/sync_skills.py --check  # solo informa; exit 1 si difieren
+    python3 scripts/sync_skills.py          # copia .agents -> .claude
+    python3 scripts/sync_skills.py --check  # solo informa; exit 1 si difieren
 
 Ignora node_modules y __pycache__.
 """
@@ -17,7 +17,7 @@ import shutil
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[4]
+ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / ".agents/skills"
 DST = ROOT / ".claude/skills"
 IGNORED = {"node_modules", "__pycache__"}
@@ -80,7 +80,7 @@ def sync_agents(check: bool) -> int:
                 if not check:
                     path.unlink()
     if check and stale:
-        print("agentes desincronizados: python3 .agents/skills/manage-blog/scripts/sync_skills.py")
+        print("agentes desincronizados: python3 scripts/sync_skills.py")
         return 1
     return 0
 
@@ -101,7 +101,7 @@ def main(argv: list[str]) -> int:
         if not check:
             (DST / p).unlink()
     if check and (changed or extra):
-        print("skills desincronizadas: python3 .agents/skills/manage-blog/scripts/sync_skills.py")
+        print("skills desincronizadas: python3 scripts/sync_skills.py")
         return 1
     if not changed and not extra and rc == 0:
         print("skills y agentes sincronizados")

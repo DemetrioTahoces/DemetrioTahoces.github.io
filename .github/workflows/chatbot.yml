@@ -9,12 +9,18 @@ on:
       - "CV/Chatbot/**"
       - "CV/chatbot.html"
       - "llms.txt"
+      - "index.html"
+      - "CV/*.html"
+      - "blog/posts/**"
       - ".github/workflows/chatbot.yml"
   push:
     branches: [main]
     paths:
       - "CV/Chatbot/**"
       - "llms.txt"
+      - "index.html"
+      - "CV/*.html"
+      - "blog/posts/**"
 
 concurrency:
   group: chatbot-${{ github.ref }}

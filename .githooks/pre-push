@@ -1,0 +1,6 @@
+#!/bin/sh
+# Hook de git agnóstico del agente (Claude Code, Codex, Antigravity o manual).
+# Activar con: python3 scripts/install_hooks.py. Saltar puntualmente: --no-verify
+cd "$(git rev-parse --show-toplevel)" || exit 1
+PY=$(command -v python3 || command -v python) || { echo "pre-push: falta python" >&2; exit 1; }
+exec "$PY" scripts/check_all.py

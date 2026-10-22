@@ -1,0 +1,34 @@
+name: CV
+
+# Umbrales de tarjetas y sincronía de skills y agentes al tocar el CV estático o su
+# documentación RAG. Solo stdlib, sin dependencias. Los tests del chatbot (anclas) van en chatbot.yml.
+
+on:
+  pull_request:
+    paths:
+      - "index.html"
+      - "CV/*.html"
+      - "CV/Chatbot/docs/**"
+      - ".agents/skills/edit-cv/**"
+      - "scripts/**"
+      - ".github/workflows/cv.yml"
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "CV/*.html"
+      - "CV/Chatbot/docs/**"
+      - ".agents/skills/edit-cv/**"
+      - "scripts/**"
+
+concurrency:
+  group: cv-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check CV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 scripts/check_all.py

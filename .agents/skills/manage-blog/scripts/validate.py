@@ -25,7 +25,7 @@ def run(cmd: list[str], cwd: Path = ROOT) -> int:
 
 def main(argv: list[str]) -> int:
     failed = run([sys.executable, str(SCRIPTS / "check_post.py"), *argv]) != 0
-    failed |= run([sys.executable, str(SCRIPTS / "sync_skills.py"), "--check"]) != 0
+    failed |= run([sys.executable, str(ROOT / "scripts/sync_skills.py"), "--check"]) != 0
     uv = shutil.which("uv")
     if not uv:
         print("aviso: uv no está instalado; se omiten llms.txt y los tests del chatbot")
