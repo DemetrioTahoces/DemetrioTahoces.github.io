@@ -85,7 +85,7 @@
 
         <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
             <figure class="mb-8" data-reveal>
-                <img src="../assets/git-workflow-agentes-ia.svg" alt="Tres ramas en horizontal con su entorno: develop en dev, release 2.5 en staging y main en producción. Un hotfix entra en main y una cascada lo lleva a la release y después a develop. En cada salto, si el merge es limpio y el CI sale verde, el bot mergea directo; si hay conflicto o CI rojo, se abre una PR, el agente resuelve y un humano aprueba. Antes de producción, una puerta comprueba que main está contenido en la release" class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+                <img src="../assets/git-workflow-agentes-ia.svg" alt="Diagrama de ramas con el tiempo de izquierda a derecha: hotfix, main en producción, release 2.5 en staging, develop en dev y features. Dos features vuelven a develop por PR del agente con squash y se corta release 2.5 desde develop. Un hotfix que implementa el agente y clasifica un humano entra en main con el tag v2.4.1. La cascada lleva main a la release con merge directo del bot, porque es limpio y el CI sale verde, y la release a develop por PR, porque hay conflicto: el agente resuelve y el humano aprueba. Una puerta comprueba que main está contenido en la release y main avanza por fast-forward con el tag v2.5.0, la misma imagen sin recompilar" class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
             </figure>
 
             <div class="principle-grid mb-8" data-reveal>
