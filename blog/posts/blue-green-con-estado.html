@@ -86,7 +86,7 @@
 
         <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
             <figure class="mb-8" data-reveal>
-                <img src="../assets/blue-green-con-estado.svg" alt="El tráfico llega al cluster par, activo con la release N, mientras el cluster impar, en preparación, tiene la release N+1. Cada cluster usa sus propias colas en el mismo RabbitMQ, con prefijos prod-par y prod-impar. Los dos clusters comparten una única base de datos, que debe ser compatible con ambas versiones" class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+                <img src="../assets/blue-green-con-estado.svg" alt="El tráfico llega al cluster par, activo con la release N, mientras el cluster impar, en preparación, tiene la release N+1. Cada cluster usa sus propias colas en el mismo broker de mensajería, con prefijos prod-par y prod-impar. Los dos clusters comparten una única base de datos, que debe ser compatible con ambas versiones" class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
             </figure>
 
             <div class="principle-grid mb-8" data-reveal>
@@ -106,7 +106,7 @@
                 <section id="la-mensajeria-se-aisla">
                     <h2>La mensajería se aísla</h2>
                     <p>Lo que más asusta es la mensajería. La versión nueva publica un evento con otro formato y el consumidor de la versión anterior tiene que entenderlo, o al revés. Se puede resolver con eventos versionados, consumidores tolerantes a campos desconocidos y despliegues ordenados entre servicios. Funciona, pero exige disciplina en cada cambio de contrato. Y el fallo es traicionero: el consumidor antiguo recibe un mensaje que no sabe leer, lo rechaza o lo descarta, y el problema aparece en producción y no en las pruebas.</p>
-                    <p>Nosotros lo evitamos con la topología. El RabbitMQ es el mismo para los dos clusters, pero los exchanges y las colas llevan un prefijo con el entorno y el cluster, por ejemplo <code>prod-par.*</code> y <code>prod-impar.*</code>. Cada cluster publica en sus exchanges y consume de sus colas, así que un mensaje producido por la versión N solo lo consume la versión N. Los contratos de los eventos no cruzan la frontera entre versiones.&nbsp;<span class="emoji" aria-hidden="true">🏷️</span></p>
+                    <p>Nosotros lo evitamos con la topología. El broker de mensajería es el mismo para los dos clusters, pero los exchanges y las colas llevan un prefijo con el entorno y el cluster, por ejemplo <code>prod-par.*</code> y <code>prod-impar.*</code>. Cada cluster publica en sus exchanges y consume de sus colas, así que un mensaje producido por la versión N solo lo consume la versión N. Los contratos de los eventos no cruzan la frontera entre versiones.&nbsp;<span class="emoji" aria-hidden="true">🏷️</span></p>
                     <p>El cambio de tráfico queda limpio. Cuando el cluster nuevo pasa a ser el activo, el saliente mantiene sus consumidores hasta drenar sus colas y solo entonces se apaga. Y como conserva sus propias colas, volver a él tampoco mezcla versiones. El precio es duplicar la topología: dos juegos de exchanges y colas por servicio.</p>
                 </section>
 

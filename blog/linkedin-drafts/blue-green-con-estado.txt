@@ -1,6 +1,6 @@
 Desplegar con dos clusters de producción suena a que el rollback sale gratis. Hasta que miras qué comparten.
 
-Uno atiende a los usuarios y en el otro se despliega y se prueba la release nueva antes de mover el tráfico. Pero los dos usan el mismo RabbitMQ y la misma base de datos.
+Uno atiende a los usuarios y en el otro se despliega y se prueba la release nueva antes de mover el tráfico. Pero los dos usan el mismo broker de mensajería y la misma base de datos.
 
 Lo que hemos aprendido:
 
@@ -18,4 +18,4 @@ https://demetriotahoces.github.io/blog/posts/blue-green-con-estado.html
 
 ¿Qué os ha dado más guerra con dos versiones vivas, los mensajes o la base de datos?
 
-#Backend #DevOps #ArquitecturaDeSoftware #RabbitMQ #BasesDeDatos
+#Backend #DevOps #ArquitecturaDeSoftware #Mensajería #BasesDeDatos

@@ -3,7 +3,7 @@ type: blog_post
 title: "Blue-green con estado: aislar las colas, disciplinar la base de datos"
 route: "/blog/posts/blue-green-con-estado.html"
 date: "2026-10-22"
-tags: ["Despliegues", "Mensajería", "Bases de datos", "Blue-green", "Expand/contract", "RabbitMQ", "Rollback"]
+tags: ["Despliegues", "Mensajería", "Bases de datos", "Blue-green", "Expand/contract", "Broker de mensajería", "Rollback"]
 summary: "Cómo desplegar con dos clusters de producción que comparten broker y base de datos: colas con prefijo por cluster y cambios de esquema con expand/contract, sin borrar nada mientras se pueda volver atrás"
 ---
 
@@ -15,7 +15,7 @@ Con dos clusters de producción (par e impar), uno activo y otro donde se despli
 
 ## La mensajería se aísla {#la-mensajeria-se-aisla}
 
-El RabbitMQ es el mismo para los dos clusters, pero exchanges y colas llevan un prefijo con el entorno y el cluster (por ejemplo prod-par.* y prod-impar.*). Cada cluster publica y consume solo en lo suyo, así que un mensaje de la versión N solo lo consume la versión N y los contratos de los eventos no cruzan la frontera entre versiones. Alternativas como eventos versionados o consumidores tolerantes funcionan, pero exigen disciplina en cada cambio. Al cambiar el tráfico, el cluster saliente drena sus colas antes de apagarse; volver a él no mezcla versiones. Precio: duplicar la topología (dos juegos de exchanges y colas por servicio).
+El broker de mensajería es el mismo para los dos clusters, pero exchanges y colas llevan un prefijo con el entorno y el cluster (por ejemplo prod-par.* y prod-impar.*). Cada cluster publica y consume solo en lo suyo, así que un mensaje de la versión N solo lo consume la versión N y los contratos de los eventos no cruzan la frontera entre versiones. Alternativas como eventos versionados o consumidores tolerantes funcionan, pero exigen disciplina en cada cambio. Al cambiar el tráfico, el cluster saliente drena sus colas antes de apagarse; volver a él no mezcla versiones. Precio: duplicar la topología (dos juegos de exchanges y colas por servicio).
 
 ## La base de datos no se duplica {#la-base-de-datos-no-se-duplica}
 

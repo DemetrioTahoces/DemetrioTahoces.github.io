@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Blue-green con estado: colas aisladas y base de datos compartida</title>
-  <desc id="desc">El tr&#225;fico llega al cluster par, activo con la release N, mientras el cluster impar, en preparaci&#243;n, tiene la release N+1. Cada cluster usa sus propias colas en el mismo RabbitMQ, con prefijos prod-par y prod-impar. Los dos clusters comparten una &#250;nica base de datos compatible con ambas versiones.</desc>
+  <desc id="desc">El tr&#225;fico llega al cluster par, activo con la release N, mientras el cluster impar, en preparaci&#243;n, tiene la release N+1. Cada cluster usa sus propias colas en el mismo broker de mensajer&#237;a, con prefijos prod-par y prod-impar. Los dos clusters comparten una &#250;nica base de datos compatible con ambas versiones.</desc>
   <defs>
     <radialGradient id="bg-grad" cx="50%" cy="50%" r="75%">
       <stop offset="0%" stop-color="#0e1d35"/>
@@ -73,9 +73,9 @@
     <text x="248" y="454" fill="#ffffff" font-size="24" font-weight="800" letter-spacing="-0.5">Cluster impar</text>
     <text x="248" y="476" fill="#94a3b8" font-size="13" font-weight="500">release N+1</text>
 
-    <!-- RabbitMQ -->
+    <!-- Broker de mensajería -->
     <rect x="540" y="195" width="250" height="305" rx="16" fill="#0b1323" fill-opacity="0.7" stroke="#38bdf8" stroke-opacity="0.25" stroke-width="1.5" stroke-dasharray="6 5"/>
-    <text x="665" y="219" fill="#cbd5e1" font-size="12" font-weight="700" letter-spacing="0.8" text-anchor="middle">UN SOLO RABBITMQ</text>
+    <text x="665" y="219" fill="#cbd5e1" font-size="12" font-weight="700" letter-spacing="0.8" text-anchor="middle">UN SOLO BROKER</text>
 
     <rect x="560" y="235" width="210" height="70" rx="12" fill="url(#active-grad)" stroke="#4ade80" stroke-opacity="0.5" stroke-width="1.5"/>
     <text x="580" y="266" fill="#ffffff" font-size="18" font-weight="700" font-family="JetBrains Mono, ui-monospace, monospace">prod-par.*</text>
