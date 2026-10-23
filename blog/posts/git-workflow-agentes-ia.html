@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git workflow con agentes: una PR, su destino real y una cascada que nadie olvida - Demetrio Tahoces</title>
+    <meta name="description" content="Con agentes hay más PRs y ramas vivas: cada cambio entra una vez en la rama más antigua afectada y una cascada de merges con CI lo propaga hacia las nuevas.">
+    <meta property="og:title" content="Git workflow con agentes: una PR, su destino real y una cascada que nadie olvida">
+    <meta property="og:description" content="Una PR en la rama más antigua afectada, una cascada de merges determinista hacia las nuevas y humanos donde se asume riesgo: un flujo de ramas para agentes.">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="https://demetriotahoces.github.io/blog/posts/git-workflow-agentes-ia.html">
+    <meta property="og:url" content="https://demetriotahoces.github.io/blog/posts/git-workflow-agentes-ia.html">
+    <meta property="og:image" content="https://demetriotahoces.github.io/blog/assets/git-workflow-agentes-ia.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Git workflow con agentes: una PR, su destino real y una cascada que nadie olvida">
+    <meta name="twitter:description" content="Una PR en la rama más antigua afectada, una cascada de merges determinista hacia las nuevas y humanos donde se asume riesgo: un flujo de ramas para agentes.">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/blog/assets/git-workflow-agentes-ia.png">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Git workflow con agentes: una PR, su destino real y una cascada que nadie olvida",
+      "description": "Una PR en la rama más antigua afectada, una cascada de merges determinista hacia las nuevas y humanos donde se asume riesgo: un flujo de ramas para agentes.",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
+      "author": {
+        "@type": "Person",
+        "name": "Demetrio Tahoces"
+      },
+      "image": "https://demetriotahoces.github.io/blog/assets/git-workflow-agentes-ia.png",
+      "mainEntityOfPage": "https://demetriotahoces.github.io/blog/posts/git-workflow-agentes-ia.html"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/tokens.css?v=2">
+    <link rel="stylesheet" href="../../assets/cv.css?v=3">
+    <link rel="stylesheet" href="../../assets/blog.css?v=3">
+    <script>
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('motion-ready');
+        }
+    </script>
+</head>
+
+<body class="antialiased">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <nav class="site-nav" aria-label="Navegación principal">
+        <a class="site-brand" href="../../index.html">Demetrio Tahoces</a>
+        <div class="site-nav-links">
+            <a href="../../index.html">CV</a>
+            <a href="../index.html" aria-current="page">Blog</a>
+        </div>
+    </nav>
+
+    <main id="contenido" class="page-shell mx-auto">
+        <a href="../index.html" class="back-link inline-flex items-center gap-2 mb-6 text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Volver al blog
+        </a>
+
+        <header class="header-bg article-hero rounded-2xl p-8 md:p-10 mb-8 shadow-xl">
+            <div class="flex flex-wrap gap-2 mb-5 hero-stage" style="--stage-delay: 0.05s">
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">IA</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Agentes</span>
+                <span class="badge rounded-full px-3 py-1 text-sm font-semibold">Git</span>
+            </div>
+            <p class="text-sm font-semibold uppercase tracking-normal text-blue-200 mb-3 hero-stage" style="--stage-delay: 0.13s">Flujo de ramas con agentes</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight hero-stage" style="--stage-delay: 0.21s">Git workflow con agentes: una PR, su destino real y una cascada que nadie olvida</h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.29s">
+                Con agentes abriendo PRs hay más ramas vivas y más fixes en vuelo. Este diseño hace que cada cambio entre una sola vez, en la rama más antigua a la que afecta, y que una cascada automática lo lleve al resto: lo que mueve ramas es determinista, lo que escribe código es del agente y lo que asume riesgo es humano.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3 text-sm text-gray-300 hero-stage" style="--stage-delay: 0.37s">
+                <span>23 octubre 2026</span>
+                <span class="text-gray-600">·</span>
+                <span>7 min de lectura</span>
+            </div>
+        </header>
+
+        <article class="card rounded-xl p-6 md:p-8 mb-8" data-reveal>
+            <figure class="mb-8" data-reveal>
+                <img src="../assets/git-workflow-agentes-ia.svg" alt="Tres ramas en horizontal con su entorno: develop en dev, release 2.5 en staging y main en producción. Un hotfix entra en main y una cascada lo lleva a la release y después a develop. En cada salto, si el merge es limpio y el CI sale verde, el bot mergea directo; si hay conflicto o CI rojo, se abre una PR, el agente resuelve y un humano aprueba. Antes de producción, una puerta comprueba que main está contenido en la release" class="w-full rounded-xl border border-blue-400/20 bg-slate-950/40">
+            </figure>
+
+            <div class="principle-grid mb-8" data-reveal>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Entrada</strong><span class="text-sm">Una PR, rama más antigua</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Cascada</strong><span class="text-sm">Determinista, con CI</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Conflictos</strong><span class="text-sm">Agente resuelve, humano aprueba</span></div>
+                <div class="badge rounded-xl p-3 text-center"><strong class="block text-white text-lg">Promoción</strong><span class="text-sm">main dentro de la release</span></div>
+            </div>
+
+            <div class="article-prose">
+                <section id="el-fix-que-desaparece">
+                    <h2>El fix que desaparece</h2>
+                    <p>Supón un servicio backend con tres ramas largas y agentes de código abriendo PRs a diario. La 2.4 está en producción, la 2.5 en staging y <code>develop</code> acumula la 2.6. Un agente arregla un bug de producción en <code>main</code>, pero el fix no llega a <code>release/2.5</code> ni a <code>develop</code>, y nadie lo nota hasta promocionar la 2.5: el fix desaparece de producción, el bug vuelve y hay que rehacerlo.&nbsp;<span class="emoji" aria-hidden="true">🪃</span></p>
+                    <p>Con un fix de staging que no llega a <code>develop</code> pasa igual: la regresión aparece una release después. Con agentes el problema crece, porque hay más PRs, más ramas vivas y más fixes en vuelo. El diseño que propongo reparte el trabajo: lo que mueve ramas es determinista, lo que escribe código es del agente y lo que asume riesgo es humano. Es una propuesta de diseño y el ejemplo es hipotético.</p>
+                </section>
+
+                <section id="tres-ramas-tres-entornos">
+                    <h2>Tres ramas, tres entornos</h2>
+                    <p>Cada rama larga tiene su entorno: <code>develop</code> va a dev, <code>release/x.y</code> a staging y <code>main</code> a producción. Staging es el cluster inactivo de un despliegue blue-green, donde la release se prueba con la infraestructura real antes de mover el tráfico (lo conté en <a href="blue-green-con-estado.html">Blue-green con estado</a>).</p>
+                    <p>La regla es build once, deploy many: la imagen validada en staging es la que llega a producción, sin recompilar. Después, <code>main</code> avanza por fast-forward hasta la release. Así <code>main</code> es siempre lo que hay en producción y un hotfix parte del código que está fallando.</p>
+                    <p>Ese fast-forward solo es posible si la release contiene todo <code>main</code>. Si un hotfix no llegó a la release, no se puede, y esa señal se convertirá en bloqueo.</p>
+                </section>
+
+                <section id="una-pr-su-destino">
+                    <h2>Una PR, su destino real</h2>
+                    <p>Regla única: un cambio entra por una PR en la rama más antigua a la que afecta y desde ahí se propaga solo hacia las más nuevas. Bug en producción: PR a <code>main</code>. Bug que solo existe en staging porque lo introdujo la 2.5: PR a <code>release/2.5</code>. Features y fixes de lo que aún no ha salido: <code>develop</code>.</p>
+                    <p>Se acaba la PR duplicada a mano por rama: tres revisiones del mismo cambio, tres commits que git no relaciona y la posibilidad de que uno se quede sin mergear.</p>
+                    <p>Elegir <code>main</code> es declarar un hotfix, y eso lo decide un humano: es tocar producción fuera de ciclo. El agente lo propone con su diagnóstico (dónde aparece el bug y desde qué versión).</p>
+                </section>
+
+                <section id="formas-de-propagar">
+                    <h2>Cinco formas de propagar</h2>
+                    <p>Falta decidir cómo llega el cambio a las ramas más nuevas. Hay cinco opciones:</p>
+                    <table class="naming-table">
+                        <thead>
+                            <tr>
+                                <th>Opción</th>
+                                <th>A favor</th>
+                                <th>En contra</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Manual (GitFlow clásico)</td>
+                                <td>Sin herramientas.</td>
+                                <td>Depende de que alguien se acuerde.</td>
+                            </tr>
+                            <tr>
+                                <td>Backport por cherry-pick</td>
+                                <td>Propaga en paralelo.</td>
+                                <td>N copias con SHAs distintos.</td>
+                            </tr>
+                            <tr>
+                                <td>Upstream first</td>
+                                <td><code>develop</code> nunca se queda sin el fix.</td>
+                                <td>Latencia alta hasta producción.</td>
+                            </tr>
+                            <tr>
+                                <td>Cascada con PR</td>
+                                <td>Mismos commits; cada resolución se hereda.</td>
+                                <td>PRs de bot en la lista.</td>
+                            </tr>
+                            <tr>
+                                <td>Merge directo en cascada sin PR</td>
+                                <td>Sin ruido de PRs.</td>
+                                <td>Sin CI sobre el resultado antes del merge.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>En GitFlow, quien cierra un hotfix lo mergea a mano en <code>master</code> y en <code>develop</code> (o en la release abierta, como prevé Driessen): justo el paso que se olvida.</p>
+                    <p>El backport lo automatizan bots como <code>korthout/backport-action</code>: etiquetas la PR mergeada y el bot abre una PR por rama destino con los commits cherry-pickeados. Son copias con SHA propio: git no sabe que son el mismo cambio (<code>git branch --contains</code> no las encuentra) y cada una resuelve sus conflictos por separado. Para un backport real, a una release antigua mantenida, es la herramienta correcta.&nbsp;<span class="emoji" aria-hidden="true">🍒</span></p>
+                    <p>Upstream first invierte el sentido: el fix entra en <code>develop</code> y se cherry-pickea hacia la release y <code>main</code>. El fix llega tarde a producción y se escribe sobre un código distinto del que falla.</p>
+                    <p>En la cascada, al mergear en <code>main</code> una automatización mergea <code>main</code> en la release y la release en <code>develop</code>. Son los mismos commits: un conflicto se resuelve una vez por salto y la rama siguiente hereda la resolución. Tres hotfixes seguidos viajan en una sola PR por salto.</p>
+                    <p>Algunas plataformas traen integrado el merge directo en cascada sin PR: al mergear la PR original, mergean hacia las ramas más nuevas y, si un salto tiene conflicto, la cadena para y se abre una PR para ese salto. Sin ruido, pero un merge limpio entra sin compilar.</p>
+                    <p>Un matiz: entre backport y cascada con PR, el número de PRs es parecido. La cascada gana en otra cosa: un commit por cambio, una resolución por conflicto y trazabilidad. Propongo un híbrido: merge directo si el salto es limpio y el CI previo sale verde; PR de cascada si hay conflicto o CI rojo.</p>
+                </section>
+
+                <section id="la-cascada-en-la-practica">
+                    <h2>La cascada en la práctica</h2>
+                    <p>Al mergear en <code>main</code> o en una release, una GitHub Action:</p>
+                    <ol>
+                        <li>Crea una rama temporal, <code>cascade/main-to-release-&lt;sha&gt;</code>, con el merge de <code>main</code> sobre la release.</li>
+                        <li>Lanza el CI sobre ese commit. Limpio no es correcto: si <code>develop</code> renombró una función que el hotfix llama por su nombre viejo, git mergea sin conflictos y el build falla.</li>
+                        <li>Si sale verde, el bot hace push a la rama destino, sin PR, como una merge queue de un elemento: si el destino se movió mientras corría el CI, rehace el merge y vuelve a probar.</li>
+                        <li>Si hay conflicto o CI rojo, abre una PR de cascada desde la rama temporal, nunca con <code>main</code> como head: la resolución se commitearía en <code>main</code>.</li>
+                    </ol>
+                    <p>La GitHub App del bot es el único bypass actor de la regla de PR obligatoria en el ruleset. Personas y agentes siguen entrando por PR.</p>
+                    <p>Las PRs normales van con squash; la cascada, siempre con merge commit. Con squash, la release recibiría un commit sin <code>main</code> como ancestro: git no vería el fix como mergeado y las ramas divergirían.</p>
+                    <p>Falta la puerta de promoción. Antes de mover el tráfico a la 2.5, un check ejecuta <code>git merge-base --is-ancestor main release/2.5</code>, que devuelve 0 solo si todo <code>main</code> está en la release. Si falla, no se promociona: "la cascada no llegó a tiempo" pasa a ser "no se puede desplegar".&nbsp;<span class="emoji" aria-hidden="true">🚧</span></p>
+                </section>
+
+                <section id="latencia-y-conflictos">
+                    <h2>Latencia y conflictos</h2>
+                    <p>La cascada es secuencial. Si el salto de <code>main</code> a la release se bloquea con un conflicto esperando aprobación, <code>develop</code> no recibe el fix y sigue divergiendo, y cuanto más tarda, más conflictos acumula.&nbsp;<span class="emoji" aria-hidden="true">🐌</span></p>
+                    <p>Mitigaciones: la cascada arranca al mergear, no en un cron. Si el salto a la release lleva unas horas bloqueado, se propaga de <code>main</code> a <code>develop</code> directamente; con merges es seguro, porque son los mismos commits y el salto posterior de la release a <code>develop</code> no los duplica (con cherry-pick no saldría limpio). Cada cascada abierta tiene plazo con alerta y el agente resuelve el conflicto al aparecer.</p>
+                    <p>Pero una PR de cascada con conflicto resuelto por el agente pierde el auto-merge y exige aprobación humana (CODEOWNERS o una etiqueta obligatoria) en cada salto con conflicto. Es la PR que nadie mira, y una mala resolución se propaga sola hasta <code>develop</code>.</p>
+                    <p>Las migraciones piden regla propia. Una <code>V42</code> del hotfix en <code>main</code> y otra <code>V42</code> en <code>develop</code> chocan en la cascada; numerarlas con timestamp lo evita, aunque según la herramienta habrá que permitir migraciones fuera de orden. Y un hotfix que toca el esquema respeta expand/contract, porque se despliega con el otro cluster leyendo la misma base de datos.</p>
+                </section>
+
+                <section id="skills-para-el-criterio">
+                    <h2>Skills para lo que pide criterio</h2>
+                    <p>El reparto:</p>
+                    <table class="naming-table">
+                        <thead>
+                            <tr>
+                                <th>Quién</th>
+                                <th>Qué hace</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Determinista (Actions y rulesets)</td>
+                                <td>Nombre y base de rama según el tipo, cascada, merge directo con CI previo, check de promoción, corte de release, versión, tags y changelog (release-please o similar, desde conventional commits).</td>
+                            </tr>
+                            <tr>
+                                <td>Agente (skills de feature, fix y hotfix)</td>
+                                <td>Implementar con un test que reproduzca el bug, conventional commits, descripción de PR, migraciones compatibles, resolver conflictos de cascada, proponer hotfixes.</td>
+                            </tr>
+                            <tr>
+                                <td>Humano</td>
+                                <td>Clasificar un hotfix, aprobar las PRs con conflictos resueltos por IA, promover a staging y a producción.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Las skills cubren lo que pide criterio: qué test reproduce el bug o cómo resolver un conflicto sin perder ningún cambio. Lo que es regla va en una Action, que no se olvida: lo verificable se comprueba en CI, no en instrucciones, como en las <a href="flujos-agenticos-desarrollo-ia.html">puertas deterministas</a> y <a href="normas-desarrollo-ia-equipo.html">las normas del equipo</a>.</p>
+                    <p>Lo que el agente no debe hacer (mergear, push a ramas protegidas, crear tags) lo impiden los permisos de su token y los rulesets, no una frase en la skill. Una instrucción se puede ignorar; un permiso que no tienes, no.&nbsp;<span class="emoji" aria-hidden="true">🔒</span></p>
+                </section>
+
+                <section id="y-trunk-based">
+                    <h2>¿Y trunk-based?</h2>
+                    <p>En trunk-based, <code>main</code> hace de <code>develop</code>, las <code>release/x.y</code> se cortan de <code>main</code> y producción es un tag. Una rama larga menos y apenas cascada: los fixes van a <code>main</code> y se cherry-pickean a la release, y aquí sí es backport real. A cambio, lo que no está listo entra tras feature flags. El propio Driessen añadió en 2020 una nota a su post: con entrega continua, mejor un flujo más simple. Cambiaría cuando haya feature flags maduros y ninguna release pase días en staging.</p>
+                </section>
+
+                <section id="conclusion">
+                    <h2>Conclusión</h2>
+                    <p>Con agentes hay más cambios en vuelo que personas pendientes de propagarlos. El diseño cabe en tres reglas: cada cambio entra una vez, en la rama más antigua afectada; una cascada determinista lo lleva a las más nuevas, directa si el CI sale verde y con PR si no; y ninguna release se promociona sin contener <code>main</code>. El agente escribe y resuelve conflictos. El humano decide qué es un hotfix, aprueba lo que resolvió la IA y mueve el tráfico.&nbsp;<span class="emoji" aria-hidden="true">⚖️</span></p>
+                </section>
+
+                <section id="fuentes">
+                    <h2>Fuentes</h2>
+                    <ul>
+                        <li><a href="https://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="noopener noreferrer">Vincent Driessen, "A successful Git branching model"</a>, enero 2010, con la nota de reflexión de marzo 2020.</li>
+                        <li><a href="https://trunkbaseddevelopment.com/branch-for-release/" target="_blank" rel="noopener noreferrer">Trunk Based Development, "Branch for release"</a>.</li>
+                        <li><a href="https://github.com/korthout/backport-action" target="_blank" rel="noopener noreferrer">korthout/backport-action</a>, GitHub.</li>
+                        <li><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository" target="_blank" rel="noopener noreferrer">GitHub Docs, "Creating rulesets for a repository"</a> (bypass list).</li>
+                        <li><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue" target="_blank" rel="noopener noreferrer">GitHub Docs, "Managing a merge queue"</a>.</li>
+                        <li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request" target="_blank" rel="noopener noreferrer">GitHub Docs, "Automatically merging a pull request"</a>.</li>
+                        <li><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener noreferrer">GitHub Docs, "About code owners"</a>.</li>
+                        <li><a href="https://git-scm.com/docs/git-merge-base" target="_blank" rel="noopener noreferrer">Git, "git-merge-base"</a> (<code>--is-ancestor</code>).</li>
+                        <li><a href="https://github.com/googleapis/release-please" target="_blank" rel="noopener noreferrer">googleapis/release-please</a>, GitHub.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <footer class="site-footer" data-reveal="fade">
+            <span>Blog software de Demetrio Tahoces</span>
+            <span>GitHub Pages</span>
+        </footer>
+    </main>
+
+    <script src="../../assets/cv.js?v=2" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+</body>
+
+</html>

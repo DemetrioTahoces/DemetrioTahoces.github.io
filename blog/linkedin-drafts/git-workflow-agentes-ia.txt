@@ -1,0 +1,21 @@
+Supón que un hotfix entra en main, producción queda arreglada y todos siguen a lo suyo. Al promocionar la siguiente release, el bug vuelve. 🪃
+
+El fix nunca llegó a la release en curso ni a develop. Con agentes abriendo PRs a diario hay más ramas vivas y más fixes en vuelo, y confiar en que alguien se acuerde de propagar cada uno no escala.
+
+He escrito una propuesta de diseño para ese problema:
+
+🎯 Una sola PR por cambio, en la rama más antigua a la que afecta. Nada de PRs duplicadas a mano por rama.
+
+🔁 Una cascada de merges automática hacia las ramas más nuevas: merge directo si el CI sobre el merge sale verde, PR si hay conflicto. Mismos commits en todas las ramas, no copias por cherry-pick.
+
+🚧 Una puerta antes de producción: si main no está dentro de la release, no se promociona.
+
+El reparto es simple: lo que mueve ramas es determinista, lo que escribe código es del agente y lo que asume riesgo (decidir un hotfix, aprobar un conflicto resuelto por IA, promocionar) es humano.
+
+En el artículo comparo cinco formas de propagar un fix, con sus pegas, y cuándo me pasaría a trunk-based:
+
+https://demetriotahoces.github.io/blog/posts/git-workflow-agentes-ia.html
+
+¿Cómo propagáis vosotros los hotfixes entre ramas?
+
+#Git #CICD #AgentesIA #DevOps #IngenieríaDeSoftware
