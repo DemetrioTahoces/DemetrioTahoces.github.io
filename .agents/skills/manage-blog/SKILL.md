@@ -32,7 +32,7 @@ Detalle de cada script, CI y el hook de push: `references/automatizacion.md`.
    - Codex: subagente `blog-writer` de `.codex/agents/blog-writer.toml`.
    - Antigravity u otro sin subagentes nativos: abrir una tarea o sesión aparte que lea `.agents/agents/blog-writer.md` y siga ese rol (Gemini Argon medium, o Flash medium).
 4. Revisar el informe y el resultado: abrir el PNG, repasar las afirmaciones basadas solo en el briefing y relanzar `validate.py` (`python3 .agents/skills/manage-blog/scripts/validate.py <slug> --minutes N [--forbid TERM ...] --check-urls --fix`). Sin errores; cada aviso se revisa a mano. Revisión visual opcional con `scripts/screenshot.mjs <slug>`.
-5. Publicar: commit `feature(blog): ...` y push directo a `main` (AGENTS.md). Cerrar con el resumen de `references/briefing.md`: enlace, ejemplos hipotéticos, afirmaciones solo del briefing, minutos reales frente a los pedidos y evals pendientes (las ejecuta un humano).
+5. Publicar: commit `feature(blog): ...` y push directo a `main` (AGENTS.md). Después, enviar el draft de LinkedIn por Gmail (`references/linkedin.md`, sección "Envío por Gmail"). Cerrar con el resumen de `references/briefing.md`: enlace, ejemplos hipotéticos, afirmaciones solo del briefing, minutos reales frente a los pedidos y evals pendientes (las ejecuta un humano).
 
 ## Editar un post publicado
 
