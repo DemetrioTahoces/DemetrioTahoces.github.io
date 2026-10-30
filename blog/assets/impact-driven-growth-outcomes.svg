@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Cadena output, outcome e impacto con test de inflación y bucle de hipótesis</title>
+  <desc id="desc">Tres eslabones de izquierda a derecha. Output, lo que se entrega, se mide con tickets y deploys. Entre output y outcome, un filtro: el test de inflación, que solo deja pasar métricas que no pueden subir sin valor para el cliente. Outcome, el cambio observable de comportamiento del usuario, se mide con métricas leading y la CPVM, en días. Impacto, el resultado de negocio, se mide con churn y margen, métricas lagging, en meses. Un bucle vuelve del impacto al output con la etiqueta hipótesis y experimento: lo que se aprende decide qué se construye después.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#94a3b8" stroke-opacity="0.06" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#60a5fa"/>
+    </marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#22c55e"/>
+    </marker>
+    <marker id="arrow-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="#07111f"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <g font-family="Inter, system-ui, sans-serif">
+    <text x="40" y="58" fill="#e5edf7" font-size="30" font-weight="700">Outcomes, no output</text>
+    <text x="40" y="90" fill="#a7b4c8" font-size="17">El deploy en verde no es el resultado: lo que cuenta es qué hace distinto el usuario</text>
+
+    <!-- Eslabones -->
+    <g>
+      <rect x="40" y="150" width="270" height="140" rx="14" fill="#94a3b8" fill-opacity="0.08" stroke="#94a3b8" stroke-width="2"/>
+      <text x="175" y="200" text-anchor="middle" fill="#e5edf7" font-size="28" font-weight="700">Output</text>
+      <text x="175" y="232" text-anchor="middle" fill="#a7b4c8" font-size="16">Lo que se entrega</text>
+      <text x="175" y="256" text-anchor="middle" fill="#a7b4c8" font-size="16">feature, endpoint, deploy</text>
+
+      <rect x="465" y="150" width="270" height="140" rx="14" fill="#60a5fa" fill-opacity="0.12" stroke="#60a5fa" stroke-width="2.5"/>
+      <text x="600" y="200" text-anchor="middle" fill="#e5edf7" font-size="28" font-weight="700">Outcome</text>
+      <text x="600" y="232" text-anchor="middle" fill="#a7b4c8" font-size="16">Cambio observable</text>
+      <text x="600" y="256" text-anchor="middle" fill="#a7b4c8" font-size="16">de comportamiento</text>
+
+      <rect x="890" y="150" width="270" height="140" rx="14" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+      <text x="1025" y="200" text-anchor="middle" fill="#e5edf7" font-size="28" font-weight="700">Impacto</text>
+      <text x="1025" y="232" text-anchor="middle" fill="#a7b4c8" font-size="16">Resultado de negocio</text>
+      <text x="1025" y="256" text-anchor="middle" fill="#a7b4c8" font-size="16">financiero o estratégico</text>
+    </g>
+
+    <!-- Filtro: test de inflación entre output y outcome -->
+    <path d="M310 220H352" stroke="#94a3b8" stroke-width="3" fill="none"/>
+    <path d="M356 190L420 206V234L356 250Z" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-width="2"/>
+    <path d="M420 220H459" stroke="#60a5fa" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+    <text x="388" y="170" text-anchor="middle" fill="#38bdf8" font-size="15" font-weight="700">test de inflación</text>
+    <text x="388" y="276" text-anchor="middle" fill="#7f8ea3" font-size="13">¿sube sin valor</text>
+    <text x="388" y="294" text-anchor="middle" fill="#7f8ea3" font-size="13">para el cliente?</text>
+
+    <!-- Outcome a impacto -->
+    <path d="M735 220H884" stroke="#22c55e" stroke-width="3" fill="none" marker-end="url(#arrow-ok)"/>
+
+    <!-- Qué lo mide -->
+    <text x="40" y="346" fill="#7f8ea3" font-size="14" font-weight="600" letter-spacing="1.5">QUÉ LO MIDE</text>
+    <g>
+      <rect x="40" y="362" width="270" height="86" rx="12" fill="#0f172a" stroke="#94a3b8" stroke-opacity="0.35"/>
+      <text x="175" y="396" text-anchor="middle" fill="#e5edf7" font-size="18" font-weight="600">Tickets y deploys</text>
+      <text x="175" y="424" text-anchor="middle" fill="#7f8ea3" font-size="15">volumen, siempre sube</text>
+
+      <rect x="465" y="362" width="270" height="86" rx="12" fill="#0f172a" stroke="#60a5fa" stroke-opacity="0.6"/>
+      <text x="600" y="396" text-anchor="middle" fill="#e5edf7" font-size="18" font-weight="600">Leading y CPVM</text>
+      <text x="600" y="424" text-anchor="middle" fill="#7f8ea3" font-size="15">se mueve en días</text>
+
+      <rect x="890" y="362" width="270" height="86" rx="12" fill="#0f172a" stroke="#22c55e" stroke-opacity="0.6"/>
+      <text x="1025" y="396" text-anchor="middle" fill="#e5edf7" font-size="18" font-weight="600">Churn y margen</text>
+      <text x="1025" y="424" text-anchor="middle" fill="#7f8ea3" font-size="15">lagging, llega en meses</text>
+    </g>
+
+    <!-- Bucle: hipótesis / experimento -->
+    <path d="M1025 448V540H175V454" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="8 7" fill="none" marker-end="url(#arrow-loop)"/>
+    <rect x="455" y="520" width="290" height="40" rx="20" fill="#07111f" stroke="#38bdf8" stroke-width="2"/>
+    <text x="600" y="546" text-anchor="middle" fill="#e5edf7" font-size="17" font-weight="600">hipótesis / experimento</text>
+    <text x="600" y="592" text-anchor="middle" fill="#a7b4c8" font-size="15">Lo que se aprende decide qué se construye después</text>
+  </g>
+</svg>

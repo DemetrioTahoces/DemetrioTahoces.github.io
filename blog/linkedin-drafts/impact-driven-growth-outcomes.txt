@@ -1,0 +1,23 @@
+El deploy salió en verde. Los tests pasan. La feature está en producción. ¿Y alguien ha cambiado lo que hace por ella?
+
+Con agentes de IA, construir cuesta cada vez menos. Lo caro es construir algo que no cambia el comportamiento de nadie. Y muchos equipos de ingeniería siguen midiendo tickets, deploys y features: output.
+
+Humane levantó más de 200 millones de dólares para el AI Pin. Lo fabricó y lo vendió. En agosto de 2024, The Verge publicó que las devoluciones diarias ya superaban a las ventas. 🪫
+
+El framework Impact-Driven Growth de Carlos Iglesias (Runroom) ordena la cadena al revés: empiezas por el impacto de negocio y trabajas hacia atrás.
+
+🔗 Output: lo que entregas. Outcome: el cambio observable en el comportamiento del usuario. Impacto: lo que eso mueve en el negocio.
+
+🎈 Una métrica sirve si no puede subir sin que el cliente reciba valor. "Presupuestos generados" se infla sola; "presupuestos enviados sin retoques" no.
+
+🧪 Cada iniciativa, escrita como una hipótesis que pueda fallar y con el umbral de éxito fijado antes de ver los datos.
+
+Para quien escribe el código cambia el ticket: la instrumentación entra en la definition of done, el feature flag sirve para experimentar y la feature se borra si la hipótesis falla.
+
+Lo cuento aquí: 👇
+
+https://demetriotahoces.github.io/blog/posts/impact-driven-growth-outcomes.html
+
+¿Qué mide tu equipo cuando dice que algo está terminado?
+
+#IngenieriaDeSoftware #Producto #Metricas #IA #ProductManagement
