@@ -3,13 +3,13 @@ type: formacion
 title: "Máster en IA Aplicada y Optimización de Procesos"
 route: "/#master-ia-aplicada"
 tags: ["formacion", "master", "ia", "rag", "agentes"]
-summary: "Máster en IA Aplicada y Optimización de Procesos (04/2026–10/2026, en curso): RAG y agentes"
+summary: "Máster en IA Aplicada y Optimización de Procesos (04/2026–10/2026, finalizado): RAG y agentes"
 order: 20
 ---
 
 # Máster en IA Aplicada y Optimización de Procesos
 **Visual Business School — UTAMED (Universidad Tecnológica Atlántico-Mediterráneo)**
-04/2026 — 10/2026 (en curso) | Online | 30 ECTS | ~350h | 6 meses
+04/2026 — 10/2026 (finalizado) | Online | 30 ECTS | ~350h | 6 meses
 
 ## Motivación
 Programa enfocado en integración práctica/estratégica de IA en entornos profesionales. Complementa trabajo con LLMs y agentes autónomos en proyectos propios con visión técnica + negocio.

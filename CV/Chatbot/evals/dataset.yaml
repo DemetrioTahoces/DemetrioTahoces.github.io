@@ -82,7 +82,7 @@
 - id: formacion
   pregunta: "¿Qué estudió?"
   contiene_alguno: ["Telecomunicación", "Telecommunication"]
-  criterio: "Menciona su formación en Ingeniería de Telecomunicación (Universidad de Oviedo) y el Máster en IA Aplicada (en curso)."
+  criterio: "Menciona su formación en Ingeniería de Telecomunicación (Universidad de Oviedo) y el Máster en IA Aplicada (finalizado en 2026)."
 
 - id: tfg
   pregunta: "¿De qué trató su TFG?"
@@ -196,10 +196,10 @@
   criterio: "Explica el principio Open/Closed según el artículo (extender sin modificar; útil con variaciones previsibles, peligroso si se abstrae antes de tiempo) y cita la sección del artículo sobre OCP."
 
 - id: cita-formacion
-  pregunta: "¿Qué máster está cursando ahora?"
+  pregunta: "¿Qué máster ha terminado más recientemente?"
   citas: true
   contiene: ["demetriotahoces.github.io/#master-ia-aplicada"]
-  criterio: "Indica el Máster en IA Aplicada y Optimización de Procesos (Utamed, en curso) y lo cita."
+  criterio: "Indica el Máster en IA Aplicada y Optimización de Procesos (Utamed, finalizado en 10/2026) y lo cita."
 
 # --- Solo clasificador de abuso (no ejecutan el agente) ---
 
