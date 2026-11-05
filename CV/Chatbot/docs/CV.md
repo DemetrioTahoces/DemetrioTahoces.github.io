@@ -57,7 +57,7 @@ Procesado señales dispositivos seguridad físicos.
 
 ## Formación Académica {#formacion}
 
-### Máster en IA Aplicada y Optimización de Procesos — Utamed (2025-2026, en curso) {#master-ia-aplicada}
+### Máster en IA Aplicada y Optimización de Procesos — Utamed (04/2026-10/2026, en curso) {#master-ia-aplicada}
 - IA Agéntica, Arquitecturas RAG, despliegue soluciones IA empresariales.
 
 ### Máster en Ingeniería de Telecomunicación — Universidad de Oviedo (2017-2019) {#master-telecomunicacion}
