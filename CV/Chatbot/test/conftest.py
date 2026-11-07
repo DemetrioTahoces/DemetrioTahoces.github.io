@@ -149,6 +149,10 @@ class FakeRedis:
             elif name == "ZREVRANGE":
                 ranked = sorted(self.zsets.get(key, {}).items(), key=lambda item: -item[1])
                 results.append([m for m, _ in ranked][args[0]:args[1] + 1])
+            elif name == "INCR":
+                current = int(self._get(key) or 0) + 1
+                self.values[key] = (str(current), self.values.get(key, (None, None))[1])
+                results.append(current)
             elif name == "HINCRBY":
                 fields = self.hashes.setdefault(key, {})
                 fields[args[0]] = fields.get(args[0], 0) + int(args[1])
@@ -185,3 +189,14 @@ def offline_usage_stats(monkeypatch):
     monkeypatch.setattr(settings, "stats_key", "")
     monkeypatch.setattr(settings, "stats_dashboard_key", "")
     return site_stats
+
+
+@pytest.fixture(autouse=True)
+def offline_chat_budget(monkeypatch):
+    """The shared chat budget never reaches the real Redis, even with its credentials in .env."""
+    import api.index as api_module
+    from middleware.chat_budget import ChatBudget
+
+    budget = ChatBudget(None, ip_hourly_limit=20, daily_limit=300)
+    monkeypatch.setattr(api_module, "chat_budget", budget)
+    return budget

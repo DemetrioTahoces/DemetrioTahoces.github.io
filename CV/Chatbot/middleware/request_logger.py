@@ -48,7 +48,7 @@ def setup_logging() -> logging.Logger:
 
 
 def hash_ip(ip: str) -> str:
-    key = (settings.api_key or "cv-chatbot").encode()
+    key = (settings.ip_hash_key or settings.api_key or "cv-chatbot").encode()
     return hmac.new(key, ip.encode(), hashlib.sha256).hexdigest()[:12]
 
 

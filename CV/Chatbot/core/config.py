@@ -47,6 +47,12 @@ class Settings(BaseSettings):
     # The MCP server spends no model tokens, but an agent makes several calls per question.
     mcp_rate_limit_per_minute: int = 60
     mcp_rate_limit_per_hour: int = 600
+    # Shared budget in Redis (middleware/chat_budget.py): RATE_LIMIT_PER_HOUR per IP across
+    # every instance, plus this many questions per UTC day in total (ceiling on model spend). 0 = no ceiling.
+    chat_daily_limit: int = 300
+    # Key of the HMAC that pseudonymises IPs in logs and Redis. Empty = API_KEY (the historical
+    # behaviour): set it to decouple rotating the Anthropic key from the active blocks.
+    ip_hash_key: str = ""
 
     # --- Temporary block for repeated malicious questions (see middleware/abuse_guard.py) ---
     # off: no classifier · log-only: classify and log strikes, never block · block: enforce.

@@ -1,15 +1,14 @@
 """
 Rate limiting middleware using slowapi.
 
-Uses in-memory storage — sufficient for 2-3 concurrent users on Vercel.
-For production with higher traffic, upgrade to Upstash Redis backend.
+In memory and per instance: it stops bursts. The limit shared by every instance
+(per IP and per day) is middleware/chat_budget.py, on Redis.
 """
 
 from limits import parse_many
 from limits.storage import MemoryStorage
 from limits.strategies import FixedWindowRateLimiter
 from slowapi import Limiter
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -18,8 +17,9 @@ from core.config import settings
 from middleware.abuse_guard import client_ip
 
 
-# Create the limiter instance with IP-based key function
-limiter = Limiter(key_func=get_remote_address)
+# Keyed by the client IP (x-real-ip / x-forwarded-for on Vercel), like the abuse guard and the
+# MCP limit: request.client.host would be the runtime's address, not the visitor's.
+limiter = Limiter(key_func=client_ip)
 
 
 def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:

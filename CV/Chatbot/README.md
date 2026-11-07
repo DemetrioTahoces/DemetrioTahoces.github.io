@@ -78,11 +78,12 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | --- | --- |
 | Bucles de herramientas | `ModelCallLimitMiddleware` (3) · `ToolCallLimitMiddleware` (2) |
 | Coste por llamada | `max_output_tokens=4000`, `timeout=30s`, límite de gasto en la consola de Anthropic |
-| Abuso | Rate limit por IP (5/min, 20/h) · CORS solo para el dominio del CV · bloqueo temporal por consultas malintencionadas reiteradas (ver abajo) |
+| Abuso | Rate limit por IP (5/min, 20/h; la hora, compartida en Redis) · techo diario global de preguntas (`CHAT_DAILY_LIMIT`) · CORS solo para el dominio del CV · bloqueo temporal por consultas malintencionadas reiteradas (ver abajo) |
 | Prompt injection | Reglas fijas en el prompt · historial solo texto user/assistant · `page_context` solo por ruta conocida |
 | Invención | Solo responde con la base de conocimiento; evals de «no inventar» |
 | Enlaces inventados | `core/citations.py` reescribe todo enlace al sitio a su URL canónica: ancla desconocida → página; página desconocida → sin enlace. También en streaming |
-| Privacidad | Sin texto del usuario en logs · IP como HMAC · sin memoria en servidor (la API de Anthropic no guarda estado entre peticiones) |
+| Privacidad | Sin texto del usuario en logs · IP como HMAC · sin memoria en servidor (la API de Anthropic no guarda estado entre peticiones) · pregunta y respuesta en Redis sin IP durante `FEEDBACK_TURN_TTL_HOURS` (180 días si se valoran, ver [Feedback](#feedback)), avisado en el pie del chat |
+| HTML del modelo en el navegador | `CV/chatbot.html` sanea con DOMPurify (copia local en `assets/vendor/`) · CSP en `<meta>` que limita scripts, estilos y conexiones a la API · la página no funciona embebida en un iframe de otro origen, para que nadie gaste tokens en su nombre |
 
 ## Estructura
 
@@ -95,6 +96,7 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | `core/prompts.py` | Reglas del asistente + fecha |
 | `core/abuse_classifier.py` | Clasificador de intención maliciosa (structured output) |
 | `middleware/abuse_guard.py` | Strikes y bloqueo temporal por `HMAC(ip)` en Upstash Redis |
+| `middleware/chat_budget.py` | Límite por IP y hora compartido entre instancias y techo diario global de preguntas, en Upstash Redis |
 | `core/redis_rest.py` | Cliente mínimo de la API REST de Upstash (compartido) |
 | `core/feedback_store.py` | Feedback persistido en Redis con la respuesta valorada; CLI para leerlo |
 | `core/tools.py` | Tool `read_blog_article` (solo si el blog no cabe en el contexto) |
@@ -139,7 +141,9 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | `MAX_OUTPUT_TOKENS` | `4000` | Incluye tokens de razonamiento (con 2000 una respuesta real llegó a 1555, 914 de thinking) |
 | `MAX_MODEL_CALLS` / `MAX_TOOL_CALLS` | `3` / `2` | Por petición |
 | `MAX_HISTORY_MESSAGES` | `10` | Mensajes previos aceptados |
-| `RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `5` / `20` | Por IP y por instancia |
+| `RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `5` / `20` | Por IP y por instancia (en memoria, frena ráfagas). Con Redis, `_PER_HOUR` también se aplica compartido entre instancias (`middleware/chat_budget.py`) |
+| `CHAT_DAILY_LIMIT` | `300` | Preguntas al día (UTC) en total, entre todas las IP: techo de gasto del modelo. `0` = sin techo. Necesita Redis; sin él, fail-open |
+| `IP_HASH_KEY` | vacío | Clave del HMAC que seudonimiza las IP en logs y Redis. Vacía = `API_KEY` (comportamiento histórico); definirla desacopla rotar la key de Anthropic de los bloqueos activos |
 | `MCP_RATE_LIMIT_PER_MINUTE` / `_PER_HOUR` | `60` / `600` | Lo mismo para `POST /api/mcp` (no gasta tokens, pero un agente hace varias llamadas por pregunta) |
 | `ABUSE_MODE` | `log-only` | `off` (sin clasificador) · `log-only` (registra strikes, no bloquea) · `block` |
 | `ABUSE_MAX_STRIKES` / `ABUSE_STRIKE_WINDOW_HOURS` | `3` / `24` | Strikes dentro de la ventana deslizante que provocan el bloqueo |

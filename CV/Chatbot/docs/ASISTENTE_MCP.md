@@ -23,3 +23,4 @@ order: 900
 
 - Es un proyecto propio de Demetrio: Python, FastAPI y LangChain/LangGraph, desplegado en Vercel.
 - Responde solo con la información publicada en su CV y en su blog, y cada dato enlaza a la sección de la web que lo respalda.
+- Las preguntas se procesan con Anthropic y se guardan sin IP 24 horas (180 días si se valora la respuesta), solo para mejorar el asistente; por eso conviene no escribir datos personales. Tiene un límite de preguntas por hora y por día.

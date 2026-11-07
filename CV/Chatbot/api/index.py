@@ -40,6 +40,7 @@ from core.mcp_server import mcp_http_app, mcp_server
 from core.tracing import configure_tracing, run_config, send_feedback
 from core.usage_stats import MAX_MONTHS, McpUsageCounter, site_stats, stats_key_matches
 from middleware.abuse_guard import blocked_response, client_ip, create_abuse_guard
+from middleware.chat_budget import create_chat_budget
 from middleware.rate_limiter import (
     MountedAppRateLimit,
     get_mcp_rate_limit_string,
@@ -52,6 +53,7 @@ from middleware.request_logger import log_error, log_request, log_response, setu
 logger = setup_logging()
 configure_tracing()
 abuse_guard = create_abuse_guard()
+chat_budget = create_chat_budget()
 feedback_store = create_feedback_store()
 
 
@@ -193,6 +195,8 @@ async def chat(request: Request, body: ChatRequest):
     ip = client_ip(request)
     if retry_after := await abuse_guard.retry_after(ip):
         return blocked_response(retry_after)
+    if over_budget := await chat_budget.check(ip):
+        return over_budget
     request_id, session_id, history, page_context = _prepare(request, body, "/api/chat")
     # The classifier runs alongside the agent; awaited before returning because
     # Vercel may freeze the instance once the response is sent.
@@ -229,6 +233,8 @@ async def chat_stream(request: Request, body: ChatRequest):
     ip = client_ip(request)
     if retry_after := await abuse_guard.retry_after(ip):
         return blocked_response(retry_after)
+    if over_budget := await chat_budget.check(ip):
+        return over_budget
     request_id, session_id, history, page_context = _prepare(request, body, "/api/chat/stream")
 
     async def event_generator():
