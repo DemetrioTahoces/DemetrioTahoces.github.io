@@ -60,6 +60,8 @@ Superficies que suelen requerir sincronización:
 - `assets/CV-Demetrio-Tahoces.pdf` (se regenera desde la vista de impresión de `index.html`; comando en `README.md`)
 - `CV/cv-profesional.html` → `assets/CV-Demetrio-Tahoces-Profesional.pdf` (CV resumido de una página; comando en `README.md`)
 
+La web es la fuente de verdad de los PDF: `scripts/check_cv_pdf.py` (dentro de `check_all.py`) compara `index.html` con `CV/cv-profesional.html` y con el texto de los dos PDF (puestos, fechas, estado de la formación y cifras) y falla si no coinciden o si un PDF está sin regenerar. Necesita `pdftotext` (poppler); sin él avisa en local y falla en CI. No inventes cifras en el CV resumido: toda cifra debe existir en la web.
+
 Regla práctica: si una experiencia, tecnología, formación, responsabilidad o logro aparece en la web pública y el chatbot debería poder responder sobre ello, debe existir también una representación razonable en los documentos Markdown de `CV/Chatbot/docs/`.
 
 Mantén el contenido en castellano profesional, concreto y defendible. Evita marketing vacío, claims inflados y listas de buzzwords sin evidencia.
@@ -98,7 +100,7 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - No hay build del frontend.
 - Workflows: declaran `permissions: contents: read` y fijan cada action por SHA con la versión en un comentario (`@<sha> # v7`); al subir de versión, resuelve el SHA nuevo (`gh api repos/<owner>/<action>/commits/<tag> --jq .sha`).
 - CI del chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions.
-- Validación: `python3 scripts/check_all.py` (blog, CV, CSS, sitemap y copias derivadas; `--tests` añade los tests del chatbot) es la puerta única y la usan la CI (`blog.yml`, `cv.yml`; `chatbot.yml` ejecuta los tests del chatbot), el hook de Claude Code (`.claude/settings.json`, bloquea el push desde el agente) y el hook de git `.githooks/pre-push` (para cualquier agente; `python3 scripts/install_hooks.py` lo activa y Claude Code lo hace solo). Mapa completo en `.agents/README.md`. El resto del frontend no tiene CI ni build.
+- Validación: `python3 scripts/check_all.py` (blog, CV, CV web vs PDF, CSS, sitemap y copias derivadas; `--tests` añade los tests del chatbot) es la puerta única y la usan la CI (`blog.yml`, `cv.yml`; `chatbot.yml` ejecuta los tests del chatbot), el hook de Claude Code (`.claude/settings.json`, bloquea el push desde el agente) y el hook de git `.githooks/pre-push` (para cualquier agente; `python3 scripts/install_hooks.py` lo activa y Claude Code lo hace solo). Mapa completo en `.agents/README.md`. El resto del frontend no tiene CI ni build.
 
 ### Flujo de cambios del chatbot en Vercel
 

@@ -43,4 +43,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      # pdftotext para comparar el texto de los CV en PDF con la web (scripts/check_cv_pdf.py).
+      - run: sudo apt-get update -q && sudo apt-get install -y --no-install-recommends poppler-utils
       - run: python3 scripts/check_all.py

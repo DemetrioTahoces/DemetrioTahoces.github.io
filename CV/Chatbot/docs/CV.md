@@ -8,12 +8,12 @@ order: 1
 ---
 
 # Demetrio Antonio Tahoces Sánchez
-**Software Engineer** · tonitahoces@gmail.com · LinkedIn: https://www.linkedin.com/in/demetrio-tahoces-software-engineer/
+**Software Engineer** · tonitahoces@gmail.com · LinkedIn: https://www.linkedin.com/in/demetrio-tahoces/
 
 ## Contacto y disponibilidad {#contacto}
 - Abierto a propuestas de backend, IoT e IA aplicada.
 - Ubicación: Asturias (España). Modalidad: remoto o híbrido.
-- Contacto: tonitahoces@gmail.com o LinkedIn (https://www.linkedin.com/in/demetrio-tahoces-software-engineer/).
+- Contacto: tonitahoces@gmail.com o LinkedIn (https://www.linkedin.com/in/demetrio-tahoces/).
 - CV descargable: completo (https://demetriotahoces.github.io/assets/CV-Demetrio-Tahoces.pdf) y de una página (https://demetriotahoces.github.io/assets/CV-Demetrio-Tahoces-Profesional.pdf).
 
 ## Resumen {#resumen}

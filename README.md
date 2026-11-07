@@ -89,7 +89,7 @@ Cuando se cambie contenido curricular, conviene mantener sincronizadas estas sup
 & "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf="$PWD\assets\CV-Demetrio-Tahoces.pdf" "http://localhost:8000/"
 ```
 
-- `assets/CV-Demetrio-Tahoces-Profesional.pdf`: CV resumido de una página, de una sola columna y apto para ATS. Su fuente es `CV/cv-profesional.html` (`noindex`). Tras editarla, comprueba que sigue cabiendo en una página y regenera el PDF:
+- `assets/CV-Demetrio-Tahoces-Profesional.pdf`: CV resumido de una página, de una sola columna y apto para ATS. Su fuente es `CV/cv-profesional.html` (`noindex`). Para que lo lea bien un ATS, cada puesto va en una línea de texto (título · empresa · fechas) seguida de su contexto, logros y Stack; nada de columnas, tablas, flex de dos lados ni `opacity` (Chrome la exporta como capa aparte y algunos extractores la leen al final). Tras editarla, comprueba que sigue cabiendo en una página, regenera el PDF y pasa `python3 scripts/check_cv_pdf.py` (compara web y PDF y valida el orden de lectura con `pdftotext`):
 
 ```powershell
 & "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --user-data-dir="$env:TEMP\edgecv" --print-to-pdf="$PWD\assets\CV-Demetrio-Tahoces-Profesional.pdf" "file:///$((Resolve-Path CV\cv-profesional.html).Path -replace '\\','/')"

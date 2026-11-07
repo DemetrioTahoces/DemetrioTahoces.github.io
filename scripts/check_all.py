@@ -2,7 +2,7 @@
 """Puerta única de validación del repo: la usan el hook de Claude Code, el hook de git y la CI.
 
 Uso (desde cualquier directorio, solo stdlib):
-    python3 scripts/check_all.py            # rápido: blog, CV, CSS, sitemap y copias derivadas
+    python3 scripts/check_all.py            # rápido: blog, CV (web vs PDF), CSS, sitemap y copias derivadas
     python3 scripts/check_all.py --tests    # añade los tests offline del chatbot (requiere uv)
 
 Ejecuta todas las comprobaciones aunque alguna falle y sale con 1 si falla cualquiera.
@@ -21,6 +21,7 @@ SKILLS = ROOT / ".agents/skills"
 CHECKS = [
     ("blog", [sys.executable, str(SKILLS / "manage-blog/scripts/check_post.py"), "--all"]),
     ("cv", [sys.executable, str(SKILLS / "edit-cv/scripts/check_cv.py")]),
+    ("cv web vs pdf", [sys.executable, str(ROOT / "scripts/check_cv_pdf.py")]),
     ("css", [sys.executable, str(ROOT / "scripts/check_css.py")]),
     ("sitemap", [sys.executable, str(ROOT / "scripts/build_sitemap.py"), "--check"]),
     ("skills y agentes", [sys.executable, str(ROOT / "scripts/sync_skills.py"), "--check"]),
