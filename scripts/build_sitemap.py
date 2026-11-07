@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SITEMAP = ROOT / "sitemap.xml"
-PAGES = ["index.html", "CV/*.html", "blog/index.html", "blog/posts/*.html", "FundamentosIA/index.html"]
+PAGES = ["index.html", "CV/*.html", "blog/index.html", "blog/posts/*.html"]
 CANONICAL_RE = re.compile(r'<link[^>]+rel="canonical"[^>]+href="([^"]+)"')
 NOINDEX_RE = re.compile(r'<meta[^>]+name="robots"[^>]+content="[^"]*noindex', re.I)
 

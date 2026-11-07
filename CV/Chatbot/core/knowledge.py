@@ -31,7 +31,7 @@ BLOG_TYPE = "blog_post"
 SITE_TYPE = "sitio"
 PAGE_CONTEXT_MAX_LENGTH = 220
 # Public pages that exist but have no document behind them (valid link targets).
-EXTRA_PAGES = ("/blog/", "/CV/chatbot.html", "/FundamentosIA/", "/llms.txt")
+EXTRA_PAGES = ("/blog/", "/CV/chatbot.html", "/llms.txt")
 
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)(?:\s*\{#([A-Za-z0-9_-]+)\})?\s*$")
 
@@ -201,7 +201,7 @@ def normalize_route_path(value: object) -> str:
     path = unquote(path).replace("\\", "/").strip()
 
     lower = path.lower()
-    for marker in ("/cv/", "/blog/", "/fundamentosia/"):
+    for marker in ("/cv/", "/blog/"):
         marker_idx = lower.find(marker)
         if marker_idx != -1:
             path = path[marker_idx:]

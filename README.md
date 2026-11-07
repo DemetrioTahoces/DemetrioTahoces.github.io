@@ -12,7 +12,6 @@ Repositorio del CV profesional de Demetrio Tahoces, publicado como sitio estáti
 - `CV/Chatbot/docs/`: base de conocimiento Markdown del asistente.
 - `llms.txt`: índice del sitio para LLMs, generado desde `CV/Chatbot/docs/`.
 - `blog/`: blog técnico estático.
-- `FundamentosIA/`: página estática sobre estrategia de adopción de IA.
 - `assets/`: recursos compartidos, como la tarjeta Open Graph; `assets/vendor/`, copias locales con versión fija de marked y DOMPurify.
 - `404.html`, `robots.txt` y `sitemap.xml` (generado con `python3 scripts/build_sitemap.py`).
 
@@ -46,7 +45,6 @@ Páginas útiles:
 - `http://localhost:8000/index.html`
 - `http://localhost:8000/CV/chatbot.html`
 - `http://localhost:8000/blog/`
-- `http://localhost:8000/FundamentosIA/`
 
 ## Backend del chatbot
 
