@@ -35,10 +35,12 @@ body { --shell-max: 64rem; }
 
 /* ---------- Prosa de artículo ---------- */
 
+/* Ancho de lectura cómodo: ~70 caracteres por línea (con el ancho completo salían ~110). */
 .article-prose {
     color: #cbd5e1;
-    font-size: 1.02rem;
+    font-size: 1.0625rem;
     line-height: 1.78;
+    max-width: 70ch;
 }
 
 .article-prose h2 {
@@ -59,8 +61,12 @@ body { --shell-max: 64rem; }
 }
 
 .article-prose p { margin: 1rem 0; }
-.article-prose ul, .article-prose ol { margin: 1rem 0 1rem 1.25rem; }
-.article-prose li { margin: 0.45rem 0; }
+/* El reset de Tailwind quita las viñetas (list-style: none): se devuelven en la prosa. */
+.article-prose ul, .article-prose ol { margin: 1rem 0; padding-left: 1.4rem; }
+.article-prose ul { list-style: disc; }
+.article-prose ol { list-style: decimal; }
+.article-prose li { margin: 0.45rem 0; padding-left: 0.2rem; }
+.article-prose li::marker { color: var(--accent); }
 .article-prose strong { color: #f8fafc; }
 
 .article-prose a {

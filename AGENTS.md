@@ -21,7 +21,8 @@ Guía única para agentes y asistentes de coding (Claude Code, Codex, Cowork, et
 ## Frontend
 
 - Edita los HTML directamente.
-- Patrón de estilos: los estilos y scripts compartidos viven en `assets/tokens.css` + `assets/cv.css` (+ `assets/blog.css` en el blog) + `assets/cv.js`, enlazados con query de versión (`?v=N`). Inline en cada HTML solo quedan el gate `motion-ready` en el `<head>`, el favicon y los metadatos. `CV/chatbot.html` mantiene su `<style>` propio pero consume `assets/tokens.css`.
+- Patrón de estilos: los estilos y scripts compartidos viven en `assets/tokens.css` + `assets/cv.css` (+ `assets/blog.css` en el blog) + `assets/tailwind.css` + `assets/cv.js`, enlazados con query de versión (`?v=N`). Inline en cada HTML solo quedan el gate `motion-ready` en el `<head>`, el favicon y los metadatos. `CV/chatbot.html` mantiene su `<style>` propio pero consume `assets/tokens.css`.
+- Tailwind: no hay CDN. `assets/tailwind.css` es un fichero generado y versionado con las utilidades que usa el sitio (Tailwind 3.4.17), enlazado después de `cv.css`/`blog.css` como se cargaba el CDN. Si usas una utilidad nueva, regenera con `python3 scripts/build_tailwind.py` (necesita node) en el mismo commit; `scripts/check_css.py`, dentro de `check_all.py`, falla si una clase del HTML no tiene regla. Para componentes nuevos, mejor clases propias en `cv.css`/`blog.css` que cadenas de utilidades.
 - Cache-busting: GitHub Pages cachea ~10 minutos. Si cambias un fichero de `assets/*.css|js` de forma incompatible con el HTML, incrementa el `?v=N` de sus `<link>`/`<script>` en el mismo commit.
 - Los colores salen SIEMPRE de los tokens (`var(--accent)`, etc.); no introduzcas colores nuevos hardcodeados.
 - Tipografía: Space Grotesk (display: h1, h2, `.section-title`, `.site-brand`, h3 de cards) + Inter 300–800 (cuerpo), en una única petición a Google Fonts con `preconnect`.

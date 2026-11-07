@@ -21,6 +21,7 @@ SKILLS = ROOT / ".agents/skills"
 CHECKS = [
     ("blog", [sys.executable, str(SKILLS / "manage-blog/scripts/check_post.py"), "--all"]),
     ("cv", [sys.executable, str(SKILLS / "edit-cv/scripts/check_cv.py")]),
+    ("css", [sys.executable, str(ROOT / "scripts/check_css.py")]),
     ("skills y agentes", [sys.executable, str(ROOT / "scripts/sync_skills.py"), "--check"]),
 ]
 

@@ -7,20 +7,26 @@
     <title>Asistente Virtual - Demetrio Tahoces</title>
     <meta name="description" content="Asistente virtual de IA sobre la experiencia profesional de Demetrio Tahoces.">
     <link rel="canonical" href="https://demetriotahoces.github.io/CV/chatbot.html">
+    <meta property="og:title" content="Asistente Virtual - Demetrio Tahoces">
+    <meta property="og:description" content="Asistente virtual de IA sobre la experiencia profesional de Demetrio Tahoces.">
+    <meta property="og:type" content="website">
     <meta property="og:url" content="https://demetriotahoces.github.io/CV/chatbot.html">
-    <meta property="og:image" content="https://demetriotahoces.github.io/assets/og-card.svg">
+    <meta property="og:image" content="https://demetriotahoces.github.io/assets/og-card.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Demetrio Tahoces, Software Engineer: backend, IoT e IA aplicada">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Asistente Virtual - Demetrio Tahoces">
     <meta name="twitter:description" content="Asistente virtual de IA sobre la experiencia profesional de Demetrio Tahoces.">
-    <meta name="twitter:image" content="https://demetriotahoces.github.io/assets/og-card.svg">
+    <meta name="twitter:image" content="https://demetriotahoces.github.io/assets/og-card.jpg">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231e40af'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='white' font-family='Inter,sans-serif' font-weight='700' font-size='13'%3EDT%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Solo el peso regular de Phosphor: el script del paquete cargaba los seis (~250 KB). -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
     <link rel="stylesheet" href="../assets/tokens.css?v=2">
 
@@ -121,6 +127,29 @@
         .bubble-user {
             background: linear-gradient(135deg, #2563eb, #0284c7);
             color: #ffffff;
+        }
+
+        /* Dentro del widget (iframe) el texto era de 14px: se sube para leer sin hacer zoom. */
+        body.is-embedded .bubble-ai,
+        body.is-embedded .bubble-user {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Poca altura (zoom del navegador o ventana baja): cabecera, sugerencias y pie compactos
+           para que los mensajes conserven casi todo el espacio. */
+        @media (max-height: 560px) {
+            #chatbot-container-wrapper .chat-header { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+            #chatbot-container-wrapper .chat-header p { display: none; }
+            #chatbot-container-wrapper #suggestions {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 0.5rem 0.75rem;
+                scrollbar-width: none;
+            }
+            #chatbot-container-wrapper .suggestion-chip { flex-shrink: 0; }
+            #chatbot-container-wrapper .chat-footer { padding: 0.5rem 0.75rem; }
         }
 
         .chat-title {
@@ -259,6 +288,7 @@
         }
 
     </style>
+    <link rel="stylesheet" href="../assets/tailwind.css?v=1">
 </head>
 
 <body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
@@ -303,6 +333,11 @@
                     <span id="status-text"
                         class="text-xs font-medium text-slate-400 transition-colors duration-300">Conectando...</span>
                 </div>
+                <button id="expand-btn" type="button" aria-pressed="false"
+                    class="hidden flex items-center justify-center w-9 h-9 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors"
+                    title="Ampliar" aria-label="Ampliar asistente">
+                    <i class="ph ph-arrows-out text-lg"></i>
+                </button>
                 <button id="minimize-btn"
                     class="hidden flex items-center justify-center w-9 h-9 rounded-full hover:bg-slate-800 text-slate-400 hover:text-blue-400 transition-colors"
                     title="Minimizar" aria-label="Minimizar asistente">
@@ -594,6 +629,7 @@
 
         const resetBtn = document.getElementById('reset-btn');
         const minimizeBtn = document.getElementById('minimize-btn');
+        const expandBtn = document.getElementById('expand-btn');
         const backBtn = document.getElementById('back-btn');
 
         // State & History
@@ -621,12 +657,27 @@
             // Toggle header buttons
             if (backBtn) backBtn.classList.add('hidden');
             if (minimizeBtn) minimizeBtn.classList.remove('hidden');
+            if (expandBtn) expandBtn.classList.remove('hidden');
+            document.body.classList.add('is-embedded');
         }
 
         // Minimize listener
         minimizeBtn.addEventListener('click', () => {
             window.parent.postMessage({ type: 'minimize' }, '*');
         });
+
+        // Ampliar/reducir el panel del widget: lo decide la página padre y responde con 'size'
+        expandBtn.addEventListener('click', () => {
+            window.parent.postMessage({ type: 'toggle-size' }, '*');
+        });
+
+        function setExpandedState(expanded) {
+            expandBtn.setAttribute('aria-pressed', String(expanded));
+            expandBtn.title = expanded ? 'Reducir' : 'Ampliar';
+            expandBtn.setAttribute('aria-label', expanded ? 'Reducir asistente' : 'Ampliar asistente');
+            const icon = expandBtn.querySelector('i');
+            if (icon) icon.className = 'ph ' + (expanded ? 'ph-arrows-in' : 'ph-arrows-out') + ' text-lg';
+        }
 
         // Confirm modal (sustituye a confirm() nativo)
         const confirmModal = document.getElementById('confirm-modal');
@@ -1346,6 +1397,34 @@
                 scrollToBottom();
             }
         });
+
+        // Preguntas que llegan de fuera: ?q= en la URL (enlaces de la home, móvil) o un
+        // mensaje 'ask' de la página que contiene el widget. Se envían como si las escribiera el usuario.
+        function askQuestion(text) {
+            const question = String(text || '').trim().slice(0, 500);
+            if (!question) return;
+            chatInput.value = question;
+            autoResizeInput();
+            if (!isGenerating) chatForm.requestSubmit();
+        }
+
+        window.addEventListener('message', (event) => {
+            if (window.location.protocol !== 'file:' && event.origin !== window.location.origin) return;
+            const data = event.data || {};
+            if (data.type === 'ask') askQuestion(data.text);
+            if (data.type === 'size') setExpandedState(Boolean(data.expanded));
+        });
+
+        const initialParams = new URLSearchParams(window.location.search);
+        if (initialParams.get('expanded') === '1') setExpandedState(true);
+        const initialQuestion = initialParams.get('q');
+        if (initialQuestion) {
+            // Se quita de la URL para que recargar no repita la pregunta
+            initialParams.delete('q');
+            const query = initialParams.toString();
+            history.replaceState(null, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
+            askQuestion(initialQuestion);
+        }
     </script>
 </body>
 

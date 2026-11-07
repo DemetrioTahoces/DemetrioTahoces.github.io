@@ -495,6 +495,8 @@ h2.phase-label { color: #bfdbfe; letter-spacing: 0; font-family: var(--font-body
     gap: 1rem;
 }
 
+.skill-group { display: flex; flex-direction: column; }
+
 .skill-group--focus {
     grid-column: 1 / -1;
     border-color: var(--border-strong);

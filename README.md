@@ -22,7 +22,7 @@ El proyecto combina dos superficies independientes:
 1. Frontend estático servido por GitHub Pages.
 2. Backend serverless en Vercel para el chatbot del CV.
 
-La parte pública no tiene proceso de build. Los HTML usan estilos y scripts compartidos en `assets/`, con dependencias cargadas desde CDN, principalmente Tailwind CSS, Google Fonts, Chart.js, Phosphor Icons, marked.js y DOMPurify.
+La parte pública no tiene proceso de build. Los HTML usan estilos y scripts compartidos en `assets/`; las utilidades de Tailwind están en `assets/tailwind.css`, generado con `python3 scripts/build_tailwind.py` y versionado (solo hay que regenerarlo al usar una utilidad nueva; `scripts/check_css.py` lo detecta). El resto de dependencias se cargan desde CDN: Google Fonts, Chart.js, Phosphor Icons, marked.js y DOMPurify.
 
 El chatbot usa FastAPI y LangChain (`create_agent`) con Claude Haiku 5.5 (`claude-haiku-5-5`). El CV completo va en el system prompt (con caché) y los artículos del blog se leen bajo demanda con una herramienta. También expone un servidor MCP de solo lectura en `/api/mcp`; el botón «MCP» de `CV/chatbot.html` abre un modal con la URL y el comando de Claude Code para copiarlos.
 
