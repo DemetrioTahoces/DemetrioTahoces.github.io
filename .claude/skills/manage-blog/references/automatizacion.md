@@ -6,8 +6,9 @@ Todos desde la raíz del repo, solo stdlib salvo `svg-to-png.mjs` (puppeteer-cor
 
 | Script | Qué hace |
 |---|---|
-| `new_post.py` | Esqueleto: HTML desde la plantilla con los `?v=N` del índice, tarjeta en primera posición, contador y ficha y draft con frontmatter. |
-| `check_post.py` | Validador. Errores bloquean; avisos se revisan. `--minutes N` (objetivo del usuario), `--forbid TERM` (empresa o producto que no puede aparecer, también desde `forbidden-terms.local.txt`, ignorado por git), `--fix` (minutos y etiquetas de la tarjeta), `--check-urls` (Fuentes por red; 403 es aviso, 404/410 error). |
+| `new_post.py` | Esqueleto: HTML desde la plantilla con los `?v=N` del índice (también el del widget del chatbot), tarjeta en primera posición, contador, "Sigue leyendo" con los 2 posts con más etiquetas en común, "Últimos artículos" de la home y ficha y draft con frontmatter. |
+| `blog_cards.py` | Módulo compartido (no se ejecuta solo): lee las tarjetas de `blog/index.html` y genera "Sigue leyendo" de cada post y "Últimos artículos" de `index.html` (las 3 primeras tarjetas). La elección de los 2 relacionados de un post publicado es criterio: se cambia en su HTML y el script solo refresca título y fecha. |
+| `check_post.py` | Validador. Errores bloquean; avisos se revisan. `--minutes N` (objetivo del usuario), `--forbid TERM` (empresa o producto que no puede aparecer, también desde `forbidden-terms.local.txt`, ignorado por git), `--fix` (minutos y etiquetas de la tarjeta, "Sigue leyendo" y "Últimos artículos" de la home), `--check-urls` (Fuentes por red; 403 es aviso, 404/410 error). Falla si falta la ficha de autor o "Sigue leyendo", si este no enlaza 2 posts distintos y existentes, o si él o la home no cuadran con el índice. |
 | `build_png.py <slug>` | Instala dependencias si faltan, localiza Chrome y convierte el SVG en PNG 1200x630. |
 | `validate.py <slug> ...` | `check_post.py` con los mismos argumentos, `scripts/sync_skills.py --check`, `llms.txt` regenerado y tests offline. No lanza evals. |
 | `screenshot.mjs <slug>` | Capturas de escritorio y móvil con servidor estático en marcha. |

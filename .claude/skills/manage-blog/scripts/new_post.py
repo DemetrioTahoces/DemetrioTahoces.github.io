@@ -7,8 +7,10 @@ Uso (desde la raíz del repo, solo stdlib):
         --eyebrow "Antetítulo" --description "Descripción SEO" [--date AAAA-MM-DD]
 
 Copia las versiones ?v=N de blog/index.html, añade la tarjeta en primera posición y
-sube el contador "N publicados". Deja marcadores {{...}} en el cuerpo, la tarjeta, la
-ficha y el draft: check_post.py falla mientras quede alguno. No genera el diagrama.
+sube el contador "N publicados". Rellena "Sigue leyendo" con los 2 posts con más etiquetas
+en común y actualiza "Últimos artículos" de la home (blog_cards.py). Deja marcadores {{...}}
+en el cuerpo, la tarjeta, la ficha y el draft: check_post.py falla mientras quede alguno.
+No genera el diagrama.
 """
 
 from __future__ import annotations
@@ -18,6 +20,8 @@ import datetime
 import re
 import sys
 from pathlib import Path
+
+import blog_cards
 
 ROOT = Path(__file__).resolve().parents[4]
 SITE = "https://demetriotahoces.github.io"
@@ -71,12 +75,15 @@ def main(argv: list[str]) -> int:
             parser.error(f"ya existe {path.relative_to(ROOT)}")
 
     index = index_path.read_text(encoding="utf-8")
-    versions = dict(re.findall(r"assets/(\w+\.(?:css|js))\?v=(\d+)", index))
+    versions = dict(re.findall(r"(?:assets|CV)/([\w-]+\.(?:css|js))\?v=(\d+)", index))
 
     # HTML desde la plantilla
     html = (ROOT / ".agents/skills/manage-blog/references/post-template.html").read_text(encoding="utf-8")
     html = re.sub(r"(?s)<!--\n  Plantilla de post.*?-->\n\n", "", html, count=1)
-    html = re.sub(r"assets/(\w+\.(?:css|js))\?v=\{\{N\}\}", lambda m: f"assets/{m.group(1)}?v={versions[m.group(1)]}", html)
+    html = re.sub(r"(assets|CV)/([\w-]+\.(?:css|js))\?v=\{\{N\}\}",
+                  lambda m: f"{m.group(1)}/{m.group(2)}?v={versions[m.group(2)]}", html)
+    related = blog_cards.pick_related(args.slug, tags, blog_cards.index_cards(index))
+    html = html.replace("{{RELACIONADOS}}", blog_cards.related_html(related))
     html = html.replace("{{N}} min de lectura", f"{args.minutes} min de lectura")
     html = html.replace("{{DESCRIPCION_SEO_150_160_CARACTERES}}", args.description)
     if args.description != "{{DESCRIPCION_SEO_150_160_CARACTERES}}":
@@ -93,10 +100,16 @@ def main(argv: list[str]) -> int:
     # Tarjeta en primera posición y contador
     badges = "\n".join(f'                        <span class="badge rounded-full px-3 py-1">{t}</span>' for t in tags)
     card = CARD.format(slug=args.slug, title=args.title, date_es=date_es, minutes=args.minutes, badges=badges)
-    marker = 'data-reveal-group>\n'
+    marker = 'data-post-grid data-reveal-group>\n'
+    if marker not in index:
+        parser.error(f"blog/index.html sin el contenedor de tarjetas ({marker.strip()})")
     index = index.replace(marker, marker + card, 1)
     index = re.sub(r"(\d+) publicados", lambda m: f"{int(m.group(1)) + 1} publicados", index, count=1)
     index_path.write_text(index, encoding="utf-8")
+
+    # "Últimos artículos" de la home: las 3 primeras tarjetas del índice
+    home = blog_cards.HOME.read_text(encoding="utf-8")
+    blog_cards.HOME.write_text(blog_cards.sync_home(home, blog_cards.index_cards(index)), encoding="utf-8")
 
     # Ficha del chatbot y draft de LinkedIn
     md_path.write_text(f"""---
@@ -120,7 +133,7 @@ summary: "{{{{RESUMEN_UNA_FRASE}}}}"
 """, encoding="utf-8")
     txt_path.write_text(f"{{{{DRAFT_LINKEDIN}}}}\n\nLo cuento aquí: 👇\n\n{SITE}/blog/posts/{args.slug}.html\n", encoding="utf-8")
 
-    for path in (html_path, md_path, txt_path, index_path):
+    for path in (html_path, md_path, txt_path, index_path, blog_cards.HOME):
         print(f"escrito: {path.relative_to(ROOT)}")
     print("Pendiente: cuerpo, tarjeta, ficha, draft, diagrama (svg + png) y emojis. Después, check_post.py.")
     return 0

@@ -14,6 +14,8 @@ Todo lo que se pueda expresar como regla va a un script y no se repite aquí com
 | Lo hace un script | Lo hace el modelo |
 |---|---|
 | Esqueleto, tarjeta, contador y `?v=N` (`new_post.py`) | Tesis, esquema y redacción |
+| "Sigue leyendo" del post y "Últimos artículos" de la home (`new_post.py`, `check_post.py --fix`, vía `blog_cards.py`) | Cambiar los 2 relacionados si los de más etiquetas en común no son los que más aportan |
+| Índice lateral, anclas copiables, barra de progreso, filtros del índice y post destacado (`assets/cv.js` y `blog.css`, no van en el HTML) | Nada: no se escriben a mano |
 | Minutos y etiquetas de la tarjeta (`check_post.py --fix`) | Acordar los minutos con el usuario y ajustar el texto a su presupuesto de palabras |
 | Metadatos, JSON-LD, anclas, enlaces, ids, orden del índice, ficha frente al post | Título, descripción SEO, resumen de la ficha |
 | Marcadores sin sustituir, términos prohibidos, dashes, paleta del SVG, emojis (cuenta, marcado, repetición) | Qué emoji y dónde, tono, auditoría del humanizer |

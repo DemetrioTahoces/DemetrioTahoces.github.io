@@ -5,6 +5,8 @@
   - {{IMAGEN_OG}}: PNG 1200x630 en blog/assets/<slug>.png (LinkedIn y X no renderizan SVG).
   - Versiones ?v=N: copiar las de blog/index.html en el momento de crear el post.
   - Cada <section> lleva un id estable en kebab-case ASCII; la ficha del chatbot lo cita con {#id}.
+  - {{RELACIONADOS}}: lo rellena new_post.py (blog_cards.py) con los 2 posts con más etiquetas en común.
+  - El índice lateral, las anclas de los h2 y la barra de progreso los pone assets/cv.js; no van en el HTML.
   - Borrar este comentario y los bloques opcionales que no se usen.
 -->
 
@@ -62,6 +64,7 @@
         <div class="site-nav-links">
             <a href="../../index.html">CV</a>
             <a href="../index.html" aria-current="page">Blog</a>
+            <a href="../../index.html#contacto" class="nav-cta">Contacto</a>
         </div>
     </nav>
 
@@ -131,6 +134,35 @@
             </div>
         </article>
 
+        <aside class="card author-card" aria-labelledby="autor" data-reveal>
+            <div class="author-photo">
+                <img src="../../assets/foto-demetrio.jpg" alt="Foto de Demetrio Tahoces" width="480" height="480" loading="lazy">
+            </div>
+            <div>
+                <p class="author-kicker">Escrito por</p>
+                <h2 id="autor" class="author-name">Demetrio Tahoces</h2>
+                <p class="author-bio">Software Engineer e Ingeniero de Telecomunicación. Más de 7 años en backend, sistemas distribuidos e IoT; ahora, desarrollo de software con agentes de IA. Abierto a propuestas, en remoto o híbrido.</p>
+                <div class="author-actions">
+                    <a href="../../index.html" class="btn btn-primary" data-goatcounter-click="blog-autor-cv">Ver mi CV</a>
+                    <a href="https://www.linkedin.com/in/demetrio-tahoces-software-engineer/" class="btn" target="_blank" rel="noopener noreferrer" data-goatcounter-click="blog-autor-linkedin">LinkedIn</a>
+                    <a href="../../CV/chatbot.html" class="btn btn-ai">Pregúntale a mi CV <span class="btn-tag">IA</span></a>
+                </div>
+            </div>
+        </aside>
+
+        <section class="related-posts" aria-labelledby="sigue-leyendo">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker" data-reveal="fade">Blog técnico</p>
+                    <h2 id="sigue-leyendo" class="section-title" data-reveal>Sigue leyendo</h2>
+                </div>
+                <a href="../index.html" class="section-link" data-reveal="fade">Ver todos los artículos</a>
+            </div>
+            <div class="related-grid" data-related-posts data-reveal-group data-spotlight>
+{{RELACIONADOS}}
+            </div>
+        </section>
+
         <footer class="site-footer" data-reveal="fade">
             <span>Blog software de Demetrio Tahoces</span>
             <span>GitHub Pages</span>
@@ -138,6 +170,7 @@
     </main>
 
     <script src="../../assets/cv.js?v={{N}}" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+    <script src="../../CV/chatbot-widget.js?v={{N}}" defer></script>
 </body>
 
 </html>

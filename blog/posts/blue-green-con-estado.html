@@ -39,7 +39,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/tokens.css?v=3">
     <link rel="stylesheet" href="../../assets/cv.css?v=4">
-    <link rel="stylesheet" href="../../assets/blog.css?v=3">
+    <link rel="stylesheet" href="../../assets/blog.css?v=4">
     <link rel="stylesheet" href="../../assets/tailwind.css?v=2">
     <script>
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -55,6 +55,7 @@
         <div class="site-nav-links">
             <a href="../../index.html">CV</a>
             <a href="../index.html" aria-current="page">Blog</a>
+            <a href="../../index.html#contacto" class="nav-cta">Contacto</a>
         </div>
     </nav>
 
@@ -152,13 +153,56 @@
             </div>
         </article>
 
+        <aside class="card author-card" aria-labelledby="autor" data-reveal>
+            <div class="author-photo">
+                <img src="../../assets/foto-demetrio.jpg" alt="Foto de Demetrio Tahoces" width="480" height="480" loading="lazy">
+            </div>
+            <div>
+                <p class="author-kicker">Escrito por</p>
+                <h2 id="autor" class="author-name">Demetrio Tahoces</h2>
+                <p class="author-bio">Software Engineer e Ingeniero de Telecomunicación. Más de 7 años en backend, sistemas distribuidos e IoT; ahora, desarrollo de software con agentes de IA. Abierto a propuestas, en remoto o híbrido.</p>
+                <div class="author-actions">
+                    <a href="../../index.html" class="btn btn-primary" data-goatcounter-click="blog-autor-cv">Ver mi CV</a>
+                    <a href="https://www.linkedin.com/in/demetrio-tahoces-software-engineer/" class="btn" target="_blank" rel="noopener noreferrer" data-goatcounter-click="blog-autor-linkedin">LinkedIn</a>
+                    <a href="../../CV/chatbot.html" class="btn btn-ai">Pregúntale a mi CV <span class="btn-tag">IA</span></a>
+                </div>
+            </div>
+        </aside>
+
+        <section class="related-posts" aria-labelledby="sigue-leyendo">
+            <div class="section-head">
+                <div>
+                    <p class="section-kicker" data-reveal="fade">Blog técnico</p>
+                    <h2 id="sigue-leyendo" class="section-title" data-reveal>Sigue leyendo</h2>
+                </div>
+                <a href="../index.html" class="section-link" data-reveal="fade">Ver todos los artículos</a>
+            </div>
+            <div class="related-grid" data-related-posts data-reveal-group data-spotlight>
+                <a class="card related-post" href="domain-events-brokers-mensajeria.html" data-reveal>
+                    <img src="../assets/domain-events-brokers-mensajeria.svg" alt="" loading="lazy">
+                    <span class="related-post-body">
+                        <span class="latest-post-meta">6 julio 2026 · 8 min</span>
+                        <span class="latest-post-title">Domain events y brokers de mensajería: nombrar colas para entender el sistema</span>
+                    </span>
+                </a>
+                <a class="card related-post" href="git-workflow-agentes-ia.html" data-reveal>
+                    <img src="../assets/git-workflow-agentes-ia.svg" alt="" loading="lazy">
+                    <span class="related-post-body">
+                        <span class="latest-post-meta">23 octubre 2026 · 7 min</span>
+                        <span class="latest-post-title">Git workflow con agentes: una PR, su destino real y una cascada que nadie olvida</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
         <footer class="site-footer" data-reveal="fade">
             <span>Blog software de Demetrio Tahoces</span>
             <span>GitHub Pages</span>
         </footer>
     </main>
 
-    <script src="../../assets/cv.js?v=3" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+    <script src="../../assets/cv.js?v=4" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+    <script src="../../CV/chatbot-widget.js?v=2" defer></script>
 </body>
 
 </html>

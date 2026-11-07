@@ -6,7 +6,8 @@ Uso (desde la raíz del repo, solo stdlib):
     python3 .agents/skills/manage-blog/scripts/check_post.py --all
 
 --minutes N: minutos de lectura que pidió el usuario; avisa si el estimado no coincide.
---fix: sincroniza lo mecánico: minutos del post y la tarjeta con el estimado, y etiquetas de la tarjeta con las del hero.
+--fix: sincroniza lo mecánico: minutos del post y la tarjeta con el estimado, etiquetas de la tarjeta con las del hero,
+       y "Sigue leyendo" del post y "Últimos artículos" de la home con las tarjetas del índice (blog_cards.py).
 --check-urls: abre cada enlace de "Fuentes" (red); 404/410 es error, lo no alcanzable es aviso.
 --forbid TERM: término que no puede aparecer (empresa, producto...) en HTML, ficha, draft ni SVG.
 Los términos también se leen de scripts/forbidden-terms.local.txt (uno por línea, ignorado por git).
@@ -26,6 +27,8 @@ import urllib.error
 import urllib.request
 from html.parser import HTMLParser
 from pathlib import Path
+
+import blog_cards
 
 ROOT = Path(__file__).resolve().parents[4]
 SITE = "https://demetriotahoces.github.io"
@@ -179,6 +182,20 @@ def apply_fixes(slug: str) -> list[str]:
         if fixed != card:
             index_path.write_text(index.replace(card, fixed, 1), encoding="utf-8")
             done.append("minutos y etiquetas de la tarjeta sincronizados")
+    # "Sigue leyendo" del post y "Últimos artículos" de la home, con el título y la fecha actuales del índice
+    listed = blog_cards.index_cards()
+    html = html_path.read_text(encoding="utf-8")
+    related = blog_cards.related_slugs(html)
+    if related:
+        synced = blog_cards.sync_related(html, related, listed)
+        if synced != html:
+            html_path.write_text(synced, encoding="utf-8")
+            done.append("'Sigue leyendo' regenerado desde el índice")
+    home = blog_cards.HOME.read_text(encoding="utf-8")
+    synced_home = blog_cards.sync_home(home, listed)
+    if synced_home != home:
+        blog_cards.HOME.write_text(synced_home, encoding="utf-8")
+        done.append("'Últimos artículos' de la home regenerado")
     return done
 
 
@@ -358,7 +375,8 @@ def check(slug: str, forbid: list[str], wanted: int | None, check_urls: bool = F
             match = re.search(pattern, text, re.I)
             if match:
                 warnings.append(f"estilo: '{match.group(0)}' en {path.relative_to(ROOT)}")
-    prose_html = html_text[html_text.find('class="article-prose"'):]
+    prose_start = html_text.find('class="article-prose"')
+    prose_html = html_text[prose_start:html_text.find("</article>", prose_start)]  # sin ficha de autor ni relacionados
     bold = len(re.findall(r"<(?:strong|b)>", prose_html))
     if bold > MAX_BOLD:
         warnings.append(f"estilo: {bold} negritas en la prosa (máximo orientativo {MAX_BOLD})")
@@ -425,8 +443,24 @@ def check(slug: str, forbid: list[str], wanted: int | None, check_urls: bool = F
     if not counter or int(counter.group(1)) != len(posts) or len(cards) != len(posts):
         errors.append(f"contador/tarjetas del índice no cuadran con {len(posts)} posts en blog/posts")
 
-    # Versiones de assets iguales que en el índice
-    versions = lambda text: dict(re.findall(r"assets/(\w+\.(?:css|js))\?v=(\d+)", text))
+    # Ficha de autor y "Sigue leyendo" de la plantilla; la home enseña las primeras tarjetas del índice
+    if 'class="card author-card"' not in html_text:
+        errors.append("falta la ficha de autor (aside.author-card de references/post-template.html)")
+    listed = blog_cards.index_cards(index)
+    related = blog_cards.related_slugs(html_text)
+    if related is None:
+        errors.append("falta 'Sigue leyendo' (div.related-grid[data-related-posts] de references/post-template.html)")
+    elif (len(related) != blog_cards.RELATED or len(set(related)) != len(related)
+          or slug in related or not set(related) <= set(posts)):
+        errors.append(f"'Sigue leyendo' debe enlazar {blog_cards.RELATED} posts distintos, existentes y que no sean este: {related}")
+    elif blog_cards.sync_related(html_text, related, listed) != html_text:
+        errors.append("'Sigue leyendo' no coincide con el título o la fecha de las tarjetas del índice (--fix lo regenera)")
+    home = blog_cards.HOME.read_text(encoding="utf-8")
+    if blog_cards.sync_home(home, listed) != home:
+        errors.append(f"'Últimos artículos' de index.html no son las {blog_cards.HOME_LATEST} primeras tarjetas del índice (--fix lo regenera)")
+
+    # Versiones de assets (y del widget del chatbot) iguales que en el índice
+    versions = lambda text: dict(re.findall(r"(?:assets|CV)/([\w-]+\.(?:css|js))\?v=(\d+)", text))
     if versions(html_path.read_text(encoding="utf-8")) != versions(index):
         warnings.append("?v=N de assets distinto entre el post y blog/index.html")
 

@@ -39,7 +39,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/tokens.css?v=3">
     <link rel="stylesheet" href="../assets/cv.css?v=4">
-    <link rel="stylesheet" href="../assets/blog.css?v=3">
+    <link rel="stylesheet" href="../assets/blog.css?v=4">
     <link rel="stylesheet" href="../assets/tailwind.css?v=2">
     <script>
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -55,6 +55,7 @@
         <div class="site-nav-links">
             <a href="../index.html">CV</a>
             <a href="./index.html" aria-current="page">Blog</a>
+            <a href="../index.html#contacto" class="nav-cta">Contacto</a>
         </div>
     </nav>
 
@@ -65,6 +66,10 @@
             <p class="text-lg md:text-xl text-blue-100 max-w-3xl leading-relaxed hero-stage" style="--stage-delay: 0.21s">
                 Artículos educativos sobre software, arquitectura, backend, IA y aprendizajes prácticos de proyectos reales o personales.
             </p>
+            <a class="blog-author hero-stage" style="--stage-delay: 0.29s" href="../index.html" data-goatcounter-click="blog-hero-cv">
+                <img src="../assets/foto-demetrio.jpg" alt="" width="480" height="480">
+                <span><strong>Demetrio Tahoces</strong>Software Engineer · Ver mi CV</span>
+            </a>
         </header>
 
         <section class="mb-12" aria-labelledby="articulos">
@@ -75,7 +80,9 @@
                 <span class="badge inline-flex items-center w-fit rounded-full px-3 py-1 text-sm font-semibold">7 publicados</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" data-reveal-group>
+            <div class="post-filters" data-post-filters></div>
+
+            <div class="post-grid grid grid-cols-1 md:grid-cols-2 gap-5" data-post-grid data-reveal-group>
                 <article class="card post-card rounded-xl overflow-hidden" data-reveal>
                     <a href="posts/impact-driven-growth-outcomes.html" class="block group">
                         <img src="assets/impact-driven-growth-outcomes.svg" alt="Diagrama de la cadena output, outcome e impacto, con el test de inflación y el bucle de hipótesis y experimentos" class="w-full aspect-[16/9] object-cover border-b border-blue-400/10">
@@ -236,7 +243,8 @@
         </footer>
     </main>
 
-    <script src="../assets/cv.js?v=3" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+    <script src="../assets/cv.js?v=4" defer onerror="document.documentElement.classList.remove('motion-ready')"></script>
+    <script src="../CV/chatbot-widget.js?v=2" defer></script>
 </body>
 
 </html>
