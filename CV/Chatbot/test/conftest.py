@@ -183,4 +183,5 @@ def offline_usage_stats(monkeypatch):
     monkeypatch.setattr(site_stats, "redis", None)
     monkeypatch.setattr(site_stats, "goatcounter", None)
     monkeypatch.setattr(settings, "stats_key", "")
+    monkeypatch.setattr(settings, "stats_dashboard_key", "")
     return site_stats

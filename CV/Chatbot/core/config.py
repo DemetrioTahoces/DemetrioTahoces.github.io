@@ -71,8 +71,11 @@ class Settings(BaseSettings):
     feedback_retention_days: int = 180
 
     # --- Usage stats for the owner (see core/usage_stats.py) ---
-    # Key of the private MCP tool usage_stats. Empty = the tool always refuses.
+    # Key of GET /api/stats (Authorization: Bearer). Empty = always 401.
     stats_key: str = ""
+    # Key of the private MCP tool usage_stats, a different one: it is stored in the dashboard's
+    # source, readable by anyone who can open the dashboard. Empty = the tool always refuses.
+    stats_dashboard_key: str = ""
     # Web visits from the GoatCounter API (key with read permission). Empty = visits come back null.
     goatcounter_url: str = "https://demetriotahoces.goatcounter.com"
     goatcounter_api_token: str = ""

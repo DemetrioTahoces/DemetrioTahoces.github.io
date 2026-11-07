@@ -4,8 +4,8 @@ Read-only MCP server exposing the CV knowledge base at /api/mcp.
 Lets other agents (Claude, ChatGPT, IDE assistants...) query Demetrio's CV
 directly. Tools only return documents: no LLM calls, so no token cost.
 The one exception is usage_stats: private usage metrics for the owner's
-dashboard, refused without STATS_KEY (core/usage_stats.py; the same data is at
-GET /api/stats for anything that is not a connector).
+dashboard, refused without STATS_DASHBOARD_KEY (core/usage_stats.py; the same data
+is at GET /api/stats, with STATS_KEY, for anything that is not a connector).
 """
 
 from mcp.server import MCPServer
@@ -16,7 +16,7 @@ from mcp.types import Icon, ToolAnnotations
 from core.config import settings
 from core.knowledge import Document, get_knowledge_base
 from core.search import get_section_index, tokenize
-from core.usage_stats import MAX_MONTHS, STATS_TOOL, site_stats, stats_key_matches
+from core.usage_stats import MAX_MONTHS, STATS_TOOL, dashboard_key_matches, site_stats
 
 READ_ONLY = ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False)
 # usage_stats also reads the GoatCounter API.
@@ -123,7 +123,7 @@ async def usage_stats(key: str, months: int = 6) -> list[dict]:
     así que no la uses para responder preguntas sobre él. Devuelve, por mes (AAAA-MM, del más antiguo al actual),
     las visitas a la web (GoatCounter), las preguntas y conversaciones del asistente, y las conexiones y consultas
     a este MCP con su reparto por cliente declarado (el uso propio también cuenta). null = sin datos."""
-    if not stats_key_matches(key):
+    if not dashboard_key_matches(key):
         raise ToolError("Clave incorrecta: esta herramienta es privada.")
     return await site_stats.monthly(max(1, min(months, MAX_MONTHS)))
 

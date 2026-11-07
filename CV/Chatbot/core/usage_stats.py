@@ -3,8 +3,8 @@ Usage metrics of the site for its owner: web visits (GoatCounter API), questions
 the assistant and connections to the MCP server (own counters in Upstash Redis).
 
 They are read per month with `GET /api/stats` (Authorization: Bearer STATS_KEY) or
-with the private MCP tool `usage_stats` (core/mcp_server.py, same key), which only
-exists because the job-search dashboard reads live data through connectors. Only aggregated counters are
+with the private MCP tool `usage_stats` (core/mcp_server.py, STATS_DASHBOARD_KEY),
+which only exists because the job-search dashboard reads live data through connectors. Only aggregated counters are
 kept: no IP, no question text, no session. The MCP client name is whatever the
 client declares (clientInfo.name), so the owner's own use (claude.ai, the dashboard)
 counts too.
@@ -210,10 +210,20 @@ def _clients(counted: dict[str, int] | None) -> str | None:
     return " · ".join(f"{name} {count}" for name, count in clients[:TOP_CLIENTS])
 
 
-def stats_key_matches(candidate: object) -> bool:
-    """Constant-time check against STATS_KEY; always False while it is unset."""
-    expected = settings.stats_key
+def _key_matches(candidate: object, expected: str) -> bool:
+    """Constant-time comparison; always False while the expected key is unset."""
     return bool(expected) and isinstance(candidate, str) and hmac.compare_digest(candidate.encode(), expected.encode())
+
+
+def stats_key_matches(candidate: object) -> bool:
+    """GET /api/stats: STATS_KEY (scripts, terminal)."""
+    return _key_matches(candidate, settings.stats_key)
+
+
+def dashboard_key_matches(candidate: object) -> bool:
+    """MCP tool usage_stats: STATS_DASHBOARD_KEY. A key of its own because the dashboard stores it in its
+    source, where anyone who can open the dashboard reads it: rotating it leaves STATS_KEY untouched."""
+    return _key_matches(candidate, settings.stats_dashboard_key)
 
 
 def create_usage_stats() -> UsageStats:

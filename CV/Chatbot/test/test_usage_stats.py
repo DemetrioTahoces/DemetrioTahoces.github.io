@@ -104,10 +104,12 @@ def test_mcp_connections_and_queries_are_counted_per_client(client, stats, redis
 
 
 def test_usage_stats_tool_is_private(client, stats, redis, monkeypatch):
-    assert _stats_call(client, {"key": ""})["isError"]  # no STATS_KEY configured: always refused
-    monkeypatch.setattr(settings, "stats_key", "una-clave-larga-de-prueba")
+    assert _stats_call(client, {"key": ""})["isError"]  # no STATS_DASHBOARD_KEY configured: always refused
+    monkeypatch.setattr(settings, "stats_dashboard_key", "una-clave-larga-de-prueba")
+    monkeypatch.setattr(settings, "stats_key", "la-clave-de-la-api")
     refused = _stats_call(client, {"key": "otra"})
     assert refused["isError"] and "privada" in refused["content"][0]["text"]
+    assert _stats_call(client, {"key": "la-clave-de-la-api"})["isError"]  # STATS_KEY does not open the tool
 
     redis.hashes[KEY] = {"questions": 7, "conversations": 3, "mcp_connections": 4, "mcp_calls": 9,
                          "client:claude-ai": 3, "client:cursor": 1}
@@ -122,8 +124,11 @@ def test_stats_endpoint_requires_the_bearer_key(client, stats, redis, monkeypatc
     assert client.get("/api/stats").status_code == 401
     assert client.get("/api/stats", headers={"Authorization": "Bearer "}).status_code == 401  # no STATS_KEY: always 401
     monkeypatch.setattr(settings, "stats_key", "una-clave-larga-de-prueba")
+    monkeypatch.setattr(settings, "stats_dashboard_key", "la-clave-del-dashboard")
     refused = client.get("/api/stats", headers={"Authorization": "Bearer otra"})
     assert refused.status_code == 401 and refused.headers["www-authenticate"] == "Bearer"
+    # The dashboard's key does not open the API.
+    assert client.get("/api/stats", headers={"Authorization": "Bearer la-clave-del-dashboard"}).status_code == 401
 
     redis.hashes[KEY] = {"questions": 2, "client:cursor": 1, "mcp_connections": 1}
     ok = client.get("/api/stats?months=1", headers={"Authorization": "Bearer una-clave-larga-de-prueba"})
