@@ -6,8 +6,9 @@ They are read per month with `GET /api/stats` (Authorization: Bearer STATS_KEY) 
 with the private MCP tool `usage_stats` (core/mcp_server.py, STATS_DASHBOARD_KEY),
 which only exists because the job-search dashboard reads live data through connectors. Only aggregated counters are
 kept: no IP, no question text, no session. The MCP client name is whatever the
-client declares (clientInfo.name), so the owner's own use (claude.ai, the dashboard)
-counts too.
+client declares (clientInfo.name). The owner's dashboard does not count: usage_stats never
+counts and its list_documents call carries sin_contar=true. Connections (initialize) do: claude.ai
+opens one whenever it loads the connector, for the owner's chats as well as anyone else's.
 
 Keys (prefix cvbot:stats), one hash per UTC month kept RETENTION_DAYS:
     cvbot:stats:<YYYY-MM>  questions, conversations, mcp_connections, mcp_calls, client:<name>
@@ -39,7 +40,13 @@ RETENTION_DAYS = 400  # a year back plus the current month
 MAX_MONTHS = 12
 # First month with assistant and MCP counters: earlier months are null, not 0.
 COUNTING_SINCE = "2026-11"
+# First month with GoatCounter on the web (installed 2026-11-07): earlier visits are null, not 0.
+VISITS_SINCE = "2026-11"
 STATS_TOOL = "usage_stats"
+# Tool argument with which the owner's dashboard marks its own calls: they are not counted.
+# Not a secret: all it lets a caller do is leave itself out of the metrics.
+OWNER_ARG = "sin_contar"
+OWNER_CALL = "(propietario)"
 UNKNOWN_CLIENT = "desconocido"
 TOP_CLIENTS = 6
 # MCP methods that open a connection (legacy handshake / 2026-07-28 discovery) or query the CV.
@@ -88,6 +95,9 @@ def mcp_events(body: bytes) -> list[tuple[str, str | None, str | None]]:
         info = params.get("clientInfo") or meta.get(CLIENT_INFO_META_KEY)
         client = info.get("name") if isinstance(info, dict) else None
         tool = params.get("name") if item["method"] == "tools/call" else None
+        arguments = params.get("arguments") if isinstance(params.get("arguments"), dict) else {}
+        if tool is not None and arguments.get(OWNER_ARG) is True:
+            tool = OWNER_CALL
         events.append((item["method"], client, tool if isinstance(tool, str) else None))
     return events
 
@@ -166,7 +176,7 @@ class UsageStats:
         for method, client, tool in events:
             if method in CONNECTION_METHODS:
                 fields += ["mcp_connections", f"client:{client_label(client)}"]
-            elif method in QUERY_METHODS and tool != STATS_TOOL:
+            elif method in QUERY_METHODS and tool not in (STATS_TOOL, OWNER_CALL):
                 fields.append("mcp_calls")
         await self._increment(fields)
 
@@ -188,7 +198,8 @@ class UsageStats:
         """One row per month, oldest first. null = no data (store not configured or month not counted)."""
         labels = last_months(self.clock(), max(1, min(int(months), MAX_MONTHS)))
         counters = await self._counters(labels)
-        visits = await self.goatcounter.monthly_visits(labels, self.clock()) if self.goatcounter else {}
+        tracked = [m for m in labels if m >= VISITS_SINCE]
+        visits = await self.goatcounter.monthly_visits(tracked, self.clock()) if self.goatcounter and tracked else {}
         rows = []
         for month in labels:
             counted = counters.get(month) if month >= COUNTING_SINCE else None

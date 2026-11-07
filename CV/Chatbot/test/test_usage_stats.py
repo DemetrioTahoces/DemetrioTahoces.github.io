@@ -100,6 +100,9 @@ def test_mcp_connections_and_queries_are_counted_per_client(client, stats, redis
     _modern(client, "server/discover", {}, client_name="claude-ai")
     _modern(client, "tools/call", {"name": "search", "arguments": {"query": "Kafka"}}, client_name="claude-ai", name="search")
     _stats_call(client, {"key": "x"})  # reading the stats is not a query to the CV
+    # The owner's dashboard marks its own list_documents call: not counted either.
+    _modern(client, "tools/call", {"name": "list_documents", "arguments": {"sin_contar": True}}, client_name="claude-ai",
+            name="list_documents")
     assert redis.hashes[KEY] == {"mcp_connections": 2, "client:cursor": 1, "client:claude-ai": 1, "mcp_calls": 1}
 
 
@@ -184,3 +187,16 @@ def test_goatcounter_retries_once_on_rate_limit(monkeypatch):
     goatcounter = GoatCounter("https://demo.goatcounter.com", "tok", transport=httpx.MockTransport(handler))
     assert asyncio.run(goatcounter.monthly_visits(["2026-10", "2026-11"], NOW)) == {"2026-10": 5, "2026-11": 5}
     assert calls == ["2026-10", "2026-11", "2026-11"]
+
+
+def test_visits_before_goatcounter_are_null_and_not_requested():
+    asked = []
+
+    def handler(request):
+        asked.append(request.url.params["start"][:7])
+        return httpx.Response(200, json={"total": 0})
+
+    goatcounter = GoatCounter("https://demo.goatcounter.com", "tok", transport=httpx.MockTransport(handler))
+    rows = asyncio.run(UsageStats(None, goatcounter=goatcounter, clock=clock).monthly(3))
+    assert [(r["mes"], r["visitas_web"]) for r in rows] == [("2026-09", None), ("2026-10", None), ("2026-11", 0)]
+    assert asked == ["2026-11"]  # before GoatCounter existed: null, not a 0 that fakes a trend

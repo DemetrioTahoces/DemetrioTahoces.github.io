@@ -91,8 +91,10 @@ def search(query: str, limit: int = 5) -> list[dict]:
 
 
 @mcp_server.tool(annotations=READ_ONLY)
-def list_documents() -> list[dict]:
-    """Lista los documentos disponibles (CV, experiencias, formación y artículos del blog) con su resumen y URL pública."""
+def list_documents(sin_contar: bool = False) -> list[dict]:
+    """Lista los documentos disponibles (CV, experiencias, formación y artículos del blog) con su resumen y URL pública.
+    `sin_contar` solo lo usa el panel del propietario para que su propia llamada no cuente en las métricas de uso;
+    no cambia el resultado."""
     kb = get_knowledge_base()
     return [
         {"name": d.name, "type": d.type, "title": d.title, "summary": d.summary, "url": d.url, "date": d.date}
