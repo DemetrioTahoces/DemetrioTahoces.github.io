@@ -57,6 +57,7 @@ Todas las preguntas se resuelven en **1 llamada** al modelo. Solo si el blog dej
 | `POST` | `/api/chat` | Respuesta completa en JSON (fallback) |
 | `POST` | `/api/feedback` | 👍/👎 de una respuesta (`request_id`, `rating`); se guarda en Redis con la pregunta y la respuesta |
 | `GET` | `/api/health` | Estado, modelo y nº de documentos |
+| `GET` | `/api/stats` | Métricas de uso privadas por mes (`Authorization: Bearer <STATS_KEY>`, `?months=1-12`, por defecto 6). Ver [Métricas de uso](#métricas-de-uso) |
 | `POST` | `/api/mcp` | Servidor MCP (Streamable HTTP, stateless, sin auth ni `subscriptions/listen`; rate limit propio) |
 
 Cuerpo de `/api/chat*`:
@@ -190,7 +191,7 @@ Para el dashboard del propietario (plan de cambio de trabajo): visitas a la web,
 
 - **Contadores** (`core/usage_stats.py`): un hash por mes UTC en Redis, `cvbot:stats:<AAAA-MM>` (TTL 400 días), con `questions` y `conversations` (una pregunta sin `history` abre conversación; se cuenta al responder, junto al turno del feedback), y `mcp_connections` (`initialize` o `server/discover`, más `client:<nombre>` con el `clientInfo.name` que declara el cliente) y `mcp_calls` (`tools/call`, `resources/read`, `prompts/get`). Los cuenta `McpUsageCounter`, un wrapper ASGI que lee una copia del cuerpo JSON-RPC y termina de escribir antes de cerrar la respuesta. Sin IP, sin texto, sin sesión. Fail-open.
 - **Visitas**: API de GoatCounter (`/api/v0/stats/total`, una llamada por mes, páginas vistas).
-- **Lectura**: tool MCP `usage_stats(key, months=6)`, privada: compara `key` con `STATS_KEY` (`hmac.compare_digest`) y, si no coincide o no hay clave, devuelve error. Devuelve una fila por mes (`mes`, `visitas_web`, `preguntas_asistente`, `conversaciones_asistente`, `conexiones_mcp`, `consultas_mcp`, `clientes_mcp`); `null` = sin datos (store o token sin configurar, o mes anterior a `COUNTING_SINCE`). Leer las estadísticas no cuenta como consulta. No está entre las tools del agente del chat.
+- **Lectura**: `GET /api/stats` con `Authorization: Bearer <STATS_KEY>` (401 si falta o no coincide, `Cache-Control: no-store`, rate limit del chat contra fuerza bruta) para scripts y cualquier cliente HTTP; y la tool MCP `usage_stats(key, months=6)`, que existe solo porque el dashboard de claude.ai lee datos en directo a través de conectores. Las dos comparan con `STATS_KEY` (`hmac.compare_digest`) y rechazan siempre si no hay clave configurada. Devuelve una fila por mes (`mes`, `visitas_web`, `preguntas_asistente`, `conversaciones_asistente`, `conexiones_mcp`, `consultas_mcp`, `clientes_mcp`); `null` = sin datos (store o token sin configurar, o mes anterior a `COUNTING_SINCE`). Leer las estadísticas no cuenta como consulta. No está entre las tools del agente del chat.
 - **Sesgo conocido**: el uso propio cuenta (el dashboard y los chats del propietario con el conector entran como `claude-ai` u otro cliente). El reparto por cliente es solo de conexiones: en el protocolo clásico el nombre del cliente solo llega en `initialize`, no en cada consulta.
 
 ```powershell

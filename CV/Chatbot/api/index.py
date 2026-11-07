@@ -6,6 +6,7 @@ Endpoints:
     POST /api/chat/stream — Streaming response (SSE)
     POST /api/feedback    — Thumbs up/down for an answer
     GET  /api/health      — Health check
+    GET  /api/stats       — Private usage metrics per month (Authorization: Bearer STATS_KEY)
     POST /api/mcp         — Read-only MCP server (Streamable HTTP, stateless)
 """
 
@@ -18,7 +19,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
@@ -37,7 +38,7 @@ from core.feedback_store import create_feedback_store
 from core.knowledge import get_knowledge_base, normalize_route_path
 from core.mcp_server import mcp_http_app, mcp_server
 from core.tracing import configure_tracing, run_config, send_feedback
-from core.usage_stats import McpUsageCounter, site_stats
+from core.usage_stats import MAX_MONTHS, McpUsageCounter, site_stats, stats_key_matches
 from middleware.abuse_guard import blocked_response, client_ip, create_abuse_guard
 from middleware.rate_limiter import (
     MountedAppRateLimit,
@@ -282,6 +283,21 @@ async def feedback(request: Request, body: FeedbackRequest):
     )
     await run_in_threadpool(send_feedback, body.request_id, 1 if body.rating == "up" else 0, body.comment)
     return Response(status_code=204)
+
+
+@app.get("/api/stats")
+@limiter.limit(get_rate_limit_string())
+async def usage_stats(request: Request, months: int = Query(default=6, ge=1, le=MAX_MONTHS)):
+    """Private usage metrics for the owner: the same rows as the MCP tool usage_stats (core/usage_stats.py).
+    Rate limited like the chat, so the key cannot be brute-forced."""
+    scheme, _, token = request.headers.get("authorization", "").partition(" ")
+    if scheme.lower() != "bearer" or not stats_key_matches(token.strip()):
+        return JSONResponse(
+            status_code=401,
+            headers={"WWW-Authenticate": "Bearer", "Cache-Control": "no-store"},
+            content={"error": "unauthorized", "message": "Falta la clave o no es correcta."},
+        )
+    return JSONResponse(content={"rows": await site_stats.monthly(months)}, headers={"Cache-Control": "no-store"})
 
 
 def _sse_event(data: dict) -> str:

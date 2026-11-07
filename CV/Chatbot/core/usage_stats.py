@@ -2,8 +2,9 @@
 Usage metrics of the site for its owner: web visits (GoatCounter API), questions to
 the assistant and connections to the MCP server (own counters in Upstash Redis).
 
-The private MCP tool `usage_stats` (core/mcp_server.py, protected with STATS_KEY)
-returns them per month for the job-search dashboard. Only aggregated counters are
+They are read per month with `GET /api/stats` (Authorization: Bearer STATS_KEY) or
+with the private MCP tool `usage_stats` (core/mcp_server.py, same key), which only
+exists because the job-search dashboard reads live data through connectors. Only aggregated counters are
 kept: no IP, no question text, no session. The MCP client name is whatever the
 client declares (clientInfo.name), so the owner's own use (claude.ai, the dashboard)
 counts too.
@@ -20,6 +21,7 @@ Print the last months (needs the Redis / GoatCounter variables in .env):
 """
 
 import asyncio
+import hmac
 import json
 import logging
 import re
@@ -206,6 +208,12 @@ def _clients(counted: dict[str, int] | None) -> str | None:
         return None
     clients = sorted(((k[7:], v) for k, v in counted.items() if k.startswith("client:")), key=lambda kv: (-kv[1], kv[0]))
     return " · ".join(f"{name} {count}" for name, count in clients[:TOP_CLIENTS])
+
+
+def stats_key_matches(candidate: object) -> bool:
+    """Constant-time check against STATS_KEY; always False while it is unset."""
+    expected = settings.stats_key
+    return bool(expected) and isinstance(candidate, str) and hmac.compare_digest(candidate.encode(), expected.encode())
 
 
 def create_usage_stats() -> UsageStats:

@@ -118,6 +118,23 @@ def test_usage_stats_tool_is_private(client, stats, redis, monkeypatch):
                        "conexiones_mcp": 4, "consultas_mcp": 9, "clientes_mcp": "claude-ai 3 · cursor 1"}
 
 
+def test_stats_endpoint_requires_the_bearer_key(client, stats, redis, monkeypatch):
+    assert client.get("/api/stats").status_code == 401
+    assert client.get("/api/stats", headers={"Authorization": "Bearer "}).status_code == 401  # no STATS_KEY: always 401
+    monkeypatch.setattr(settings, "stats_key", "una-clave-larga-de-prueba")
+    refused = client.get("/api/stats", headers={"Authorization": "Bearer otra"})
+    assert refused.status_code == 401 and refused.headers["www-authenticate"] == "Bearer"
+
+    redis.hashes[KEY] = {"questions": 2, "client:cursor": 1, "mcp_connections": 1}
+    ok = client.get("/api/stats?months=1", headers={"Authorization": "Bearer una-clave-larga-de-prueba"})
+    assert ok.status_code == 200 and ok.headers["cache-control"] == "no-store"
+    assert ok.json() == {"rows": [{"mes": "2026-11", "visitas_web": None, "preguntas_asistente": 2,
+                                   "conversaciones_asistente": 0, "conexiones_mcp": 1, "consultas_mcp": 0,
+                                   "clientes_mcp": "cursor 1"}]}
+    too_many = client.get("/api/stats?months=13", headers={"Authorization": "Bearer una-clave-larga-de-prueba"})
+    assert too_many.status_code == 422
+
+
 def test_counters_are_fail_open(redis):
     redis.fail = True
     stats = UsageStats(redis, clock=clock)
