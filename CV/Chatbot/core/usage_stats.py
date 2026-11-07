@@ -99,6 +99,8 @@ def _next_month(start: datetime) -> datetime:
 class GoatCounter:
     """Monthly totals from the GoatCounter API (https://www.goatcounter.com/help/api)."""
 
+    REQUEST_INTERVAL = 0.3  # seconds between requests (tests set it to 0)
+
     def __init__(self, site_url: str, token: str, timeout: float = 3.0, transport=None):
         self._url = site_url.rstrip("/") + "/api/v0/stats/total"
         self._headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
@@ -113,13 +115,17 @@ class GoatCounter:
         # The API wants hour-rounded bounds: the current month ends at the next full hour.
         next_hour = datetime.fromtimestamp(now, UTC).replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
         async with httpx.AsyncClient(timeout=self._timeout, transport=self._transport) as client:
-            for month in months:  # one by one: the API allows 4 requests per second
+            for i, month in enumerate(months):
+                if i:  # the API allows 4 requests per second: without a pause the 5th month gets a 429
+                    await asyncio.sleep(self.REQUEST_INTERVAL)
                 start = datetime.strptime(month + "-01", "%Y-%m-%d").replace(tzinfo=UTC)
                 end = min(_next_month(start), next_hour)
+                params = {"start": start.strftime("%Y-%m-%dT%H:%M:%SZ"), "end": end.strftime("%Y-%m-%dT%H:%M:%SZ")}
                 try:
-                    response = await client.get(self._url, headers=self._headers, params={
-                        "start": start.strftime("%Y-%m-%dT%H:%M:%SZ"), "end": end.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    })
+                    response = await client.get(self._url, headers=self._headers, params=params)
+                    if response.status_code == 429:  # one retry after the window the API asks for
+                        await asyncio.sleep(min(float(response.headers.get("Retry-After") or 1), 2.0))
+                        response = await client.get(self._url, headers=self._headers, params=params)
                     response.raise_for_status()
                     visits[month] = int(response.json()["total"])
                 except Exception as e:

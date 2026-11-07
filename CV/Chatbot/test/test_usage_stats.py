@@ -150,7 +150,8 @@ def test_counters_are_fail_open(redis):
     assert asyncio.run(UsageStats(None, clock=clock).monthly(1))[0]["consultas_mcp"] is None
 
 
-def test_goatcounter_visits_per_month():
+def test_goatcounter_visits_per_month(monkeypatch):
+    monkeypatch.setattr(GoatCounter, "REQUEST_INTERVAL", 0)
     seen = []
 
     def handler(request):
@@ -168,3 +169,18 @@ def test_goatcounter_visits_per_month():
 def test_goatcounter_errors_leave_visits_null():
     goatcounter = GoatCounter("https://demo.goatcounter.com", "tok", transport=httpx.MockTransport(lambda r: httpx.Response(403)))
     assert asyncio.run(goatcounter.monthly_visits(["2026-10", "2026-11"], NOW)) == {"2026-10": None, "2026-11": None}
+
+
+def test_goatcounter_retries_once_on_rate_limit(monkeypatch):
+    monkeypatch.setattr(GoatCounter, "REQUEST_INTERVAL", 0)
+    calls = []
+
+    def handler(request):
+        calls.append(request.url.params["start"][:7])
+        if len(calls) == 2:  # the 2nd request hits the 4 req/s limit, its retry goes through
+            return httpx.Response(429, headers={"Retry-After": "0"})
+        return httpx.Response(200, json={"total": 5})
+
+    goatcounter = GoatCounter("https://demo.goatcounter.com", "tok", transport=httpx.MockTransport(handler))
+    assert asyncio.run(goatcounter.monthly_visits(["2026-10", "2026-11"], NOW)) == {"2026-10": 5, "2026-11": 5}
+    assert calls == ["2026-10", "2026-11", "2026-11"]
