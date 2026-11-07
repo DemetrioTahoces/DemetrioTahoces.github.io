@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "CV/*.html", "blog/index.html", "blog/posts/*.html",
+PAGES = ["index.html", "404.html", "CV/*.html", "blog/index.html", "blog/posts/*.html",
          ".agents/skills/manage-blog/references/post-template.html"]
 STYLESHEETS = ["assets/tailwind.css", "assets/tokens.css", "assets/cv.css", "assets/blog.css"]
 # Clases sin estilo propio a propósito: ganchos de JS, de los checks o de la impresión.

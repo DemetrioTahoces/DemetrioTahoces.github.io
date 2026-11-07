@@ -21,6 +21,10 @@ on:
       - ".agents/skills/edit-cv/**"
       - "scripts/**"
 
+# Solo lectura: ningún job necesita escribir en el repo.
+permissions:
+  contents: read
+
 concurrency:
   group: cv-${{ github.ref }}
   cancel-in-progress: true
@@ -30,5 +34,5 @@ jobs:
     name: Check CV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: python3 scripts/check_all.py

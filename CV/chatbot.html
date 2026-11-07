@@ -3,6 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Esta página pinta HTML generado por el modelo: la CSP limita de dónde salen scripts, estilos y conexiones.
+         Si cambias la URL de la API o añades un recurso externo, actualízala aquí. -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self' https://demetrio-tahoces-cv-chatbot.vercel.app; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistente Virtual - Demetrio Tahoces</title>
     <meta name="description" content="Asistente virtual de IA sobre la experiencia profesional de Demetrio Tahoces.">
@@ -24,10 +28,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Solo el peso regular de Phosphor: el script del paquete cargaba los seis (~250 KB). -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css"
+        integrity="sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Space+Grotesk:wght@500..700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+    <!-- Copias locales con versión fija (assets/vendor/): el saneado del HTML del modelo no depende de un CDN. -->
+    <script src="../assets/vendor/marked-15.0.12.min.js"></script>
+    <script src="../assets/vendor/dompurify-3.4.17.min.js"></script>
     <link rel="stylesheet" href="../assets/tokens.css?v=3">
 
     <style>
@@ -405,7 +411,7 @@
                 </button>
             </form>
             <div class="text-center mt-2">
-                <span class="text-[10px] text-slate-500">El asistente es una IA y puede cometer errores.</span>
+                <span class="text-[10px] text-slate-500">El asistente es una IA y puede cometer errores. Las preguntas se procesan con Anthropic y se guardan, sin IP, 24 h (180 días si valoras la respuesta) para mejorarlo: no compartas datos personales.</span>
             </div>
         </footer>
 
@@ -474,6 +480,28 @@
     </div>
 
     <script>
+        // Embebido en una web ajena (iframe de otro origen): no se conecta con la API, que gastaría tokens
+        // en nombre de esa web. El widget propio carga la página desde el mismo origen y pasa el control.
+        (function guardForeignFrame() {
+            if (window.self === window.top || window.location.protocol === 'file:') return;
+            try {
+                if (window.top.location.origin === window.location.origin) return;
+            } catch (e) { /* otro origen: no se puede leer */ }
+            const wrapper = document.getElementById('chatbot-container-wrapper');
+            const notice = document.createElement('p');
+            notice.className = 'p-6 text-sm text-slate-300';
+            notice.append('Este asistente solo funciona en ');
+            const link = document.createElement('a');
+            link.href = 'https://demetriotahoces.github.io/CV/chatbot.html';
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.className = 'underline';
+            link.textContent = 'la web de Demetrio Tahoces';
+            notice.append(link, '.');
+            if (wrapper) wrapper.replaceChildren(notice);
+            throw new Error('Chatbot embebido en un origen ajeno: desactivado.');
+        })();
+
         // Robust wrapper for localStorage to handle security exceptions under file:// protocol
         const safeStorage = {
             getItem: function (key) {
@@ -1385,7 +1413,7 @@
 
                 const contentDiv = aiWrapper.querySelector('.ai-content');
                 const errorMessage = getNetworkErrorMessage(error);
-                contentDiv.innerHTML = `<span class="text-red-400"><i class="ph ph-warning-circle"></i> ${errorMessage}</span>`;
+                contentDiv.innerHTML = `<span class="text-red-400"><i class="ph ph-warning-circle"></i> ${escapeHTML(errorMessage)}</span>`;
 
                 // Save connection/network error to history
                 chatHistory.push({ sender: 'ai', text: `⚠️ ${errorMessage}`, error: true });

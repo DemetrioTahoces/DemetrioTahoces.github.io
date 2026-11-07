@@ -22,10 +22,11 @@ Las copias no se editan a mano. Tras tocar un original, ejecuta `sync_skills.py`
 
 | Script | Qué hace |
 |---|---|
-| `check_all.py [--tests]` | Puerta única: blog, CV y copias derivadas. `--tests` añade los tests offline del chatbot (requiere `uv`). Nunca lanza evals. |
+| `check_all.py [--tests]` | Puerta única: blog, CV, CSS, sitemap y copias derivadas. `--tests` añade los tests offline del chatbot (requiere `uv`). Nunca lanza evals. |
 | `sync_skills.py [--check]` | Genera y comprueba las copias de skills y agentes. |
 | `pre_push_gate.py` | Hook PreToolUse de Claude Code: ejecuta `check_all.py` ante un push desde el agente. |
 | `install_hooks.py` | Activa `core.hooksPath=.githooks` en el clon. |
+| `build_sitemap.py [--check]` | Genera `sitemap.xml` desde los canonical de las páginas; `--check` (en `check_all.py`) falla si no está al día. |
 
 ## Puertas de validación
 

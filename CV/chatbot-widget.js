@@ -152,6 +152,8 @@
         const phosphor = document.createElement('link');
         phosphor.rel = 'stylesheet';
         phosphor.href = 'https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css';
+        phosphor.integrity = 'sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7';
+        phosphor.crossOrigin = 'anonymous';
         document.head.appendChild(phosphor);
     }
 

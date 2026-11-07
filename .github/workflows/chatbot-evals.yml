@@ -6,6 +6,10 @@ name: Chatbot evals
 on:
   workflow_dispatch:
 
+# Solo lectura: ningún job necesita escribir en el repo.
+permissions:
+  contents: read
+
 defaults:
   run:
     working-directory: CV/Chatbot
@@ -18,8 +22,8 @@ jobs:
       API_KEY: ${{ secrets.CHATBOT_API_KEY }}
       MODEL_NAME: claude-haiku-5-5
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.2.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       - run: uv sync --frozen
       - name: Evals contra el modelo
         if: env.API_KEY != ''

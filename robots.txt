@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://demetriotahoces.github.io/sitemap.xml
