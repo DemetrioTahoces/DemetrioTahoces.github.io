@@ -97,7 +97,8 @@ Eventos SSE: `session` → `tool_call`* → `tool_result`* → `token`… → `d
 | `core/redis_rest.py` | Cliente mínimo de la API REST de Upstash (compartido) |
 | `core/feedback_store.py` | Feedback persistido en Redis con la respuesta valorada; CLI para leerlo |
 | `core/tools.py` | Tool `read_blog_article` (solo si el blog no cabe en el contexto) |
-| `core/mcp_server.py` | Servidor MCP: tools `search`, `list_documents` y `get_document` (con `section` opcional), cada documento como resource `cv://documents/<name>`, prompts `evaluar_encaje` y `presentar_perfil`, icono y pistas de caché de 1 h (`ttlMs`/`cacheScope`) |
+| `core/mcp_server.py` | Servidor MCP: tools `search`, `list_documents` y `get_document` (con `section` opcional), la privada `usage_stats`, cada documento como resource `cv://documents/<name>`, prompts `evaluar_encaje` y `presentar_perfil`, icono y pistas de caché de 1 h (`ttlMs`/`cacheScope`) |
+| `core/usage_stats.py` | Métricas de uso: contadores mensuales en Redis (preguntas, conversaciones, conexiones y consultas MCP), visitas de GoatCounter y el wrapper ASGI que cuenta el tráfico MCP; CLI para leerlas |
 | `core/search.py` | Búsqueda BM25 por secciones (sin dependencias) para la tool `search` del MCP |
 | `core/tracing.py` | LangSmith opcional + feedback |
 | `core/llms_txt.py` | Genera `/llms.txt` del sitio |
@@ -145,6 +146,8 @@ Tras añadir o cambiar un documento: `uv run python -m core.llms_txt` y `uv run 
 | `ABUSE_CLASSIFIER_MODEL` / `_REASONING_EFFORT` | `MODEL_NAME` / `low` | Modelo del clasificador; conviene uno pequeño |
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN` | — | Store compartido (también acepta `KV_REST_API_URL` / `_TOKEN`). Sin él: fail-open, nadie se bloquea y el feedback solo va a logs |
 | `FEEDBACK_TURN_TTL_HOURS` / `FEEDBACK_RETENTION_DAYS` | `24` / `180` | Cuánto se guarda cada pregunta/respuesta (`0` = nada) y cada feedback |
+| `STATS_KEY` | — | Clave de la tool MCP privada `usage_stats` (ver [Métricas de uso](#métricas-de-uso)). Vacía: la tool siempre rechaza |
+| `GOATCOUNTER_URL` / `GOATCOUNTER_API_TOKEN` | `https://demetriotahoces.goatcounter.com` / — | Visitas a la web por la API de GoatCounter. Sin token: visitas a `null` |
 | `ALLOWED_ORIGINS` | GitHub Pages + localhost | Separados por comas |
 | `LANGSMITH_TRACING` / `_API_KEY` / `_PROJECT` | `false` | Tracing opcional |
 
@@ -180,6 +183,19 @@ uv run python -m core.feedback_store --limit 50 --eval-drafts   # los 👎 como 
 Con `--eval-drafts` cada 👎 sale como caso YAML (`id`, `pregunta`, `pagina`) con el `criterio` en `TODO` y, en comentarios, el comentario del usuario y la respuesta valorada: se revisa, se completa el criterio y se pega en `evals/dataset.yaml`.
 
 Limitaciones: `request_id` solo se valida por formato, así que cualquiera puede enviar feedback (lo frena el rate limit); y guardar el turno añade una escritura a Redis (~decenas de ms) por respuesta.
+
+## Métricas de uso
+
+Para el dashboard del propietario (plan de cambio de trabajo): visitas a la web, preguntas al asistente y conexiones al MCP, por mes. Vercel Web Analytics no sirve aquí (la web está en GitHub Pages y la API no tiene páginas) y Observability por API es de pago.
+
+- **Contadores** (`core/usage_stats.py`): un hash por mes UTC en Redis, `cvbot:stats:<AAAA-MM>` (TTL 400 días), con `questions` y `conversations` (una pregunta sin `history` abre conversación; se cuenta al responder, junto al turno del feedback), y `mcp_connections` (`initialize` o `server/discover`, más `client:<nombre>` con el `clientInfo.name` que declara el cliente) y `mcp_calls` (`tools/call`, `resources/read`, `prompts/get`). Los cuenta `McpUsageCounter`, un wrapper ASGI que lee una copia del cuerpo JSON-RPC y termina de escribir antes de cerrar la respuesta. Sin IP, sin texto, sin sesión. Fail-open.
+- **Visitas**: API de GoatCounter (`/api/v0/stats/total`, una llamada por mes, páginas vistas).
+- **Lectura**: tool MCP `usage_stats(key, months=6)`, privada: compara `key` con `STATS_KEY` (`hmac.compare_digest`) y, si no coincide o no hay clave, devuelve error. Devuelve una fila por mes (`mes`, `visitas_web`, `preguntas_asistente`, `conversaciones_asistente`, `conexiones_mcp`, `consultas_mcp`, `clientes_mcp`); `null` = sin datos (store o token sin configurar, o mes anterior a `COUNTING_SINCE`). Leer las estadísticas no cuenta como consulta. No está entre las tools del agente del chat.
+- **Sesgo conocido**: el uso propio cuenta (el dashboard y los chats del propietario con el conector entran como `claude-ai` u otro cliente). El reparto por cliente es solo de conexiones: en el protocolo clásico el nombre del cliente solo llega en `initialize`, no en cada consulta.
+
+```powershell
+uv run python -m core.usage_stats --months 6   # JSON por línea; requiere Redis y GoatCounter en .env
+```
 
 ## Desarrollo
 

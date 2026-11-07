@@ -116,6 +116,8 @@ class FakeRedis:
         self.clock = clock
         self.values: dict[str, tuple[str, float | None]] = {}
         self.zsets: dict[str, dict[str, float]] = {}
+        self.hashes: dict[str, dict[str, int]] = {}
+        self.ttls: dict[str, int] = {}
         self.fail = False
 
     def _get(self, key):
@@ -147,6 +149,15 @@ class FakeRedis:
             elif name == "ZREVRANGE":
                 ranked = sorted(self.zsets.get(key, {}).items(), key=lambda item: -item[1])
                 results.append([m for m, _ in ranked][args[0]:args[1] + 1])
+            elif name == "HINCRBY":
+                fields = self.hashes.setdefault(key, {})
+                fields[args[0]] = fields.get(args[0], 0) + int(args[1])
+                results.append(fields[args[0]])
+            elif name == "EXPIRE":
+                self.ttls[key] = args[0]
+                results.append(1)
+            elif name == "HGETALL":  # Upstash REST shape: flat [field, value, ...] with string values
+                results.append([x for f, v in self.hashes.get(key, {}).items() for x in (f, str(v))])
             else:
                 raise NotImplementedError(name)
         return results
@@ -161,3 +172,15 @@ def offline_feedback_store(monkeypatch):
     store = FeedbackStore(None, turn_ttl_seconds=3600, retention_seconds=86400)
     monkeypatch.setattr(api_module, "feedback_store", store)
     return store
+
+
+@pytest.fixture(autouse=True)
+def offline_usage_stats(monkeypatch):
+    """Usage counters never reach the real Redis or GoatCounter, and no STATS_KEY leaks in from .env."""
+    from core.config import settings
+    from core.usage_stats import site_stats
+
+    monkeypatch.setattr(site_stats, "redis", None)
+    monkeypatch.setattr(site_stats, "goatcounter", None)
+    monkeypatch.setattr(settings, "stats_key", "")
+    return site_stats

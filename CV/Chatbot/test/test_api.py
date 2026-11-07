@@ -99,7 +99,7 @@ def test_mcp_server_lists_and_reads_documents(client):
     assert init["result"]["serverInfo"]["name"] == "demetrio-tahoces-cv"
 
     tools = rpc("tools/list", {}, 2)["result"]["tools"]
-    assert {t["name"] for t in tools} == {"search", "list_documents", "get_document"}
+    assert {t["name"] for t in tools} == {"search", "list_documents", "get_document", "usage_stats"}
 
     doc = rpc("tools/call", {"name": "get_document", "arguments": {"name": "FERMAX"}}, 3)["result"]
     assert "Fermax" in doc["content"][0]["text"]
@@ -125,7 +125,7 @@ def test_mcp_server_does_not_offer_listen_streams(client):
     assert not capabilities["resources"].get("subscribe")
 
     tools = rpc("tools/list", {}, 2)["result"]["tools"]
-    assert {t["name"] for t in tools} == {"search", "list_documents", "get_document"}
+    assert {t["name"] for t in tools} == {"search", "list_documents", "get_document", "usage_stats"}
 
 
 MODERN_META = {

@@ -3,7 +3,11 @@ Read-only MCP server exposing the CV knowledge base at /api/mcp.
 
 Lets other agents (Claude, ChatGPT, IDE assistants...) query Demetrio's CV
 directly. Tools only return documents: no LLM calls, so no token cost.
+The one exception is usage_stats: private usage metrics for the owner's
+dashboard, refused without STATS_KEY (core/usage_stats.py).
 """
+
+import hmac
 
 from mcp.server import MCPServer
 from mcp.server.caching import CacheHint
@@ -13,8 +17,11 @@ from mcp.types import Icon, ToolAnnotations
 from core.config import settings
 from core.knowledge import Document, get_knowledge_base
 from core.search import get_section_index, tokenize
+from core.usage_stats import MAX_MONTHS, STATS_TOOL, site_stats
 
 READ_ONLY = ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False)
+# usage_stats also reads the GoatCounter API.
+READ_ONLY_EXTERNAL = ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=True)
 SEARCH_MAX_RESULTS = 10
 # Same "DT" badge as the site favicon.
 ICON = Icon(
@@ -109,6 +116,17 @@ def get_document(name: str, section: str | None = None) -> str:
         valid = ", ".join(f"'{s.title}'" for s in doc.sections)
         raise ToolError(f"'{doc.name}' no tiene la sección '{section}'. Secciones: {valid}")
     return f"# {doc.title}: {match.title}\nURL: {doc.section_url(match)}\n\n{match.content}"
+
+
+@mcp_server.tool(name=STATS_TOOL, title="Uso del sitio (privada)", annotations=READ_ONLY_EXTERNAL)
+async def usage_stats(key: str, months: int = 6) -> list[dict]:
+    """Privada, solo para el propietario del sitio: requiere su clave y no dice nada sobre el perfil de Demetrio,
+    así que no la uses para responder preguntas sobre él. Devuelve, por mes (AAAA-MM, del más antiguo al actual),
+    las visitas a la web (GoatCounter), las preguntas y conversaciones del asistente, y las conexiones y consultas
+    a este MCP con su reparto por cliente declarado (el uso propio también cuenta). null = sin datos."""
+    if not settings.stats_key or not hmac.compare_digest(key.encode(), settings.stats_key.encode()):
+        raise ToolError("Clave incorrecta: esta herramienta es privada.")
+    return await site_stats.monthly(max(1, min(months, MAX_MONTHS)))
 
 
 def _reader(doc: Document):

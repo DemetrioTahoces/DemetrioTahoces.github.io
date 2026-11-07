@@ -70,6 +70,13 @@ class Settings(BaseSettings):
     feedback_turn_ttl_hours: int = 24
     feedback_retention_days: int = 180
 
+    # --- Usage stats for the owner (see core/usage_stats.py) ---
+    # Key of the private MCP tool usage_stats. Empty = the tool always refuses.
+    stats_key: str = ""
+    # Web visits from the GoatCounter API (key with read permission). Empty = visits come back null.
+    goatcounter_url: str = "https://demetriotahoces.goatcounter.com"
+    goatcounter_api_token: str = ""
+
     # --- CORS: comma-separated list in ALLOWED_ORIGINS ---
     allowed_origins: Annotated[list[str], NoDecode] = DEFAULT_ALLOWED_ORIGINS
 

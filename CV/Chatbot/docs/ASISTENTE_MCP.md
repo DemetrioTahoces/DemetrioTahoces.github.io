@@ -15,6 +15,7 @@ order: 900
 - En Claude Code se añade con: `claude mcp add --transport http demetrio-tahoces-cv https://demetrio-tahoces-cv-chatbot.vercel.app/api/mcp`
 - En otros clientes compatibles con MCP (Claude, ChatGPT, asistentes de IDE) basta con añadir un conector MCP remoto con esa URL.
 - Herramientas: `search` (busca en todas las secciones y devuelve la URL de cada una para citarla), `list_documents` y `get_document`. Prompts: `evaluar_encaje` (contrasta una oferta con el perfil) y `presentar_perfil`.
+- Hay además una herramienta privada, `usage_stats`, con métricas de uso agregadas por mes (visitas, preguntas al asistente y conexiones al MCP) para el propio Demetrio. Requiere su clave, no guarda IP ni texto de las preguntas y no contiene información del perfil.
 - En la página del asistente, el botón «MCP» muestra la URL y el comando para copiarlos.
 - También hay un índice del sitio para LLMs en https://demetriotahoces.github.io/llms.txt
 

@@ -37,6 +37,7 @@ from core.feedback_store import create_feedback_store
 from core.knowledge import get_knowledge_base, normalize_route_path
 from core.mcp_server import mcp_http_app, mcp_server
 from core.tracing import configure_tracing, run_config, send_feedback
+from core.usage_stats import McpUsageCounter, site_stats
 from middleware.abuse_guard import blocked_response, client_ip, create_abuse_guard
 from middleware.rate_limiter import (
     MountedAppRateLimit,
@@ -204,7 +205,10 @@ async def chat(request: Request, body: ChatRequest):
         return _internal_error(request_id)
     finally:
         await inspection
-    await feedback_store.remember_turn(request_id, body.message, result["response"], _route(page_context))
+    await asyncio.gather(
+        feedback_store.remember_turn(request_id, body.message, result["response"], _route(page_context)),
+        site_stats.record_question(new_conversation=not history),
+    )
 
     duration_ms = (time.perf_counter() - start) * 1000
     log_response(logger, request_id=request_id, status_code=200, duration_ms=duration_ms, usage=result["usage"])
@@ -237,7 +241,10 @@ async def chat_stream(request: Request, body: ChatRequest):
                     answer.append(event["content"])
                 elif event["type"] == "done":
                     # Before `done`: Vercel may freeze the instance once the client has it.
-                    await feedback_store.remember_turn(request_id, body.message, "".join(answer), _route(page_context))
+                    await asyncio.gather(
+                        feedback_store.remember_turn(request_id, body.message, "".join(answer), _route(page_context)),
+                        site_stats.record_question(new_conversation=not history),
+                    )
                 yield _sse_event(event)
                 if event["type"] == "done":
                     log_response(
@@ -282,5 +289,6 @@ def _sse_event(data: dict) -> str:
 
 
 # Read-only MCP server at /api/mcp. Mounted last so the API routes above win.
-mcp_app = MountedAppRateLimit(mcp_http_app, get_mcp_rate_limit_string(), "mcp")
+# Rate limit first: rejected requests are not counted as connections or queries.
+mcp_app = MountedAppRateLimit(McpUsageCounter(mcp_http_app), get_mcp_rate_limit_string(), "mcp")
 app.mount("/api", mcp_app)
