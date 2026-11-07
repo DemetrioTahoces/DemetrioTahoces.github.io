@@ -14,6 +14,15 @@
     --accent: #60a5fa;
     --accent-strong: #38bdf8;
     --accent-warm: #22c55e;
+    /* Variantes de los acentos que ya se usaban sueltas en cv.css: texto sobre fondo oscuro y rellenos suaves.
+       Regla de uso: azul = lo que se pulsa; verde = estado y resultados (disponibilidad, métricas). */
+    --accent-text: #bfdbfe;
+    --accent-link: #93c5fd;
+    --accent-soft: rgba(96, 165, 250, 0.1);
+    --accent-line: rgba(96, 165, 250, 0.24);
+    --accent-warm-text: #bbf7d0;
+    --accent-warm-soft: rgba(34, 197, 94, 0.08);
+    --accent-warm-line: rgba(34, 197, 94, 0.32);
     --shadow-soft: 0 24px 80px rgba(2, 6, 23, 0.42);
     --radius: 14px;
     --shell-max: 72rem;

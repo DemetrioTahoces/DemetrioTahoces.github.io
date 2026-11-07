@@ -10,6 +10,12 @@ order: 1
 # Demetrio Antonio Tahoces Sánchez
 **Software Engineer** · tonitahoces@gmail.com · LinkedIn: https://www.linkedin.com/in/demetrio-tahoces-software-engineer/
 
+## Contacto y disponibilidad {#contacto}
+- Abierto a propuestas de backend, IoT e IA aplicada.
+- Ubicación: Asturias (España). Modalidad: remoto o híbrido.
+- Contacto: tonitahoces@gmail.com o LinkedIn (https://www.linkedin.com/in/demetrio-tahoces-software-engineer/).
+- CV descargable: completo (https://demetriotahoces.github.io/assets/CV-Demetrio-Tahoces.pdf) y de una página (https://demetriotahoces.github.io/assets/CV-Demetrio-Tahoces-Profesional.pdf).
+
 ## Resumen {#resumen}
 Soy Ingeniero de Telecomunicación y Software Engineer. Llevo más de 7 años diseñando y desarrollando software en entornos backend e IoT, trabajando con sistemas distribuidos y flujos de datos en tiempo real. Me gusta escribir código limpio, fácil de mantener y con una arquitectura bien definida. Ahora estoy aplicando esta experiencia al desarrollo con modelos de lenguaje y agentes: en Fermax lidero el diseño de los workflows de agentes con los que el equipo desarrolla software, y por mi cuenta construyo agentes con RAG y LangGraph, como el asistente de este CV (Python, FastAPI y LangChain/LangGraph, desplegado en Vercel). Me interesa especialmente llevar este tipo de agentes a casos de uso reales en producción.
 
@@ -54,6 +60,12 @@ Procesado señales dispositivos seguridad físicos.
 
 ### Desarrollador Android — Imagine800 S.L (02/2019 — 09/2019) {#exp-imagine800}
 - Apps Android VoIP y transcripción de voz. Asterisk en Docker.
+
+## Proyecto propio: asistente IA del CV {#proyecto}
+- Agente en producción que responde sobre la experiencia de Demetrio solo con lo publicado en su web y en su blog, y enlaza la sección que respalda cada dato.
+- Stack: Python, FastAPI y LangChain/LangGraph con modelos Claude, desplegado en Vercel como API sin estado con límites de uso.
+- Servidor MCP público de solo lectura para conectar el CV a cualquier agente (Claude, ChatGPT o un IDE).
+- Código abierto: https://github.com/DemetrioTahoces/DemetrioTahoces.github.io/tree/main/CV/Chatbot
 
 ## Formación Académica {#formacion}
 
