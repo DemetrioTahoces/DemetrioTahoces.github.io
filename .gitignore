@@ -8,3 +8,4 @@ __pycache__/
 # Capturas y logs del MCP de Playwright (verificación local)
 .playwright-mcp/
 .pytest_cache/
+bash.exe.stackdump
