@@ -37,9 +37,9 @@
 
   <g font-family="Inter, Arial, sans-serif">
     <g transform="translate(80 92)">
-      <rect width="512" height="46" rx="23" fill="#0f172a" fill-opacity="0.8" stroke="#22c55e" stroke-opacity="0.45"/>
+      <rect width="596" height="46" rx="23" fill="#0f172a" fill-opacity="0.8" stroke="#22c55e" stroke-opacity="0.45"/>
       <circle cx="26" cy="23" r="6" fill="#22c55e"/>
-      <text x="44" y="30" fill="#bbf7d0" font-size="19" font-weight="600">Abierto a propuestas · Asturias · Remoto / híbrido</text>
+      <text x="44" y="30" fill="#bbf7d0" font-size="19" font-weight="600">Abierto a proyectos freelance · Asturias · Remoto / híbrido</text>
     </g>
     <text x="78" y="236" fill="#e5edf7" font-size="74" font-weight="700" letter-spacing="-1.5">Demetrio Tahoces</text>
     <text x="80" y="294" fill="#bfdbfe" font-size="28" font-weight="600">Software Engineer · Backend, IoT e IA aplicada</text>
