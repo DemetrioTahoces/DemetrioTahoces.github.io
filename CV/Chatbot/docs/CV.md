@@ -11,7 +11,8 @@ order: 1
 **Software Engineer** · tonitahoces@gmail.com · LinkedIn: https://www.linkedin.com/in/demetrio-tahoces/
 
 ## Contacto y disponibilidad {#contacto}
-- Abierto a propuestas de backend, IoT e IA aplicada.
+- Abierto a proyectos freelance (trabajo autónomo) de backend, IoT e IA aplicada.
+- Por ahora no busca cambiar de empleo: no está abierto a ofertas de empleo por cuenta ajena.
 - Ubicación: Asturias (España). Modalidad: remoto o híbrido.
 - Contacto: tonitahoces@gmail.com o LinkedIn (https://www.linkedin.com/in/demetrio-tahoces/).
 - CV descargable: completo (https://demetriotahoces.github.io/assets/CV-Demetrio-Tahoces.pdf) y de una página (https://demetriotahoces.github.io/assets/CV-Demetrio-Tahoces-Profesional.pdf).
