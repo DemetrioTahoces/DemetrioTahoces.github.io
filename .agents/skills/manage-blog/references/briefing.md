@@ -1,6 +1,6 @@
 # Briefing del artículo
 
-Objetivo: llegar a un esquema aprobado con el mínimo de rondas. Las preguntas van siempre como encuesta cerrada con opciones (`AskUserQuestion`), con un máximo de 4 por ronda. Nunca listas de preguntas abiertas por chat: el usuario ya ha pedido que no se haga. Una ronda de brainstorm (solo si no hay idea) y una de briefing como mucho; después, esquema.
+Objetivo: llegar a un esquema aprobado con el mínimo de rondas. Las preguntas van siempre como encuesta cerrada con opciones (`AskUserQuestion` en Claude Code, `ask_question` en Antigravity), con un máximo de 4 por ronda. Nunca listas de preguntas abiertas por chat: el usuario ya ha pedido que no se haga. Una ronda de brainstorm (solo si no hay idea) y una de briefing como mucho; después, esquema.
 
 ## 1. ¿Hay idea definida?
 

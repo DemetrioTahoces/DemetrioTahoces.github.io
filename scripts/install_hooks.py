@@ -2,8 +2,8 @@
 """Activa los hooks de git versionados (.githooks) en este clon. Idempotente, solo stdlib.
 
 Uso: python3 scripts/install_hooks.py
-Lo ejecuta solo el hook SessionStart de Claude Code; en Codex, Antigravity o un clon manual,
-ejecútalo una vez. Desactivar: git config --unset core.hooksPath
+Lo ejecutan solos el hook SessionStart de Claude Code y .agents/environment.json en
+Antigravity cloud; en Codex o un clon manual, ejecútalo una vez. Desactivar: git config --unset core.hooksPath
 """
 
 from __future__ import annotations

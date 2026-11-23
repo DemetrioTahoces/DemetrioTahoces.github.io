@@ -2,7 +2,7 @@
 """Mantiene las copias derivadas de .agents (el original se edita siempre en .agents):
 .claude/skills = copia exacta de .agents/skills, y los agentes de .agents/agents/*.md se
 generan como .claude/agents/*.md (Claude Code) y .codex/agents/*.toml (Codex).
-Antigravity lee .agents/agents directamente.
+Antigravity lee el original en .agents/agents/*.md para registrarlo con define_subagent.
 
 Uso (desde la raíz del repo, solo stdlib):
     python3 scripts/sync_skills.py          # copia .agents -> .claude

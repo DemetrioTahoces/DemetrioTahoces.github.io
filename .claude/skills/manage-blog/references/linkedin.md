@@ -15,10 +15,13 @@
 Cada artículo nuevo termina enviando su draft a Gmail. Es parte del flujo, no hay que pedirlo.
 
 - Cuándo: tras el push a `main`, para que el enlace público de la imagen ya resuelva (GitHub Pages tarda ~10 minutos; si aún no responde, el adjunto es la vía principal).
-- Destinatario: `tonitahoces@gmail.com`. Herramienta: `mcp__Gmail__send_message` (cargarla con ToolSearch si está diferida).
+- Destinatario: `tonitahoces@gmail.com`.
+- Herramienta según entorno:
+  - **Claude Code (MCP)**: `mcp__Gmail__send_message` (cargarla con `ToolSearch` si está diferida), adjuntando `blog/assets/<slug>.png` en `attachments` (base64, `mimeType: image/png`, `filename: <slug>.png`, no inline).
+  - **Antigravity (plugin `gmail` CLI)**: usar la skill `gmail`. Guardar el cuerpo en un fichero temporal y ejecutar `gmail mutate send-with-attachment --to "tonitahoces@gmail.com" --subject "Draft LinkedIn: <título del post>" --body-file <tmp_body> --file blog/assets/<slug>.png`. Si `AGY_UNATTENDED` está activo (envío bloqueado por el CLI), crear un borrador con `gmail mutate create-draft` con los mismos argumentos e indicarlo en el resumen final. Confirmar destinatario, asunto y cuerpo si el usuario no aprobó explícitamente el envío en la sesión.
 - Asunto: `Draft LinkedIn: <título del post>`.
 - Cuerpo (`body`, texto plano, sin Markdown): el contenido íntegro de `blog/linkedin-drafts/<slug>.txt`, tal cual, listo para copiar. Al final, tras una línea en blanco, `Imagen: https://demetriotahoces.github.io/blog/assets/<slug>.png`.
-- Imagen: adjuntar `blog/assets/<slug>.png` en `attachments` (base64, `mimeType: image/png`, `filename: <slug>.png`, no inline). Si no se puede adjuntar (herramienta sin adjuntos, error o más de 25 MB), enviar solo con el enlace público de arriba e indicarlo en el informe final.
+- Si no se puede adjuntar la imagen (herramienta sin adjuntos, error o más de 25 MB), enviar solo con el enlace público de arriba e indicarlo en el informe final.
 - Si Gmail no está disponible, no bloquear la publicación: dejarlo dicho en el resumen final para que el usuario lo reenvíe.
 - Solo para artículos nuevos; las ediciones de posts publicados no reenvían el draft salvo petición.
 - No se publica nada en LinkedIn (regla anterior).
