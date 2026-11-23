@@ -18,11 +18,11 @@ Todos desde la raíz del repo, solo stdlib salvo `svg-to-png.mjs` (puppeteer-cor
 `scripts/check_all.py` es la definición única de "validado": `check_post.py --all`, `check_cv.py`, `check_css.py`, `build_sitemap.py --check` (un post nuevo exige `python3 scripts/build_sitemap.py`) y `sync_skills.py --check` (con `--tests`, los tests offline del chatbot). Lo usan tres puertas:
 
 - **CI** (`blog.yml`, `cv.yml`): vale para cualquier agente, pero avisa tarde, porque aquí se publica directo a `main` y GitHub Pages sirve al instante.
-- **Hook de git** (`.githooks/pre-push`): vale para Claude Code, Codex, Antigravity y pushes manuales. Se activa con `python3 scripts/install_hooks.py` (`core.hooksPath`, una vez por clon; lo ejecutan solos `SessionStart` en Claude Code y `.agents/environment.json` en Antigravity cloud). Saltar puntualmente: `--no-verify`.
-- **Hook de Claude Code** (`.claude/settings.json`, `scripts/pre_push_gate.py`): bloquea el push desde el agente (exit 2) con el motivo devuelto al modelo.
+- **Hook de git** (`.githooks/pre-push`): vale para Claude Code, Codex, Antigravity y pushes manuales. Se activa con `python3 scripts/install_hooks.py` (`core.hooksPath`, una vez por clon; lo ejecutan solos `SessionStart` en Claude Code y Antigravity, y `.agents/environment.json` en Antigravity cloud). Saltar puntualmente: `--no-verify`.
+- **Hooks de agente** (`.claude/settings.json` en Claude Code y `.agents/hooks.json` en Antigravity, ambos vía `scripts/pre_push_gate.py`): bloquean el push antes de ejecutar el comando con el motivo devuelto al modelo.
 
 - Todo es Python stdlib salvo el wrapper `sh` del hook de git, que usa `python3` o `python`.
-- El hook de Claude Code detecta un push en cualquier parte de la orden, también dentro de un mensaje de commit: ejecuta antes lo que haga falta (por ejemplo `sync_skills.py`) en una orden aparte.
-- Desactivar el de Claude Code sin tocar el repo: `"disableAllHooks": true` en `.claude/settings.local.json` (no se versiona). Desactivar el de git: `git config --unset core.hooksPath`.
+- `pre_push_gate.py` detecta un push en cualquier parte de la orden, también dentro de un mensaje de commit: ejecuta antes lo que haga falta (por ejemplo `sync_skills.py`) en una orden aparte.
+- Desactivar los de Claude Code sin tocar el repo: `"disableAllHooks": true` en `.claude/settings.local.json` (no se versiona). Desactivar uno de Antigravity: `"enabled": false` en `.agents/hooks.json`. Desactivar el de git: `git config --unset core.hooksPath`.
 
 No se valida en cada edición (un borrador a medias falla por diseño) ni hay hooks que lancen evals (prohibido).
