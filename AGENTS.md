@@ -57,8 +57,8 @@ Superficies que suelen requerir sincronización:
 - `index.html`
 - `CV/*.html`
 - `CV/Chatbot/docs/*.md`
-- `assets/CV-Demetrio-Tahoces.pdf` (se regenera desde la vista de impresión de `index.html`; comando en `README.md`)
-- `CV/cv-profesional.html` → `assets/CV-Demetrio-Tahoces-Profesional.pdf` (CV resumido de una página; comando en `README.md`)
+- `assets/CV-Demetrio-Tahoces.pdf` (se regenera desde la vista de impresión de `index.html` con `python3 scripts/build_cv_pdfs.py`)
+- `CV/cv-profesional.html` → `assets/CV-Demetrio-Tahoces-Profesional.pdf` (CV resumido de una página; se regenera y valida con `python3 scripts/build_cv_pdfs.py`)
 
 La web es la fuente de verdad de los PDF: `scripts/check_cv_pdf.py` (dentro de `check_all.py`) compara `index.html` con `CV/cv-profesional.html` y con el texto de los dos PDF (puestos, fechas, estado de la formación y cifras) y falla si no coinciden o si un PDF está sin regenerar. Necesita `pdftotext` (poppler); sin él avisa en local y falla en CI. No inventes cifras en el CV resumido: toda cifra debe existir en la web.
 
@@ -78,7 +78,7 @@ Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `f
 - El blog consume los assets compartidos (`tokens.css` + `cv.css` + `blog.css` + `cv.js`, rutas `../assets/` desde `blog/` y `../../assets/` desde `blog/posts/`). Los estilos de prosa de artículo viven en `assets/blog.css`, no inline.
 - Cada post lleva, desde la plantilla de `manage-blog`, Contacto en el menú, ficha de autor con CTA, «Sigue leyendo» con 2 relacionados y el widget del chatbot. El índice lateral, las anclas copiables de los h2, la barra de progreso y la pregunta al asistente sobre el artículo los pone `assets/cv.js` (no van en el HTML); en `blog/index.html`, los filtros por etiqueta y el post destacado también salen de `cv.js`/`blog.css`.
 - «Últimos artículos» de la home y «Sigue leyendo» de cada post se generan desde las tarjetas de `blog/index.html` (`new_post.py` y `check_post.py --fix`, vía `blog_cards.py`); no los edites a mano: `check_post.py` falla si no cuadran. Qué 2 posts se relacionan sí es criterio y se cambia en el HTML del post.
-- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` tienen una copia en `.claude/skills/` (no son enlaces simbólicos), que es la que carga Claude Code: edita el original y ejecuta `python3 scripts/sync_skills.py` en el mismo commit. La redacción (artículo, SVG/PNG, ficha, draft de LinkedIn) la hace siempre el agente `blog-writer` (Opus, effort medium en Claude Code), definido una sola vez en `.agents/agents/blog-writer.md`; `scripts/sync_skills.py` genera `.claude/agents/blog-writer.md` (Claude Code) y `.codex/agents/blog-writer.toml` (Codex), y Antigravity lee el original. No edites las copias generadas.
+- Artículos nuevos o cambios de posts: usa la skill `.agents/skills/manage-blog` (briefing, plantilla, diagrama, ficha del chatbot, draft de LinkedIn y `scripts/check_post.py`). Las skills de `.agents/skills/` tienen una copia en `.claude/skills/` (no son enlaces simbólicos), que es la que carga Claude Code: edita el original y ejecuta `python3 scripts/sync_skills.py` en el mismo commit. La redacción (artículo, SVG/PNG, ficha, draft de LinkedIn) la hace siempre el agente `blog-writer` (Opus, effort medium en Claude Code), definido una sola vez en `.agents/agents/blog-writer.md`; `scripts/sync_skills.py` genera `.claude/agents/blog-writer.md` (Claude Code) y `.codex/agents/blog-writer.toml` (Codex), y Antigravity lee el original para registrarlo en sesión con `define_subagent` + `invoke_subagent`. No edites las copias generadas.
 - Emojis en los artículos: 4-7 (lo normal, 5-6, más o menos uno por sección principal y nunca dos en la misma), elegidos por lo que dice cada texto para que no se repitan entre posts, y colocados con el texto ya cerrado; dónde van y dónde no, en `references/emojis.md` de la skill `manage-blog`.
 - Si se añaden artículos que el chatbot deba conocer, añade o sincroniza también el contenido Markdown correspondiente bajo `CV/Chatbot/docs/`, normalmente en una subcarpeta si el patrón existente lo permite.
 
@@ -86,7 +86,7 @@ Cada documento de `CV/Chatbot/docs/` lleva frontmatter YAML con `type` (`cv`, `f
 
 Comprobaciones backend desde `CV/Chatbot`:
 
-```powershell
+```bash
 uv run pytest            # tests offline, sin API key
 uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un humano (ver abajo)
 ```
@@ -100,13 +100,13 @@ uv run pytest -m evals   # evals contra el modelo real: SOLO las ejecuta un huma
 - No hay build del frontend.
 - Workflows: declaran `permissions: contents: read` y fijan cada action por SHA con la versión en un comentario (`@<sha> # v7`); al subir de versión, resuelve el SHA nuevo (`gh api repos/<owner>/<action>/commits/<tag> --jq .sha`).
 - CI del chatbot: `.github/workflows/chatbot.yml` ejecuta solo los tests offline en PRs y pushes a `main`. Las evals están fuera del pipeline automático: `.github/workflows/chatbot-evals.yml` solo tiene `workflow_dispatch` y lo lanza un humano desde la pestaña Actions.
-- Validación: `python3 scripts/check_all.py` (blog, CV, CV web vs PDF, CSS, sitemap y copias derivadas; `--tests` añade los tests del chatbot) es la puerta única y la usan la CI (`blog.yml`, `cv.yml`; `chatbot.yml` ejecuta los tests del chatbot), el hook de Claude Code (`.claude/settings.json`, bloquea el push desde el agente) y el hook de git `.githooks/pre-push` (para cualquier agente; `python3 scripts/install_hooks.py` lo activa y Claude Code lo hace solo). Mapa completo en `.agents/README.md`. El resto del frontend no tiene CI ni build.
+- Validación: `python3 scripts/check_all.py` (blog, CV, CV web vs PDF, CSS, sitemap y copias derivadas; `--tests` añade los tests del chatbot) es la puerta única y la usan la CI (`blog.yml`, `cv.yml`; `chatbot.yml` ejecuta los tests del chatbot), el hook de Claude Code (`.claude/settings.json`, bloquea el push desde el agente) y el hook de git `.githooks/pre-push` (para cualquier agente; `python3 scripts/install_hooks.py` lo activa y lo ejecutan solos `SessionStart` en Claude Code y `.agents/environment.json` en Antigravity cloud). Mapa completo en `.agents/README.md`. El resto del frontend no tiene CI ni build.
 
 ### Flujo de cambios del chatbot en Vercel
 
 - Como el resto del proyecto, los cambios van con commit y push directo a `main` y se prueban directamente en producción (ver "Reglas operativas para agentes"). El preview de rama solo se usa si el usuario pide expresamente una PR.
-- Los previews son públicos (Vercel Authentication desactivada). `GET /api/health` se prueba con `web_fetch_vercel_url`; para `POST /api/chat` y `POST /api/chat/stream` usa un Vercel Sandbox temporal con la red limitada al dominio del preview y páralo al terminar.
-- Desde el entorno cloud de Claude Code, `*.vercel.app` está bloqueado por el proxy.
+- Los previews son públicos (Vercel Authentication desactivada). `GET /api/health` se prueba con `web_fetch_vercel_url` (Claude Code) o `curl` directo (Antigravity cloud cuando hay red saliente); para `POST /api/chat` y `POST /api/chat/stream` desde Claude Code usa un Vercel Sandbox temporal con la red limitada al dominio del preview y páralo al terminar.
+- Desde el entorno cloud de Claude Code, `*.vercel.app` está bloqueado por el proxy; desde Antigravity cloud con red abierta, `*.vercel.app` es alcanzable directamente (ten en cuenta cold starts de varios segundos).
 
 ## Convenciones de edición
 

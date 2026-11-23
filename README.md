@@ -83,16 +83,13 @@ Cuando se cambie contenido curricular, conviene mantener sincronizadas estas sup
 - `index.html`
 - páginas detalladas de `CV/*.html`
 - documentos Markdown de `CV/Chatbot/docs/*.md`
-- `assets/CV-Demetrio-Tahoces.pdf` (descargable desde la cabecera): se genera desde la hoja `@media print` de `index.html`. Regenéralo tras cualquier cambio de contenido con el servidor local levantado (`python -m http.server 8000`):
+- `assets/CV-Demetrio-Tahoces.pdf` (descargable desde la cabecera): se genera desde la hoja `@media print` de `index.html`.
+- `assets/CV-Demetrio-Tahoces-Profesional.pdf`: CV resumido de una página, de una sola columna y apto para ATS. Su fuente es `CV/cv-profesional.html` (`noindex`). Para que lo lea bien un ATS, cada puesto va en una línea de texto (título · empresa · fechas) seguida de su contexto, logros y Stack; nada de columnas, tablas, flex de dos lados ni `opacity` (Chrome la exporta como capa aparte y algunos extractores la leen al final).
 
-```powershell
-& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --print-to-pdf="$PWD\assets\CV-Demetrio-Tahoces.pdf" "http://localhost:8000/"
-```
+Tras cualquier cambio de contenido curricular, regenera y valida ambos PDF en Linux, macOS o Windows (detecta Chrome, Chromium o Edge, comprueba que el profesional cabe en 1 página y lanza `scripts/check_cv_pdf.py` con `pdftotext`):
 
-- `assets/CV-Demetrio-Tahoces-Profesional.pdf`: CV resumido de una página, de una sola columna y apto para ATS. Su fuente es `CV/cv-profesional.html` (`noindex`). Para que lo lea bien un ATS, cada puesto va en una línea de texto (título · empresa · fechas) seguida de su contexto, logros y Stack; nada de columnas, tablas, flex de dos lados ni `opacity` (Chrome la exporta como capa aparte y algunos extractores la leen al final). Tras editarla, comprueba que sigue cabiendo en una página, regenera el PDF y pasa `python3 scripts/check_cv_pdf.py` (compara web y PDF y valida el orden de lectura con `pdftotext`):
-
-```powershell
-& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 --user-data-dir="$env:TEMP\edgecv" --print-to-pdf="$PWD\assets\CV-Demetrio-Tahoces-Profesional.pdf" "file:///$((Resolve-Path CV\cv-profesional.html).Path -replace '\\','/')"
+```bash
+python3 scripts/build_cv_pdfs.py
 ```
 
 El chatbot responde a partir de la base documental Markdown. Si una experiencia, tecnología o formación aparece en la web pública pero no en `CV/Chatbot/docs/`, el asistente puede no conocerla o responder de forma incompleta. Tras cambiar documentos, regenera `llms.txt` con `uv run python -m core.llms_txt` desde `CV/Chatbot`.
